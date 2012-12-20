@@ -217,7 +217,7 @@ When you want to obtain an API token you can do it using two standard Python mod
 
 	ospassword = "shhh"
 
-	params = '{auth{"passwordCredentials":{"username":osuser, "password":ospassword}}}'
+	params = '{"auth":{"passwordCredentials":{"username": "admin", "password":"openstack"}, "tenantId":"YourTenantIdGoesHere"}}'
 
 	headers = {"Content-Type": "application/json"}
  
@@ -234,7 +234,7 @@ When you want to obtain an API token you can do it using two standard Python mod
 
 	conn.close()
 
-	apitoken = dd['auth']['token']['id']
+	apitoken = dd['access']['token']['id']
 
 	print "Your token is: %s" % apitoken
 
