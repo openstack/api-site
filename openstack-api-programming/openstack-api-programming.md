@@ -100,17 +100,18 @@ Please check the real path to the Python interpreter on your system.  You can do
 
 ### Getting the Keys to the Kingdom
 
-Depending on the setup you are going to use, there could be three ways to authenticate yourself with an OpenStack Compute v1.1 API:
+Depending on the provider's configuration, there could be different ways to authenticate yourself so you can use an OpenStack Compute API:
 
-1. Username/password &mdash; needs to be given with every call to the OpenStack Compute API.  Not very convenient nor secure.
-2. An authentication token &mdash; typically OAuth, but could be any kind of a secret string of bits with an expiry date and time.  This is the preferred way to authenticate yourself when calling the OpenStack Compute API.  You obtain your authentication token from the authentication server using your username and password, which has to be given only once during the lifetime of the token.
-3. An API key &mdash; works just like the authentication token, but does not have an expiry date/time.  You or your OpenStack provider's administrator/support staff can revoke it and generate a new one.  It is not as safe as an authentication token, which can have a short lifespan, but at least you don't have to send your username and password with every API call.  You don't have to send those credentials at all, in fact.
+1. Username/password &mdash; needs to be given with every call to the OpenStack Compute API.  Not very convenient nor secure, but used for client calls with a sourced environment variable file.
+2. An authentication token &mdash; typically from the Identity API from the Keystone project, but could be any kind of a secret string of bits with an expiry date and time.  This is the preferred way to authenticate yourself when calling the OpenStack Compute API.  You obtain your authentication token from the authentication server using your username and password, which has to be given only once during the lifetime of the token.
 
-When you decide to use the username/password authentication, you will have to send it with every request; when you use a token, you will need to send username/password once and you will get a secret string of bytes which can be reused until it expires on its own or when the OpenStack cloud provider's administrator revokes it.  With the API key you do not have to send your username/password credentials, but you are responsible for expiring the key. 
+Note: An API key &mdash; provided by some cloud providers auth systems. You or your OpenStack provider's administrator/support staff can revoke it and generate a new one. While an authentication token can have a short lifespan, an API key lasts until it is regenerated.
+
+When you decide to use the username/password authentication, you will have to send it with every request; when you use a token, you will need to send username/password once and you will get a secret string of bytes which can be reused until it expires on its own or when the OpenStack cloud provider's administrator revokes it.  With the API key you are responsible for regenerating the key if you suspect it has been compromised. 
 
 ### Remembering Basic Security Hygiene 
 
-Please make sure that the scripts you are pasting your credentials into are not readable by other users because the authentication tokens, the API keys, as well as your username and password are literally the key to your account and with it anyone who gets a hold of it will be able to wreak havoc with your cloud.
+Please make sure that the scripts you are pasting your credentials into are not readable by other users because the authentication tokens and your username and password are literally the key to your account and with it anyone who gets a hold of it will be able to wreak havoc with your cloud.
 
 If you suspect that the worst might have happened, revoke the compromised credentials and generate new ones by following the instructions provided by your OpenStack cloud provider.  It will make all scripts, rouge and legitimate, inoperable, so once you cut them off, you'll need to fix the security holes and then replace the compromised credentials in your scripts with the new ones.
 
@@ -124,7 +125,7 @@ The following example shows how to use the **curl** command to obtain the authen
 
 	$ curl -d '{"passwordCredentials": {"username": "joe", "password": "shhh"}}' -H "Content-type: application/json" http://localhost:5000/v2.0/tokens
 
-.. note :: For a cloud like TryStack running diablo, the command also requires 
+Note: For a cloud provider running Diablo, the command also requires 
 
 * **joe** &mdash; your username, replace **joe** without your username, unless it is **joe**.
 * **shhh** &mdash; the password for your OpenStack account, please do not use **shhh**.
