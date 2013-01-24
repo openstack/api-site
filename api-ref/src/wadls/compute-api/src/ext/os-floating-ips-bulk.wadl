@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- (C) 2012 OpenStack LLC., All Rights Reserved -->
+
+<application xmlns="http://wadl.dev.java.net/2009/02"
+             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+             xmlns:wadl="http://wadl.dev.java.net/2009/02">
+
+    <resources base="https://servers.api.openstack.com">
+        <resource id="version" type="#VersionDetails" path="v2">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">
+                            The unique identifier of the tenant or account.
+                        </p>
+                    </doc>
+                </param>
+
+                <resource id="os-floating-ips-bulk" path="os-floating-ips-bulk">
+                    <method href="#ListFloatingIPsBulk" />
+                    <method href="#CreateFloatingIPsBulk" />
+
+                    <resource path="delete">
+                        <method href="#DeleteFloatingIPBulk" />
+                    </resource>
+
+                    <resource path="{host_name}">
+                        <param name="host_name" style="template">
+                            <doc><p xmlns="http://www.w3.org/1999/xhtml">
+                                The name of the host of interest to you.
+                            </p></doc>
+                        </param>
+                        <method href="#ListFloatingIPsBulkbyHost" />
+                    </resource>
+
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+    <method name="GET" id="ListFloatingIPsBulk">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Floating IPs">
+            <p xmlns="http://www.w3.org/1999/xhtml">Return a list of all floating IPs.</p>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-list-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-list-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="GET" id="ListFloatingIPsBulkbyHost">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Floating IPs by host">
+            <p xmlns="http://www.w3.org/1999/xhtml">Return a list of all floating IPs for a given host.</p>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-list-by-host-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-list-by-host-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="POST" id="CreateFloatingIPsBulk">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Create Floating IPs">
+            <p xmlns="http://www.w3.org/1999/xhtml">Bulk create floating IPs.</p>
+        </wadl:doc>
+        <request>
+            <param name="ip_range" style="plain" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">
+                        The range of IP addresses to use for creating floating IPs.
+                    </p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-create-req.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-create-req.xml" />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-create-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-create-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="POST" id="DeleteFloatingIPBulk">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Bulk delete Floating IPs">
+            <p xmlns="http://www.w3.org/1999/xhtml">Bulk delete floating IPs.</p>
+        </wadl:doc>
+        <request>
+            <param name="ip_range" style="plain" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">
+                        The range of IP addresses to bulk delete floating IPs from.
+                    </p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-delete-req.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-delete-req.xml" />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-delete-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../api_samples/os-floating-ips-bulk/floating-ips-bulk-delete-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+</application>
