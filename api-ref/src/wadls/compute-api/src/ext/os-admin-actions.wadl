@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- (C) 2012 OpenStack LLC., All Rights Reserved -->
+<!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-    
+
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        The ID for the tenant or account in a multi-tenancy cloud.
-                    </p></doc>
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml"> The
+                            ID for the tenant or account in a
+                            multi-tenancy cloud. </p>
+                    </doc>
                 </param>
-                
+
                 <resource id="Servers" path="servers">
                     <resource path="{server_id}">
-                        <param name="server_id" style="template" type="csapi:UUID">
-                            <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                                The UUID for the server of interest to you.
-                            </p>
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   > The UUID for the server of
+                                   interest to you. </p>
                             </doc>
                         </param>
                         <resource path="action">
@@ -37,278 +44,397 @@
                             <method href="#createBackup"/>
                             <method href="#os-migrateLive"/>
                             <method href="#os-resetState"/>
+                            <method href="#evacuate"/>
                         </resource>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-    
+
     <method name="POST" id="pause">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Pauses a server. Changes the status to PAUSED. 
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Pauses a server.
+                Changes the status to PAUSED. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-pause.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-pause.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-pause.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-pause.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
-    
+
     <method name="POST" id="unpause">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Unpauses a PAUSED server. Changes the status to ACTIVE. 
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Unpauses a PAUSED
+                server. Changes the status to ACTIVE. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-unpause.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-unpause.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-unpause.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-unpause.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
-    
+
     <method name="POST" id="suspend">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Suspends a server. Changes the status to SUSPENDED.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Suspends a
+                server. Changes the status to SUSPENDED. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-suspend.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-suspend.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-suspend.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-suspend.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
-    
+
     <method name="POST" id="resume">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Resumes a SUSPENDED server. Changes the status to ACTIVE.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Resumes a
+                SUSPENDED server. Changes the status to ACTIVE. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-resume.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-resume.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-resume.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-resume.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="migrate">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Migrates a server to a new host which is picked by scheduler.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Migrates a server
+                to a new host that is picked by scheduler. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-migrate.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-migrate.json"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="resetNetwork">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Resets networking on a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Resets networking
+                on a server. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-reset-network.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-reset-network.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-reset-network.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-reset-network.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="injectNetworkInfo">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Injects network info into a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Injects network
+                information into a server. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-inject-network-info.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-inject-network-info.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-inject-network-info.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-inject-network-info.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="lock">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Locks a server.
+            <p xmlns="http://www.w3.org/1999/xhtml">Locks a server.
             </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-lock-server.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-lock-server.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-lock-server.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-lock-server.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="unlock">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Unlocks a server.
+            <p xmlns="http://www.w3.org/1999/xhtml">Unlocks a server.
             </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-unlock-server.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-unlock-server.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-unlock-server.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-unlock-server.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="createBackup">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Backup a server instance.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Backs up a server
+                instance. </p>
         </wadl:doc>
         <request>
-            <param name="name" style="query" required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">Name of the backup image.</p></doc>
+            <param name="name" style="query" required="true"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Name of
+                        the backup image.</p>
+                </doc>
             </param>
-            <param name="backup_type" style="query" required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The backup type, like 'daily' or 'weekly'.</p></doc>
+            <param name="backup_type" style="query" required="true"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The backup
+                        type. Either 'daily' or 'weekly.'</p>
+                </doc>
             </param>
-            <param name="rotation" style="query" required="true" type="xsd:int">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">Int parameter representing how many backups to keep around.</p></doc>
+            <param name="rotation" style="query" required="true"
+                type="xsd:int">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">An integer
+                        value that specifies the number of backups to
+                        keep around.</p>
+                </doc>
             </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-backup-server.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-backup-server.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-backup-server.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-backup-server.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="os-migrateLive">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Live migrate a server to a new host without rebooting.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Live-migrates a
+                server to a new host without rebooting. </p>
         </wadl:doc>
         <request>
-            <param name="host" style="query" required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">Name of the new host.</p></doc>
+            <param name="host" style="query" required="true"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Name of
+                        the new host.</p>
+                </doc>
             </param>
-            <param name="block_migration" style="query" required="true" type="xsd:boolean">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">If true, migration will be blocked.</p></doc>
+            <param name="block_migration" style="query"
+                required="true" type="xsd:boolean">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">If true,
+                        migration is blocked.</p>
+                </doc>
             </param>
-            <param name="disk_over_commit" style="query" required="true" type="xsd:boolean">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">If true, disk over commit is allowed.</p></doc>
+            <param name="disk_over_commit" style="query"
+                required="true" type="xsd:boolean">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">If true,
+                        disk over commit is allowed.</p>
+                </doc>
             </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-live-migrate.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-live-migrate.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-live-migrate.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-live-migrate.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 
     <method name="POST" id="os-resetState">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Reset the state of a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Resets the state
+                of a server. </p>
         </wadl:doc>
         <request>
-            <param name="state" style="query" required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The desired state of a server.</p></doc>
+            <param name="state" style="query" required="true"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        desired state of a server.</p>
+                </doc>
             </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-reset-server-state.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-reset-server-state.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-admin-actions/admin-actions-reset-server-state.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-admin-actions/admin-actions-reset-server-state.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
+    </method>
+
+    <method name="POST" id="evacuate">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
+            <p xmlns="http://www.w3.org/1999/xhtml">Evacuates a server
+                from failed host. </p>
+        </wadl:doc>
+        <request>
+            <param name="host" style="query" required="true"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The name
+                        or ID of the host where the server is
+                        evacuated.</p>
+                </doc>
+            </param>
+            <param name="onSharedStorage" style="query"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Required
+                        if server is on shared storage.</p>
+                </doc>
+            </param>
+            <param name="adminPass" style="query" type="xsd:string">
+                <doc xml:lang="EN">Not specified with onSharedStorage.
+                    New admin password for the evacuated instance.
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../ext/server-evacuate-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../ext/server-evacuate-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../ext/server-evacuate-resp.json"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../ext/server-evacuate-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
     </method>
 </application>
