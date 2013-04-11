@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- (C) 2013 OpenStack LLC., All Rights Reserved -->
+
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-networks.wadl               -->
+<!--*******************************************************-->
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xmlns:common="http://docs.openstack.org/common/api/v1.0"
+   xmlns:atom="http://www.w3.org/2005/Atom"
+   xsi:schemaLocation="http://docs.openstack.org/netconn/api/v1.0
+                       xsd/api.xsd
+                       http://docs.openstack.org/common/api/v1.0
+                       xsd/api-common.xsd
+                       ">
+
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+
+    <resources base="https://quantum.example.com/">
+        <resource id="version" type="#VersionDetails" path="v2.0">
+        <resource id="Networks" type="#NetworkList" path="networks">
+            <method href="#listNetworks" />
+            <method href="#createNetwork" />
+            <resource path="{network_id}">
+                <param name="network_id" style="template" type="csapi:UUID">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Network ID">
+                        <p>The UUID for the network of interest to you.</p></wadl:doc>
+                </param>
+                <method href="#showNetwork"/>
+                <method href="#updateNetwork"/>
+                <method href="#deleteNetwork"/>
+            </resource>
+        </resource>
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+
+    <method name="GET" id="listNetworks">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Networks">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+               Lists a summary of all networks defined in quantum that are accessible to the tenant who submits the request.
+            </p>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/networks-get-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/networks-get-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="POST" id="createNetwork">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Create Network">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Creates a new quantum network.
+            </p>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-post-req.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-post-req.xml" />
+                </doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-post-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-post-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="GET" id="showNetwork">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Show Networks">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Lists detailed information for the specified network ID.
+            </p>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/networks-get-detail-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/networks-get-detail-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="PUT" id="updateNetwork">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Update Network">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Updates the name of the specified network.
+            </p>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-put-update.req.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-put-update.req.xml" />
+                </doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-put-update-resp.json" />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/network-put-update-resp.xml" />
+                </doc>
+            </representation>
+        </response>
+    </method>
+
+    <method name="DELETE" id="deleteNetwork">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Delete Network">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Deletes the specified network and all associated resources.
+            </p>
+        </wadl:doc>
+        <response status="204" />
+    </method>
+</application>
