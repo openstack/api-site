@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- (C) 2012 OpenStack LLC., All Rights Reserved -->
-
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
-             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-             xmlns:wadl="http://wadl.dev.java.net/2009/02">
-
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                      The ID for the tenant or account in a multi-tenancy cloud.
-                    </p></doc>
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
+                            ID for the tenant or account in a
+                            multi-tenancy cloud. </p></doc>
                 </param>
                 <resource path="os-cloudpipe">
                     <method href="#listCloudpipes"/>
@@ -23,78 +23,110 @@
                     </resource>
                 </resource>
             </resource>
-       </resource>
+        </resource>
     </resources>
-
     <method name="GET" id="listCloudpipes">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">List cloudpipes</p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists
+                cloudpipes.</p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe/cloud-pipe-get-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe/cloud-pipe-get-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe/cloud-pipe-get-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe/cloud-pipe-get-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
     <method name="POST" id="createCloudpipe">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Create a cloudpipe</p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates a
+                cloudpipe.</p>
         </wadl:doc>
         <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="project_id" style="query" required="false"
+                type="xsd:string">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml">Creates
+                        the cloudpipe for the specified project ID. If
+                        omitted, the project ID defaults to the
+                        calling tenant. </p></doc>
+            </param>
             <representation mediaType="application/json">
-                <param name="project_id" style="plain">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                      Create the cloudpipe for the specified tenant. Defaults
-                      to the calling tenant.
-                    </p></doc>
-                </param>
-                <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe/cloud-pipe-create-req.json" />
+                <doc>
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe/cloud-pipe-create-req.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe/cloud-pipe-create-req.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe/cloud-pipe-create-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe/cloud-pipe-create-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe/cloud-pipe-create-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe/cloud-pipe-create-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe/cloud-pipe-create-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="POST" id="updateCloudpipe">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Update the VPN IP/port of a cloudpipe instance.</p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Updates the virtual private network (VPN) IP
+                address and port for a specified cloudpipe
+                instance.</p>
         </wadl:doc>
         <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="vpn_ip" style="header" required="true"
+                type="xsd:string">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml">The VPN
+                        IP address.</p></doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="vpn_port" style="header" required="true"
+                type="xsd:string">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml">The VPN
+                        port. </p></doc>
+            </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe-update/cloud-pipe-update-req.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe-update/cloud-pipe-update-req.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-cloudpipe-update/cloud-pipe-update-req.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-cloudpipe-update/cloud-pipe-update-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202" />
+        <response status="202"/>
     </method>
 </application>
