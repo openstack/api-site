@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- (C) 2012-present OpenStack Foundation, All Rights Reserved -->
-
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
              xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-             xmlns:wadl="http://wadl.dev.java.net/2009/02">
+             xmlns:wadl="http://wadl.dev.java.net/2009/02"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:csapi="http://docs.openstack.org/compute/api/v2">
 
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
@@ -41,10 +41,28 @@
     <method name="POST" id="createServer">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
             <p xmlns="http://www.w3.org/1999/xhtml">
-                Create a server or multiple servers with an optional reservation ID.
+                Creates one or more servers with an optional reservation ID. 
+                
             </p>
         </wadl:doc>
+
         <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="return_reservation_id" style="query"
+                required="false" type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Set to
+                        <code>True</code>to generate a
+                        reservation ID for each server. 
+                        Omit this attribute to create servers 
+                        without a reservation ID. 
+                        This extended attribute is enabled when
+                        the service provider enables 
+                        multiple server
+                        launch. </p>
+                </doc>
+            </param>
+
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="min_count" style="query" required="false"
                 type="xsd:string">
@@ -65,19 +83,7 @@
                         launch.</p>
                 </doc>
             </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="return_reservation_id" style="query"
-                required="false" type="xsd:string">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Indicate
-                        with True or False if you want a reservation
-                        ID returned for each server. Enabled when the
-                        service provider enables multiple server
-                        launch..</p>
-                </doc>
-            </param>
-
-
+           
             <representation mediaType="application/json">
                 <doc>
                     <xsdxt:code
@@ -90,6 +96,16 @@
                     <xsdxt:code
                         href="../api_samples/os-multiple-create/multiple-create-no-resv-post-req.xml"
                     />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-post-req.json"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc>
+                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-post-req.xml"/>
                 </doc>
             </representation>
         </request>
