@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book[
+<!-- Useful for describing APIs -->
+<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
+<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
+<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
+<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
+]>
 <book xmlns="http://docbook.org/ns/docbook"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -17,22 +24,23 @@
   </info>
   <preface xml:id="Overview">
     <title>OpenStack API Reference</title>
-    <para>Use the OpenStack APIs in your OpenStack cloud: Identity
-      service, Compute and Compute extensions, Image service, Volumes,
-      and Object Storage. You must install the packages for each API
-      separately. After you authenticate through the Identity service
-      API, you can use the other APIs and extensions to launch server
-      instances, create images, assign metadata to instances and
-      images, create containers and objects, and complete other
-      actions in your OpenStack cloud. </para>
+    <para>Use the following OpenStack APIs in your OpenStack cloud:
+      Identity service, Compute, Compute extensions, Image service,
+      Block Storage, and Object Storage. You must install the packages
+      for each API separately. After you authenticate through the
+      Identity service API, you can use the other APIs and extensions
+      to launch server instances, create images, assign metadata to
+      instances and images, create containers and objects, and
+      complete other actions in your OpenStack cloud. </para>
     <para>To get started with the APIs, see the <link
         xlink:href="http://docs.openstack.org/api/quick-start/content/"
-        >API Quick Start Guide</link>. For detailed information, <link
+          ><citetitle>OpenStack API Quick Start</citetitle></link>.
+      For detailed information, <link
         xlink:href="http://docs.openstack.org/api/api-specs.html">read
         descriptions or specifications</link> for each API. </para>
   </preface>
   <chapter xml:id="identity" xlink:href="#identity">
-    <title>Identity</title>
+    <title>Identity Service API 2.0</title>
     <para>Gets an authentication token that permits access to the
       Compute API for 24 hours. The version of the Identity API is
       2.0.</para>
@@ -48,7 +56,7 @@
     </wadl:resources>
   </chapter>
   <chapter xml:id="compute">
-    <title>Compute</title>
+    <title>Compute API 2</title>
     <para>Launches virtual machines (VMs) based on the images uploaded
       to the system. Also, connects to a server instance securely
       through SSH once it starts and reboots or resizes server
@@ -57,12 +65,12 @@
       xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
   </chapter>
   <chapter xml:id="compute-ext">
-    <title>Compute Extensions</title>
-    <para>Adds capabilities to the Compute API beyond those defined in
-      the core API. Use extensions to add features, MIME types,
-      actions, states, headers, parameters, and resources to the core
-      API. Query the Compute API to list available extensions with a
-      GET request to v2/extensions.</para>
+    <title>Compute API 2 Extensions</title>
+    <para>Adds capabilities to the core Compute API. Use extensions to
+      add features, MIME types, actions, states, headers, parameters,
+      and resources to the core API. Query the Compute API to list
+      available extensions with a &GET; request to
+      v2/extensions.</para>
     <section xml:id="ext-os-admin-actions">
       <title>Server Admin Actions</title>
       <para>Permits administrators to perform actions on a
@@ -70,7 +78,7 @@
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-admin-actions.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section> 
+    </section>
     <section xml:id="ext-os-agents">
       <title>Agents</title>
       <para>Creates, updates, and deletes guest agents. Use guest
@@ -82,7 +90,8 @@
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-agents.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section><section xml:id="ext-os-aggregates">
+    </section>
+    <section xml:id="ext-os-aggregates">
       <title>Host Aggregates</title>
       <para>Creates and manages host aggregates. An aggregate assigns
         metadata to groups of compute nodes. Aggregates are only
@@ -91,7 +100,7 @@
         href="../wadls/compute-api/src/ext/os-aggregates.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    
+
     <section xml:id="ext-os-cloudpipe">
       <title>Cloudpipe</title>
       <para>Manages virtual vpns for projects.</para>
@@ -113,7 +122,7 @@
         href="../wadls/compute-api/src/ext/os-consoles.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    
+
     <section xml:id="ext-os-createserverext">
       <title>Server - Extended Create</title>
       <para>Shows extra information when you create a server.</para>
@@ -146,24 +155,33 @@
     </section>
     <section xml:id="ext-os-ext-az">
       <title>Extended Availability Zones</title>
-      <para>Shows the instance availability zone for compute nodes (nova-compute). 
-        Internal services appear in their own <emphasis role="italic">internal</emphasis> availability zone.</para>
+      <para>Shows the instance availability zone for compute nodes
+        (nova-compute). Internal services appear in their own
+          <emphasis role="italic">internal</emphasis> availability
+        zone.</para>
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-ext-az.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    <section xml:id="os-ext-img-size">
+    <section xml:id="ext-os-ext-img-size">
       <title>Image Size</title>
       <para>Lists details for available images or gets details for a
         specified image. Includes the
-        <code>OS-EXT-IMG-SIZE:size</code> extended attribute, which
+          <code>OS-EXT-IMG-SIZE:size</code> extended attribute, which
         shows the image size. </para>
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-ext-img-size.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    
-    <section xml:id="ext-os-extended-server-attributes"> 
+    <section xml:id="ext-os-ext-ips">
+      <title>Server IP Type</title>
+      <para>Shows the type of the IP addresses assigned to an
+        instance. Type is either fixed or floating.</para>
+      <wadl:resources
+        href="../wadls/compute-api/src/ext/os-ext-ips.wadl"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+    </section>
+    <section xml:id="ext-os-extended-server-attributes">
       <title>Server Extended Attributes</title>
       <para>Adds metadata to and shows additional metadata for
         servers.</para>
@@ -191,7 +209,7 @@
       <title>Flavor Access</title>
       <para>Creates and gets details for private flavors. Also, lists,
         adds and removes tenants' access to private flavors.</para>
-      
+
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-flavor-access.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
@@ -204,24 +222,24 @@
         href="../wadls/compute-api/src/ext/os-flavor-extra-specs.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    <section xml:id="os-flavor-rxtx">
+    <section xml:id="ext-os-flavor-rxtx">
       <title>Flavors with the rxtx_factor Extended Attribute</title>
       <para>Creates a flavor, gets details for a specified flavor, and
         lists details for available flavors. Includes the
-        <literal>rxtx_factor</literal> extended attribute, related
+          <literal>rxtx_factor</literal> extended attribute, related
         to configured bandwidth cap values. </para>
-      
+
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-flavor-rxtx.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    <section xml:id="os-flavorextradata">
+    <section xml:id="ext-os-flavorextradata">
       <title>Flavors with Extended Attributes</title>
       <para>Creates a flavor, gets details for a flavor, and lists
         details for available flavors. Includes the
-        <literal>rxtx_factor</literal>,
-        <literal>OS-FLV-EXT-DATA:ephemeral</literal>, and
-        <literal>swap</literal> extended attributes.</para>
+          <literal>rxtx_factor</literal>,
+          <literal>OS-FLV-EXT-DATA:ephemeral</literal>, and
+          <literal>swap</literal> extended attributes.</para>
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-flavorextradata.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
@@ -253,13 +271,13 @@
       <title>Floating IPs Bulk</title>
       <para>Bulk creates, deletes, and lists floating IPs. By default,
         the pool is named nova. Use the
-        <literal>os-floating-ip-pools</literal> extension to view
+          <literal>os-floating-ip-pools</literal> extension to view
         available pools.</para>
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-floating-ips-bulk.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    <section xml:id="ext-floating-ip-addresses">
+    <section xml:id="ext-floating-ips">
       <title>Floating IPs</title>
       <para>Assigns and allocates floating IP addresses to instances
         that run in an OpenStack cloud. </para>
@@ -274,7 +292,7 @@
         href="../wadls/compute-api/src/ext/os-hosts.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    
+
     <section xml:id="ext-os-hypervisors">
       <title>Hypervisors</title>
       <para>Displays extra statistical information from the machine
@@ -288,19 +306,12 @@
       <title>Server List Actions or Get Action Details</title>
       <para>Permits all users to list available actions for a
         specified server. Permits administrators to get details for a
-        specified action for a specified server. </para>   
+        specified action for a specified server. </para>
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-instance-actions.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    <section xml:id="os-ext-ips">
-      <title>Server IP Type</title>
-      <para>Shows the type of the IP addresses assigned to an
-        instance. Type is either fixed or floating.</para>
-      <wadl:resources
-        href="../wadls/compute-api/src/ext/os-ext-ips.wadl"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section>
+
     <section xml:id="ext-os-keypairs">
       <title>Keypairs</title>
       <para>Generates, imports, and deletes SSH keys.</para>
@@ -311,10 +322,12 @@
     <section xml:id="ext-os-multi-server-create">
       <title>Servers - Multiple Create</title>
       <para>Creates one or more servers with an optional reservation
-        ID. The request and response examples show how to create multiple servers with or without a reservation ID.</para>
+        ID. The request and response examples show how to create
+        multiple servers with or without a reservation ID.</para>
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-multi-server-create.wadl"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"/> </section>
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+    </section>
     <section xml:id="ext-os-networks">
       <title>Networks</title>
       <para>Shows network information for or deletes networks. Also,
@@ -331,7 +344,7 @@
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-quota-sets.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section> 
+    </section>
     <section xml:id="ext-os-rescue">
       <title>Server Rescue</title>
       <para>Rescues or unrescues a server.</para>
@@ -369,7 +382,7 @@
       <wadl:resources
         href="../wadls/compute-api/src/ext/os-server-start-stop.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section>    
+    </section>
     <section xml:id="ext-os-services">
       <title>Manage Services</title>
       <para>Lists, enables, and disables Nova services in all
@@ -402,7 +415,17 @@
         href="../wadls/compute-api/src/ext/os-virtual-interfaces.wadl"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
-    <section xml:id="os-volume">
+    <section xml:id="ext-os-volume_attachments">
+      <title>Volume Attachments</title>
+      <para xml:base="">Attaches volumes created through the volume
+        API to server instances. Also, lists volume attachments for a
+        server instance, gets volume details for a volume attachment,
+        and deletes a volume attachment.</para>
+      <wadl:resources
+        href="../wadls/compute-api/src/ext/os-volume_attachments.wadl"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+    </section>
+    <section xml:id="ext-os-volume">
       <title>Volume Extension to Compute</title>
       <para>Manages volumes and snapshots for use with the Compute
         API.</para>
@@ -412,36 +435,22 @@
     </section>
   </chapter>
   <chapter xml:id="os-images-1.0">
-    <title>Image</title>
+    <title>Image Service API 1</title>
     <para>Loads images for use at launch time by the Compute API.
       Also, assigns metadata to images. Some cloud implementations do
       not expose this API and offer pretested images only. </para>
     <wadl:resources href="../wadls/image-api/src/os-image-1.0.wadl"
       xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
   </chapter>
-  <chapter xml:id="volumes">
-    <title>Volume</title>
-    <section xml:id="volume-api">
-      <title>Volumes</title>
-      <para>Manages volumes and snapshots for use with the Volume API
-        (cinder services).</para>
-      <wadl:resources
-        href="../wadls/volume-api/src/v2/volume-api.wadl"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section>
-    <section xml:id="volume_attachments">
-      <title>Volume Attachments</title>
-      <para xml:base="">Attaches volumes created through the volume API to server
-        instances. Also, lists volume attachments for a server
-        instance, gets volume details for a volume attachment, and
-        deletes a volume attachment.</para>
-      <wadl:resources
-        href="../wadls/compute-api/src/ext/os-volume_attachments.wadl"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section>
+  <chapter xml:id="volumes-api">
+    <title>Block Storage API 2.0</title>
+    <para>Manages volumes and snapshots for use with the Volume API
+      (cinder services).</para>
+    <wadl:resources href="../wadls/volume-api/src/v2/volume-api.wadl"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
   </chapter>
   <chapter xml:id="os-object-api-1.0">
-    <title>Object Storage</title>
+    <title>Object Storage API 1.0</title>
     <para>Manages the accounts, containers, and objects in the object
       storage system.</para>
     <wadl:resources
