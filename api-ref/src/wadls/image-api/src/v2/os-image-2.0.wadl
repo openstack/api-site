@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-image-2.0.wadl               -->
+<!--*******************************************************-->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:imageapi="http://docs.openstack.org/image/api/v2.0"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:csapi="http://docs.openstack.org/image/api/v2.0"
+    targetNamespace="http://docs.openstack.org/image/api/v2.0"
+    xsi:schemaLocation="http://docs.openstack.org/image/api/v2.0
+                       xsd/api.xsd
+                       http://docs.openstack.org/common/api/v1.0
+                       xsd/api-common.xsd
+                       ">
+
+    <grammars>
+        <include href="xsd/api.xsd"/>
+        <include href="xsd/api-common.xsd"/>
+    </grammars>
+
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://glance.example.com/">
+        <resource id="info" path="v2">
+            <resource id="Images" type="#ImageList" path="images">
+                <method href="#createImage"/>
+                <resource path="{image_id}">
+                    <param name="image_id" style="template"
+                        type="csapi:uuid">
+                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN" title="Image ID">
+                            <p>Image ID stored through the image API.
+                                Typically a UUID.</p>
+                        </wadl:doc>
+                    </param>
+                    <method href="#getImage"/>
+                    <method href="#updateImage"/>
+                    <method href="#deleteImage"/>
+                    <resource id="file" path="file">
+                        <method href="#storeImageFile"/>
+                        <method href="#getImageFile"/>
+                    </resource>
+                    <resource id="Tags" path="tags">
+                        <resource path="{tag}">
+                            <param name="tag" style="template"
+                                type="xsd:string">
+                                <wadl:doc
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   xml:lang="EN" title="Tag">
+                                   <p>Image tag.</p>
+                                </wadl:doc>
+                            </param>
+                            <method href="#addImageTag"/>
+                            <method href="#deleteImageTag"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+
+    <!--*******************************************************-->
+    <!--               Resource Types                          -->
+    <!--*******************************************************-->
+
+    <resource_type id="ImageList">
+        <method href="#listImages"/>
+    </resource_type>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+
+    <method name="POST" id="createImage">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+            title="Create Image">
+            <p>Creates a virtual machine (VM) image. </p>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json"
+                element="image">
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Images name">
+                        <p>Name for the image. The name of an image is
+                            not unique to a Glance node. The API
+                            cannot expect users to know the names of
+                            images owned by others.</p>
+                    </wadl:doc>
+                </param>
+                <param name="id" style="plain" type="csapi:uuid"
+                    required="false">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Image ID">
+                        <p>The image ID.</p>
+
+                    </wadl:doc>
+                </param>
+                <param name="visibility" style="plain"
+                    type="xsd:string" required="false">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Visibility">
+                        <p>Image visibility. Public or private.
+                            Default is public.</p>
+
+                    </wadl:doc>
+                </param>
+                <param name="tags" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Tags">
+                        <p>Image tags.</p>
+
+                    </wadl:doc>
+                </param>
+                <doc xml:lang="EN">
+                    <xsdxt:code href="samples/image-create-req.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">Successful HTTP response is 201.
+                    Created with a Location header that contains the
+                    newly-created URI for the image. Response body
+                    represents the created image entity. <xsdxt:code
+                        href="samples/image-create-response.json"/>
+                </doc>
+                <param name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Image Location">
+                        <p>The location for the image identified by a
+                            URI. </p>
+                    </wadl:doc>
+                    <link resource_type="#createImage" rel="self"/>
+                </param>
+            </representation>
+        </response>
+    </method>
+
+    <method name="PATCH" id="updateImage">
+        <wadl:doc xml:lang="EN" title="Update Image"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Updates a specified image. </para>
+            <para>Request body must conform to the
+                'application/openstack-images-v2.0-json-patch' media
+                type.</para>
+            <para>You can also use the PATCH method to add or remove
+                image properties. </para>
+            <para>For information about the PATCH method, see <link
+                    xlink:href="http://docs.openstack.org/api/openstack-image-service/2.0/content/appendix-b-http-patch-media-types.html"
+                    >Appendix B: HTTP PATCH media types</link>.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json"
+                element="image">
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Images name">
+                        <p>Name for the image. The name of an image is
+                            not unique to a Glance node. The API
+                            cannot expect users to know the names of
+                            images owned by others.</p>
+                    </wadl:doc>
+                </param>
+                <param name="id" style="plain" type="csapi:uuid"
+                    required="false">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Image ID">
+                        <p>The image ID.</p>
+
+                    </wadl:doc>
+                </param>
+                <param name="visibility" style="plain"
+                    type="xsd:string" required="false">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Visibility">
+                        <p>Image visibility. Public or private.
+                            Default is public.</p>
+                    </wadl:doc>
+                </param>
+                <param name="tags" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                        xml:lang="EN" title="Tags">
+                        <p>Image tags.</p>
+                    </wadl:doc>
+                </param>
+                <doc xml:lang="EN">
+                    <xsdxt:code href="samples/image-update-req.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/image-details-response.json"/>
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <!-- Get Image -->
+    <method name="GET" id="getImage">
+        <wadl:doc xml:lang="EN" title="Get Image Details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets details for a specified image. </para>
+            <para>Response body is a single image entity.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/image-details-response.json"/>
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listImages">
+        <wadl:doc xml:lang="EN" title="List Images"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists public virtual machine (VM)
+                images.</para>
+            <para>This call returns a subset of the larger collection
+                of images and a link that you can use to get the next
+                set of images. You should always check for the
+                presence of a 'next' link and use it as the URI in a
+                subsequent HTTP GET request. You should follow this
+                pattern until a 'next' link is no longer provided. The
+                next link preserves any query parameters that you send
+                in your initial request. You can use the 'first' link
+                to jump back to the first page of the collection. If
+                you prefer to paginate through images manually, use
+                the limit and marker parameters. </para>
+            <para>The list operation accepts several types of query
+                parameters that let you filter the results of the
+                returned collection. </para>
+            <para>A client can provide direct comparison filters using
+                most image attributes, such as name=Ubuntu,
+                visibility=public, and so on. A client cannot filter
+                on tags or anything defined as a 'link' in the
+                json-schema, such as self, file, or schema. </para>
+            <para>You can use the 'size_min' and 'size_max' query
+                parameters to perform greater-than and less-than
+                filtering of images based on their 'size' attribute.
+                The size is measured in bytes and refers to the size
+                of an image when it is stored on disk.</para>
+            <para>For example, sending a size_min filter of 1048576
+                and size_max of 4194304 filters the container to
+                include only images that are between 1 and 4 MBs in
+                size.</para>
+            <para>You can sort the results of this operation by using
+                the 'sort_key' and 'sort_dir' parameters. The API uses
+                the natural sorting of whatever image attribute is
+                provided as the 'sort_key'. </para>
+        </wadl:doc>
+        <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="limit" style="query" required="false"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Use to request a specific page size. Expect
+                        a response to a limited request to return
+                        between zero and limit items. The typical
+                        pattern of limit and marker is to make an
+                        initial limited request and then to use the ID
+                        of the last image from the response as the
+                        marker parameter in a subsequent limited
+                        request.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="marker" style="query" required="false"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Specifies the ID of the last-seen image. The
+                        typical pattern of limit and marker is to make
+                        an initial limited request and then to use the
+                        ID of the last image from the response as the
+                        marker parameter in a subsequent limited
+                        request. </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="name" style="query" required="false"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Filter parameter. Name of the image as a
+                        string.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="visibility" style="query" required="false"
+                type="imageapi:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Filter parameter. Image visibility. Either
+                        public or private.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="status" style="query" required="false"
+                type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Filter parameter. The image status, such as
+                        queued, saving, active, killed, deleted, and
+                        pending_delete.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="size_min" style="query" required="false"
+                type="xsd:string" default="ALL">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Filter parameter. Value of the minimum size
+                        of the image in bytes.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="size_max" style="query" required="false"
+                type="xsd:string" default="ALL">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Filter parameter. Value of the maximum size
+                        of the image in bytes.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="sort_key" style="query" required="false"
+                type="xsd:string" default="ALL">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Sort key. All image attributes can be used
+                        as the sort_key, except tags and link
+                        attributes. Default is 'created_at.'</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="sort_dir" style="query" required="false"
+                type="xsd:string" default="ALL">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Sort direction. Valid values are 'asc'
+                        (ascending) and 'desc' (descending). Default
+                        is 'desc.'</para>
+                </wadl:doc>
+            </param>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/image-list-response.json"/>
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteImage">
+        <wadl:doc xml:lang="EN" title="Delete Image"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Deletes a specified image. </para>
+            <para>You cannot delete images with the 'protected'
+                attribute set to true (boolean); the response returns
+                the HTTP 403 status code.</para>
+            <para>You must first set the 'protected' attribute to
+                false (boolean) and then perform the delete. The
+                response is empty and returns the HTTP 204 status
+                code. </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="PUT" id="storeImageFile">
+        <wadl:doc xml:lang="EN" title="Upload Binary Image Data"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Uploads binary image data. </para>
+            <para>An image record must exist before a client can store
+                binary image data with it. </para>
+            <para>Content-Type must be 'application/octet-stream.'
+                Complete contents of request body is stored and is
+                accessible in its entirety by issuing a GET request to
+                the same URI. </para>
+            <para>Returns HTTP 204 status code. </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="GET" id="getImageFile">
+        <wadl:doc xml:lang="EN" title="Download Binary Image Data"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Downloads binary image data.</para>
+            <para>Response body contains the raw binary data that
+                represents the actual virtual disk. The Content-Type
+                header is 'application/octet-stream.' The Content-MD5
+                header contains an MD5 checksum of the image data.
+                Clients are encouraged to verify the integrity of the
+                image data they receive by using this checksum.</para>
+            <para>If no image data exists, returns the HTTP 204 status
+                code. </para>
+        </wadl:doc>
+        <response status="200"/>
+    </method>
+    <method name="POST" id="addImageTag">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+            title="Add Image Tag">
+            <p xmlns="http://www.w3.org/1999/xhtml">Adds a specified
+                tag to a specified image. </p>
+        </wadl:doc>
+        <response status="200"/>
+    </method>
+    <method name="DELETE" id="deleteImageTag">
+        <wadl:doc xml:lang="EN" title="Delete Image Tag"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Deletes a specified tag from a
+                specified image. </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+</application>
