@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- (C) 2012 OpenStack LLC., All Rights Reserved -->
-
+<!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:db="http://docbook.org/ns/docbook"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
@@ -16,51 +14,56 @@
     http://docs.openstack.org/common/api/v1.0
     xsd/api-common.xsd
     ">
-
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                      The ID for the tenant or account in a multi-tenancy cloud.
-                    </p></doc>
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml"> The
+                            ID for the tenant or account in a
+                            multi-tenancy cloud. </p>
+                    </doc>
                 </param>
                 <resource id="Servers" path="servers">
                     <method href="#createServer"/>
-
                     <resource path="{server_id}">
-                        <param name="server_id" style="template" type="csapi:UUID">
-                            <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                              The UUID for the server of interest to you.
-                            </p></doc>
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   > The UUID for the server of
+                                   interest to you. </p>
+                            </doc>
                         </param>
                         <param name="OS-DCF:diskConfig" style="plain">
-                          <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                            Acceptable values are 'AUTO' and 'MANUAL'.
-                          </p></doc>
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   > Acceptable values are 'AUTO' and
+                                   'MANUAL'. </p>
+                            </doc>
                         </param>
                         <method href="#getServer"/>
                         <method href="#updateServer"/>
-
                         <resource path="action">
                             <method href="#resize"/>
                             <method href="#rebuild"/>
                         </resource>
-
                     </resource>
-
                     <resource path="detail">
                         <method href="#getServersDetailed"/>
                     </resource>
                 </resource>
-
                 <resource id="images" path="images">
                     <resource path="{image_id}">
                         <param name="image_id" style="template">
                             <doc>
-                                <p xmlns="http://www.w3.org/1999/xhtml">
-                                  The UUID for the image of interest to you.
-                                </p>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   >The UUID for the image of interest
+                                   to you. </p>
                             </doc>
                         </param>
                         <method href="#getImage"/>
@@ -74,153 +77,208 @@
             </resource>
         </resource>
     </resources>
-
     <method name="POST" id="createServer">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Creates a server.
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates a server.
             </p>
         </wadl:doc>
         <request>
             <param name="OS-DCF:diskConfig" style="plain">
-              <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                Acceptable values are 'AUTO' and 'MANUAL'.
-              </p></doc>
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">
+                        Acceptable values are 'AUTO' and 'MANUAL.'
+                    </p>
+                </doc>
             </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-create-request.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-post-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-post-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="202">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-create-response.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-post-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-post-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="PUT" id="updateServer">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Updates a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Updates a
+                specified server. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-update-request.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-update-put-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-update-put-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-show.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-update-put-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-update-put-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="POST" id="resize">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Resizes a server.
+            <p xmlns="http://www.w3.org/1999/xhtml"> Resizes a server.
             </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-resize.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-resize-post-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-resize-post-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="202"/>
     </method>
-
     <method name="POST" id="rebuild">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Rebuilds a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Rebuilds a
+                specified server. </p>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-rebuild.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-action-rebuild-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-action-rebuild-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="202">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-show.json" />
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-action-rebuild-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-DCF/server-action-rebuild-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="GET" id="getServer">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-              Describes a specific server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Shows information
+                for a specified server. </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-show.json" />
+                    <xsdxt:code
+                        href="samples/os-disk-config-server-show.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="GET" id="getServersDetailed">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-              Lists servers.
+            <p xmlns="http://www.w3.org/1999/xhtml"> Lists servers.
             </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-server-list.json" />
+                    <xsdxt:code
+                        href="samples/os-disk-config-server-list.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="GET" id="getImage">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-              Describes a specific image.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Describes a
+                specific image. </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-image-show.json" />
+                    <xsdxt:code
+                        href="samples/os-disk-config-image-show.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
     <method name="GET" id="getImagesDetailed">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-              Lists images.
+            <p xmlns="http://www.w3.org/1999/xhtml"> Lists images.
             </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/os-disk-config-image-list.json" />
+                    <xsdxt:code
+                        href="samples/os-disk-config-image-list.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
-
 </application>
