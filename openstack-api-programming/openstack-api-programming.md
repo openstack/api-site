@@ -123,7 +123,7 @@ The OpenStack Compute API is implemented using a convention known as "representa
 
 The following example shows how to use the **curl** command to obtain the authentication token using the HTTP GET method:
 
-	$ curl -d '{"passwordCredentials": {"username": "joe", "password": "shhh"}}' -H "Content-type: application/json" http://localhost:5000/v2.0/tokens
+	$ curl -d '{"auth": {"passwordCredentials": {"username": "joe", "password": "shhh"}}}' -H "Content-type: application/json" http://localhost:5000/v2.0/tokens
 
 Note: For a cloud provider running Diablo, the command also requires 
 
@@ -218,7 +218,7 @@ When you want to obtain an API token you can do it using two standard Python mod
 
 	ospassword = "shhh"
 
-	params = '{"auth":{"passwordCredentials":{"username": "admin", "password":"openstack"}, "tenantId":"YourTenantIdGoesHere"}}'
+	params = '{"auth":{"passwordCredentials":{"username": "%s", "password":"%s"}, "tenantId":"YourTenantIdGoesHere"}}' % (osuser, ospassword)
 
 	headers = {"Content-Type": "application/json"}
  
