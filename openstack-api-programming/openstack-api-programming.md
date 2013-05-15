@@ -218,7 +218,7 @@ When you want to obtain an API token you can do it using two standard Python mod
 
 	ospassword = "shhh"
 
-	params = '{"auth":{"passwordCredentials":{"username": "admin", "password":"openstack"}, "tenantId":"YourTenantIdGoesHere"}}'
+	params = '{"auth":{"passwordCredentials":{"username": "%s", "password":"%s"}, "tenantId":"YourTenantIdGoesHere"}}' % (osuser, ospassword)
 
 	headers = {"Content-Type": "application/json"}
  
