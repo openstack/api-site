@@ -123,7 +123,7 @@ The OpenStack Compute API is implemented using a convention known as "representa
 
 The following example shows how to use the **curl** command to obtain the authentication token using the HTTP GET method:
 
-	$ curl -d '{"passwordCredentials": {"username": "joe", "password": "shhh"}}' -H "Content-type: application/json" http://localhost:5000/v2.0/tokens
+	$ curl -d '{"auth": {"passwordCredentials": {"username": "joe", "password": "shhh"}}}' -H "Content-type: application/json" http://localhost:5000/v2.0/tokens
 
 Note: For a cloud provider running Diablo, the command also requires 
 
