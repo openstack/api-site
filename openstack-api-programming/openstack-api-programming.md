@@ -1,8 +1,9 @@
-# Programming OpenStack Compute API with Shell and Python, 1st ed.
+# OpenStack Compute API Developer Guide for Shell and Python
+1st edition
 
 Written by Jacek Artymiak
 
-Copyright (c) 2011 Rackspace, Inc.
+Copyright (c) 2011-2013 OpenStack Foundation
 
 ---
 
