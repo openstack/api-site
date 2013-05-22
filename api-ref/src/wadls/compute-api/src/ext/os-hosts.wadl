@@ -4,6 +4,7 @@
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
@@ -11,47 +12,61 @@
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                    type="csapi:UUID">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The ID for the tenant or account in a
+                            multi-tenancy cloud. </p>
+                    </doc>
                 </param>
                 <resource path="os-hosts">
                     <method href="#listHosts"/>
                     <resource path="{host_name}">
-                        <param name="host_name" style="template">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > The name of the host of interest
-                                   to you. </p></doc>
+                        <param name="host_name" style="template"
+                            type="xsd:string">
+                            <doc>
+                                <p xmlns="http://www.w3.org/1999/xhtml">The name of the host of interest
+                                   to you. </p>
+                            </doc>
                         </param>
-
                         <method href="#showHost"/>
                         <method href="#updateHost"/>
-
                         <resource path="startup">
                             <method href="#startup"/>
                         </resource>
-
                         <resource path="shutdown">
                             <method href="#shutdown"/>
                         </resource>
-
                         <resource path="reboot">
                             <method href="#reboot"/>
                         </resource>
-
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="listHosts">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists all hosts.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists all hosts. </p>
         </wadl:doc>
+        <request>
+            <param name="service" style="query" required="false"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The service name. To filter the returned
+                        list by service name, specify
+                            <literal>?service={service}</literal> in
+                        the URI.</p>
+                </doc>
+            </param>
+            <param path="?zone={zone}" name="zone" style="query"
+                required="false" type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The zone. To filter the returned list by
+                        zone, specify <literal>?zone={zone}</literal>
+                        in the URI. </p>
+                </doc>
+            </param>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
@@ -69,21 +84,25 @@
             </representation>
         </response>
     </method>
-
     <method name="PUT" id="updateHost">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Enables a host or
-                puts it in maintenance mode. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Enables a host or puts it in maintenance mode.
+            </p>
         </wadl:doc>
         <request>
-            <param name="status" style="plain" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">Valid
-                        values are 'enable' or 'disable'. </p></doc>
+            <param name="status" style="plain" required="true"
+                type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Valid values are 'enable' or 'disable.'
+                    </p>
+                </doc>
             </param>
             <param name="maintenance_mode" style="plain"
-                required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">Valid
-                        values are 'enable' or 'disable'. </p></doc>
+                required="true" type="xsd:string">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Valid values are 'enable' or
+                        'disable.'</p>
+                </doc>
             </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
@@ -120,8 +139,7 @@
 
     <method name="GET" id="showHost">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Shows information
-                for a specified host. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Shows information for a specified host. </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -140,12 +158,31 @@
             </representation>
         </response>
     </method>
-
+    <method name="GET" id="startup">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
+            <p xmlns="http://www.w3.org/1999/xhtml">Starts a host. </p>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hosts/host-get-startup.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hosts/host-get-startup.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
 
     <method name="GET" id="shutdown">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Shuts down a host.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Shuts down a host. </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -169,8 +206,7 @@
 
     <method name="GET" id="reboot">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Reboots a host.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Reboots a host. </p>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
