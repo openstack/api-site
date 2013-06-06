@@ -1,5 +1,4 @@
-# OpenStack Compute API Developer Guide for Shell and Python
-1st edition
+# OpenStack Compute API v1.1 Developer Guide for Shell and Python, 1st edition
 
 Written by Jacek Artymiak
 
