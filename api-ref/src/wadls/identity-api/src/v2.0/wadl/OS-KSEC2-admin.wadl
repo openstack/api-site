@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent OS-KSEC2-admin.wadl             -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+<!ENTITY % common  SYSTEM "common.ent">
+%common;
+]>
+
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
+    xmlns:OS-KSEC2="http://docs.openstack.org/identity/api/ext/OS-KSEC2/v1.0"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xsi:schemaLocation="http://docs.openstack.org/identity/api/v2.0 ../xsd/api.xsd
+        http://docs.openstack.org/common/api/v1.0 ../xsd/api-common.xsd
+        http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
+        http://docs.openstack.org/identity/api/ext/OS-KSEC2/v1.0 ../xsd/OS-KSEC2-credentials.xsd
+        ">
+
+    <grammars>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
+        <include href="../xsd/OS-KSEC2-credentials.xsd"/>
+    </grammars>
+
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+
+    <!-- We should use SSL in production -->
+    <resources base="http://localhost:35357">
+        <resource id="version" path="v2.0">
+            <param name="X-Auth-Token" style="header"
+                type="xsd:string" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">A valid authentication
+                    token.</wadl:doc>
+            </param>
+            <resource id="users" path="users">
+                <resource id="userById" path="{userId}">
+                    <param name="userId" style="template"
+                        required="true" type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN">The user ID.</wadl:doc>
+                    </param>
+                    <resource id="user-OS-KSADM" path="OS-KSADM">
+                        <resource id="userCredentials"
+                            path="credentials">
+                            <method href="#addUserCredential"/>
+                            <resource id="credentials">
+                                <param name="marker" style="query"
+                                   required="false" type="xsd:string">
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xml:lang="EN">The ID of the last
+                                   item in the previous
+                                   list.</wadl:doc>
+                                </param>
+                                <param name="limit" style="query"
+                                   required="false" type="xsd:int">
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xml:lang="EN"><para>The page size.
+                                   </para></wadl:doc>
+                                </param>
+                                <method href="#listCredentials"/>
+                                <resource id="userCredentialsByType"
+                                   path="OS-KSEC2:ec2Credentials">
+                                   <method
+                                   href="#listCredentialsByType"/>
+                                   <method
+                                   href="#updateUserCredential"/>
+                                   <method
+                                   href="#deleteUserCredential"/>
+                                   <method href="#getUserCredential"/>
+                                </resource>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+
+    <!-- User Credentials-->
+    <method name="POST" id="addUserCredential">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add User Credentials">
+            <para role="shortdesc">Adds a credential to a user.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="OS-KSEC2:ec2Credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/xml"
+                element="OS-KSEC2:ec2Credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &postPutFaults; &getFaults; </method>
+
+    <method name="GET" id="listCredentials">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Credentials">
+            <para role="shortdesc">Lists credentials.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="identity:credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/credentialswithec2.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/credentialswithec2.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+
+    <method name="GET" id="listCredentialsByType">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Credentials by Type">
+            <para role="shortdesc">Lists credentials by type.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="identity:credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSADM/samples/credentials.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSADM/samples/credentials.xml"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+
+    <method name="POST" id="updateUserCredential">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update User Credentials">
+            <para role="shortdesc">Updates credentials for a specified
+                user.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="OS-KSEC2:ec2Credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml"
+                element="OS-KSEC2:ec2Credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &postPutFaults; &getFaults; </method>
+
+    <method name="DELETE" id="deleteUserCredential">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete User Credentials">
+            <para role="shortdesc">Deletes user credentials.</para>
+        </wadl:doc>
+        <response status="204"/> &commonFaults; &postPutFaults;
+        &getFaults; </method>
+
+    <method name="GET" id="getUserCredential">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get User Credentials">
+            <para role="shortdesc">Gets user credentials.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="OS-KSEC2:ec2Credentials">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSEC2/samples/ec2Credentials.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+</application>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent RAX-GRPADM.wadl           -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+<!ENTITY % common  SYSTEM "common.ent">
+    %common;
+]>
+
+<application xmlns="http://wadl.dev.java.net/2009/02"
+   xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
+   xmlns:grp="http://docs.rackspace.com/identity/api/ext/RAX-KSGRP/v1.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:db="http://docbook.org/ns/docbook"
+   xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+
+    <grammars>
+        <include href="../xsd/api.xsd"/>
+    </grammars>
+
+    <resources base="http://localhost:35357">
+        <resource id="version" path="v2.0">
+            <resource id="RAX-GRPADM" path="RAX-GRPADM">
+                <resource id="groups" path="groups" type="#GroupList">
+                    <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
+                        <doc xml:lang="EN" title="Auth Token">
+                            <p xmlns="http://www.w3.org/1999/xhtml">
+                                A valid authentication token for an administrative user.
+                            </p>
+                        </doc>
+                    </param>
+                    <method href="#addGroup"/>
+                    <resource id="group" path="{groupId}">
+                        <param name="groupId" style="template" type="xsd:string">
+                            <doc xml:lang="EN" title="GroupId">
+                                <p xmlns="http://www.w3.org/1999/xhtml">
+                                    The group ID.
+                                </p>
+                            </doc>
+                        </param>
+                        <method href="#getGroup"/>
+                        <method href="#updateGroup"/>
+                        <method href="#getUsersForGroup"/>
+                        <method href="#deleteGroup"/>
+                        <resource id="users" path="users" type="#UserList">
+                            <resource id="user" path="{userId}">
+                                <param name="userId" style="template" type="xsd:string">
+                                    <doc xml:lang="EN" title="GroupId">
+                                        <p xmlns="http://www.w3.org/1999/xhtml">
+                                            The user ID.
+                                        </p>
+                                    </doc>
+                                </param>
+                                <method href="#addUserToGroup"/>
+                                <method href="#removeUserFromGroup"/>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+    <resource_type id="UserList">
+        <doc xml:lang="EN" title="Volume List">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                A list of users.
+            </p>
+        </doc>
+        <method href="#getUsersForGroup"/>
+    </resource_type>
+
+    <resource_type id="GroupList">
+        <doc xml:lang="EN" title="Volume List">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                A list of groups.
+            </p>
+        </doc>
+        <param name="marker" style="query" required="false"
+            type="xsd:string">
+            <doc>The ID of the last item in the previous
+                list.</doc>
+        </param>
+        <param name="limit" style="query" required="false"
+            type="xsd:int">
+            <doc>The page size. </doc>
+        </param>
+        <param name="name"  style="query" required="false" type="xsd:string"><doc>The group name.</doc></param>
+        <method href="#listGroups"/>
+    </resource_type>
+
+    <!-- Methods -->
+    <method id="listGroups"  name="GET">
+        <doc xml:lang="EN" title="List Groups">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Lists groups.
+            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Lists available groups. Use the
+                <parameter>name</parameter> to display only
+                those groups that match a specified name.
+            </p>
+        </doc>
+        <response status="200 203">
+            <representation mediaType="application/xml" element="grp:groups">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/groups.xml"/>
+                </doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                       path="/grp:groups/atom:link[@rel='next']/@href">
+                    <link resource_type="#GroupList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                       path="/grp:groups/atom:link[@rel='previous']/@href">
+                    <link resource_type="#GroupList" rel="previous"/>
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/groups.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- commonFaults -->
+        &commonFaults;
+    </method>
+    <method id="addGroup"    name="POST">
+        <doc xml:lang="EN" title="Add a New Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Adds a group.
+            </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml" element="grp:group">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group-for-create.xml" />
+                </doc>
+                <param name="group" style="plain" required="true"
+                    type="grp:GroupForCreate"
+                    path="/grp:group"/>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group-for-create.json" />
+                </doc>
+            </representation>
+        </request>
+        <response status="201">
+            <param name="Location" style="header"
+                required="true" type="xsd:anyURI">
+                <doc xml:lang="EN" title="Location Header">
+                    <p xmlns="http://www.w3.org/1999/xhtml">
+                        The full URL to the new group is
+                        returned in the <code>Location</code>
+                        header.
+                    </p>
+                </doc>
+            </param>
+            <representation mediaType="application/xml" element="grp:group">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group.xml" />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group.json" />
+                </doc>
+            </representation>
+        </response>
+        &commonFaults;
+        &getFaults;
+        &postPutFaults;
+    </method>
+    <method id="getGroup"    name="GET">
+        <doc xml:lang="EN" title="Get Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Get group by id.
+            </p>
+        </doc>
+        <response status="200 203">
+            <representation mediaType="application/xml" element="grp:group">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group.xml"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- Common, GET -->
+        &commonFaults;
+        &getFaults;
+    </method>
+    <method id="updateGroup"    name="PUT">
+        <doc xml:lang="EN" title="Update Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Updates a group.
+            </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml" element="grp:group">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group-for-update.xml" />
+                </doc>
+                <param name="group" style="plain" required="true"
+                    type="grp:GroupForUpdate"
+                    path="/grp:group"/>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group-for-update.json" />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml" element="grp:group">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group-updated.xml" />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/group-updated.json" />
+                </doc>
+            </representation>
+        </response>
+        &commonFaults;
+        &getFaults;
+        &postPutFaults;
+    </method>
+    <method id="deleteGroup" name="DELETE">
+        <doc xml:lang="EN" title="Delete Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Deletes a group.
+            </p>
+        </doc>
+        <response status="204"/>
+        <!-- Common, GET -->
+        &commonFaults;
+        &getFaults;
+    </method>
+    <method id="getUsersForGroup" name="GET">
+        <doc xml:lang="EN" title="Get Users for Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Lists users for a group.
+            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                A list of users that belong to a specified group.
+            </p>
+        </doc>
+        <request>
+            <param name="marker" style="query" required="false" type="xsd:string"/>
+            <param name="limit"  style="query" required="false" type="xsd:int"/>
+        </request>
+        <response status="200 203">
+            <representation mediaType="application/xml" element="identity:users">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/users.xml"/>
+                </doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                       path="/identity:users/atom:link[@rel='next']/@href">
+                    <link resource_type="#UserList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                       path="/identity:users/atom:link[@rel='previous']/@href">
+                    <link resource_type="#UserList" rel="previous"/>
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="../RAX-GRPADM/samples/users.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- commonFaults -->
+        &commonFaults;
+    </method>
+    <method id="addUserToGroup" name="PUT">
+        <doc xml:lang="EN" title="Add User to Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Adds a user to a group.
+            </p>
+        </doc>
+        <response status="204"/>
+        <!-- Common, GET -->
+        &commonFaults;
+        &getFaults;
+    </method>
+    <method id="removeUserFromGroup" name="DELETE">
+        <doc xml:lang="EN" title="Remove User from Group">
+            <p xmlns="http://www.w3.org/1999/xhtml" role="shortdesc">
+                Removes a user from a group.
+            </p>
+        </doc>
+        <response status="204"/>
+        <!-- Common, GET -->
+        &commonFaults;
+        &getFaults;
+    </method>
+</application>
