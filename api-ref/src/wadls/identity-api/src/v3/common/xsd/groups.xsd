@@ -14,57 +14,62 @@
     xmlns:atom="http://www.w3.org/2005/Atom"
     targetNamespace="http://docs.openstack.org/identity/api/v3"
 >
-
     <!-- Import ATOM specific schema definitions -->
     <import vc:minVersion="1.1" namespace="http://www.w3.org/2005/Atom"
             schemaLocation="atom/atom.xsd" />
-   <include schemaLocation="entity.xsd"/>
+    <include schemaLocation="entity.xsd"/>
 
 
     <!-- Complex Types -->
-    <complexType name="CredentialType">
+    <complexType name="GroupType">
         <sequence>
-            <element  ref="identity:links" />
+           <element  ref="identity:links" />
             <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
-        <attribute name="id" type="xsd:string" use="optional"/>
-        <attribute name="user_id" type="xsd:string" use="required"/>
-        <attribute name="project_id" type="xsd:string" use="optional"/>
-        <attribute name="blob" type="xsd:string" use="required"/>
+        <attribute name="id" type="xsd:string" />
+        <attribute name="name" type="xsd:string" />
+        <attribute name="description" type="xsd:string" />
+        <attribute name="domain_id" type="xsd:string" use="optional" />
         <anyAttribute namespace="##other" processContents="lax"/>
     </complexType>
 
-    <complexType name="CredentialsType">
+    <complexType name="GroupsType">
         <sequence>
-            <element name="credential" type="identity:CredentialType" minOccurs="0" maxOccurs="unbounded"/>
-            <element  ref="identity:links" />
+            <element name="group" type="identity:GroupType" />
+            <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
         <anyAttribute namespace="##other" processContents="lax"/>
     </complexType>
 
+
     <!-- Elements -->
-    <element name="credential" type="identity:CredentialType"  >
+    <element name="group" type="identity:GroupType">
         <annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+            </xsd:documentation>
+            <xsd:appinfo>
+              <xsdxt:samples>
+                <xsdxt:sample>
+                  <xsdxt:code type="application/xml" href="../samples/group.xml" />
+                </xsdxt:sample>
+                <xsdxt:sample>
+                  <xsdxt:code type="application/json" href="../samples/group.json" />
+                </xsdxt:sample>
+              </xsdxt:samples>
+            </xsd:appinfo>
+        </annotation>
+    </element>
+    <element name="groups" type="identity:GroupsType">
+       <annotation>
             <xsd:documentation
                     xml:lang="EN"
                     xmlns="http://www.w3.org/1999/xhtml">
                 <p>
-                    An authentication credential.
+                    A list of groups.
                 </p>
             </xsd:documentation>
         </annotation>
     </element>
 
-    <element name="credentials" type="identity:CredentialsType"  >
-        <annotation>
-            <xsd:documentation
-                    xml:lang="EN"
-                    xmlns="http://www.w3.org/1999/xhtml">
-                <p>
-                    A list of authentication credentials.
-                </p>
-            </xsd:documentation>
-        </annotation>
-    </element>
 
 </schema>

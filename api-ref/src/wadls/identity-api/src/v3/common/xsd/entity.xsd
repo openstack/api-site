@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../xslt/schema.xslt"?>
+
+<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:identity="http://docs.openstack.org/identity/api/v3"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    targetNamespace="http://docs.openstack.org/identity/api/v3"
+>
+
+    <!-- Import ATOM specific schema definitions -->
+
+    <import namespace="http://www.w3.org/2005/Atom" schemaLocation="atom/atom.xsd" />
+
+
+
+    <complexType name="LinksType" >
+	<sequence>
+	      <element ref="atom:link" minOccurs="0" maxOccurs="unbounded"  />
+	</sequence>
+    </complexType>
+
+    <element  name="links"  type="identity:LinksType" />
+
+      <!-- Complex Types -->
+    <complexType name="EntityType" abstract="true">
+        <annotation>
+            <xsd:documentation
+                xml:lang="EN"
+                xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    Base type for a Identity entitity
+                </p>
+            </xsd:documentation>
+        </annotation>
+        <sequence>
+           <element  ref="identity:links" />
+        </sequence>
+        <attribute name="id" type="xsd:string" use="optional">
+            <annotation>
+                <xsd:documentation
+                    xml:lang="EN"
+                    xmlns="http://www.w3.org/1999/xhtml">
+                    <p>
+                        An ID uniquely identifying the  entity. This usually comes from the back-end store.
+                        This value is guaranteed to be unique and immutable (it will never change).
+                    </p>
+                </xsd:documentation>
+            </annotation>
+        </attribute>
+        <attribute name="name" type="xsd:string" use="required">
+            <annotation>
+                <xsd:documentation
+                    xml:lang="EN"
+                    xmlns="http://www.w3.org/1999/xhtml">
+                    <p>
+                        The name of the entity
+                    </p>
+                </xsd:documentation>
+            </annotation>
+        </attribute>
+        <attribute name="enabled" type="xsd:boolean" use="optional" default="true">
+            <annotation>
+                <xsd:documentation
+                        xml:lang="EN"
+                        xmlns="http://www.w3.org/1999/xhtml">
+                    <p>
+                        An boolean signifying if the entity is enabled or not.
+                    </p>
+                </xsd:documentation>
+            </annotation>
+        </attribute>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+
+</schema>

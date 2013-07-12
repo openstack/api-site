@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <!-- (C) 2011 OpenStack LLC., All Rights Reserved -->
+ <!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
-<!-- Import Common XML Entities -->
-<!-- -->
-<!-- You can resolve the entites with xmllint -->
-<!-- -->
-<!-- xmllint -noent OS-KSADM-admin.wadl -->
+<!-- Import Common XML Entities                            -->
+<!--                                                       -->
+<!-- You can resolve the entites with xmllint              -->
+<!--                                                       -->
+<!-- xmllint -noent OS-KSADM-admin.wadl                    -->
 <!--*******************************************************-->
 <!DOCTYPE application [
 <!ENTITY % common SYSTEM "../common/common.ent">
@@ -18,511 +18,560 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3 ../common/xsd/api.xsd
+    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3.0 ../common/xsd/api.xsd
     http://docs.openstack.org/common/api/v1.0 ../common/xsd/api-common.xsd
     http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
     ">
-
     <grammars>
-        <include href="../common/xsd/api.xsd"/> 
+        <include href="../common/xsd/api.xsd"/>
         <include href="../common/xsd/api-common.xsd"/>
     </grammars>
-
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
-
     <!-- We should use SSL in production -->
     <resources base="http://localhost:35357">
         <!-- FYI: double slash needed in path to get a single slash to display -->
-        <resource id="versions" path="//v3/versions">
-            <method href="#listVersions"/>
-        </resource>
-
-        <resource id="tokens" path="//v3/tokens">
-            <method href="#authenticateTokens"/> 
-            <method href="#validateTokens"/>
-            <method href="#checkTokens"/>
-            <method href="#revokeTokens"/> 
-        </resource>
-
-        <resource id="catalog" path="//v3/services">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <param name="type" style="query" type="xsd:string" required="false">
-                <doc>
-                    Filters by service type. Available service types include compute, ec2, 
-                    image, and identity.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Enables you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Sets the page size for paging through the list. Default page size is 30.
-                </doc>
-            </param>
-            <method href="#listServices"/>
-            <method href="#createService"/>
+        <resource id="versions" path="v3">
+            <method href="#getVersionDetails"/>
+            <resource id="tokens" path="tokens">
+                <method href="#authenticate"/>
+                <method href="#validateTokens"/>
+                <method href="#checkTokens"/>
+                <method href="#revokeTokens"/>
+            </resource>
+            <resource id="catalog" path="services"> &authHeader;
+                    <method href="#createService"/>
+                <method href="#listServices"/>
                 <resource id="catalogID" path="{service_id}">
-                    <param name="service_id" style="template" type="capi:uuid" required="true">
-                        <doc>The service ID.</doc>
+                    <param name="service_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            service ID.</wadl:doc>
                     </param>
                     <method href="#getService"/>
                     <method href="#updateService"/>
                     <method href="#deleteService"/>
                 </resource>
-        </resource> 
-        <resource id="endpoints" path="//v3/endpoints">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listEndpoints"/>
-            <method href="#createEndpoint"/>
+            </resource>
+            <resource id="endpoints" path="endpoints"> &authHeader;
+                    <method href="#createEndpoint"/>
+                <method href="#listEndpoints"/>
+            </resource>
             <resource id="endpointsID" path="{endpoint_id}">
-                <param name="endpoint_id" style="template" type="capi:uuid" required="true">
-                    <doc>The endpoint ID.</doc>
+                <param name="endpoint_id" style="template"
+                    type="capi:uuid" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        >The endpoint ID.</wadl:doc>
                 </param>
                 <method href="#updateEndpoint"/>
                 <method href="#deleteEndpoint"/>
             </resource>
-        </resource>
-        
-        <resource id="domains" path="//v3/domains">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listDomains"/>
-            <method href="#createDomain"/>
-            <resource id="domainID" path="{domain_id}">
-                <param name="domain_id" style="template" type="capi:uuid" required="true">
-                    <doc>The domain ID.</doc>
-                </param>
-                <method href="#getDomain"/>
-                <method href="#updateDomain"/>
-                <method href="#deleteDomain"/>
-                <resource id="domainIDUserIDRoles" path="users/{user_id}/roles">
-                    <param name="user_id" style="template" type="capi:uuid" required="true">
-                        <doc>The user ID.</doc>
+            <resource id="domains" path="domains"> &authHeader;
+                    <method href="#createDomain"/>
+                <method href="#listDomains"/>
+                <resource id="domainID" path="{domain_id}">
+                    <param name="domain_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            domain ID.</wadl:doc>
                     </param>
-                    <method href="#listDomainUserRoles"/>
-                    <resource id="domainIDUserIDRoleID" path="{role_id}">
-                        <param name="role_id" style="template" type="capi:uuid" required="true">
-                            <doc>The role ID.</doc>
+                    <method href="#getDomain"/>
+                    <method href="#updateDomain"/>
+                    <method href="#deleteDomain"/>
+                    <resource id="domainIDUserIDRoles"
+                        path="users/{user_id}/roles">
+                        <param name="user_id" style="template"
+                            type="capi:uuid" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                >The user ID.</wadl:doc>
                         </param>
-                        <method href="#grantDomainUserRole"/>
-                        <method href="#checkDomainUserRole"/>
-                        <method href="#revokeDomainUserRole"/>
-                    </resource>
-                </resource>
-                <resource id="domainIDGroupIDRoles" path="groups/{group_id}/roles">
-                    <param name="group_id" style="template" type="capi:uuid" required="true">
-                        <doc>The group ID.</doc>
-                    </param>
-                    <method href="#listDomainGroupRoles"/>
-                    <resource id="domainIDGroupIDRoleID" path="{role_id}">
-                        <param name="role_id" style="template" type="capi:uuid" required="true">
-                            <doc>The role ID.</doc>
-                        </param>
-                        <method href="#grantDomainGroupRole"/>
-                        <method href="#checkDomainGroupRole"/>
-                        <method href="#revokeDomainGroupRole"/>
-                    </resource>
-                </resource>
-            </resource>
-        </resource>
-        
-        <resource id="projects" path="//v3/projects">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listProjects"/>
-            <method href="#createProject"/>
-            <resource id="projectID" path="{project_id}">
-                <param name="project_id" style="template" type="xsd:string" required="true">
-                    <doc>Project to be acted on</doc>
-                </param>
-                <method href="#getProject"/>
-                <method href="#updateProject"/>
-                <method href="#deleteProject"/>
-                <resource id="projectIDUsers" path="users">
-                    <method href="#listProjectUsers"/>
-                    <resource id="projectIDUserIDRoles" path="{user_id}/roles">
-                        <param name="user_id" style="template" type="capi:uuid" required="true">
-                            <doc>The user ID.</doc>
-                        </param>
-                        <method href="#listProjectUserRoles"/>
-                        <resource id="projectIDUserIDRoleID" path="{role_id}">
-                            <param name="role_id" style="template" type="capi:uuid" required="true">
-                                <doc>The role ID.</doc>
+                        <method href="#listDomainUserRoles"/>
+                        <resource id="domainIDUserIDRoleID"
+                            path="{role_id}">
+                            <param name="role_id" style="template"
+                                type="capi:uuid" required="true">
+                                <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   >The role ID.</wadl:doc>
                             </param>
-                            <method href="#grantProjectUserRole"/>
-                            <method href="#checkProjectUserRole"/>
-                            <method href="#revokeProjectUserRole"/>
+                            <method href="#grantDomainUserRole"/>
+                            <method href="#checkDomainUserRole"/>
+                            <method href="#revokeDomainUserRole"/>
                         </resource>
                     </resource>
-                </resource>                
-                <resource id="projectIDGroupIDRoles" path="groups/{group_id}/roles">
-                    <param name="group_id" style="template" type="capi:uuid" required="true">
-                        <doc>The group ID.</doc>
-                    </param>
-                    <method href="#listProjectGroupRoles"/>
-                </resource>
-                <resource id="projectIDGroupIDRoleID" path="{role_id}">
-                    <param name="role_id" style="template" type="capi:uuid" required="true">
-                        <doc>The role ID.</doc>
-                    </param>
-                    <method href="#grantProjectGroupRole"/>
-                    <method href="#checkProjectGroupRole"/>
-                    <method href="#revokeProjectGroupRole"/>
-                </resource>
-            </resource>
-        </resource>
-        
-        <resource id="users" path="//v3/users">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listUsers"/>
-            <method href="#createUser"/>
-            <resource id="userID" path="{user_id}">
-                <param name="user_id" style="template" type="capi:uuid" required="true">
-                    <doc>The user ID.</doc>
-                </param>
-                <method href="#getUser"/>
-                <method href="#updateUser"/>
-                <method href="#deleteUser"/>
-                <resource id="userIDGroups" path="groups">
-                    <method href="#listUserGroups"/>
-                </resource>
-                <resource id="userIDProjects" path="projects">
-                    <method href="#listUserProjects"/>
-                </resource>
-                <resource id="userIDRoles" path="roles">
-                    <method href="#listUserRoles"/>
-                </resource>
-            </resource>
-        </resource>
-        
-        <resource id="groups" path="//v3/groups">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listGroups"/>
-            <method href="#createGroup"/>
-            <resource id="groupID" path="{group_id}">
-                <param name="group_id" style="template" type="capi:uuid" required="true">
-                    <doc>The group ID.</doc>
-                </param>
-                <method href="#getGroup"/>
-                <method href="#updateGroup"/>
-                <method href="#deleteGroup"/>
-                <resource id="groupIDUsers" path="users">
-                    <method href="#listGroupUsers"/>
-                    <resource id="groupIDUserIDs" path="{user_id}">
-                        <param name="user_id" style="template" type="capi:uuid" required="true">
-                            <doc>The user ID.</doc>
+                    <resource id="domainIDGroupIDRoles"
+                        path="groups/{group_id}/roles">
+                        <param name="group_id" style="template"
+                            type="capi:uuid" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                >The group ID.</wadl:doc>
                         </param>
-                        <method href="#addGroupUser"/>
-                        <method href="#deleteGroupUser"/>
-                        <method href="#checkGroupUser"/>
+                        <method href="#listDomainGroupRoles"/>
+                        <resource id="domainIDGroupIDRoleID"
+                            path="{role_id}">
+                            <param name="role_id" style="template"
+                                type="capi:uuid" required="true">
+                                <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   >The role ID.</wadl:doc>
+                            </param>
+                            <method href="#grantDomainGroupRole"/>
+                            <method href="#checkDomainGroupRole"/>
+                            <method href="#revokeDomainGroupRole"/>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
-        </resource>
-
-        <resource id="credentials" path="//v3/credentials">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listCredentials"/>
-            <method href="#createCredential"/>
-            <resource id="credentialID" path="{credential_id}">
-                <param name="credential_id" style="template" type="capi:uuid" required="true">
-                    <doc>The credential ID.</doc>
-                </param>
-                <method href="#getCredential"/>
-                <method href="#updateCredential"/>
-                <method href="#deleteCredential"/>
-            </resource>
-        </resource>
-        
-        <resource id="roles" path="//v3/roles">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listRoles"/>
-            <method href="#createRole"/>
-            <resource id="roleID" path="{role_id}">
-                <param name="role_id" style="template" type="capi:uuid" required="true">
-                    <doc>The role ID.</doc>
-                </param>
-                <method href="#getRole"/>
-                <method href="#updateRole"/>
-                <method href="#deleteRole"/>
-                <resource id="roleIDUsers" path="users">
-                    <method href="#listRoleUsers"/>
+            <resource id="projects" path="projects"> &authHeader;
+                    <method href="#createProject"/>
+                <method href="#listProjects"/>
+                <resource id="projectID" path="{project_id}">
+                    <param name="project_id" style="template"
+                        type="xsd:string" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            project ID.</wadl:doc>
+                    </param>
+                    <method href="#getProject"/>
+                    <method href="#updateProject"/>
+                    <method href="#deleteProject"/>
+                    <resource id="projectIDUsers" path="users">
+                        &listProjectUsersParams; <method
+                            href="#listProjectUsers"/>
+                        <resource id="projectIDUserIDRoles"
+                            path="{user_id}/roles">
+                            <param name="user_id" style="template"
+                                type="capi:uuid" required="true">
+                                <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   >The user ID.</wadl:doc>
+                            </param>
+                            <method href="#listProjectUserRoles"/>
+                            <resource id="projectIDUserIDRoleID"
+                                path="{role_id}">
+                                <param name="role_id" style="template"
+                                   type="capi:uuid" required="true">
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   >The role ID.</wadl:doc>
+                                </param>
+                                <method href="#grantProjectUserRole"/>
+                                <method href="#checkProjectUserRole"/>
+                                <method href="#revokeProjectUserRole"
+                                />
+                            </resource>
+                        </resource>
+                    </resource>
+                    <resource id="projectIDGroupIDRoles"
+                        path="groups/{group_id}/roles">
+                        <param name="group_id" style="template"
+                            type="capi:uuid" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                >The group ID.</wadl:doc>
+                        </param>
+                        <method href="#listProjectGroupRoles"/>
+                    </resource>
+                    <resource id="projectIDGroupIDRoleID"
+                        path="{role_id}">
+                        <param name="role_id" style="template"
+                            type="capi:uuid" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                >The role ID.</wadl:doc>
+                        </param>
+                        <method href="#grantProjectGroupRole"/>
+                        <method href="#checkProjectGroupRole"/>
+                        <method href="#revokeProjectGroupRole"/>
+                    </resource>
                 </resource>
             </resource>
-        </resource>
-        
-        <resource id="policies" path="//v3/policies">
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <method href="#listPolicies"/>
-            <method href="#createPolicy"/>
-            <resource id="policyID" path="{policy_id}">
-                <param name="policy_id" style="template" type="capi:uuid" required="true">
-                    <doc>The policy ID.</doc>
-                </param>
-                <method href="#getPolicy"/>
-                <method href="#updatePolicy"/>
-                <method href="#deletePolicy"/>
+            <resource id="users" path="users"> &authHeader; <method
+                    href="#createUser"/>
+                <method href="#listUsers"/>
+                <resource id="userID" path="{user_id}">
+                    <param name="user_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            user ID.</wadl:doc>
+                    </param>
+                    <method href="#getUser"/>
+                    <method href="#updateUser"/>
+                    <method href="#deleteUser"/>
+                    <resource id="userIDGroups" path="groups">
+                        <method href="#listUserGroups"/>
+                    </resource>
+                    <resource id="userIDProjects" path="projects">
+                        <method href="#listUserProjects"/>
+                    </resource>
+                    <resource id="userIDRoles" path="roles">
+                        &listUserRolesParams; <method
+                            href="#listUserRoles"/>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="groups" path="groups">
+                <method href="#createGroup"/>
+                <method href="#listGroups"/>
+                <resource id="groupID" path="{group_id}">
+                    <param name="group_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            group ID.</wadl:doc>
+                    </param>
+                    <method href="#getGroup"/>
+                    <method href="#updateGroup"/>
+                    <method href="#deleteGroup"/>
+                    <resource id="groupIDUsers" path="users">
+                        &listGroupUsersParams; <method
+                            href="#listGroupUsers"/>
+                        <resource id="groupIDUserIDs" path="{user_id}">
+                            <param name="user_id" style="template"
+                                type="capi:uuid" required="true">
+                                <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   >The user ID.</wadl:doc>
+                            </param>
+                            <method href="#addGroupUser"/>
+                            <method href="#deleteGroupUser"/>
+                            <method href="#checkGroupUser"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="credentials" path="credentials">
+                <method href="#createCredential"/>
+                <method href="#listCredentials"/>
+                <resource id="credentialID" path="{credential_id}">
+                    <param name="credential_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            credential ID.</wadl:doc>
+                    </param>
+                    <method href="#getCredential"/>
+                    <method href="#updateCredential"/>
+                    <method href="#deleteCredential"/>
+                </resource>
+            </resource>
+            <resource id="roles" path="roles"> &authHeader; <method
+                    href="#createRole"/>
+                <method href="#listRoles"/>
+                <resource id="roleID" path="{role_id}">
+                    <param name="role_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            role ID.</wadl:doc>
+                    </param>
+                    <method href="#getRole"/>
+                    <method href="#updateRole"/>
+                    <method href="#deleteRole"/>
+                    <resource id="roleIDUsers" path="users">
+                        &listRoleUsersParams; <method
+                            href="#listRoleUsers"/>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="policies" path="policies"> &authHeader;
+                    <method href="#createPolicy"/>
+                <method href="#listPolicies"/>
+                <resource id="policyID" path="{policy_id}">
+                    <param name="policy_id" style="template"
+                        type="capi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            policy ID.</wadl:doc>
+                    </param>
+                    <method href="#getPolicy"/>
+                    <method href="#updatePolicy"/>
+                    <method href="#deletePolicy"/>
+                </resource>
             </resource>
         </resource>
     </resources>
-    
+
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
 
     <!--Version Operations-->
-    <method name="GET" id="listVersions">
-        <doc xml:lang="EN" title="List Versions">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists versions.</p>
-        </doc>
-        &commonFaults;
-        &getFaults;
-    </method> 
+
+    <method name="GET" id="getVersionDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Version Details">
+            <p xmlns="http://www.w3.org/1999/xhtml"> Gets details
+                about this specific version of the API. </p>
+        </wadl:doc> &commonFaults; &getFaults; <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/version-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/version-resp.xml"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
     <!--Token Operations-->
-    <method name="POST" id="authenticateTokens">
-        <doc xml:lang="EN" title="Authenticate to Generate a Token">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Authenticates and generates a token.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml"> 
-               Returns a token, if successful. Each REST request requires the inclusion of a 
-                specific authorization token HTTP x-header, defined as <code>X-Auth-Token</code>.
-                Clients obtain <code>X-Auth-Token</code> and the URL endpoints for other service APIs 
-                by supplying their valid credentials to the authentication service.
-            </p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                A REST interface provides client authentication by using the POST method, with 
-                <code>auth/tokens</code> supplied as the path. The body of the request must include a 
-                payload of credentials including the authentication method and, optionally, the 
-                authorization scope.  The scope includes either a project or a domain.  If both project 
-                and domain are included, an <code>HTTP 400 Bad Request</code> results, because a token 
-                cannot be simultaneously scoped as both a project and a domain.
-            </p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <important>
-                        <para>
-                            If the optional scope is not included and the authenticating user has a 
-                            defined default project (the user's <code>default_project_id</code> attribute),
-                            then that default project is treated as the preferred authorization scope.
-                        </para>
-                        <para>
-                            If no default project is defined, the token is issued without an explicit 
-                            scope of authorization.
-                        </para>
-                    </important>
-                </wadl:doc>
-            </p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Provide one of the following sets of credentials to authenticate:
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <itemizedlist spacing="compact">
-                        <listitem>
-                            <para>
-                                User ID and password.
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                User ID and password with optional scope (project ID).
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                User ID and password with optional scope (domain ID and project name).
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                User ID and password with optional scope (domain name and project name).
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                User name, password, and domain ID.
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                User name, password, and domain name.
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                Token.
-                            </para>
-                        </listitem>
-                    </itemizedlist>
-                </wadl:doc>
-            </p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                The following examples demonstrate authentication requests with several kinds of 
-                credentials.
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <note>
-                        <para>
-                            With password authentication, <code>user ID</code> uniquely identifies the user.  
-                            However, <code>user name</code> uniquely identifies the user only when used in  
-                            conjunction with a <code>domain ID</code> or a <code>domain name</code>.
-                        </para>
-                        <para>
-                            With token authentication, the <code>token</code> uniquely identifies the user. 
-                            This method is typically used in combination with a request to change 
-                            authorization scope.
-                        </para>
-                        <para>
-                            If <code>scope</code> is included, <code>project id</code> uniquely identifies the 
-                            <code>project</code>. However, <code>project name</code> uniquely identifies 
-                            the <code>project</code> only when used in conjunction with a 
-                            <code>domain ID</code> or a <code>domain name</code>.
-                        </para>
-                    </note>
-                </wadl:doc>
-            </p>
-        </doc>
+    <method name="POST" id="authenticate">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Authenticate">
+            <para role="shortdesc">Authenticates and generates a
+                token.</para>
+            <para>Returns a token, if successful. Each REST request
+                requires the inclusion of a specific authorization
+                token HTTP x-header, defined as
+                    <code>X-Auth-Token</code>. Clients obtain
+                    <code>X-Auth-Token</code> and the URL endpoints
+                for other service APIs by supplying their valid
+                credentials to the authentication service. </para>
+            <para>A REST interface provides client authentication by
+                using the POST method, with <code>auth/tokens</code>
+                supplied as the path. The body of the request must
+                include a payload of credentials including the
+                authentication method and, optionally, the
+                authorization scope. The scope includes either a
+                project or a domain. If both project and domain are
+                included, an <code>HTTP 400 Bad Request</code>
+                results, because a token cannot be simultaneously
+                scoped as both a project and a domain. </para>
+            <important>
+                <para>If the optional scope is not included and the
+                    authenticating user has a defined default project
+                    (the user's <code>default_project_id</code>
+                    attribute), then that default project is treated
+                    as the preferred authorization scope. </para>
+                <para>If no default project is defined, the token is
+                    issued without an explicit scope of authorization.
+                </para>
+            </important>
+            <para>Provide one of the following sets of credentials to
+                authenticate:</para>
+            <itemizedlist spacing="compact">
+                <listitem>
+                    <para>User ID and password. </para>
+                </listitem>
+                <listitem>
+                    <para>User ID and password with optional scope
+                        (project ID). </para>
+                </listitem>
+                <listitem>
+                    <para>User ID and password with optional scope
+                        (domain ID and project name). </para>
+                </listitem>
+                <listitem>
+                    <para>User ID and password with optional scope
+                        (domain name and project name). </para>
+                </listitem>
+                <listitem>
+                    <para>User name, password, and domain ID. </para>
+                </listitem>
+                <listitem>
+                    <para>User name, password, and domain name.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>Token. </para>
+                </listitem>
+            </itemizedlist>
+            <para>The following examples demonstrate authentication
+                requests with several kinds of credentials.</para>
+            <note>
+                <para>With password authentication, <code>user
+                        ID</code> uniquely identifies the user.
+                    However, <code>user name</code> uniquely
+                    identifies the user only when used in conjunction
+                    with a <code>domain ID</code> or a <code>domain
+                        name</code>. </para>
+                <para>With token authentication, the
+                        <code>token</code> uniquely identifies the
+                    user. This method is typically used in combination
+                    with a request to change authorization scope. </para>
+                <para>If <code>scope</code> is included, <code>project
+                        id</code> uniquely identifies the
+                        <code>project</code>. However, <code>project
+                        name</code> uniquely identifies the
+                        <code>project</code> only when used in
+                    conjunction with a <code>domain ID</code> or a
+                        <code>domain name</code>. </para>
+            </note>
+            <para>As the following example responses show, the
+                response to an authentication request returns the
+                token ID in the <code>X-Subject-Token</code> header
+                instead of in the token data. </para>
+            <note>
+                <itemizedlist>
+                    <listitem><para>If the call has no explicit
+                            authorization scope, the response does not
+                            contain the <code>catalog</code>,
+                                <code>project</code>,
+                                <code>domain</code>, or
+                                <code>roles</code> fields. However,
+                            the response still uniquely identifies the
+                            user. </para></listitem><listitem>
+                        <para>A token scoped to a <code>project</code>
+                            also has both a service
+                                <code>catalog</code> and the user's
+                            roles applicable to the
+                                <code>project</code>.
+                        </para></listitem>
+                    <listitem>
+                        <para>A token scoped to a <code>domain</code>
+                            also has both a service
+                                <code>catalog</code> and the user's
+                            roles applicable to the
+                                <code>project</code>.
+                        </para></listitem><listitem>
+                        <para>Optionally, the identity service
+                            implementation might return an
+                                <code>authentication</code> attribute
+                            to indicate the supported authentication
+                            methods.
+                            </para></listitem><listitem><para>For
+                            authentication processes that require
+                            multiple round trips, the identity service
+                            implementation might return an <code>HTTP
+                                401 Not Authorized</code> error with
+                            additional information for the next
+                            authentication step.
+                    </para></listitem></itemizedlist></note>
+            <important>
+                <para>The following examples illustrate several
+                    possible HTTP 401 Unauthorized authentication
+                    errors. Other errors like HTTP 403 Forbidden and
+                    HTTP 409 Conflict are also possible. </para>
+            </important>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Authenticate (with User ID and Password) - Request: JSON">   
-                        <xsdxt:code href="../common/samples/TokenAuthPasswordIDRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Authenticate with User ID and Password: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthPasswordIDRequest.json"
+                        />
                     </xsdxt:sample>
-                    <xsdxt:sample title="Authenticate (with Domain ID, User Name, and Password) - Request: JSON">   
-                        <xsdxt:code href="../common/samples/TokenAuthPasswordNameRequest.json"/>
+                    <xsdxt:sample
+                        title="Authenticate with Domain ID, User Name, and Password: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthPasswordNameRequest.json"
+                        />
                     </xsdxt:sample>
-                    <xsdxt:sample title="Authenticate (with Domain Name, User Name, and Password) - Request: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthPasswordDomainRequest.json"/>
+                    <xsdxt:sample
+                        title="Authenticate with Domain Name, User Name, and Password: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthPasswordDomainRequest.json"
+                        />
                     </xsdxt:sample>
-                    <xsdxt:sample title="Authenticate (with Token) - Request: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthTokenRequest.json"/>
-                    </xsdxt:sample>  
-                    <xsdxt:sample title="Authenticate (with User ID, Password, and Scope: Project ID) - Request: JSON">   
-                        <xsdxt:code href="../common/samples/TokenAuthPasswordIDScopeProjIDRequest.json"/>
+                    <xsdxt:sample
+                        title="Authenticate with Token: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthTokenRequest.json"
+                        />
                     </xsdxt:sample>
-                    <xsdxt:sample title="Authenticate (with User ID, Password,and Scope: Domain ID and Project Name) - Request: JSON">   
-                        <xsdxt:code href="../common/samples/TokenAuthPasswordIDScopeProjNameRequest.json"/>
+                    <xsdxt:sample
+                        title="Authenticate with User ID, Password, and Scope: Project ID: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthPasswordIDScopeProjIDRequest.json"
+                        />
                     </xsdxt:sample>
-                    <xsdxt:sample title="Authenticate (with User ID, Password, and Scope: Domain Name and Project Name) - Request: JSON">   
-                        <xsdxt:code href="../common/samples/TokenAuthPasswordIDScopeProjDomainNameRequest.json"/>
+                    <xsdxt:sample
+                        title="Authenticate with User ID, Password, and Scope: Domain ID and Project Name: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthPasswordIDScopeProjNameRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                    <xsdxt:sample
+                        title="Authenticate with User ID, Password, and Scope: Domain Name and Project Name: JSON Request">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthPasswordIDScopeProjDomainNameRequest.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <important>
-                        <para>
-                            As the following example responses show, the response to an authentication request
-                            returns the token ID in the <code>X-Subject-Token</code> header instead of in 
-                            the token data.
-                        </para>
-                    </important>
-                    <note>
-                        <para>
-                            If the call has no explicit authorization scope, the response does not contain
-                            <code>catalog</code>, <code>project</code>, <code>domain</code>, or 
-                            <code>roles</code>. However, the response can still be used to uniquely 
-                            identify the user.
-                        </para>
-                    </note>
-                    <xsdxt:sample title="Authenticate Without Scope - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthNoScopeResponse.json"/>	
+
+                    <xsdxt:sample
+                        title="Authenticate without Scope: JSON Response">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthNoScopeResponse.json"
+                        />
                     </xsdxt:sample>
-                    <note>
-                        <para>
-                            A token scoped to a <code>project</code> also has both a service 
-                            <code>catalog</code> and the user's roles applicable to the <code>project</code>.
-                        </para>
-                    </note>
-                    <xsdxt:sample title="Authenticate with Project Scope - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthScopeProjectResponse.json"/>	
+                    <xsdxt:sample
+                        title="Authenticate with Project Scope: JSON Response">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthScopeProjectResponse.json"
+                        />
                     </xsdxt:sample>
-                    <note>
-                        <para>
-                            A token scoped to a <code>domain</code> also has both a service 
-                            <code>catalog</code> and the user's roles applicable to the <code>project</code>.
-                        </para>
-                    </note>
-                    <xsdxt:sample title="Authenticate with Domain Scope - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthScopeDomainResponse.json"/>	
+                    <xsdxt:sample
+                        title="Authenticate with Domain Scope: JSON Response">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthScopeDomainResponse.json"
+                        />
                     </xsdxt:sample>
-                    
-                    <important> 
-                        <para>
-                            The following examples illustrate several possible HTTP 401 Unauthorized 
-                            authentication errors.
-                            Other errors like HTTP 403 Forbidden and HTTP 409 Conflict are also possible.
-                        </para>
-                    </important> 
-                    <xsdxt:sample title="Error: Basic HTTP 401 Not Authorized - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthFail401aResponse.json"/>	
+                    <xsdxt:sample
+                        title="Error: Basic HTTP 401 Not Authorized: JSON Response">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthFail401aResponse.json"
+                        />
                     </xsdxt:sample>
-                    <note>
-                        <para>
-                            Optionally, the identity service implementation might return an
-                            <code>authentication</code> attribute to indicate the supported authentication
-                            methods.
-                        </para>
-                    </note>
-                    <xsdxt:sample title="Error: HTTP 401 Not Authorized with Supported Methods - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthFail401bResponse.json"/>	
+                    <xsdxt:sample
+                        title="Error: HTTP 401 Not Authorized with Supported Methods: JSON Response">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthFail401bResponse.json"
+                        />
                     </xsdxt:sample>
-                    <note>
-                        <para>
-                            For authentication processes that require multiple round trips, the identity
-                            service implementation might return an <code>HTTP 401 Not Authorized</code> 
-                            error with additional information for the next authentication step.
-                        </para>
-                    </note>
-                    <xsdxt:sample title="Error: HTTP 401 Not Authorized with Next Step Information - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthFail401cResponse.json"/>	
+                    <xsdxt:sample
+                        title="Error: HTTP 401 Not Authorized with Next Step Information: JSON Response">
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthFail401cResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
+        </response> &commonFaults; &getFaults; </method>
 
     <method name="GET" id="validateTokens">
-        <doc xml:lang="EN" title="Validate Token">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates a specified token.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">To validate a token by using the Cloud Identity API,
-                pass your own token in the <code>X-Auth-Token</code> header and the token to be validated
-                in the <code>X-Subject-Token</code> header.  The Cloud Identity service returns the 
-                exact same response as when the subject token was issued by <code>POST /auth/tokens</code>.
-            </p>
-        </doc>
-        <request>
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <param name="X-Subject-Token" style="header" type="xsd:string" required="true">
-                <doc>The token being acted on</doc>
-            </param>
-            <representation mediaType="application/json">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Validate Token">
+            <para role="shortdesc">Validates a specified token.</para>
+            <para>Pass your own token in the <code>X-Auth-Token</code>
+                header and the token to be validated in the
+                    <code>X-Subject-Token</code> header. The Identity
+                Service returns the same response as when the subject
+                token was issued by <code>POST /auth/tokens</code>.
+            </para>
+        </wadl:doc>
+        <request> &tokenParams; <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Validate Token - Request: JSON">
-                        <xsdxt:code href="../common/samples/TokenValidateRequest.txt"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/TokenValidateRequest.txt"
+                        />
+
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -530,1623 +579,1335 @@
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Validate Token - Response: JSON">
-                        <xsdxt:code href="../common/samples/TokenAuthNoScopeResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/TokenAuthNoScopeResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="HEAD" id="checkTokens">
-        <doc xml:lang="EN" title="Check a Token">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates a specified token. </p>
-            <p xmlns="http://www.w3.org/1999/xhtml"> This call is similar to <code>GET /auth/tokens</code>,
-                but no response body is provided, even in the <code>X-Subject-Token</code> header.  
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Check Token">
+            <para role="shortdesc">Validates a specified token. </para>
+            <para>This call is similar to <code>GET
+                    /auth/tokens</code>, but no response body is
+                provided, even in the <code>X-Subject-Token</code>
+                header. </para>
+            <important>
+                <para>The Identity service returns the same response
+                    as when the subject token was issued by <code>POST
+                        /auth/tokens</code>, even if an error occurs
+                    because the token is invalid. A 204 response
+                    indicates that the <code>X-Subject-Token</code> is
+                    valid. </para>
+            </important>
+        </wadl:doc>
+        <request> &tokenParams; <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <important>
-                        <para>
-                            The Identity service returns the exact same response as when the subject 
-                            token was issued by <code>POST /auth/tokens</code>, even if an error occurs
-                            because the token is invalid. A 204 response indicates that the 
-                            <code>X-Subject-Token</code> is valid.
-                        </para>
-                    </important>
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/TokenValidateRequest.txt"
+                        />
+                    </xsdxt:sample>
                 </wadl:doc>
-            </p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
-        <!--There is no request-->
-        <request>
-            <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
-                <doc>A valid authentication token for an administrative user.</doc>
-            </param>
-            <param name="X-Subject-Token" style="header" type="capi:uuid" required="true">
-                <doc>The token ID.</doc>
-            </param>
+            </representation>
         </request>
         <!--There is no response.  As noted above, an HTTP 204 indicates success-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="revokeTokens">
-        <doc xml:lang="EN" title="Revoke a Token">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Revokes a specified token.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This call is similar to <code>HEAD /auth/tokens</code>,
-                except that the <code>X-Subject-Token</code> token is immediately invalidated (regardless of the 
-                <code>expires_at</code> attribute).  An additional <code>X-Auth-Token</code> is not required.
-            </p>
-        </doc>
-        <!--There is no request-->
-        <!--There is no response-->
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Revoke Token">
+            <para role="shortdesc">Revokes a specified token.</para>
+            <para>This call is similar to <code>HEAD
+                    /auth/tokens</code>, except that the
+                    <code>X-Subject-Token</code> token is immediately
+                invalidated (regardless of the <code>expires_at</code>
+                attribute). An additional <code>X-Auth-Token</code> is
+                not required. </para>
+        </wadl:doc>
+        <request> &tokenParams; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/TokenValidateRequest.txt"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </request> &commonFaults; &getFaults; </method>
+
     <!--Catalog Operations-->
     <method name="GET" id="listServices">
-        <doc xml:lang="EN" title="List Services">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists services.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>type</code>"
-                or use the parameter "<code>page</code>" or "<code>per_page</code>" to control the display of 
-                the results.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Services">
+            <para role="shortdesc">Lists services.</para>
+        </wadl:doc>
         <!--No request body is provided-->
+        <request> &listServicesParams;</request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Services - Response: JSON">
-                        <xsdxt:code href="../common/samples/ServicesListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ServicesListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
     <method name="POST" id="createService">
-        <doc xml:lang="EN" title="Add a Service">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a service.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Service">
+            <para role="shortdesc">Adds a service.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Service - Request: JSON">   
-                        <xsdxt:code href="../common/samples/ServiceCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ServiceCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Service - Response: JSON">
-                        <xsdxt:code href="../common/samples/ServiceCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ServiceCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getService">
-        <doc xml:lang="EN" title="Get a Service">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified service.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Service Information">
+            <para role="shortdesc">Gets information for a specified
+                service.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get Service - Response: JSON">
-                        <xsdxt:code href="../common/samples/ServiceGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ServiceGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateService">
-        <doc xml:lang="EN" title="Update a Service">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified service.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Service">
+            <para role="shortdesc">Updates a specified service.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Service - Response: JSON">
-                        <xsdxt:code href="../common/samples/ServiceUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ServiceUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteService">
-        <doc xml:lang="EN" title="Delete a Service">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified service.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <warning>
-                        <para>
-                            Deleting a service when endpoints exist should either (1) delete all
-                            associated endpoints or (2) fail until endpoints are deleted. 
-                        </para>
-                    </warning>
-                </wadl:doc>
-            </p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Service">
+            <para role="shortdesc">Deletes a specified service.</para>
+            <warning>
+                <para>Deleting a service when endpoints exist should
+                    either (1) delete all associated endpoints or (2)
+                    fail until endpoints are deleted. </para>
+            </warning>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <!--Endpoint Operations-->
     <method name="GET" id="listEndpoints">
-        <doc xml:lang="EN" title="List Endpoints">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists available endpoints.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml"> Optionally, you can filter for "<code>interface</code>"
-                or "<code>service-id</code>".  You can also use the optional parameter 
-                "<code>page</code>" or "<code>per_page</code>" to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Endpoints">
+            <para role="shortdesc">Lists available endpoints.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="interface" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter by interface.
-                </doc>
-            </param>
-            <param name="service_id" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter by service_id.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <request> &listEndpointsParams; </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Endpoints - Response: JSON">
-                        <xsdxt:code href="../common/samples/EndpointsListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/EndpointsListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createEndpoint">
-        <doc xml:lang="EN" title="Add an Endpoint">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds an endpoint.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Endpoint">
+            <para role="shortdesc">Adds an endpoint.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Endpoint - Request: JSON">   
-                        <xsdxt:code href="../common/samples/EndpointCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/EndpointCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Endpoint - Response: JSON">
-                        <xsdxt:code href="../common/samples/EndpointCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/EndpointCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateEndpoint">
-        <doc xml:lang="EN" title="Update an Endpoint">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates an endpoint.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Endpoint">
+            <para role="shortdesc">Updates a specified
+                endpoint.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Endpoint - Response: JSON">
-                        <xsdxt:code href="../common/samples/EndpointUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/EndpointUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteEndpoint">
-        <doc xml:lang="EN" title="Delete an Endpoint">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes an endpoint.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Endpoint">
+            <para role="shortdesc">Deletes a specified
+                endpoint.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <!--Domain Operations-->
     <method name="GET" id="listDomains">
-        <doc xml:lang="EN" title="List Domains">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists domains.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>" or
-                "<code>enabled</code>".  You can also use the optional
-                parameter "<code>page</code>" or "<code>per_page</code>" to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Domains">
+            <para role="shortdesc">Lists domains.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on domain name.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled domains. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <request> &listDomainsParams; </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Domains - Response: JSON">
-                        <xsdxt:code href="../common/samples/DomainsListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainsListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createDomain">
-        <doc xml:lang="EN" title="Add a Domain">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Domain">
+            <para role="shortdesc">Adds a domain.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Domain - Request: JSON">   
-                        <xsdxt:code href="../common/samples/DomainCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Domain - Response: JSON">
-                        <xsdxt:code href="../common/samples/DomainCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getDomain">
-        <doc xml:lang="EN" title="Get a Domain">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Domain Information">
+            <para role="shortdesc">Gets information for a specified
+                domain.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get Domain - Response: JSON">
-                        <xsdxt:code href="../common/samples/DomainGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateDomain">
-        <doc xml:lang="EN" title="Update a Domain">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Domain">
+            <para role="shortdesc">Updates a specified domain.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Domain - Response: JSON">
-                        <xsdxt:code href="../common/samples/DomainUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteDomain">
-        <doc xml:lang="EN" title="Delete a Domain">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified domain.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml"> 
-                To minimize the risk of accidentally deleting a domain, you must first 
-                disable the domain by using the update domain API.  If you try to delete an enabled 
-                domain, the call returns an <code>HTTP 403 Forbidden</code> response.
-            </p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Domain">
+            <para role="shortdesc">Deletes a specified domain.</para>
+            <para>To minimize the risk of accidentally deleting a
+                domain, you must first disable the domain by using the
+                update domain API. If you try to delete an enabled
+                domain, the call returns an <code>HTTP 403
+                    Forbidden</code> response. </para>
+            <para>
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <warning>
-                        <para>
-                            Deleting a domain deletes all entities owned by it, such as users, groups,
-                            and projects, as well as any credentials and granted roles that relate
-                            to those entities.
-                        </para>
+                        <para>Deleting a domain deletes all entities
+                            owned by it, such as users, groups, and
+                            projects, as well as any credentials and
+                            granted roles that relate to those
+                            entities. </para>
                     </warning>
                 </wadl:doc>
-            </p>
-        </doc>
+            </para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-   
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listDomainUserRoles">
-        <doc xml:lang="EN" title="List a Domain's User's Roles">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists roles for a user on a domain.</p>
-         </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles for Domain User">
+            <para role="shortdesc">Lists roles for a user on a
+                domain.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Domain's User's Roles - Response: JSON">
-                        <xsdxt:code href="../common/samples/DomainListUserRolesResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainListUserRolesResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PUT" id="grantDomainUserRole">
-        <doc xml:lang="EN" title="Grant a Role to a Domain User">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Grants a role to a user on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Grant Role to Domain User">
+            <para role="shortdesc">Grants a role to a specified domain
+                user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="HEAD" id="checkDomainUserRole">
-        <doc xml:lang="EN" title="Check a Domain's User's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates that a user has a role on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Check Role for Domain User">
+            <para role="shortdesc">Validates that a user has a role on
+                a domain.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="revokeDomainUserRole">
-        <doc xml:lang="EN" title="Revoke a Domain's User's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Revokes a role from a user on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Revoke Role from Domain User">
+            <para role="shortdesc">Revokes a role from a specified
+                domain user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-   
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listDomainGroupRoles">
-        <doc xml:lang="EN" title="List a Domain's Group's Roles">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists roles for a group on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles for Domain Group">
+            <para role="shortdesc">Lists roles for a specified domain
+                group.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Domain's Group's Roles - Response: JSON">
-                        <xsdxt:code href="../common/samples/DomainListGroupRolesResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/DomainListGroupRolesResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PUT" id="grantDomainGroupRole">
-        <doc xml:lang="EN" title="Grant a Role to a Domain Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Grants a role to a group on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Grant Role to Domain Group">
+            <para role="shortdesc">Grants a specified role to a
+                specified domain group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="HEAD" id="checkDomainGroupRole">
-        <doc xml:lang="EN" title="Check a Domain's Group's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates that a group has a role on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Check Role for Domain Group">
+            <para role="shortdesc">Validates that a group has a role
+                on a domain.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="revokeDomainGroupRole">
-        <doc xml:lang="EN" title="Revoke a Domain's Group's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Revokes a role from a group on a domain.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Revoke Role from Domain Group">
+            <para role="shortdesc">Revokes a role from a group on a
+                domain.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <!--Project Operations-->
     <method name="GET" id="listProjects">
-        <doc xml:lang="EN" title="List Projects">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists projects.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>domain_id</code>",
-                "<code>enabled</code>", or "<code>name</code>".  You can also use the optional
-                parameter "<code>page</code>" or "<code>per_page</code>" to control the display of the 
-                results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Projects">
+            <para role="shortdesc">Lists projects.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="domain_id" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on domain_id.
-                </doc>
-            </param>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on project name.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled projects. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <request> &listProjectsParams; </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Projects - Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectsListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectsListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createProject">
-        <doc xml:lang="EN" title="Add a Project">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a project.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Project">
+            <para role="shortdesc">Adds a project.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Project - Request: JSON">   
-                        <xsdxt:code href="../common/samples/ProjectCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Project - Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getProject">
-        <doc xml:lang="EN" title="Get a Project">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified project.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Project Information">
+            <para role="shortdesc">Gets information for a specified
+                project.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get Project Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateProject">
-        <doc xml:lang="EN" title="Update a Project">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified project.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Project">
+            <para role="shortdesc">Updates a specified project.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Project - Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteProject">
-        <doc xml:lang="EN" title="Delete a Project">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified project.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Project">
+            <para role="shortdesc">Deletes a specified project.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-   
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listProjectUsers">
-        <doc xml:lang="EN" title="List a Project's Users">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">List users for a project.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>", 
-                "<code>enabled</code>", or "<code>email</code>" on user resources. You can also use the 
-                optional parameter "<code>page</code>" or "<code>per_page</code>" to control the display 
-                of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Project Users">
+            <para role="shortdesc">List users for a project.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a user's name.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled users. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="email" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a user's email.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Project's Users - Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectListUsersResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectListUsersResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listProjectUserRoles">
-        <doc xml:lang="EN" title="List a Project's User's Roles">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists roles for a user in a project.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles for Project User">
+            <para role="shortdesc">Lists roles for a user in a
+                project.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Project's User's Roles - Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectListUserRolesResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectListUserRolesResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PUT" id="grantProjectUserRole">
-        <doc xml:lang="EN" title="Grant a Role to a Project User">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Grants a role to a user on a project.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Grant Role to Project User">
+            <para role="shortdesc">Grants a role to a user on a
+                project.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="HEAD" id="checkProjectUserRole">
-        <doc xml:lang="EN" title="Check a Project's User's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates that a user has a specified role on a project.</p>
-       </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Check Role for Project User">
+            <para role="shortdesc">Validates that a user has a
+                specified role on a project.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="revokeProjectUserRole">
-        <doc xml:lang="EN" title="Revoke a Project's User's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Revokes a role from a project user.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Revoke Role from Project User">
+            <para role="shortdesc">Revokes a role from a project
+                user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listProjectGroupRoles">
-        <doc xml:lang="EN" title="List a Project's Group's Roles">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists roles for a project group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles for Project Group">
+            <para role="shortdesc">Lists roles for a project
+                group.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Project's Group's Roles - Response: JSON">
-                        <xsdxt:code href="../common/samples/ProjectListGroupRolesResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/ProjectListGroupRolesResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PUT" id="grantProjectGroupRole">
-        <doc xml:lang="EN" title="Grant a Role to a Project Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Grants a role to a project group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Grant Role to Project Group">
+            <para role="shortdesc">Grants a role to a project
+                group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="HEAD" id="checkProjectGroupRole">
-        <doc xml:lang="EN" title="Check a Project's Group's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates that a project group has a role.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Check Role for Project Group">
+            <para role="shortdesc">Validates that a project group has
+                a role.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="revokeProjectGroupRole">
-        <doc xml:lang="EN" title="Revoke a Project's Group's Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Revokes a role from a project group.</p>
-         </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Revoke Role from Project Group">
+            <para role="shortdesc">Revokes a role from a project
+                group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <!--User Operations-->
     <method name="GET" id="listUsers">
-        <doc xml:lang="EN" title="List Users">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists users.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>domain_id</code>",
-                "<code>enabled</code>", "<code>email</code>", or "<code>name</code>".  You can also use 
-                the optional parameter "<code>page</code>" or "<code>per_page</code>" to control the 
-                display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Users">
+            <para role="shortdesc">Lists users.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="domain_id" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a domain_id.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled users. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="email" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a user's email.
-                </doc>
-            </param>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a user's name.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <request> &listUsersParams; </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Users - Response: JSON">
-                        <xsdxt:code href="../common/samples/UsersListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UsersListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createUser">
-        <doc xml:lang="EN" title="Add a User">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a user.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add User">
+            <para role="shortdesc">Adds a user.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add User - Request: JSON">   
-                        <xsdxt:code href="../common/samples/UserCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add User - Response: JSON">
-                        <xsdxt:code href="../common/samples/UserCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getUser">
-        <doc xml:lang="EN" title="Get a User">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified user.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get User Information">
+            <para role="shortdesc">Gets information for a specified
+                user.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get User - Response: JSON">
-                        <xsdxt:code href="../common/samples/UserGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateUser">
-        <doc xml:lang="EN" title="Update a User">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified user.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Use this operation to update a user password or to enable or disable the user.  This  
-                operation might return the HTTP <code>501 Not Implemented</code> code if the back-end 
-                driver does not allow this functionality.
-            </p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update User">
+            <para role="shortdesc">Updates the password for or enables
+                or disables a specified user.</para>
+            <para>This operation might return the HTTP <code>501 Not
+                    Implemented</code> code if the back-end driver
+                does not allow this functionality. </para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update User - Response: JSON">
-                        <xsdxt:code href="../common/samples/UserUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteUser">
-        <doc xml:lang="EN" title="Delete a User">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified user.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete User">
+            <para role="shortdesc">Deletes a specified user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listUserProjects">
-        <doc xml:lang="EN" title="List a User's Projects">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">List projects for a user.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>" 
-                or "<code>enabled</code>" on project resources. You can also use the optional
-                parameter "<code>page</code>" or "<code>per_page</code>" to control the display of 
-                the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Projects for User">
+            <para role="shortdesc">List projects for a specified
+                user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a project's name.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled projects. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="type" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on type.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List User's Projects - Response: JSON">
-                        <xsdxt:code href="../common/samples/UserListProjectsResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserListProjectsResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listUserGroups">
-        <doc xml:lang="EN" title="List a User's Groups">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists groups for a specified user.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>" 
-                on group resources. You can also use the optional parameter "<code>page</code>" or 
-                "<code>per_page</code>" to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Groups for User">
+            <para role="shortdesc">Lists groups for a specified
+                user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a group's name.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List a User's Groups - Response: JSON">
-                        <xsdxt:code href="../common/samples/UserListGroupsResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserListGroupsResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listUserRoles">
-        <doc xml:lang="EN" title="List a User's Roles">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists roles for a specified user.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">You can also use the optional parameter
-                "<code>page</code>" or "<code>per_page</code>" to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles for User">
+            <para role="shortdesc">Lists roles for a specified
+                user.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List User's Roles - Response: JSON">
-                        <xsdxt:code href="../common/samples/UserListRolesResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/UserListRolesResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <!--Group Operations-->
     <method name="GET" id="listGroups">
-        <doc xml:lang="EN" title="List Groups">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists groups.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>domain_id</code>"
-                 or "<code>name</code>".  You can also use the optional parameter "<code>page</code>" or 
-                "<code>per_page</code>" to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Groups">
+            <para role="shortdesc">Lists groups.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="domain_id" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on domain_id.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
+        <request> &authHeader; &listGroupsParams;<representation
+                mediaType="application/json"/>
+            <representation mediaType="application/xml"/>
         </request>
+
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Groups - Response: JSON">
-                        <xsdxt:code href="../common/samples/GroupsListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/GroupsListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createGroup">
-        <doc xml:lang="EN" title="Add a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Group">
+            <para role="shortdesc">Adds a group.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Group - Request: JSON">   
-                        <xsdxt:code href="../common/samples/GroupCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/GroupCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Group - Response: JSON">
-                        <xsdxt:code href="../common/samples/GroupCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/GroupCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getGroup">
-        <doc xml:lang="EN" title="Get a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Group Information">
+            <para role="shortdesc">Gets information for a specified
+                group.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get Group - Response: JSON">
-                        <xsdxt:code href="../common/samples/GroupGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/GroupGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateGroup">
-        <doc xml:lang="EN" title="Update a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified group.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Use this operation to update the name or description of a group.  This operation might 
-                return the HTTP <code>501 Not Implemented</code> code if the back-end driver does not 
-                allow this functionality.
-            </p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Group">
+            <para role="shortdesc">Updates a specified group.</para>
+            <para>Use this operation to update the name or description
+                of a group. This operation might return the HTTP
+                    <code>501 Not Implemented</code> code if the
+                back-end driver does not allow this functionality.
+            </para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Group - Response: JSON">
-                        <xsdxt:code href="../common/samples/GroupUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/GroupUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteGroup">
-        <doc xml:lang="EN" title="Delete a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Group">
+            <para role="shortdesc">Deletes a specified group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="PUT" id="addGroupUser">
-        <doc xml:lang="EN" title="Add a User to a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a user to a group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add User to Group">
+            <para role="shortdesc">Adds a user to a specified
+                group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteGroupUser">
-        <doc xml:lang="EN" title="Remove a User from a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Removes a user from a group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Remove User from Group">
+            <para role="shortdesc">Removes a user from a group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="HEAD" id="checkGroupUser">
-        <doc xml:lang="EN" title="Check if User is in a Group">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Validates that a user is in a group.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Check User Membership in Group">
+            <para role="shortdesc">Validates that a user is in a
+                group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listGroupUsers">
-        <doc xml:lang="EN" title="List a Group's Users">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists users in a group.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>", 
-                "<code>enabled</code>", or "<code>email</code>" on group resources. You can also use the
-                optional parameter "<code>page</code>" or "<code>per_page</code>" to control the display 
-                of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Users in Group">
+            <para role="shortdesc">Lists the users in a specified
+                group.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on a group's name.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled groups. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="email" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on email.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <request> &listUserGroupsParams; </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Group's Users - Response: JSON">
-                        <xsdxt:code href="../common/samples/GroupListUsersResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/GroupListUsersResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <!--Credential Operations-->
     <method name="GET" id="listCredentials">
-        <doc xml:lang="EN" title="List Credentials">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists credentials.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can use the parameter 
-                "<code>page</code>" or "<code>per_page</code>" to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
-        <request>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Credentials">
+            <para role="shortdesc">Lists credentials.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
+        <request> &authHeader; &listCredentialsParams; </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Credentials - Response: JSON">
-                        <xsdxt:code href="../common/samples/CredentialsListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/CredentialsListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createCredential">
-        <doc xml:lang="EN" title="Add a Credential">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a credential.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml"> 
-                The following example shows creating an EC2 style credential where the credentials are a
-                combination of access_key and secret. Other credentials (such as access_key) can be 
-                supported simply by changing the content of the key data.
-            </p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Credential">
+            <para role="shortdesc">Adds a credential.</para>
+            <para>The following example shows creating an EC2 style
+                credential where the credentials are a combination of
+                access_key and secret. Other credentials, such as
+                access_key, can be supported simply by changing the
+                content of the key data. </para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Credential - Request: JSON">   
-                        <xsdxt:code href="../common/samples/CredentialCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/CredentialCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Credential - Response: JSON">
-                        <xsdxt:code href="../common/samples/CredentialCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/CredentialCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getCredential">
-        <doc xml:lang="EN" title="Get a Credential">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified credential.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Credential Information">
+            <para role="shortdesc">Gets information for a specified
+                credential.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get Credential - Response: JSON">
-                        <xsdxt:code href="../common/samples/CredentialGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/CredentialGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateCredential">
-        <doc xml:lang="EN" title="Update a Credential">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified credential.</p>
-       </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Credential">
+            <para role="shortdesc">Updates a specified
+                credential.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Credential - Response: JSON">
-                        <xsdxt:code href="../common/samples/CredentialUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/CredentialUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteCredential">
-        <doc xml:lang="EN" title="Delete a Credential">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified credential.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Credential">
+            <para role="shortdesc">Deletes a specified
+                credential.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-   
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <!--Role Operations-->
     <method name="GET" id="listRoles">
-        <doc xml:lang="EN" title="List Roles">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists roles.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>". 
-                You can also use the optional parameter "<code>page</code>" or "<code>per_page</code>"
-                to control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on name.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles">
+            <para role="shortdesc">Lists roles.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
+        <request> &listRolesParams; </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Roles - Response: JSON">
-                        <xsdxt:code href="../common/samples/RolesListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/RolesListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createRole">
-        <doc xml:lang="EN" title="Add a Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a role.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Role">
+            <para role="shortdesc">Adds a role.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Role - Request: JSON">   
-                        <xsdxt:code href="../common/samples/RoleCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/RoleCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Role - Response: JSON">
-                        <xsdxt:code href="../common/samples/RoleCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/RoleCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getRole">
-        <doc xml:lang="EN" title="Get a Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified role.</p>
-       </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Role Information">
+            <para role="shortdesc">Gets information for a specified
+                role.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get a Role - Response: JSON">
-                        <xsdxt:code href="../common/samples/RoleGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/RoleGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updateRole">
-        <doc xml:lang="EN" title="Update a Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified role.</p>
-       </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Role">
+            <para role="shortdesc">Updates a specified role.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Role - Response: JSON">
-                        <xsdxt:code href="../common/samples/RoleUpdateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/RoleUpdateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deleteRole">
-        <doc xml:lang="EN" title="Delete a Role">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified role.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Role">
+            <para role="shortdesc">Deletes a specified role.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        <response status="204"> </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="listRoleUsers">
-        <doc xml:lang="EN" title="List a Role's Users">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists users that have a specified role.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>name</code>", 
-                "<code>enabled</code>", or "<code>email</code>" on role resources. You can also use the
-                optional parameter "<code>page</code>" or "<code>per_page</code>" to control the display 
-                of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Users for Role">
+            <para role="shortdesc">Lists users with a specified
+                role.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <request>
-            <param name="name" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on the role's name.
-                </doc>
-            </param>
-            <param name="enabled" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter for enabled or disabled roles. Values are "true" or "false". 
-                </doc>
-            </param>
-            <param name="email" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on email.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Role's Users - Response: JSON">
-                        <xsdxt:code href="../common/samples/RoleListUsersResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/RoleListUsersResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <!--Policy Operations-->
     <method name="GET" id="listPolicies">
-        <doc xml:lang="EN" title="List Policies">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists policies.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">Optionally, you can filter for "<code>type</code>". 
-                You can also use the optional parameter "<code>page</code>" or "<code>per_page</code>" to 
-                control the display of the results.</p>
-            <p xmlns="http://www.w3.org/1999/xhtml">This operation does not require a request body.</p>
-        </doc>
-        <request>
-            <param name="type" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to filter on type.
-                </doc>
-            </param>
-            <param name="page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to page through the list.
-                </doc>
-            </param>
-            <param name="per_page" style="query" type="xsd:string" required="false">
-                <doc>
-                    Allows you to set page size for paging through the list, defaulting to 30.
-                </doc>
-            </param>
-        </request>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Policies">
+            <para role="shortdesc">Lists policies.</para>
+        </wadl:doc>
         <!--No request body is provided-->
+        <request> &listPoliciesParams; </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List Policies Response: JSON">
-                        <xsdxt:code href="../common/samples/PoliciesListResponse.json"/>	
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/PoliciesListResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="POST" id="createPolicy">
-        <doc xml:lang="EN" title="Add a Policy">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds a policy.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add Policy">
+            <para role="shortdesc">Adds a policy.</para>
+        </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc>
-                    <xsdxt:sample title="Add Policy - Request: JSON">   
-                        <xsdxt:code href="../common/samples/PolicyCreateRequest.json"/>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/PolicyCreateRequest.json"
+                        />
                     </xsdxt:sample>
-                </doc>
+                </wadl:doc>
+
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Add Policy - Response: JSON">
-                        <xsdxt:code href="../common/samples/PolicyCreateResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/PolicyCreateResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="GET" id="getPolicy">
-        <doc xml:lang="EN" title="Get a Policy">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets details information about a specified policy.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Policy Information">
+            <para role="shortdesc">Gets information about a specified
+                policy.</para>
+        </wadl:doc>
+
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get Policy - Response: JSON">
-                        <xsdxt:code href="../common/samples/PolicyGetResponse.json"/>	
+
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/PolicyGetResponse.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="PATCH" id="updatePolicy">
-        <doc xml:lang="EN" title="Update a Policy">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates a specified policy.</p>
-        </doc>
-        <!--No request body is provided-->
-        <response status="200">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Policy">
+            <para role="shortdesc">Updates a specified policy.</para>
+        </wadl:doc>
+        <request>
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Update Policy - Response: JSON">
-                        <xsdxt:code href="../common/samples/PolicyUpdateResponse.json"/>	
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/PolicyCreateRequest.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
-    
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../common/samples/PolicyUpdateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+
     <method name="DELETE" id="deletePolicy">
-        <doc xml:lang="EN" title="Delete a Policy">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes a specified policy.</p>
-        </doc>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Policy">
+            <para role="shortdesc">Deletes a specified policy.</para>
+        </wadl:doc>
         <!--No request body is provided-->
-        <response status="204">
-        </response>
-        &commonFaults;
-        &getFaults;
+        <response status="204"> </response> &commonFaults; &getFaults;
     </method>
 </application>
+

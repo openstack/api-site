@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../xslt/schema.xslt"?>
+
+<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:identity="http://docs.openstack.org/identity/api/v3"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+    xmlns:hpext="http://www.hp.com/identity/api/ext/HP-IDM/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    targetNamespace="http://docs.openstack.org/identity/api/v3"
+>
+
+    <include schemaLocation="roles.xsd"/>
+    <include schemaLocation="services.xsd"/>
+    <include schemaLocation="endpoints.xsd"/>
+    <include schemaLocation="users.xsd"/>
+    <include schemaLocation="projects.xsd"/>
+    <include schemaLocation="domains.xsd"/>
+
+
+    <!-- Import ATOM specific schema definitions -->
+
+    <import vc:minVersion="1.1" namespace="http://www.w3.org/2005/Atom"
+        schemaLocation="atom/atom.xsd" />
+
+
+    <!-- Elements -->
+    <element name="token" type="identity:AuthenticateResponse"/>
+
+    <complexType name="MethodsType" >
+	<sequence>
+		<element name="method"  type="string" minOccurs="0" maxOccurs="unbounded" />
+	</sequence>
+    </complexType>
+
+
+    <complexType name="UserForAuthenticateResponse">
+        <sequence>
+         <element name="domain"  type="identity:DomainsForAuthenticateResponse" />
+         <element  name="links"  type="identity:LinksType"/>
+        </sequence>
+        <attribute name="id" type="xsd:string"/>
+        <attribute name="name" type="xsd:string"/>
+        <attribute name="description" type="xsd:string"/>
+        <attribute name="default_project_id" type="xsd:string"/>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+    <complexType name="ProjectForAuthenticateResponse">
+        <sequence>
+	   <element name="domain"  type="identity:DomainsForAuthenticateResponse" />
+         <element  name="links"  type="identity:LinksType" />
+        </sequence>
+        <attribute name="id" type="xsd:string"/>
+        <attribute name="name" type="xsd:string"/>
+        <attribute name="enabled" type="xsd:boolean"/>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+  <complexType name="DomainsForAuthenticateResponse">
+	    <sequence>
+	       <element  name="links"  type="identity:LinksType" />
+        </sequence>
+        <attribute name="id" type="xsd:string"/>
+        <attribute name="name" type="xsd:string"/>
+        <attribute name="enabled" type="xsd:boolean"/>
+        <anyAttribute namespace="##other" processContents="lax"/>
+
+    </complexType>
+
+
+   <complexType name="TrustForAuthenticateResponse">
+        <sequence>
+         <element  name="links"  type="identity:LinksType" />
+        </sequence>
+        <attribute name="id" type="xsd:string"/>
+        <attribute name="trustee_user_id" type="xsd:string"/>
+        <attribute name="trustor_user_id" type="xsd:string"/>
+        <attribute name="impersonation"   type="xsd:boolean"/>
+        <attribute name="project_id"      type="xsd:string"/>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+
+    <complexType name="CatalogType">
+        <sequence>
+		<element name="service" type="identity:ServiceForAuthenticationResponse" minOccurs= "1" maxOccurs="unbounded" />
+	</sequence>
+    </complexType >
+
+    <complexType name="ServiceForAuthenticationResponse">
+        <sequence>
+            <element name="endpoints" type="identity:EndpointsType">
+                <annotation>
+                    <xsd:documentation
+                            xml:lang="EN"
+                            xmlns="http://www.w3.org/1999/xhtml">
+                        <p>
+                            A list of endpoints.
+                        </p>
+                    </xsd:documentation>
+                </annotation>
+            </element>
+            <!-- element vc:minVersion="1.1" ref="atom:link" minOccurs="0" maxOccurs="unbounded" /-->
+            <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+        <attribute name="type" type="xsd:string" use="required">
+            <annotation>
+                <xsd:documentation
+                    xml:lang="EN"
+                    xmlns="http://www.w3.org/1999/xhtml">
+                    <p>
+                        The OpenStack-registered type (e.g. 'compute', 'object-store', etc).
+                    </p>
+                </xsd:documentation>
+            </annotation>
+        </attribute>
+        <attribute name="id" type="xsd:string" use="optional">
+            <annotation>
+                <xsd:documentation
+                    xml:lang="EN"
+                    xmlns="http://www.w3.org/1999/xhtml">
+                    <p>
+                        The service id
+                    </p>
+                </xsd:documentation>
+            </annotation>
+        </attribute>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+    <complexType name="AuthenticateResponse">
+        <sequence>
+	    <element name="expires_at" type="xsd:dateTime" minOccurs="1"/>
+            <element name="issued_at" type="xsd:dateTime" minOccurs="1"/>
+            <element name="methods" type="identity:MethodsType"  />
+            <element name="domain"  type="identity:DomainsForAuthenticateResponse" />
+            <element name="project"  type="identity:ProjectForAuthenticateResponse" />
+            <element name="catalog" type="identity:CatalogType"  />
+            <element name="roles" type="identity:RoleList" />
+            <element name="user" type="identity:UserForAuthenticateResponse"/>
+            <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+</schema>
+

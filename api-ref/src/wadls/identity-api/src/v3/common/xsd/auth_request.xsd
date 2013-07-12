@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../xslt/schema.xslt"?>
+
+<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:identity="http://docs.openstack.org/identity/api/v3"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    targetNamespace="http://docs.openstack.org/identity/api/v3"
+>
+    <!-- Import ATOM specific schema definitions -->
+    <import vc:minVersion="1.1" namespace="http://www.w3.org/2005/Atom"
+            schemaLocation="atom/atom.xsd" />
+    <include schemaLocation="domains.xsd" />
+    <include schemaLocation="projects.xsd" />
+    <include schemaLocation="auth_response.xsd" />
+
+  <complexType name="DomainScopeType">
+         <attribute name="id" type="xsd:string" use="required" />
+         <attribute name="name" type="xsd:string" use="required" />
+   </complexType>
+
+   <complexType name="ProjectScopeType">
+	<sequence>
+		<element name="domain" type="identity:DomainScopeType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+         <attribute name="id" type="xsd:string" use="required" />
+         <attribute name="name" type="xsd:string" use="optional"/>
+    </complexType>
+
+  <complexType name="TrustScopeType">
+         <attribute name="id" type="xsd:string" use="required" />
+    </complexType>
+
+    <complexType name="ScopeType">
+	<choice>
+               <element name="domain"  type="identity:DomainScopeType" minOccurs="1"/>
+	       <element name="project" type="identity:ProjectScopeType" minOccurs="1"/>
+	       <element name="trust"   type="identity:TrustScopeType" minOccurs="1"/>
+         </choice>
+    </complexType>
+
+    <complexType name="UserNamePasswordRequest">
+	<sequence>
+		<element name="domain" type="identity:DomainType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+
+         <attribute name="id" type="xsd:string" />
+         <attribute name="password" type="xsd:string" use="required" />
+         <attribute name="name" type="xsd:string" />
+    </complexType>
+
+   <!-- Complex Types -->
+    <complexType name="BaseCredentialType" abstract="true">
+        <annotation>
+            <xsd:documentation
+                xml:lang="EN"
+                xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    Base type for credential in Keystone.
+                </p>
+            </xsd:documentation>
+        </annotation>
+        <sequence>
+            <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+        <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+
+    <complexType name="TokenCredentials">
+	<complexContent>
+            <extension base="identity:BaseCredentialType">
+                <attribute name="id" type="xsd:string" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+
+    <complexType name="PasswordCredentials">
+        <complexContent>
+            <extension base="identity:BaseCredentialType">
+		<sequence>
+		   <element name="user" type="identity:UserNamePasswordRequest" />
+		</sequence>
+            </extension>
+
+        </complexContent>
+    </complexType>
+
+
+<!--
+    Sample - How we can extend to support AccessKeyCredentials
+    <complexType name="AccessKeyCredentials">
+        <complexContent>
+            <extension base="identity:CredentialType">
+                <attribute name="accessKey" type="xsd:string" use="required" />
+                <attribute name="secretKey" type="xsd:string" use="required" />
+                <anyAttribute namespace="##other" processContents="lax"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+-->
+
+   <complexType name="AuthIdentityRequest">
+        <annotation>
+            <xsd:documentation
+                xml:lang="EN"
+                xmlns="http://www.w3.org/1999/xhtml">
+            </xsd:documentation>
+        </annotation>
+     <sequence>
+          <element name="methods" type="identity:MethodsType" />
+          <choice>
+               <element name="password"   type="identity:PasswordCredentials" minOccurs="1"/>
+               <element name="token"      type="identity:TokenCredentials"/>
+          </choice>
+         <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+      <anyAttribute namespace="##other" processContents="lax"/>
+    </complexType>
+
+   <complexType name="AuthRequest">
+      <sequence>
+	<element name="identity" type="identity:AuthIdentityRequest" />
+	 <element name="scope" type="identity:ScopeType"/>
+         <any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+   </complexType>
+
+    <!-- Elements -->
+    <element name="auth" type="identity:AuthRequest"/>
+</schema>
