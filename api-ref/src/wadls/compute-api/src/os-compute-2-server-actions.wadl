@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-compute-2.wadl             -->
+<!--*******************************************************-->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+<application xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xsi:schemaLocation="http://docs.openstack.org/compute/api/v1.1
+                       xsd/api.xsd
+                       http://docs.openstack.org/common/api/v1.0
+                       xsd/api-common.xsd
+                       http://wadl.dev.java.net/2009/02 
+                       http://www.w3.org/Submission/wadl/wadl.xsd
+                       ">
+    <grammars>
+        <include href="xsd/api.xsd"/>
+        <include href="xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://servers.api.openstack.com">
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenantID" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The ID
+                            for the tenant or account in a
+                            multi-tenancy cloud. </p>
+                    </doc>
+                </param>  
+                <resource id="Servers" type="#ServerList"
+                    path="servers">
+                    <resource path="{server_id}">
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   >The UUID for the server of
+                                   interest to you.</p>
+                            </doc>
+                        </param>
+                        <resource path="action">
+                            <method href="#changePassword"/>
+                            <method href="#rebootServer"/>
+                            <method href="#rebuildServer"/>
+                            <method href="#resizeServer"/>
+                            <method href="#confirmServer"/>
+                            <method href="#revertServer"/>
+                            <method href="#createImage"/>
+                        </resource>
+                    </resource>   
+                </resource>     
+            </resource>
+        </resource>
+    </resources>
+
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+
+  
+    <!-- Server Actions -->
+    <method name="POST" id="changePassword">
+        <doc xml:lang="EN" title="Change Password">
+            <p xmlns="http://www.w3.org/1999/xhtml">Changes the
+                password for a server. Specify the
+                    <code>changePassword</code> action in the request
+                body. </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:changePassword">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-changepassword.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-changepassword.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="202"/>
+        <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
+        &getFaults; &postPutFaults; &inProgressFault; </method>
+
+    <method name="POST" id="rebootServer">
+        <doc xml:lang="EN" title="Reboot Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Reboots a
+                specified server. Specify the <code>reboot</code>
+                action in the request body. </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:reboot">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-reboot.xml"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-reboot.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="202"/>
+        <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
+        &getFaults; &postPutFaults; &inProgressFault; </method>
+
+    <method name="POST" id="rebuildServer">
+        <doc xml:lang="EN" title="Rebuild Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Rebuilds a
+                specified server. Specify the <code>rebuild</code>
+                action in the request body. </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:rebuild">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-rebuild.xml"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-rebuild.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="202">
+            <param name="Location" style="header" required="true"
+                type="xsd:anyURI">
+                <doc xml:lang="EN" title="Location">
+                    <p xmlns="http://www.w3.org/1999/xhtml">Specific
+                        URL of the server you want to rebuild.
+                    </p></doc>
+            </param>
+            <representation mediaType="application/xml"
+                element="csapi:server">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-rebuild-resp.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-rebuild-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <!-- All other faults, build, common, get, post/put, and inProgress -->
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults;
+        &inProgressFault; </method>
+
+    <method name="POST" id="resizeServer">
+        <doc xml:lang="EN" title="Resize Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Resizes a
+                specified server. Specify the <code>resize</code>
+                action in the request body. </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:resize">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-resize.xml"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-resize.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="202"/>
+        <!-- All other faults, build, common, get, post/put, and inProgress -->
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults;
+        &inProgressFault; </method>
+
+    <method name="POST" id="confirmServer">
+        <doc xml:lang="EN" title="Confirm Resized Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Confirms a pending
+                resize action. Specify the <code>confirmResize</code>
+                action in the request body. </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:confirmResize">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-confirmresize.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-confirmresize.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="204"/>
+        <!-- All other faults, build, common, get, post/put, and inProgress -->
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults;
+        &inProgressFault; </method>
+
+    <method name="POST" id="revertServer">
+        <doc xml:lang="EN" title="Revert Resized Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Cancels and
+                reverts a pending resize action. Specify the
+                    <code>revertResize</code> action in the request
+                body. </p>
+        </doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:revertResize">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-revertresize.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-action-revertresize.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="202"/>
+        <!-- All other faults, build, common, get, post/put, and inProgress -->
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults;
+        &inProgressFault; </method>
+
+    <method name="POST" id="createImage">
+        <doc xml:lang="EN" title="Create Image">
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates a new
+                image. Specify the <code>createImage</code> action in
+                the request body. </p>
+        </doc>
+        <request>
+            <param name="name" style="plain" required="true"
+                type="csapi:ServerForCreate" path="/csapi:server">
+                <doc xml:lang="EN" title="name">
+                    <p xmlns="http://www.w3.org/1999/xhtml">Name of
+                        the snapshot.</p>
+                </doc>
+            </param>
+            <param name="createImage" style="plain" required="true"
+                type="csapi:ServerForCreate" path="/csapi:server">
+                <doc xml:lang="EN" title="createImage">
+                    <p xmlns="http://www.w3.org/1999/xhtml">A
+                        dictionary representation of a creation for
+                        image.</p>
+                </doc>
+            </param>
+            <param name="metadata" style="plain" required="false"
+                type="csapi:ServerForCreate" path="/csapi:server">
+                <doc xml:lang="EN" title="metadata">
+                    <p xmlns="http://www.w3.org/1999/xhtml">Metadata
+                        key and value pairs. The maximum size of the
+                        metadata key and value is 255 bytes each.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/xml"
+                element="csapi:createImage">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/server-action-createimage.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/server-action-createimage.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="202">
+            <param name="Location" style="header" required="true"
+                type="xsd:anyURI"/>
+        </response>
+        <response status="409">
+            <representation mediaType="application/xml"
+                element="csapi:backupOrResizeInProgress"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <!-- All other faults, build, common, get, post/put, and inProgress -->
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults;
+        &inProgressFault; </method>
+
+</application>

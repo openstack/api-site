@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-compute-2.wadl             -->
+<!--*******************************************************-->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+<application xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xsi:schemaLocation="http://docs.openstack.org/compute/api/v1.1
+                       xsd/api.xsd
+                       http://docs.openstack.org/common/api/v1.0
+                       xsd/api-common.xsd
+                       http://wadl.dev.java.net/2009/02 
+                       http://www.w3.org/Submission/wadl/wadl.xsd
+                       ">
+    <grammars>
+        <include href="xsd/api.xsd"/>
+        <include href="xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://servers.api.openstack.com">
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenantID" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The ID
+                            for the tenant or account in a
+                            multi-tenancy cloud. </p>
+                    </doc>
+                </param>
+                <resource id="Servers" type="#ServerList"
+                    path="servers">
+                    <method href="#createServer"/>
+                    <resource path="detail" type="#DetailServerList"/>
+                    <resource path="{server_id}">
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   >The UUID for the server of
+                                   interest to you.</p>
+                            </doc>
+                        </param>
+                        <method href="#getServer"/>
+                        <method href="#updateServer"/>
+                        <method href="#deleteServer"/>
+                        <resource path="metadata"
+                            type="#Metadata #MetadataList"/>
+                    </resource>      
+                </resource>       
+            </resource>
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               Resource Types                          -->
+    <!--*******************************************************-->
+
+    <resource_type id="DetailServerList">
+        <doc xml:lang="EN" title="Detail Image List">
+            <p xmlns="http://www.w3.org/1999/xhtml">A detailed server
+                list. </p>
+        </doc>
+        <method href="#listDetailServers"/>
+    </resource_type>
+
+    <resource_type id="ServerList">
+        <doc xml:lang="EN" title="Server List">
+            <p xmlns="http://www.w3.org/1999/xhtml">A list of servers.
+                Each server contains IDs, names, and links -- other
+                attributes are omitted. </p>
+        </doc>
+        <method href="#listServers"/>
+    </resource_type>
+    <resource_type id="Metadata">
+        <doc xml:lang="EN" title="Metadata">
+            <p xmlns="http://www.w3.org/1999/xhtml">The metadata resource
+                type, which is servers. </p>
+        </doc>
+        <method href="#setMetadata"/>
+        <method href="#updateMetadata"/>
+        <resource id="MetadataKey" path="{key}">
+            <param name="key" style="template"
+                type="csapi:MetadataKey">
+                <doc xml:lang="EN" title="Metadata key">
+                    <p xmlns="http://www.w3.org/1999/xhtml">The metadata key. Maximum length is 
+                        255 characters. </p>
+                </doc>
+            </param>
+            <method href="#getMetadataItem"/>
+            <method href="#setMetadataItem"/>
+            <method href="#deleteMetadataItem"/>
+        </resource>
+    </resource_type>
+    
+    <resource_type id="MetadataList">
+        <doc xml:lang="EN" title="Metadata List">
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists
+                metadata. </p>
+        </doc>
+        <method href="#listMetadata"/>
+    </resource_type>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+
+    <!-- Servers -->
+    <method name="POST" id="createServer">
+        <doc xml:lang="EN" title="Create Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates a server.
+            </p>
+        </doc>
+        <request> &serverCreateParameters; <representation
+                mediaType="application/xml" element="csapi:server">
+                <param name="server" style="plain" required="true"
+                    type="csapi:ServerForCreate" path="/csapi:server">
+                    <doc xml:lang="EN" title="server">
+                        <p xmlns="http://www.w3.org/1999/xhtml"
+                            >Server.</p>
+                    </doc>
+                </param>
+                <param name="imageRef" style="plain" required="true"
+                    type="csapi:string">
+                    <doc xml:lang="EN" title="imageRef">
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            image reference for the desired image for
+                            your server instance. </p>
+                        <p xmlns="http://www.w3.org/1999/xhtml"
+                            >Specify as an ID or full URL.</p></doc>
+                </param>
+                <param name="flavorRef" style="plain" required="true"
+                    type="csapi:string">
+                    <doc xml:lang="EN" title="flavorRef">
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            flavor reference for the desired flavor
+                            for your server instance.</p>
+                        <p xmlns="http://www.w3.org/1999/xhtml"
+                            >Specify as an ID or full URL.</p></doc>
+                </param>
+                <param name="name" style="plain" required="true"
+                    type="csapi:string">
+                    <doc xml:lang="EN" title="name">
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            name for your created server.</p></doc>
+                </param>
+                <param name="metadata" style="plain" required="false"
+                    type="csapi:string">
+                    <doc xml:lang="EN" title="metadata">
+                        <p xmlns="http://www.w3.org/1999/xhtml"
+                            >Metadata key and value pairs. The maximum
+                            size of the metadata key and value is 255
+                            bytes each.</p></doc>
+                </param>
+                <param name="personality" style="plain"
+                    required="false" type="csapi:string">
+                    <doc xml:lang="EN" title="personality">
+                        <p xmlns="http://www.w3.org/1999/xhtml">File
+                            path and contents (text only) to inject
+                            into the server at launch. The maximum
+                            size of the file path data is 255 bytes.
+                            The maximum limit refers to the number of
+                            bytes in the decoded data and not the
+                            number of characters in the encoded
+                            data.</p></doc>
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/server-post-req.json"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc>
+                    <xsdxt:code href="api_samples/server-post-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="202">
+            <param name="Location" style="header" required="true"
+                type="xsd:anyURI">
+                <doc xml:lang="EN" title="Location"><p
+                        xmlns="http://www.w3.org/1999/xhtml">Full URL
+                        to a server created by the service.</p></doc>
+            </param>
+            <representation mediaType="application/xml"
+                element="csapi:server">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/server-post-resp.xml"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/server-post-resp.json"/>
+                </doc>
+            </representation>
+        </response>
+        <response status="422">
+            <representation mediaType="application/xml"
+                element="csapi:UnprocessableEntity"> </representation>
+            <representation mediaType="application/json"
+            > </representation>
+        </response>
+        <!-- All other common faults except build in progess -->
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults; </method>
+
+    <method name="GET" id="listServers">
+        <doc xml:lang="EN" title="List Servers">
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists IDs, names,
+                and links for all servers. </p>
+        </doc>
+        <request> &serverListParameters; </request>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="csapi:servers">
+                <param name="servers" style="plain" required="true"
+                    type="csapi:ServersWithOnlyIDsNamesLinks"
+                    path="/csapi:servers/atom:link[@rel='servers']/@href">
+                    <doc xml:lang="EN"><p
+                            xmlns="http://www.w3.org/1999/xhtml">List
+                            of servers.</p>
+                        <xsdxt:code
+                            href="api_samples/servers-list-resp.xml"/>
+                    </doc>
+                    <link resource_type="#ServerList" rel="servers"/>
+                </param>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='next']/@href">
+                    <doc xml:lang="EN"><p
+                            xmlns="http://www.w3.org/1999/xhtml">Move
+                            to the next item in the list.</p></doc>
+                    <link resource_type="#ServerList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='previous']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Move
+                            to the previous item in the
+                        list.</p></doc>
+                    <link resource_type="#ServerList" rel="previous"/>
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/servers-list-resp.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- Common Faults --> &commonFaults; </method>
+
+    <method name="GET" id="listDetailServers">
+        <doc xml:lang="EN" title="List Detail Servers">
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists details for
+                all servers. </p>
+        </doc>
+        <request> &serverListParameters; </request>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="csapi:servers">
+                <doc>
+                    <p xmlns="http://docbook.org/ns/docbook">The
+                        following examples show the list server
+                        responses:</p>
+                    <xsdxt:code
+                        href="api_samples/servers-details-resp.xml"/>
+                </doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='next']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Move
+                            to the next item in the list.</p></doc>
+                    <link resource_type="#DetailServerList" rel="next"
+                    />
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='previous']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Move
+                            to the previous item in the
+                        list.</p></doc>
+                    <link resource_type="#DetailServerList"
+                        rel="previous"/>
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/servers-details-resp.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- Common Faults --> &commonFaults; </method>
+
+    <method name="GET" id="getServer">
+        <doc xml:lang="EN" title="Get Server Details">
+            <p xmlns="http://www.w3.org/1999/xhtml">Gets details for a
+                specified server. </p>
+        </doc>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="csapi:server">
+                <doc>
+                    <xsdxt:code href="api_samples/server-get-resp.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc>
+                    <xsdxt:code
+                        href="api_samples/server-get-resp.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- Common and GET Faults--> &commonFaults; &getFaults; </method>
+
+    <method name="PUT" id="updateServer">
+        <doc xml:lang="EN" title="Update Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Updates the
+                editable attributes of a specified server. </p>
+        </doc>
+        <request>
+            <param name="name" style="plain" required="false"
+                type="csapi:ServerForUpdate" path="/csapi:server">
+                <doc xml:lang="EN">
+                    <p xmlns="http://www.w3.org/1999/xhtml">The name
+                        of the server. If you edit the server name,
+                        the server host name does not change. Also,
+                        server names are not guaranteed to be unique.
+                    </p>
+                </doc>
+            </param>
+            <param name="accessIPv4" style="plain" required="false"
+                type="csapi:ServerForUpdate" path="/csapi:server">
+                <doc xml:lang="EN">
+                    <p xmlns="http://www.w3.org/1999/xhtml">The IP
+                        version 4 address. </p>
+                </doc>
+            </param>
+            <param name="accessIPv6" style="plain" required="false"
+                type="csapi:ServerForUpdate" path="/csapi:server">
+                <doc xml:lang="EN">
+                    <p xmlns="http://www.w3.org/1999/xhtml">The IP
+                        version 6 address. </p>
+                </doc>
+            </param>
+            <representation mediaType="application/json"
+                element="csapi:server">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server Name Request: JSON">
+                    <xsdxt:code href="api_samples/server-put-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml"
+                element="csapi:server">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server Name Request: XML">
+                    <xsdxt:code href="api_samples/server-put-req.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server IP Addresses Request: JSON">
+                    <xsdxt:code
+                        href="api_samples/server-put-req-ad.json"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server IP Addresses Request: XML">
+                    <xsdxt:code
+                        href="api_samples/server-put-req-ad.xml"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json"
+                element="csapi:server">
+                <wadl:doc xml:lang="EN"
+                    title="Update Server Name Response: JSON"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/server-put-resp.json"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml"
+                element="csapi:server">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server Name Response: XML">
+                    <xsdxt:code href="api_samples/server-put-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server IP Addresses Response: JSON">
+                    <xsdxt:code
+                        href="api_samples/server-put-resp-ad.json"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                    title="Update Server IP Addresses Response: XML">
+                    <xsdxt:code
+                        href="api_samples/server-put-resp-ad.xml"/>
+                </wadl:doc>
+            </representation>
+        </response>
+        <!-- Common, GET, POST/PUT, inProgress Faults-->
+        &commonFaults; &getFaults; &postPutFaults; &inProgressFault; </method>
+
+    <method name="DELETE" id="deleteServer">
+        <doc xml:lang="EN" title="Delete Server">
+            <p xmlns="http://www.w3.org/1999/xhtml">Deletes a
+                specified server. </p>
+        </doc>
+        <response status="204"/>
+        <!-- Common, GET, inProgress Faults--> &commonFaults;
+        &getFaults; &inProgressFault; </method>
+    <!-- Metadata -->
+    <method name="GET" id="listMetadata">
+        <doc xml:lang="EN" title="List Metadata">
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists metadata
+                associated with the server. </p>
+        </doc>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="csapi:metadata">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-get-resp.xml"
+                    />
+                </doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Moves
+                        to the next item in the list.</p></doc>
+                    <link resource_type="#MetadataList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Moves
+                        to the previous item in the
+                        list.</p></doc>
+                    <link resource_type="#MetadataList" rel="previous"
+                    />
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-get-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <!-- Common Faults and GET Faults--> &commonFaults;
+        &getFaults; </method>
+    
+    <method name="POST" id="updateMetadata">
+        <wadl:doc xml:lang="EN" title="Update Metadata"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Updates metadata items. </para>
+            <p xmlns="http://www.w3.org/1999/xhtml">For a server, updates existing metadata items
+                with the same key. Items not explicitly mentioned in
+                the request are not modified. An overLimit
+                (<errorcode>413</errorcode>) fault might be thrown
+                if the operation causes the maximum number of metadata
+                items to be exceeded. </p>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:metadata">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-post-req.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-post-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml"
+                element="csapi:metadata">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-post-resp.xml"
+                    />
+                </doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Moves
+                        to the next item in the list.</p></doc>
+                    <link resource_type="#MetadataList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Moves
+                        to the previous item in the
+                        list.</p></doc>
+                    <link resource_type="#MetadataList" rel="previous"
+                    />
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-post-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <!-- Common, GET, POST/PUT, inProgress Faults-->
+        &commonFaults; &getFaults; &postPutFaults; &inProgressFault; </method>
+    
+    <method name="PUT" id="setMetadata">
+        <wadl:doc xml:lang="EN" title="Create or Replace Metadata"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Sets metadata for a server. </para>
+            <p xmlns="http://www.w3.org/1999/xhtml">The metadata items
+                set on the server are those specified on the
+                requests. Existing metadata items are replaced with
+                the ones provided in the request. Metadata items, set
+                previously, but not specified in the request are
+                removed. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">An overLimit
+                (<errorcode>413</errorcode>) fault might be thrown
+                if the maximum number of metadata items is exceeded.
+            </p>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:metadata">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-metadata-req.xml"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-metadata-req.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml"
+                element="csapi:metadata">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-metadata-resp.xml"/>
+                </doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Moves
+                        to the next item in the list.</p></doc>
+                    <link resource_type="#MetadataList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">Moves
+                        to the previous item in the
+                        list.</p></doc>
+                    <link resource_type="#MetadataList" rel="previous"
+                    />
+                </param>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/server-metadata-resp.json"/>
+                </doc>
+            </representation>
+        </response>
+        <!-- Common, GET, POST/PUT, inProgress Faults-->
+        &commonFaults; &getFaults; &postPutFaults; &inProgressFault; </method>
+    
+    <method name="GET" id="getMetadataItem">
+        <wadl:doc xml:lang="EN" title="Get Metadata Item"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets a metadata item associated
+                with a server. </para>
+            <p xmlns="http://www.w3.org/1999/xhtml">Retrieves a single
+                metadata item by key. </p>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/xml"
+                element="csapi:meta">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-get-resp.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-get-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <!-- Common Faults and GET Faults--> &commonFaults;
+        &getFaults; </method>
+    
+    <method name="PUT" id="setMetadataItem">
+        <wadl:doc xml:lang="EN" title="Create or Update Metadata Item"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Sets a metadata item for a server. </para>
+            <p xmlns="http://www.w3.org/1999/xhtml">Sets a metadata
+                item by its key. An overLimit
+                (<errorcode>413</errorcode>) fault might be thrown
+                if the operation causes the maximum number of metadata
+                items to be exceeded. </p>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:meta">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-put-req.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-put-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml"
+                element="csapi:meta">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-put-resp.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/image-metadata-put-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <!-- Common, GET, POST/PUT, inProgress Faults-->
+        &commonFaults; &getFaults; &postPutFaults; &inProgressFault; </method>
+    
+    <method name="DELETE" id="deleteMetadataItem">
+        <doc xml:lang="EN" title="Delete Metadata Item">
+            <p xmlns="http://www.w3.org/1999/xhtml">Deletes a metadata
+                item for a server. </p>
+        </doc>
+        <response status="204"/>
+        <!-- Common, GET, inProgress Faults--> &commonFaults;
+        &getFaults; &inProgressFault; </method>
+</application>
