@@ -197,47 +197,54 @@ Using HTTPS in Python scripts is explained later in this chapter.
 
 When you want to obtain an API token you can do it using two standard Python modules: **httplib** and **json**.  Both are available in all major branches of Python: 2.6.*x*, 2.7.*x*, and 3.*x*.*x*.  If you don't like them, you can always use **requests** and **simplejson**.
 
-	#!/usr/bin/python
+#!/usr/bin/python
 
-	import httplib
-	import json
+import httplib
+import json
 
-	# arguments
+# arguments
 
-	## make sure that url is set to the actual hostname/IP address,
-	## port number
+## make sure that url is set to the actual hostname/IP address,
+## port number
 
-	url = "192.168.10.1:5000"
+url = "192.168.122.111:5000"
 
-	## make sure that osuser is set to your actual username, "admin"
-	## works for test installs on virtual machines, but it's a hack
+## make sure that osuser is set to your actual username, "admin"
+## works for test installs on virtual machines, but it's a hack
 
-	osuser = "joe"
+osuser = "admin"
 
-	## use something else than "shhh" for your password
+## use something else than "shhh" for your password
 
-	ospassword = "shhh"
+ospassword = "donoetah"
 
-	params = '{"auth":{"passwordCredentials":{"username": "admin", "password":"openstack"}, "tenantId":"YourTenantIdGoesHere"}}'
 
-	headers = {"Content-Type": "application/json"}
- 
-	# HTTP connection
+## use something else than "openstack" for your tenant
 
-	conn = httplib.HTTPConnection(url)
-	conn.request("POST", "/v2.0/tokens", params, headers)
+tenant = "openstack"
 
-	# HTTP response
+params = '{"auth": {"tenantName": "%s" , "passwordCredentials": {"username": "%s", "password": "%s"}}}' % (tenant, osuser, ospassword)
 
-	response = conn.getresponse()
-	data = response.read()
-	dd = json.loads(data)
+headers = {"Content-Type": "application/json"}
 
-	conn.close()
 
-	apitoken = dd['access']['token']['id']
+# HTTP connection
 
-	print "Your token is: %s" % apitoken
+conn = httplib.HTTPConnection(url)
+conn.request("POST", "/v2.0/tokens", params, headers)
+
+# HTTP response
+
+response = conn.getresponse()
+data = response.read()
+dd = json.loads(data)
+
+conn.close()
+
+apitoken = dd['access']['token']['id']
+
+print "Your token is: %s" % apitoken
+
 
 When you run **gettoken.py** you should see the following output (the token will hopefully be different):
 
