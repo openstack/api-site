@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
 <!--     You can resolve the entites with xmllint          -->
 <!--                                                       -->
-<!--        xmllint -noent os-networks.wadl               -->
+<!--        xmllint -noent os-networks-provider-ext.wadl   -->
 <!--*******************************************************-->
+
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns="http://wadl.dev.java.net/2009/02" 
+    xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:common="http://docs.openstack.org/common/api/v1.0"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:atom="http://www.w3.org/2005/Atom"
@@ -33,6 +36,73 @@
             <resource id="Networks" type="#NetworkList"
                 path="networks">
                 <method href="#listNetworks"/>
+                <param name="name" style="plain" type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            network name.</p>
+                    </doc>
+                </param>
+                <param name="admin_state_up" style="plain"
+                    type="xsd:bool">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml"
+                            >Indicates the administrative status of
+                            the network.</p>
+                    </doc>
+                </param>
+                <param name="shared" style="plain" type="xsd:bool">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml"
+                            >Indicates whether this network is shared
+                            across all tenants. By default, only
+                            administrative users can change this
+                            value.</p>
+                    </doc>
+                </param>
+                <param name="tenant_id" style="plain"
+                    type="csapi:uuid">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The ID
+                            of the tenant that owns the network. Only
+                            administrative users can set the tenant
+                            ID. You cannot change this value through
+                            authorization policies.</p>
+                    </doc>
+                </param>
+                <param name="provider:network_type" style="plain"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            type of physical network that maps to this
+                            networks resource. Examples are flat,
+                            vlan, and gre.</p>
+                    </doc>
+                </param>
+                <param name="provider:physical_network" style="plain"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            physical network on which this network
+                            object is implemented. The Networking API
+                            v2.0 does not provide a way to list
+                            available physical networks. For example,
+                            the Open vSwitch plug-in configuration
+                            file defines a symbolic name that maps to
+                            specific bridges on each Compute host.</p>
+                    </doc>
+                </param>
+                <param name="provider:segmentation_id" style="plain"
+                    type="csapi:uuid">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">An
+                            isolated segment on the physical network.
+                            The network_type attribute defines the
+                            segmentation model. For example, if
+                            network_type is vlan, this ID is a vlan
+                            identifier. If network_type is gre, this
+                            ID is a gre key.</p>
+                    </doc>
+                </param>
                 <method href="#createNetwork"/>
                 <resource path="{network_id}">
                     <param name="network_id" style="template"
@@ -58,21 +128,24 @@
     <method name="GET" id="listNetworks">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
             title="List Networks">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Lists a summary
-                of all networks defined in neutron that are accessible
-                to the tenant who submits the request. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists networks
+                that are accessible to the tenant who submits the
+                request.</p>
         </wadl:doc>
         <response status="200"> &networkListParameters;
-                <representation mediaType="application/json">
+            &networkProviderParameters; <representation
+                mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/networks-get-resp.json"/>
+                        href="api_samples/networks-get-detail-resp.json"
+                    />
                 </doc>
             </representation>
-            <representation mediaType="application/xml"> <doc
-                    xml:lang="EN">
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/networks-get-resp.xml"/>
+                        href="api_samples/networks-get-detail-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
@@ -81,8 +154,8 @@
     <method name="POST" id="createNetwork">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
             title="Create Network">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Creates a neutron
-                network. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates a
+                network.</p>
         </wadl:doc>
         <request> &networkCreateParameters; <representation
                 mediaType="application/json">
@@ -99,7 +172,8 @@
             </representation>
         </request>
         <response status="201"> &networkListParameters;
-            <representation mediaType="application/json">
+            &networkProviderParameters; <representation
+                mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/network-post-resp.json"/>
@@ -117,11 +191,12 @@
     <method name="GET" id="showNetwork">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
             title="Show Networks">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Lists detailed
-                information for the specified network ID. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Shows information
+                for the specified network.</p>
         </wadl:doc>
         <response status="200"> &networkListParameters;
-                <representation mediaType="application/json">
+            &networkProviderParameters; <representation
+                mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/networks-get-detail-resp.json"
@@ -137,14 +212,14 @@
             </representation>
         </response>
     </method>
-
     <method name="PUT" id="updateNetwork">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
             title="Update Network">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Updates the name
-                of the specified network. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Updates the
+                specified network.</p>
         </wadl:doc>
-        <request> &networkCreateParameters; <representation
+        <request> &networkCreateParameters;
+            &networkProviderParameters; <representation
                 mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
@@ -161,7 +236,8 @@
             </representation>
         </request>
         <response status="201"> &networkListParameters;
-                <representation mediaType="application/json">
+            &networkProviderParameters; <representation
+                mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/network-put-update-resp.json"
@@ -176,14 +252,5 @@
                 </doc>
             </representation>
         </response>
-    </method>
-
-    <method name="DELETE" id="deleteNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Delete Network">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Deletes the
-                specified network and associated resources. </p>
-        </wadl:doc>
-        <response status="204"/>
     </method>
 </application>
