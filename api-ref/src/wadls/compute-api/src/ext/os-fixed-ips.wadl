@@ -3,6 +3,7 @@
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
 
@@ -11,14 +12,14 @@
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
                             ID for the tenant or account in a
                             multi-tenancy cloud. </p></doc>
                 </param>
                 <resource id="os-fixed-ips" path="os-fixed-ips">
                     <resource path="{fixed_ip}">
                         <param name="fixed_ip" style="template"
-                            required="true">
+                            type="xsd:string" required="true">
                             <doc><p
                                    xmlns="http://www.w3.org/1999/xhtml"
                                    > The fixed IP of interest to you.
@@ -27,18 +28,16 @@
                         <method href="#showIP"/>
                         <resource path="action">
                             <method href="#reserveIP"/>
-                            <method href="#unreserveIP"/>
                         </resource>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="showIP">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Gets data about a
-                specified fixed IP address. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc">Gets data about a specified fixed
+                IP address.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -57,48 +56,28 @@
             </representation>
         </response>
     </method>
-
     <method name="POST" id="reserveIP">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Reserves a fixed
-                IP. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Reserve or Release a Fixed IP">
+            <para role="shortdesc">Reserves or releases a fixed
+                IP.</para>
+            <para>To reserve a fixed IP address, specify
+                    <code>reserve</code> in the request body. To
+                release a fixed IP address, specify
+                    <code>unreserve</code> in the request body.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/os-fixed-ips/fixedip-reserve-post-req.json"
+                        href="../api_samples/os-fixed-ips/fixedip-post-req.json"
                     />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/os-fixed-ips/fixedip-reserve-post-req.xml"
-                    />
-                </doc>
-            </representation>
-        </request>
-        <response status="202"/>
-    </method>
-
-    <method name="POST" id="unreserveIP">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Unreserves a
-                fixed IP. </p>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/os-fixed-ips/fixedip-unreserve-post-req.json"
-                    />
-                </doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/os-fixed-ips/fixedip-unreserve-post-req.xml"
+                        href="../api_samples/os-fixed-ips/fixedip-post-req.xml"
                     />
                 </doc>
             </representation>
