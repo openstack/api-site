@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -29,38 +31,44 @@
     <!--*******************************************************-->
 
     <resources base="https://neutron.example.com/">
-        <resource id="version" type="#VersionDetails" path="v2.0">
-            <resource id="Networks" type="#NetworkList"
-                path="networks">
-                <method href="#listNetworks"/>
-                <method href="#createNetwork"/>
-                <resource path="{network_id}">
-                    <param name="network_id" style="template"
-                        type="csapi:UUID">
-                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
-                            xml:lang="EN" title="Network ID">
-                            <p>The UUID for the network of interest to
-                                you.</p>
-                        </wadl:doc>
-                    </param>
-                    <method href="#showNetwork"/>
-                    <method href="#updateNetwork"/>
-                    <method href="#deleteNetwork"/>
-                </resource>
+
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenantID" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="csapi:UUID">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            tenant ID in a multi-tenancy cloud.</p>
+                    </doc>
+                </param>
+        <resource id="Networks" type="#NetworkList" path="networks">
+            <method href="#listNetworks" />
+            <method href="#createNetwork" />
+            <resource path="{network_id}">
+                <param name="network_id" style="template" type="csapi:UUID">
+                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Network ID">
+                        <p>The UUID for the network of interest to you.</p></wadl:doc>
+                </param>
+                <method href="#showNetwork"/>
+                <method href="#updateNetwork"/>
+                <method href="#deleteNetwork"/>
+            </resource>
+        </resource>
             </resource>
         </resource>
     </resources>
+        
+
 
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
 
     <method name="GET" id="listNetworks">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="List Networks">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Lists a summary
-                of all networks defined in neutron that are accessible
-                to the tenant who submits the request. </p>
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Networks">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+               Lists networks to which the specified tenant has access.
+            </p>
         </wadl:doc>
         <response status="200"> &networkListParameters;
                 <representation mediaType="application/json">
@@ -79,10 +87,11 @@
     </method>
 
     <method name="POST" id="createNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Create Network">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Creates a neutron
-                network. </p>
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Create Network">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Creates a network.
+            </p>
+
         </wadl:doc>
         <request> &networkCreateParameters; <representation
                 mediaType="application/json">
@@ -115,10 +124,12 @@
     </method>
 
     <method name="GET" id="showNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Show Networks">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Lists detailed
-                information for the specified network ID. </p>
+
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Show Networks">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Shows information for the specified network.
+            </p>
+
         </wadl:doc>
         <response status="200"> &networkListParameters;
                 <representation mediaType="application/json">
@@ -139,11 +150,12 @@
     </method>
 
     <method name="PUT" id="updateNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Update Network">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Updates the name
-                of the specified network. </p>
-        </wadl:doc>
+
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Update Network">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Updates the specified network.
+            </p>
+    </wadl:doc>
         <request> &networkCreateParameters; <representation
                 mediaType="application/json">
                 <doc xml:lang="EN">
@@ -179,10 +191,12 @@
     </method>
 
     <method name="DELETE" id="deleteNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Delete Network">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Deletes the
-                specified network and associated resources. </p>
+
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Delete Network">
+            <p xmlns="http://www.w3.org/1999/xhtml">
+                Deletes the specified network and its associated resources.
+            </p>
+
         </wadl:doc>
         <response status="204"/>
     </method>
