@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
                             ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                            multi-tenancy cloud.</p></doc>
                 </param>
                 <resource id="Servers" path="servers">
                     <method href="#createServerWithSchedulerHints"/>
@@ -20,14 +24,15 @@
     </resources>
     <method name="POST" id="createServerWithSchedulerHints">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Creates a server
-                by using scheduler hints. </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates a server
+                with scheduler hints that are passed directly to the
+                scheduler.</p>
         </wadl:doc>
-        <request>
-            <param name="os:scheduler_hints" style="plain"
-                required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        Dictionary of data to send to the scheduler.
+        <request> &serverCreateParameters; <param
+                name="os:scheduler_hints" style="plain"
+                required="true" type="xsd:dict">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml"
+                        >Dictionary of data to send to the scheduler.
                     </p></doc>
             </param>
             <representation mediaType="application/json">
