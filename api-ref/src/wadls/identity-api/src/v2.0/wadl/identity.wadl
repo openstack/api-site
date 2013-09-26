@@ -32,29 +32,7 @@
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
-    <!-- We should use SSL in production -->
-    <!--    <resources base="http://localhost:5000">
-        <resource id="version" type="#VersionDetails" path="v2.0/">
-            <resource id="extensions" type="#ExtensionList"
-                path="extensions">
-                <resource id="extension" path="{alias}">
-                    <param name="alias" style="template"
-                        type="xsd:string">
-                        <doc>
-                            <p xmlns="http://www.w3.org/1999/xhtml">The extension name.</p>
-                        </doc>
-                    </param>
-                    <method href="#getExtension"/>
-                </resource>
-            </resource>
-            <resource id="tokens" path="tokens">
-                <method href="#authenticate"/>
-            </resource>
-            <resource id="tenants" path="tenants">
-                <method href="#listTenants"/>
-            </resource>
-        </resource>
-    </resources> -->
+
     <resources base="http://localhost:5000">
         <resource id="version" type="#VersionDetails" path="v2.0/">
             <resource id="extensions" type="#ExtensionList"
@@ -71,31 +49,7 @@
                 </resource>
             </resource>
             <resource id="tokens" path="tokens">
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="username" style="plain" required="true"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            ><para>The user name.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="password" style="plain" required="true"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            ><para>The password of the
-                        user.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="tenantName" style="plain" required="false"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            ><para>The tenant name.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="tenantId" style="plain" required="false"
-                    type="capi:UUID">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            ><para>The tenant ID.</para></wadl:doc>
-                </param>
+
                 <method href="#authenticate"/>
 
                 <resource id="tenants" path="tenants">
@@ -150,7 +104,8 @@
     <method name="GET" id="getVersionInfo">
         <doc xml:lang="EN" title="Get Version Details">
             <p xmlns="http://www.w3.org/1999/xhtml">Gets detailed
-                information about a specified version of the Identity Service API.</p>
+                information about a specified version of the Identity
+                Service API.</p>
         </doc>
         <response status="200 203">
             <!-- <param name="location" style="plain" type="xsd:anyURI"
@@ -219,11 +174,6 @@
             <para role="shortdesc">Gets detailed information for a
                 specified extension.</para>
             <para>Specify the extension alias in the URI.</para>
-            <!--     <param name="alias" style="template"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    ><para>The extension alias.</para> </wadl:doc>
-            </param> -->
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
@@ -249,49 +199,63 @@
         <wadl:doc xml:lang="EN" title="Authenticate"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Authenticates and generates a
-                token. </para>
-            <para>Client authentication is provided through a ReST
-                interface by using the POST method with v2.0/tokens
-                supplied as the path. Include a payload of credentials
-                in the body.</para>
+                token.</para>
             <para>The Identity Service is a ReSTful web service. It is
                 the entry point to all service APIs. To access the
                 Identity Service, you must know the URL of the
-                Identity Service. </para>
+                Identity Service.</para>
             <para>Each ReST request against the Identity Service
                 requires the X-Auth-Token header. Clients obtain this
                 token, along with the URL to other service APIs, by
                 first authenticating against the Identity Service with
                 valid credentials.</para>
-            <table rules="all">
-                <caption>Authenticate Request Attributes</caption>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>username</td>
-                        <td>string</td>
-                        <td>Required. The user name.</td></tr>
-                    <tr><td>password</td>
-                        <td>string</td><td>Required. The password of
-                            the user.</td>
-                    </tr>
-                    <tr><td>tenantName</td><td>string</td><td>Optional.
-                            The tenant name.</td></tr>
-                    <tr><td>tenantId</td><td>UUID</td><td>Optional.
-                            The tenant ID.</td></tr></tbody></table>
+            <para>To authenticate, you must provide either a user ID
+                and password or a token.</para>
         </wadl:doc>
         <request>
+            <param name="username" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>The user name. If you do not provide a
+                        user name and password, you must provide a
+                        token.</para></wadl:doc>
+            </param>
+            <param name="password" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>The password of the
+                    user.</para></wadl:doc>
+            </param>
+            <param name="tenantName" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>The tenant name. Both the tenantId and
+                        tenantName are optional, but should not be
+                        specified together. If both attributes are
+                        specified, the server responds with a 400 Bad
+                        Request.</para></wadl:doc>
+            </param>
+            <param name="tenantId" style="plain" required="false"
+                type="capi:UUID">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>The tenant ID. Both the tenantId and
+                        tenantName are optional, but should not be
+                        specified together. If both attributes are
+                        specified, the server responds with a 400 Bad
+                        Request.</para></wadl:doc>
+            </param>
+            <param name="token" style="plain" required="false"
+                type="capi:UUID">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>A token. If you do not provide a token,
+                        you must provide a user name and
+                        password.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json"
                 element="identity:auth">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
-                        title="Authenticate with credentials: JSON request">
+                        title="Authenticate with user name and password credentials: JSON request">
                         <xsdxt:code
                             href="../samples/auth_credentials.json"/>
                     </xsdxt:sample>
@@ -301,7 +265,7 @@
                 element="identity:auth">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
-                        title="Authenticate with credentials: XML request">
+                        title="Authenticate with user name and password credentials: XML request">
                         <xsdxt:code
                             href="../samples/auth_credentials.xml"/>
                     </xsdxt:sample>
@@ -313,7 +277,7 @@
                 element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
-                        title="Authenticate with credentials: JSON response">
+                        title="Authenticate with user name and password credentials: JSON response">
                         <xsdxt:code href="../samples/auth.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
@@ -322,7 +286,7 @@
                 element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
-                        title="Authenticate with credentials: XML response">
+                        title="Authenticate with user name and password credentials: XML response">
                         <xsdxt:code href="../samples/auth.xml"/>
                     </xsdxt:sample>
                 </wadl:doc>
