@@ -1,0 +1,974 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!-- Import Common XML Entities                            -->
+<!--                                                       -->
+<!-- You can resolve the entites with xmllint              -->
+<!--                                                       -->
+<!-- xmllint -noent OS-OAUTH1.wadl                         -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+<!ENTITY % common SYSTEM "common.ent">
+%common;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3.0 ../xsd/api.xsd
+    http://docs.openstack.org/common/api/v1.0 ../xsd/api-common.xsd
+    http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
+    ">
+    <grammars>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <!-- We should use SSL in production -->
+    <resources base="http://localhost:35357">
+        <!-- FYI: double slash needed in path to get a single slash to display -->
+        <resource id="versions" path="v3">
+            <resource id="OS-OAUTH1" path="OS-OAUTH1">
+                <resource id="consumers" path="consumers">
+                    <method href="#createConsumer"/>
+                    <method href="#listConsumers"/>
+                    <resource id="consumer_id" path="{consumer_id}">
+                        <param name="consumer_id" style="template"
+                            type="csapi:uuid" required="true">
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   >The ID of the consumer.</p>
+                            </doc>
+                        </param>
+                        <method href="#showConsumer"/>
+                        <method href="#updateConsumer"/>
+                        <method href="#deleteConsumer"/>
+                    </resource>
+                </resource>
+                <resource id="request_token" path="request_token">
+                    <method href="#getUnauthorizeRequestToken"/>
+                </resource>
+                <resource id="authorize" path="authorize">
+                    <resource id="request_token_key"
+                        path="{request_token_key)">
+                        <method href="#authorizeRequestToken"/>
+                    </resource>
+                </resource>
+                <resource id="access_token" path="access_token">
+                    <method href="#createAccessToken"/>
+                    <resource id="access_token_key"
+                        path="{access_token_key">
+                        <method href="#authorizeAccessToken"/>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="users" path="users">
+                <resource id="user_id" path="{user_id}">
+                    <param name="user_id" style="template"
+                        type="csapi:uuid" required="true">
+                        <doc>
+                            <p xmlns="http://www.w3.org/1999/xhtml"
+                                >The ID of the user.</p>
+                        </doc>
+                    </param>
+                    <resource id="OS-OAUTH1-2" path="OS-OAUTH1">
+                        <resource id="access_tokens"
+                            path="access_tokens">
+                            <method href="#listAuthorizedAccessTokens"/>
+                            <resource id="access_token_id"
+                                path="{access_token_id}">
+                                <param name="access_token_id"
+                                   style="template" type="csapi:uuid"
+                                   required="true">
+                                   <doc>
+                                   <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   >The ID of the access token.</p>
+                                   </doc>
+                                </param>
+                                <method
+                                   href="#getAuthorizedAccessToken"/>
+                                <method href="#revokeAccessToken"/>
+                                <resource id="roles" path="roles">
+                                   <method
+                                   href="#listRolesOfAccessToken"/>
+                                   <resource id="role_id"
+                                   path="{role_id}">
+                                   <param name="role_id"
+                                   style="template" type="csapi:uuid"
+                                   required="true">
+                                   <doc>
+                                   <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   >The ID of the role.</p>
+                                   </doc>
+                                   </param>
+                                   <method
+                                   href="#getRoleOfAccessToken"/>
+                                   </resource>
+                                </resource>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="auth" path="auth">
+                <resource id="tokens" path="tokens">
+                    <method href="#authenticate"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+
+
+    <!--Consumers Operations-->
+    <method name="POST" id="createConsumer">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create Consumer">
+            <para role="shortdesc">Enables a user to create a
+                consumer.</para>
+        </wadl:doc>
+        <request>
+            <param name="description" style="plain" type="xsd:string"
+                required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        consumer description.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Create consumer: JSON request">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/consumers-POST-req.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+
+            </representation>
+        </request>
+        <response status="201">
+            <param name="secret" style="plain" type="xsd:string"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">A secret
+                        for the consumer, which is returned only when
+                        the consumer is created.</p>
+                </doc>
+            </param>
+            <param name="description" style="plain" type="xsd:string"
+                required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        consumer description.</p>
+                </doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the consumer. In OpenStack, the ID is the
+                        key.</p>
+                </doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Consumer
+                        links.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Create consumer: JSON response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/consumers-POST-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults;</method>
+
+    <method name="GET" id="listConsumers">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Consumers">
+            <para role="shortdesc">Lists consumers.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="description" style="plain" type="xsd:string"
+                required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        consumer description.</p>
+                </doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the consumer. In OpenStack, the ID is the
+                        key.</p>
+                </doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Consumer
+                        links.</p>
+                </doc>
+            </param>
+            <param name="next" style="plain" type="xsd:anyURI"
+                path="/common:extensions/atom:link[@rel='next']/@href">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Moves to the next item in the
+                    list.</para></wadl:doc>
+                <link resource_type="#ExtensionList" rel="next"/>
+            </param>
+            <param name="previous" style="plain" type="xsd:anyURI"
+                path="/common:extensions/atom:link[@rel='previous']/@href">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Moves to the previous item in the
+                        list.</para></wadl:doc>
+                <link resource_type="#ExtensionList" rel="previous"/>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="List consumers: JSON response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/consumers-GET-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+
+    <method name="GET" id="showConsumer">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show Consumer">
+            <para role="shortdesc">Shows information for a specified
+                consumer.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the consumer. In OpenStack, the ID is the
+                        key.</p>
+                </doc>
+            </param>
+            <param name="description" style="plain" type="xsd:string"
+                required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        consumer description.</p>
+                </doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Consumer
+                        links.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/consumer-GET-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+
+    <method name="DELETE" id="deleteConsumer">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Consumer">
+            <para role="shortdesc">Deletes a specified
+                consumer.</para>
+            <para>When you delete a consumer, any associated request
+                tokens, access tokens, and Identity Service API tokens
+                are also deleted.</para>
+        </wadl:doc>
+        <response status="204"> </response> &commonFaults; </method>
+
+    <method name="PATCH" id="updateConsumer">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update Consumer">
+            <para role="shortdesc">Updates the description for a
+                specified consumer.</para>
+            <para>If you try to update any attribute other than
+                description, the HTTP 400 Bad Request error is
+                returned.</para>
+        </wadl:doc>
+        <request>
+            <param name="description" style="plain" type="xsd:string"
+                required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        consumer description.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Update consumer: JSON request">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/consumer-PATCH-req.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+
+            </representation>
+        </request>
+        <response status="200">
+            <param name="description" style="plain" type="xsd:string"
+                required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The
+                        consumer description.</p>
+                </doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the consumer. In OpenStack, the ID is the
+                        key.</p>
+                </doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Consumer
+                        links.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Update consumer: JSON response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/consumer-PATCH-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="POST" id="getUnauthorizedRequestToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Unauthorized Request Token">
+            <para role="shortdesc">Enables a consumer to get an
+                unauthorized request token.</para>
+            <para>Supported signature methods: HMAC-SHA1.</para>
+            <para>The consumer must provide all required OAuth
+                parameters in the request. See <link
+                    xlink:href="http://oauth.net/core/1.0a/#auth_step1"
+                    >Consumer Obtains a Request Token</link>.</para>
+        </wadl:doc>
+        <request>
+            <param name="requested_role_ids" style="plain"
+                type="xsd:dict" required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml"
+                        >Comma-separated list of role IDs for the
+                        roles that the consumer would like to
+                        delegate. Example:
+                            <code>requested_role_ids=a3b29b,49993e</code>.</p>
+                </doc>
+            </param>
+            <param name="requested_project_id" style="plain"
+                type="xsd:dict" required="false">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the project to which to assign the requested
+                        roles. Example:
+                            <code>requested_project_id=b9fca3</code>.</p>
+                </doc>
+            </param>
+            <param name="oauth_consumer_key" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The consumer key.</para></wadl:doc>
+            </param>
+            <param name="oauth_signature_method" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The signature method that the consumer used
+                        to sign the request.</para></wadl:doc>
+            </param>
+            <param name="oauth_signature" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The signature as defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#signing_process"
+                            >signing
+                    requests</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_timestamp" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>As defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#nonce"
+                            >Nonce and
+                    Timestamp</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_nonce" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>As defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#nonce"
+                            >Nonce and
+                    Timestamp</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_version" style="plain"
+                type="xsd:string" required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>If present, value must be
+                            <literal>1.0</literal>. Service providers
+                        must assume the protocol version to be 1.0 if
+                        this parameter is not present. The service
+                        provider response to non-1.0 value is
+                        undefined.</para></wadl:doc>
+            </param>
+            <param name="oauth_callback" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>An absolute URL to which the service
+                        provider redirects the user when the obtaining
+                        user authorization step is completed. If the
+                        consumer cannot receive callbacks or a
+                        callback URL was established through other
+                        means, the parameter value must be set to
+                            <literal>oob</literal> (case sensitive) to
+                        indicate an out-of-band
+                    configuration.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"/>
+        </request>
+        <response status="200">
+            <param name="oauth_token" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The request token key that the Identity
+                        Service returns.</para></wadl:doc>
+            </param>
+            <param name="oauth_token_secret" style="plain"
+                type="xsd:dict" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The secret associated with the request
+                        token.</para></wadl:doc>
+            </param>
+            <param name="oauth_expires_at" style="plain"
+                type="xsd:dict" required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The ISO 8601 date time when a request token
+                        expires. If the Identity Service API does not
+                        include this attribute or the attribute is
+                        null, the token lasts
+                    indefinitely.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/txt">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Create request token: Response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/request_token_POST-resp.txt"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="PUT" id="authorizeRequestToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Authorize Request Token">
+            <para role="shortdesc">Enables a user to authorize a
+                request token.</para>
+            <para>The authorizing user must have the requested role
+                assignments on the requested project. Successful
+                authorization returns an OAuth verifier code. The
+                consumer receives the OAuth verifier from the user
+                out-of-band.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="oauth_verifier" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The OAuth verifier code.</para></wadl:doc>
+            </param>
+            <param name="oauth_token" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The request token key that the Identity
+                        Service returns.</para></wadl:doc>
+            </param>
+            <param name="oauth_token_secret" style="plain"
+                type="xsd:dict" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The secret associated with the request
+                        token.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Authorize request token: JSON response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/authorize-PUT-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="POST" id="createAccessToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create Access Token">
+            <para role="shortdesc">Enables a consumer to create an
+                access token by exchanging a request token for an
+                access token.</para>
+            <para>After the user authorizes the request token, the
+                consumer exchanges the authorized request token and
+                OAuth verifier for an access token.</para>
+            <para>Supported signature methods: HMAC-SHA1.</para>
+            <para>The consumer must provide all required OAuth
+                parameters in the request. See <link
+                    xlink:href="http://oauth.net/core/1.0a/#auth_step1"
+                    >Consumer Obtains a Request Token</link>.</para>
+            <para>Supported signature methods: HMAC-SHA1.</para>
+            <para>You must provide all required OAuth parameters in
+                the request. See <link
+                    xlink:href="http://oauth.net/core/1.0a/#auth_step1"
+                    >Consumer Obtains a Request Token</link>.</para>
+        </wadl:doc>
+        <request>
+            <param name="oauth_consumer_key" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The consumer key.</para></wadl:doc>
+            </param>
+            <param name="oauth_signature_method" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The signature method that the consumer used
+                        to sign the request.</para></wadl:doc>
+            </param>
+            <param name="oauth_signature" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The signature as defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#signing_process"
+                            >signing
+                    requests</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_timestamp" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>As defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#nonce"
+                            >Nonce and
+                    Timestamp</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_nonce" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>As defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#nonce"
+                            >Nonce and
+                    Timestamp</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_version" style="plain"
+                type="xsd:string" required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>If present, value must be
+                            <literal>1.0</literal>. Service providers
+                        must assume the protocol version to be 1.0 if
+                        this parameter is not present. The service
+                        provider response to non-1.0 value is
+                        undefined.</para></wadl:doc>
+            </param>
+            <param name="oauth_callback" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>An absolute URL to which the service
+                        provider redirects the user when the obtaining
+                        user authorization step is completed. If the
+                        consumer cannot receive callbacks or a
+                        callback URL was established through other
+                        means, the parameter value must be set to
+                            <literal>oob</literal> (case sensitive) to
+                        indicate an out-of-band
+                    configuration.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"/>
+        </request>
+        <response status="200">
+            <param name="oauth_expires_at" style="plain"
+                type="xsd:dict" required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The ISO 8601 date time when a request token
+                        expires. If the Identity Service API does not
+                        include this attribute or the attribute is
+                        null, the token lasts
+                    indefinitely.</para></wadl:doc>
+            </param>
+            <param name="oauth_token" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The request token key that the Identity
+                        Service returns.</para></wadl:doc>
+            </param>
+            <param name="oauth_token_secret" style="plain"
+                type="xsd:dict" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The secret associated with the request
+                        token.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/txt">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Create access token: Response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/access_token-POST-resp.txt"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="POST" id="authenticate">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get an Identity Service Token">
+            <para role="shortdesc">Enables a consumer to get an
+                Identity Service authentication token.</para>
+            <para>The token represents the delegated authorization and
+                identity (impersonation) of the authorizing user. The
+                roles and scope of the generated token match those
+                that the consumer initially
+                requested.</para><para>Supported signature methods:
+                HMAC-SHA1.</para>
+            <para>The consumer must provide all required OAuth
+                parameters in the request. See <link
+                    xlink:href="http://oauth.net/core/1.0a/#auth_step1"
+                    >Consumer Obtains a Request Token</link>.</para>
+            <para>The returned token is scoped to the requested
+                project and with the requested roles. In addition to
+                the standard token response, the token has an
+                OAuth-specific object.</para>
+            <para>Various <link
+                    xlink:href="https://github.com/openstack/identity-api/blob/master/openstack-identity-api/v3/src/markdown/identity-api-v3.md#authentication-responses"
+                    >examples</link> of OpenStack token
+                responses.</para>
+            <para>Example OAuth-specific object in a token:</para>
+            <programlisting language="json">"OS-OAUTH1": {
+                        "access_token_id": "cce0b8be7",
+                        }</programlisting>
+        </wadl:doc>
+        <request>
+            <param name="oauth_consumer_key" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The consumer key.</para></wadl:doc>
+            </param>
+            <param name="oauth_signature_method" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The signature method that the consumer used
+                        to sign the request.</para></wadl:doc>
+            </param>
+            <param name="oauth_signature" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The signature as defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#signing_process"
+                            >signing
+                    requests</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_timestamp" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>As defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#nonce"
+                            >Nonce and
+                    Timestamp</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_nonce" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>As defined in <link
+                            xlink:href="http://oauth.net/core/1.0a/#nonce"
+                            >Nonce and
+                    Timestamp</link>.</para></wadl:doc>
+            </param>
+            <param name="oauth_version" style="plain"
+                type="xsd:string" required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>If present, value must be
+                            <literal>1.0</literal>. Service providers
+                        must assume the protocol version to be 1.0 if
+                        this parameter is not present. The service
+                        provider response to non-1.0 value is
+                        undefined.</para></wadl:doc>
+            </param>
+            <param name="oauth_callback" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>An absolute URL to which the service
+                        provider redirects the user when the obtaining
+                        user authorization step is completed. If the
+                        consumer cannot receive callbacks or a
+                        callback URL was established through other
+                        means, the parameter value must be set to
+                            <literal>oob</literal> (case sensitive) to
+                        indicate an out-of-band configuration.</para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json"/>
+        </request>
+        <response status="200 203">
+            <representation mediaType="application/json"/>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="GET" id="listAuthorizedAccessTokens">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Authorized Access Tokens">
+            <para role="shortdesc">Lists authorized access
+                tokens.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="consumer_id" style="template"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the consumer.</p>
+                </doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The ID for the access
+                    token.</para></wadl:doc>
+            </param>
+            <param name="expires_at" style="plain" type="xsd:dict"
+                required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The ISO 8601 date time when an access token
+                        expires. If the Identity Service API does not
+                        include this attribute or the attribute is
+                        null, the token lasts
+                    indefinitely.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Access
+                        token links.</p>
+                </doc>
+            </param>
+            <param name="project_id" style="plain" type="csapi:uuid"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the project.</p>
+                </doc>
+            </param>
+            <param name="authorizing_user_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the authorizing user.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="List authorized access tokens: JSON response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/access_tokens-GET-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="GET" id="getAuthorizedAccessToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Authorized Access Token">
+            <para role="shortdesc">Gets an authorized access
+                token.</para>
+        </wadl:doc>
+
+        <response status="200">
+            <param name="consumer_id" style="template"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the consumer.</p>
+                </doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The ID for the access
+                    token.</para></wadl:doc>
+            </param>
+            <param name="expires_at" style="plain" type="xsd:dict"
+                required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The ISO 8601 date time when an access token
+                        expires. If the Identity Service API does not
+                        include this attribute or the attribute is
+                        null, the token lasts
+                    indefinitely.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Access
+                        token links.</p>
+                </doc>
+            </param>
+            <param name="project_id" style="plain" type="csapi:uuid"
+                required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the project.</p>
+                </doc>
+            </param>
+            <param name="authorizing_user_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of
+                        the authorizing user.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Get authorized access token: JSON response">
+                        <xsdxt:code
+                            href="../samples/OS-OAUTH1/access_token-GET-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="GET" id="listRolesOfAccessToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Roles of an Access Token">
+            <para role="shortdesc">Lists associated roles of a
+                specified access token.</para>
+        </wadl:doc>
+        <response status="200">
+
+            <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                <para>See &GET; <literal>/v3/roles</literal> for an
+                        [<link
+                        xlink:href="https://github.com/openstack/identity-api/blob/master/openstack-identity-api/v3/src/markdown/identity-api-v3.md#list-roles-get-roles"
+                        >example</link>) of this response
+                    format.</para>
+            </wadl:doc>
+
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="GET" id="getRoleOfAccessToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get Role of an Access Token">
+            <para role="shortdesc">Gets information about a specified
+                role for a specified access token.</para>
+            <para>See &GET; <literal>/v3/roles/{role_id}</literal> for
+                an <link
+                    xlink:href="https://github.com/openstack/identity-api/blob/master/openstack-identity-api/v3/src/markdown/identity-api-v3.md#get-role-get-rolesrole_id"
+                    >example</link> of this response format. </para>
+        </wadl:doc>
+
+        <response status="200">
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The role ID.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Links to roles.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>The role name.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="400"/> &commonFaults; </method>
+    <method name="DELETE" id="revokeAccessToken">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Revoke Access Token">
+            <para role="shortdesc">Enables a user to revoke an access
+                token, which prevents the consumer from requesting new
+                Identity Service API tokens. Also, revokes any
+                Identity Service API tokens issued to the consumer
+                through that access token.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+</application>
