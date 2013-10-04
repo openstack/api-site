@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.openstack.org/api/compute/2.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+
+    <resources base="https://servers.api.openstack.com">
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenantID" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook"
+                            ><para>The ID for the tenant or account in
+                            a multi-tenancy cloud.</para></wadl:doc>
+                </param>
+                <resource id="os-fixed-ips" path="os-migrations">
+                    <param name="cell_name" style="query"
+                        required="false" type="xsd:string"
+                        path="cell_name={cell_name}">
+                        <wadl:doc xml:lang="EN"
+                            xmlns="http://docbook.org/ns/docbook"
+                                ><para>The cell name. To fetch
+                                migrations for a specified cell,
+                                include the cell name in the URI as follows:
+                                   <code>cell_name={cell_name}</code>.</para></wadl:doc>
+                    </param>
+                    <method href="#getMigrations"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="getMigrations">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Enables an administrative user to
+                fetch in-progress migrations for a region or specified
+                cell in a region.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="created_at" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        created at time stamp.</para></wadl:doc>
+            </param>
+            <param name="dest_compute" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        destination compute node.</para></wadl:doc>
+            </param>
+            <param name="dest_host" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        destination host.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        migration ID.</para></wadl:doc>
+            </param>
+            <param name="instance_uuid" style="plain" required="true"
+                type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The ID
+                        of the instance being
+                    migrated.</para></wadl:doc>
+            </param>
+            <param name="new_instance_type_id" style="plain"
+                required="true" type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The ID
+                        of the new instance type.</para></wadl:doc>
+            </param>
+            <param name="old_instance_type_id" style="plain"
+                required="true" type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The ID
+                        of the old instance type.</para></wadl:doc>
+            </param>
+            <param name="source_compute" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        source compute node.</para></wadl:doc>
+            </param>
+            <param name="source_node" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        source node.</para></wadl:doc>
+            </param>
+            <param name="status" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        migration status.</para></wadl:doc>
+            </param>
+            <param name="updated_at" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        updated at time stamp.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-migrations/migrations-get.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-migrations/migrations-get.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
