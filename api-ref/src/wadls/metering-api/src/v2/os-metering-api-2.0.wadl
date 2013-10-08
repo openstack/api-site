@@ -1,0 +1,179 @@
+<application xmlns="http://wadl.dev.java.net/2009/02"
+xmlns:wadl="http://wadl.dev.java.net/2009/02"
+xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    <resources base="http://www.example.com">
+        <resource path="v2">
+            <resource path="alarms">
+                <method href="#listAlarms" />
+                <method href="#createAlarm" />
+            </resource>
+            <resource path="meters">
+                <method href="#listMeters" />
+                <resource path="{meter_id}">
+                    <method href="#showMeter" />
+                    <method href="#createMeter" />
+                    <resource path="statistics">
+                        <method href="#showMeterStatistics" />
+                    </resource>
+                </resource>
+            </resource>
+            <resource path="resources">
+                <method href="#listResources" />
+                <resource path="{resource_id}">
+                    <method href="#showResource" />
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method id="listResources" name="GET">
+        <wadl:doc title="List resources" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Retrieve definitions of all of the
+            resources.</para>
+        </wadl:doc>
+        <request>
+            <param name="q" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
+                    rules for the resources to be returned.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="showResource" name="GET">
+        <wadl:doc title="Show resource" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Retrieve details about one
+            resource.</para>
+        </wadl:doc>
+        <request>
+            <param name="resource_id" required="false" style="query"
+            type="xsd:string"
+            xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The UUID
+                    of the resource.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="listMeters" name="GET">
+        <wadl:doc title="List meters" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Return all known meters, based on
+            the data recorded so far.</para>
+        </wadl:doc>
+        <request>
+            <param name="q" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
+                    rules for the meters to be returned.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="showMeter" name="GET">
+        <wadl:doc title="Show meter" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Return samples for the
+            meter.</para>
+        </wadl:doc>
+        <request>
+            <param name="q" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
+                    rules for the data to be returned.</p>
+                </doc>
+            </param>
+            <param name="limit" required="false" style="query"
+            type="xsd:int" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Maximum
+                    number of samples to return.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="createMeter" name="POST">
+        <wadl:doc title="Create meter" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Post a list of new Samples to
+            Ceilometer.</para>
+        </wadl:doc>
+        <request>
+            <param name="body" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">a list of
+                    samples within the request body.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="showMeterStatistics" name="GET">
+        <wadl:doc title="Show meter statistics" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Computes the statistics of the
+            samples in the time range given.</para>
+        </wadl:doc>
+        <request>
+            <param name="q" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
+                    rules for the data to be returned.</p>
+                </doc>
+            </param>
+            <param name="groupby" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Fields
+                    for group by aggregation</p>
+                </doc>
+            </param>
+            <param name="period" required="false" style="query"
+            type="xsd:int" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Returned
+                    result will be an array of statistics for a
+                    period long of that number of seconds.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="listAlarms" name="GET">
+        <wadl:doc title="List alarms" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Return all alarms, based on the
+            query provided.</para>
+        </wadl:doc>
+        <request>
+            <param name="q" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
+                    rules for the alarms to be returned.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="createAlarm" name="POST">
+        <wadl:doc title="Create alarm" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Create a new alarm.</para>
+        </wadl:doc>
+        <request />
+        <response status="200" />
+    </method>
+</application>
