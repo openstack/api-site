@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2011 OpenStack LLC., All Rights Reserved -->
+<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -22,7 +22,7 @@
     ../xsd/api.xsd
     http://docs.openstack.org/common/api/v1.0
     ../xsd/api-common.xsd
-    ">  
+    ">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
@@ -30,30 +30,43 @@
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        The ID for the tenant or account in a multi-tenancy cloud.
-                    </p></doc>
-                </param>         
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml"> The
+                            ID for the tenant or account in a
+                            multi-tenancy cloud. </p>
+                    </doc>
+                </param>
                 <resource id="Servers" path="servers">
                     <resource path="{server_id}">
-                        <param name="server_id" style="template" type="csapi:UUID">
-                            <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                                The UUID for the server of interest to you.
-                            </p>
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc>
+                                <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   > The UUID for the server of
+                                   interest to you. </p>
                             </doc>
                         </param>
-                        <resource path="os-volume_attachments" type="#Volumes"> 
-                            <resource path="{attachment_id}" type="#VolumeAttachmentList">
-                                <param name="attachment_id" style="template" type="xsd:string"><doc xml:lang="EN" title="attachment_id">
-                                    <p xmlns="http://www.w3.org/1999/xhtml">
-                                        Volume attachment ID.
-                                    </p></doc></param>
-                            </resource> 
+                        <resource path="os-volume_attachments"
+                            type="#Volumes">
+                            <resource path="{attachment_id}"
+                                type="#VolumeAttachmentList">
+                                <param name="attachment_id"
+                                   style="template" type="xsd:string">
+                                   <doc xml:lang="EN"
+                                   title="attachment_id">
+                                   <p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   > Volume attachment ID. </p>
+                                   </doc>
+                                </param>
+                            </resource>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
-        </resource>
         </resource>
     </resources>
     <!--*******************************************************-->
@@ -61,137 +74,150 @@
     <!--*******************************************************-->
     <resource_type id="Volumes">
         <doc xml:lang="EN" title="Volumes">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                A list of volume attachments associated with a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> A list of volume
+                attachments associated with a server. </p>
         </doc>
         <method href="#attachVolume"/>
-        <method href="#listVolumeAttachments"/>      
-    </resource_type>   
+        <method href="#listVolumeAttachments"/>
+    </resource_type>
     <resource_type id="VolumeAttachmentList">
         <doc xml:lang="EN" title="Volume Attachment List">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                A list of volume attachments associated with a server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> A list of volume
+                attachments associated with a server. </p>
         </doc>
         <method href="#getVolumeAttachmentDetails"/>
         <method href="#deleteVolumeAttachment"/>
     </resource_type>
- 
+
     <!--*******************************************************-->
     <!--               All Methods                             -->
-    <!--****************************************************** --> 
+    <!--****************************************************** -->
     <!-- Volume Actions -->
     <method name="POST" id="attachVolume">
         <doc xml:lang="EN" title="Attach Volume to Server">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Attaches a volume to the specified server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Attaches a volume
+                to the specified server. </p>
         </doc>
         <request>
             <param name="volumeId" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        ID of the volume to attach.
-                    </p></doc>
-                </param>
+                <doc><p xmlns="http://www.w3.org/1999/xhtml"> ID of
+                        the volume to attach. </p></doc>
+            </param>
             <param name="device" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        Name of the device e.g. /dev/vdb. Use "auto" for autoassign (if supported).
-                    </p></doc>
-                </param>
-            <param name="volumeAttachment" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        A dictionary representation of a volume attachment.
-                    </p></doc>
-                </param>
-            <representation mediaType="application/xml" element="csapi:attachvolume">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml"> Name of
+                        the device such as, /dev/vdb. Use "auto" for
+                        auto-assign (if supported). </p></doc>
+            </param>
+            <param name="volumeAttachment" style="template"
+                type="xsd:string">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml"> A
+                        dictionary representation of a volume
+                        attachment. </p></doc>
+            </param>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/attachvolume.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/attach-volume-to-server-req.xml"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="samples/attachvolume.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/attach-volume-to-server-req.json"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="202">
-            <representation mediaType="application/xml" element="csapi:attachvolume"/>
-            <representation mediaType="application/json" >
-            <doc xml:lang="EN">
-                <xsdxt:code href="samples/attachvolume-resp.json" />
-            </doc>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/attach-volume-to-server-resp.xml"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/attach-volume-to-server-resp.json"
+                    />
+                </doc>
             </representation>
         </response>
-        <!-- Common, GET, postput, inProgress Faults-->
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-        &inProgressFault;
-    </method>  
+        <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
+        &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="GET" id="listVolumeAttachments">
         <doc xml:lang="EN" title="List Volume Attachments">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Lists the volume attachments for the specified server.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists the volume
+                attachments for the specified server. </p>
         </doc>
         <request>
-            <representation mediaType="application/xml" element="csapi:attachvolume"/>
-            <representation mediaType="application/json" element="csapi:attachvolume"/>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume"/>
+            <representation mediaType="application/json"
+                element="csapi:attachvolume"/>
         </request>
         <response status="202">
-            <representation mediaType="application/xml" element="csapi:attachvolume"/>
-            <representation mediaType="application/json" >
-            <doc xml:lang="EN">
-                <xsdxt:code href="samples/listvolumeattach-resp.json" />
-            </doc>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume"><doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/list-volume-attachments-resp.xml"
+                    />
+                </doc></representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/list-volume-attachments-resp.json"
+                    />
+                </doc>
             </representation>
         </response>
-        <!-- Common, GET, postput, inProgress Faults-->
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-        &inProgressFault;
-    </method> 
+        <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
+        &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="GET" id="getVolumeAttachmentDetails">
         <doc xml:lang="EN" title="Get Volume Attachment Details">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Lists volume details for the specified volume attachment ID.
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists volume
+                details for the specified volume attachment ID. </p>
         </doc>
         <request>
-            <representation mediaType="application/xml" element="csapi:attachvolume"/>
-            <representation mediaType="application/json" element="csapi:attachvolume"/>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume"/>
+            <representation mediaType="application/json"
+                element="csapi:attachvolume"/>
         </request>
         <response status="202">
-            <representation mediaType="application/xml" element="csapi:attachvolume"/>
-            <representation mediaType="application/json" >
-            <doc xml:lang="EN">
-                <xsdxt:code href="samples/getvolumeattach-resp.json" />
-            </doc>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume"> <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume-attachment-detail-resp.xml"
+                    />
+                </doc></representation>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume-attachment-detail-resp.json"
+                    />
+                </doc>
             </representation>
         </response>
-        <!-- Common, GET, postput, inProgress Faults-->
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-        &inProgressFault;
-    </method> 
+        <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
+        &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="DELETE" id="deleteVolumeAttachment">
         <doc xml:lang="EN" title="Delete Volume Attachment">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Deletes the specified volume attachment from the specified server.
+            <p xmlns="http://www.w3.org/1999/xhtml"> Deletes the
+                specified volume attachment from the specified server.
             </p>
         </doc>
         <request>
-            <representation mediaType="application/xml" element="csapi:attachvolume"/>
-            <representation mediaType="application/json" element="csapi:attachvolume"/>
+            <representation mediaType="application/xml"
+                element="csapi:attachvolume"/>
+            <representation mediaType="application/json"
+                element="csapi:attachvolume"/>
         </request>
         <response status="202"/>
-        <!-- Common, GET, postput, inProgress Faults-->
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-        &inProgressFault;
-    </method>
-    </application>
+        <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
+        &getFaults; &postPutFaults; &inProgressFault; </method>
+</application>

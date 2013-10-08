@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- (C) 2012 OpenStack LLC., All Rights Reserved -->
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
-             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-             xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
 
     <resources base="https://servers.api.openstack.com">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Flavor access" xml:lang="EN"/>
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                      The ID for the tenant or account in a multi-tenancy cloud.
-                    </p></doc>
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para> The ID for the tenant or account in a
+                            multi-tenancy cloud. </para></wadl:doc>
                 </param>
                 <resource id="flavors" path="flavors">
-                    <method href="#detailAccess" />
-                    <method href="#createAccess" />
+                    <method href="#detailAccess"/>
+                    <method href="#createAccess"/>
                     <resource path="{flavor_id}">
-                        <param name="flavor_id" style="template" required="true">
-                            <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                              The ID of the flavor of interest to you.
-                            </p></doc>
+                        <param name="flavor_id" style="template"
+                            type="csapi:uuid" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para role="shortdesc">
+                                   The ID of the flavor of interest to
+                                   you. </para></wadl:doc>
                         </param>
-                        <method href="#showAccess" />
+                        <method href="#showAccess"/>
                         <resource path="os-flavor-access">
-                            <method href="#listAccess" />
+                            <method href="#listAccess"/>
                         </resource>
                         <resource path="action">
-                            <method href="#addTenantAccess" />
-                            <method href="#removeTenantAccess" />
+                            <method href="#addTenantAccess"/>
+                            <method href="#removeTenantAccess"/>
                         </resource>
                     </resource>
                 </resource>
@@ -38,159 +48,187 @@
     </resources>
 
     <method name="GET" id="detailAccess">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Lists all flavors. Includes the access type, which is public or private.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc"> Lists all flavors. Includes the
+                access type, which is public or private. </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-detail-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-detail-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-detail-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-detail-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 
     <method name="POST" id="createAccess">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-              Creates a private flavor.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc"> Creates a private flavor. </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-create-req.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-create-req.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-create-req.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-create-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-create-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-create-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-create-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-create-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 
     <method name="GET" id="showAccess">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Gets the flavor access type, which is either public or private.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc"> Gets the flavor access type, which
+                is either public or private. </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-show-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-show-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-show-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-show-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 
     <method name="GET" id="listAccess">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Lists tenants with access to the specified private flavor.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc"> Lists tenants with access to the
+                specified private flavor. </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-list-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-list-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-list-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-list-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 
     <method name="POST" id="addTenantAccess">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Gives the specified tenant access to the specified private flavor.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc"> Gives the specified tenant access
+                to the specified private flavor. </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-add-tenant-req.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-add-tenant-req.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-add-tenant-req.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-add-tenant-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-add-tenant-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-add-tenant-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-add-tenant-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-add-tenant-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 
     <method name="DELETE" id="removeTenantAccess">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Revokes access from the specified tenant for the specified private flavor.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc"> Revokes access from the specified
+                tenant for the specified private flavor. </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-remove-tenant-req.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-remove-tenant-req.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-remove-tenant-req.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-remove-tenant-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-remove-tenant-resp.json" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-remove-tenant-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-flavor-access/flavor-access-remove-tenant-resp.xml" />
+                    <xsdxt:code
+                        href="../api_samples/os-flavor-access/flavor-access-remove-tenant-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 </application>
-
