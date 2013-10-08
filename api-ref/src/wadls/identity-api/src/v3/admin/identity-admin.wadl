@@ -18,7 +18,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3.0 ../common/xsd/api.xsd
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3"
+    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3 ../common/xsd/api.xsd
     http://docs.openstack.org/common/api/v1.0 ../common/xsd/api-common.xsd
     http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
     ">
@@ -68,8 +69,8 @@
                 <method href="#updateEndpoint"/>
                 <method href="#deleteEndpoint"/>
             </resource>
-            <resource id="domains" path="domains"> &authHeader;
-                    <method href="#createDomain"/>
+            <resource id="domains" path="domains">
+                <method href="#createDomain"/>
                 <method href="#listDomains"/>
                 <resource id="domainID" path="{domain_id}">
                     <param name="domain_id" style="template"
@@ -834,11 +835,10 @@
         </wadl:doc>
         <!--No request body is provided-->
         <request> &listDomainsParams; </request>
-
-        <response status="200">
+        <response status="200"> &listDomainsRespParams;
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample>
+               <wadl:doc xmlns="http://docbook.org/ns/docbook" title="List domains: JSON response">
+                <xsdxt:sample title="List domains: JSON response">
                         <xsdxt:code
                             href="../common/samples/DomainsListResponse.json"
                         />
@@ -853,6 +853,25 @@
             <para role="shortdesc">Adds a domain.</para>
         </wadl:doc>
         <request>
+            &authHeader;
+            <param name="description" style="plain"
+                type="xsd:string" required="false">
+                <wadl:doc
+                    xmlns="http://docbook.org/ns/docbook"
+                    >The domain description.</wadl:doc>
+            </param>
+            <param name="enabled" style="plain"
+                type="xsd:boolean" required="false">
+                <wadl:doc
+                    xmlns="http://docbook.org/ns/docbook"
+                    >Set to true to enable the domain. Otherwise, set to false.</wadl:doc>
+            </param>
+            <param name="name" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc
+                    xmlns="http://docbook.org/ns/docbook"
+                    >The domain name.</wadl:doc>
+            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
@@ -861,13 +880,11 @@
                         />
                     </xsdxt:sample>
                 </wadl:doc>
-
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../common/samples/DomainCreateResponse.json"
