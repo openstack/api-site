@@ -315,16 +315,14 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/version-resp.json"
-                        />
+                            href="../samples/version-resp.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
-                        <xsdxt:code
-                            href="../samples/version-resp.xml"
+                        <xsdxt:code href="../samples/version-resp.xml"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -343,7 +341,7 @@
                     <code>X-Auth-Token</code>. Clients obtain
                     <code>X-Auth-Token</code> and the URL endpoints
                 for other service APIs by supplying their valid
-                credentials to the authentication service. </para>
+                credentials to the authentication service.</para>
             <para>A REST interface provides client authentication by
                 using the POST method, with <code>auth/tokens</code>
                 supplied as the path. The body of the request must
@@ -353,155 +351,194 @@
                 project or a domain. If both project and domain are
                 included, an <code>HTTP 400 Bad Request</code>
                 results, because a token cannot be simultaneously
-                scoped as both a project and a domain. </para>
+                scoped as both a project and a domain.</para>
             <important>
                 <para>If the optional scope is not included and the
                     authenticating user has a defined default project
                     (the user's <code>default_project_id</code>
                     attribute), then that default project is treated
-                    as the preferred authorization scope. </para>
+                    as the preferred authorization scope.</para>
                 <para>If no default project is defined, the token is
                     issued without an explicit scope of authorization.
                 </para>
             </important>
             <para>Provide one of the following sets of credentials to
-                authenticate:</para>
-            <itemizedlist spacing="compact">
-                <listitem>
-                    <para>User ID and password. </para>
-                </listitem>
-                <listitem>
-                    <para>User ID and password with optional scope
-                        (project ID). </para>
-                </listitem>
-                <listitem>
-                    <para>User ID and password with optional scope
-                        (domain ID and project name). </para>
-                </listitem>
-                <listitem>
-                    <para>User ID and password with optional scope
-                        (domain name and project name). </para>
-                </listitem>
-                <listitem>
-                    <para>User name, password, and domain ID. </para>
-                </listitem>
-                <listitem>
-                    <para>User name, password, and domain name.
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>Token. </para>
-                </listitem>
-            </itemizedlist>
+                authenticate: User ID and password, user name and
+                password scoped by domain ID or name, user ID and
+                password scoped by project ID or name with or without
+                domain scope, or token.</para>
             <para>The following examples demonstrate authentication
-                requests with several kinds of credentials.</para>
+                requests with different types of credentials.</para>
             <note>
-                <para>With password authentication, <code>user
-                        ID</code> uniquely identifies the user.
-                    However, <code>user name</code> uniquely
-                    identifies the user only when used in conjunction
-                    with a <code>domain ID</code> or a <code>domain
-                        name</code>. </para>
-                <para>With token authentication, the
-                        <code>token</code> uniquely identifies the
-                    user. This method is typically used in combination
-                    with a request to change authorization scope. </para>
                 <para>If <code>scope</code> is included, <code>project
                         id</code> uniquely identifies the
                         <code>project</code>. However, <code>project
                         name</code> uniquely identifies the
                         <code>project</code> only when used in
                     conjunction with a <code>domain ID</code> or a
-                        <code>domain name</code>. </para>
+                        <code>domain name</code>.</para>
             </note>
+            <para>If the authentication token has expired, a
+                    <errorcode>401</errorcode> response code is
+                returned.</para>
+            <para>If the subject token has expired, this call returns
+                a <errorcode>404</errorcode> response code.</para>
+            <para>The Identity Service treats expired tokens as not
+                valid tokens.</para>
+            <para>The deployment determines how long expired tokens
+                are stored.</para>
             <para>As the following example responses show, the
                 response to an authentication request returns the
                 token ID in the <code>X-Subject-Token</code> header
-                instead of in the token data. </para>
-            <note>
-                <itemizedlist>
-                    <listitem><para>If the call has no explicit
-                            authorization scope, the response does not
-                            contain the <code>catalog</code>,
-                                <code>project</code>,
-                                <code>domain</code>, or
-                                <code>roles</code> fields. However,
-                            the response still uniquely identifies the
-                            user. </para></listitem><listitem>
-                        <para>A token scoped to a <code>project</code>
-                            also has both a service
-                                <code>catalog</code> and the user's
-                            roles applicable to the
-                                <code>project</code>.
-                        </para></listitem>
-                    <listitem>
-                        <para>A token scoped to a <code>domain</code>
-                            also has both a service
-                                <code>catalog</code> and the user's
-                            roles applicable to the
-                                <code>project</code>.
-                        </para></listitem><listitem>
-                        <para>Optionally, the identity service
-                            implementation might return an
-                                <code>authentication</code> attribute
-                            to indicate the supported authentication
-                            methods.
-                            </para></listitem><listitem><para>For
-                            authentication processes that require
-                            multiple round trips, the identity service
-                            implementation might return an <code>HTTP
-                                401 Not Authorized</code> error with
-                            additional information for the next
-                            authentication step.
-                    </para></listitem></itemizedlist></note>
-            <important>
-                <para>The following examples illustrate several
-                    possible HTTP 401 Unauthorized authentication
-                    errors. Other errors like HTTP 403 Forbidden and
-                    HTTP 409 Conflict are also possible. </para>
-            </important>
+                instead of in the token data.</para>
+            <para>If the call has no explicit authorization scope, the
+                response does not contain the <code>catalog</code>,
+                    <code>project</code>, <code>domain</code>, or
+                    <code>roles</code> fields. However, the response
+                still uniquely identifies the user.</para>
+            <para>A token scoped to a <code>project</code> also has
+                both a service <code>catalog</code> and the user's
+                roles applicable to the <code>project</code>. </para>
+            <para>A token scoped to a <code>domain</code> also has
+                both a service <code>catalog</code> and the user's
+                roles applicable to the <code>project</code>. </para>
+            <para>Optionally, the identity service implementation
+                might return an <code>authentication</code> attribute
+                to indicate the supported authentication methods.
+                </para><para>For authentication processes that require
+                multiple round trips, the identity service
+                implementation might return an <code>HTTP 401 Not
+                    Authorized</code> error with additional
+                information for the next authentication step.</para>
+            <para>The following examples illustrate several possible
+                HTTP 401 Unauthorized authentication errors. Other
+                errors like HTTP <errorcode>403</errorcode>
+                <returnvalue>Forbidden</returnvalue> and HTTP
+                    <errorcode>409</errorcode>
+                <returnvalue>Conflict</returnvalue> are also
+                possible.</para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/json">
+            <param name="methods" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>The authentication method, which is
+                            <code>password</code> or
+                            <code>token</code>.</para><para>With
+                        password authentication, you can specify user
+                        ID and password, user name and password scoped
+                        by domain ID or name, or user ID and password
+                        scoped by project ID or name with or without
+                        domain scope.</para>
+                    <para>With token authentication, you specify the
+                        token ID.</para>
+                </wadl:doc>
+            </param>
+            <param name="token" style="plain" required="false"
+                type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="Authenticate with User ID and Password: JSON Request">
+                    <para>With token authentication, the
+                            <code>id</code> uniquely identifies the
+                        token. This method is typically used in
+                        combination with a request to change
+                        authorization scope.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <para>With password authentication,
+                            <code>id</code> uniquely identifies the
+                        user. However, <code>name</code> uniquely
+                        identifies the user when used in conjunction
+                        with a domain <code>id</code> or
+                            <code>name</code>.</para></wadl:doc>
+            </param>
+            <param name="user" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <para>Specify <code>id</code> or <code>name</code>
+                        to uniquely identify the user and
+                            <code>password</code>. Use
+                            <code>name</code> only in conjunction with
+                        a domain <code>id</code> or
+                        <code>name</code>.</para></wadl:doc>
+            </param>
+            <param name="domain" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <para>Specify either <code>id</code> or
+                            <code>name</code> to uniquely identify the
+                        domain.</para></wadl:doc>
+            </param>
+            <param name="scope" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>A project scope with an optional domain
+                        scope. Specify either an <code>id</code> or
+                            <code>name</code> to uniquely identify the
+                        project. Use <code>name</code> only in
+                        conjunction with a domain <code>id</code> or
+                            <code>name</code>.</para></wadl:doc>
+            </param>
+            <param name="token" style="plain" required="false"
+                type="capi:UUID">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        ><para>A token ID. If you do not provide a
+                        token, you must provide a user name and
+                        password.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with User ID and Password: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthPasswordIDRequest.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with Domain ID, User Name, and Password: JSON Request">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with Domain ID, User Name, and Password: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthPasswordNameRequest.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with Domain Name, User Name, and Password: JSON Request">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with Domain Name, User Name, and Password: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthPasswordDomainRequest.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with Token: JSON Request">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with Token: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthTokenRequest.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with User ID, Password, and Scope: Project ID: JSON Request">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with User ID, Password, and Scope: Project ID: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthPasswordIDScopeProjIDRequest.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with User ID, Password, and Scope: Domain ID and Project Name: JSON Request">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with User ID, Password, and Scope: Domain ID and Project Name: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthPasswordIDScopeProjNameRequest.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with User ID, Password, and Scope: Domain Name and Project Name: JSON Request">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with User ID, Password, and Scope: Domain Name and Project Name: JSON Request">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthPasswordIDScopeProjDomainNameRequest.json"
                         />
@@ -512,47 +549,60 @@
         </request>
         <response status="200 203">
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
-                    <xsdxt:sample
-                        title="Authenticate without Scope: JSON Response">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate without Scope: JSON Response">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthNoScopeResponse.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with Project Scope: JSON Response">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with Project Scope: JSON Response">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthScopeProjectResponse.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Authenticate with Domain Scope: JSON Response">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Authenticate with Domain Scope: JSON Response">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthScopeDomainResponse.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Error: Basic HTTP 401 Not Authorized: JSON Response">
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Error: Basic HTTP 401 Not Authorized: JSON Response">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthFail401aResponse.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Error: HTTP 401 Not Authorized with Supported Methods: JSON Response">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Error: HTTP 401 Not Authorized with Supported Methods: JSON Response">
+                    <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthFail401bResponse.json"
                         />
                     </xsdxt:sample>
-                    <xsdxt:sample
-                        title="Error: HTTP 401 Not Authorized with Next Step Information: JSON Response">
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="Error: HTTP 401 Not Authorized with Next Step Information: JSON Response"><xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthFail401cResponse.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response>
+        <response status="404 409"/> &commonFaults; &getFaults; </method>
 
     <method name="GET" id="validateTokens">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
@@ -572,7 +622,6 @@
                         <xsdxt:code
                             href="../samples/TokenValidateRequest.txt"
                         />
-
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -580,7 +629,6 @@
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/TokenAuthNoScopeResponse.json"
@@ -593,18 +641,18 @@
     <method name="HEAD" id="checkTokens">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Check Token">
-            <para role="shortdesc">Validates a specified token. </para>
+            <para role="shortdesc">Validates a specified token.</para>
             <para>This call is similar to <code>GET
                     /auth/tokens</code>, but no response body is
                 provided, even in the <code>X-Subject-Token</code>
-                header. </para>
+                header.</para>
             <important>
                 <para>The Identity service returns the same response
                     as when the subject token was issued by <code>POST
                         /auth/tokens</code>, even if an error occurs
-                    because the token is invalid. A 204 response
+                    because the token is not valid. A 204 response
                     indicates that the <code>X-Subject-Token</code> is
-                    valid. </para>
+                    valid.</para>
             </important>
         </wadl:doc>
         <request> &tokenParams; <representation
@@ -628,9 +676,9 @@
             <para>This call is similar to <code>HEAD
                     /auth/tokens</code>, except that the
                     <code>X-Subject-Token</code> token is immediately
-                invalidated (regardless of the <code>expires_at</code>
+                not valid (regardless of the <code>expires_at</code>
                 attribute). An additional <code>X-Auth-Token</code> is
-                not required. </para>
+                not required.</para>
         </wadl:doc>
         <request> &tokenParams; <representation
                 mediaType="application/json">
@@ -683,7 +731,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ServiceCreateResponse.json"
@@ -704,7 +751,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ServiceGetResponse.json"
@@ -724,7 +770,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ServiceUpdateResponse.json"
@@ -741,7 +786,7 @@
             <warning>
                 <para>Deleting a service when endpoints exist should
                     either (1) delete all associated endpoints or (2)
-                    fail until endpoints are deleted. </para>
+                    fail until endpoints are deleted.</para>
             </warning>
         </wadl:doc>
         <!--No request body is provided-->
@@ -787,7 +832,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/EndpointCreateResponse.json"
@@ -808,7 +852,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/EndpointUpdateResponse.json"
@@ -836,9 +879,10 @@
         <!--No request body is provided-->
         <request> &listDomainsParams; </request>
         <response status="200"> &listDomainsRespParams;
-            <representation mediaType="application/json">
-               <wadl:doc xmlns="http://docbook.org/ns/docbook" title="List domains: JSON response">
-                <xsdxt:sample title="List domains: JSON response">
+                <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="List domains: JSON response">
+                    <xsdxt:sample title="List domains: JSON response">
                         <xsdxt:code
                             href="../samples/DomainsListResponse.json"
                         />
@@ -852,25 +896,21 @@
             title="Add Domain">
             <para role="shortdesc">Adds a domain.</para>
         </wadl:doc>
-        <request>
-            &authHeader;
-            <param name="description" style="plain"
+        <request> &authHeader; <param name="description" style="plain"
                 type="xsd:string" required="false">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
-                    >The domain description.</wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">The
+                    domain description.</wadl:doc>
             </param>
-            <param name="enabled" style="plain"
-                type="xsd:boolean" required="false">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
-                    >Set to true to enable the domain. Otherwise, set to false.</wadl:doc>
+            <param name="enabled" style="plain" type="xsd:boolean"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">Set to
+                    true to enable the domain. Otherwise, set to
+                    false.</wadl:doc>
             </param>
-            <param name="name" style="plain"
-                type="xsd:string" required="true">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
-                    >The domain name.</wadl:doc>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">The
+                    domain name.</wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
@@ -905,11 +945,9 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/DomainGetResponse.json"
-                        />
+                            href="../samples/DomainGetResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -925,7 +963,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/DomainUpdateResponse.json"
@@ -943,7 +980,7 @@
                 domain, you must first disable the domain by using the
                 update domain API. If you try to delete an enabled
                 domain, the call returns an <code>HTTP 403
-                    Forbidden</code> response. </para>
+                    Forbidden</code> response.</para>
             <para>
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <warning>
@@ -951,7 +988,7 @@
                             owned by it, such as users, groups, and
                             projects, as well as any credentials and
                             granted roles that relate to those
-                            entities. </para>
+                            entities.</para>
                     </warning>
                 </wadl:doc>
             </para>
@@ -970,7 +1007,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/DomainListUserRolesResponse.json"
@@ -1018,7 +1054,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/DomainListGroupRolesResponse.json"
@@ -1096,7 +1131,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ProjectCreateResponse.json"
@@ -1117,7 +1151,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ProjectGetResponse.json"
@@ -1137,7 +1170,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ProjectUpdateResponse.json"
@@ -1185,7 +1217,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ProjectListUserRolesResponse.json"
@@ -1233,7 +1264,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/ProjectListGroupRolesResponse.json"
@@ -1284,8 +1314,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/UsersListResponse.json"
-                        />
+                            href="../samples/UsersListResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1301,8 +1330,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/UserCreateRequest.json"
-                        />
+                            href="../samples/UserCreateRequest.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
 
@@ -1311,7 +1339,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/UserCreateResponse.json"
@@ -1332,11 +1359,9 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/UserGetResponse.json"
-                        />
+                            href="../samples/UserGetResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1349,14 +1374,13 @@
                 or disables a specified user.</para>
             <para>This operation might return the HTTP <code>501 Not
                     Implemented</code> code if the back-end driver
-                does not allow this functionality. </para>
+                does not allow this functionality.</para>
         </wadl:doc>
 
         <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/UserUpdateResponse.json"
@@ -1479,7 +1503,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/GroupCreateResponse.json"
@@ -1500,11 +1523,9 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/GroupGetResponse.json"
-                        />
+                            href="../samples/GroupGetResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1525,7 +1546,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/GroupUpdateResponse.json"
@@ -1618,7 +1638,7 @@
                 credential where the credentials are a combination of
                 access_key and secret. Other credentials, such as
                 access_key, can be supported simply by changing the
-                content of the key data. </para>
+                content of the key data.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1636,7 +1656,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/CredentialCreateResponse.json"
@@ -1657,7 +1676,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/CredentialGetResponse.json"
@@ -1678,7 +1696,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/CredentialUpdateResponse.json"
@@ -1711,8 +1728,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/RolesListResponse.json"
-                        />
+                            href="../samples/RolesListResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1729,8 +1745,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/RoleCreateRequest.json"
-                        />
+                            href="../samples/RoleCreateRequest.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
 
@@ -1739,7 +1754,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/RoleCreateResponse.json"
@@ -1760,11 +1774,9 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/RoleGetResponse.json"
-                        />
+                            href="../samples/RoleGetResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1780,7 +1792,6 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/RoleUpdateResponse.json"
@@ -1858,7 +1869,6 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
                             href="../samples/PolicyCreateResponse.json"
@@ -1879,11 +1889,9 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/PolicyGetResponse.json"
-                        />
+                            href="../samples/PolicyGetResponse.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1927,4 +1935,3 @@
         <response status="204"> </response> &commonFaults; &getFaults;
     </method>
 </application>
-
