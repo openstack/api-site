@@ -12,6 +12,7 @@
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v2.0"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -291,30 +292,29 @@
                 token, along with the URL to other service APIs, by
                 first authenticating against the Identity Service with
                 valid credentials.</para>
-            <table rules="all">
-                <caption>Authenticate Request Attributes</caption>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>username</td>
-                        <td>string</td>
-                        <td>Required. The user name.</td></tr>
-                    <tr><td>password</td>
-                        <td>string</td><td>Required. The password of
-                            the user.</td>
-                    </tr>
-                    <tr><td>tenantName</td><td>string</td><td>Optional.
-                            The tenant name.</td></tr>
-                    <tr><td>tenantId</td><td>UUID</td><td>Optional.
-                            The tenant ID.</td></tr></tbody></table> 
+            <para>If the authentication token has expired, a
+                <errorcode>401</errorcode> response code is
+                returned.</para>
+            <para>If the token specified in the request body has expired, this call returns
+                a <errorcode>404</errorcode> response code.</para>
+            <para>The Identity Service treats expired tokens as
+                invalid tokens.</para>
+            <para>The deployment determines how long expired tokens
+                are stored.</para>
         </wadl:doc>
         <request>
+            <param name="username" style="plain"
+                type="xsd:string" required="true">
+                <doc>The user name.</doc>
+            </param>
+            <param name="tenantName" style="plain"
+                type="xsd:string" required="false">
+                <doc>The tenant name.</doc>
+            </param>
+            <param name="tenantId" style="plain"
+                type="csapi:uuid" required="false">
+                <doc>The tenant ID.</doc>
+            </param>
             <representation mediaType="application/json"
                 element="identity:auth">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
