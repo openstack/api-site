@@ -7,43 +7,36 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2">
-
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
                             ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                            multi-tenancy cloud.</p></doc>
                 </param>
                 <resource id="os-services" path="os-services">
-
                     <method href="#listServices"/>
-                    <!-- <resource path="{service_id}">
-                        <param name="service_id" style="template"
-                            required="true" type="csapi:UUID">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > The unique ID associated with the
-                                   service. </p></doc>
-                        </param> -->
                     <resource path="enable">
                         <method href="#enableScheduling"/>
                     </resource>
                     <resource path="disable">
                         <method href="#disableScheduling"/>
+                    </resource>     
+                    <resource path="disable-log-reason">
+                        <method href="#disableLogReason"/>
                     </resource>
-                    <!-- </resource> -->
+                    <resource path="detail">
+                        <method href="#getDisableReasonDetail"/>
+                    </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="listServices">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists all running
-                services. </p>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">>Lists all running services.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -55,11 +48,10 @@
             </representation>
         </response>
     </method>
-
     <method name="PUT" id="enableScheduling">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Enables
-                scheduling for a service. </p>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Enables scheduling for a
+                service.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -80,11 +72,10 @@
             </representation>
         </response>
     </method>
-
     <method name="PUT" id="disableScheduling">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Disables
-                scheduling for a service. </p>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Disables scheduling for a
+                service.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -100,6 +91,81 @@
                 <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-services/service-disable-put-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="disableLogReason">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Logs information to the service
+                table about why a service was disabled.</para>
+        </wadl:doc>
+        <request>
+            <param name="host" style="plain" type="xsd:string"
+                required="true">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml">The host
+                        name.</p></doc>
+            </param>
+            <param name="binary" style="plain" type="xsd:string"
+                required="true">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml">The
+                        service name.</p></doc>
+            </param>
+            <param name="disabled_reason" style="plain"
+                type="xsd:string" required="true">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml">The
+                        reason the service was disabled.</p></doc>
+            </param>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-services/service-disable-log-put-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-services/service-disable-log-put-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-services/service-disable-log-put-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-services/service-disable-log-put-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getDisableReasonDetail">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists disabled services. If
+                information exists, includes reasons why services were
+                disabled.</para></wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-services/services-get-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-services/services-get-resp.xml"
                     />
                 </doc>
             </representation>
