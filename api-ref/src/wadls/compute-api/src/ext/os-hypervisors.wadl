@@ -8,68 +8,154 @@
     <resources base="https://servers.api.openstack.com">
         <resource id="version" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="csapi:uuid">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
+                <param name="tenant_id" style="template"
+                    type="csapi:uuid">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
                             ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                            multi-tenancy cloud.</p></doc>
                 </param>
                 <resource id="os-hypervisors" path="os-hypervisors">
-                    <method href="#list_hypervisors"/>
-                    <method href="#statistics_hypervisors"/>
-                    <resource path="{hypervisor_hostname}/servers">
+                    <method href="#listHypervisors"/>
+                    <resource id="detail" path="detail">
+                        <method href="#showHypervisor"/>
+                    </resource>
+                    <resource id="statistics" path="statistics">
+                        <method href="#getHypervisorStats"/>
+                    </resource>
+                    <resource path="{hypervisor_hostname}">
                         <param name="hypervisor_hostname"
                             style="template" type="xsd:string">
                             <doc><p
                                    xmlns="http://www.w3.org/1999/xhtml"
-                                   > The name associated with a
-                                   hypervisor hostname, the host
-                                   running the hypervisor. </p>
+                                   >The name of the host that runs
+                                   the hypervisor. </p>
                             </doc>
                         </param>
+                        <method href="#getHypervisorUptime"/>
+                        <resource id="servers" path="servers">
+                            <method href="#listHypervisorInstances"/>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-    <method name="GET" id="list_hypervisors">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists hypervisors
-                information for each server obtained through the
-                hypervisor-specific API, such as libvirt or
-                XenAPI.</p>
+    <method name="GET" id="listHypervisors">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc">Lists hypervisors information for
+                each server obtained through the hypervisor-specific
+                API, such as libvirt or XenAPI.</para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
+            <param name="hypervisor_hostname" style="plain"
+                required="true" type="xsd:string">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml"
+                        >Hypervisor host name, retrieved from the
+                        per-server listing.</p></doc>
+            </param>
+            <param name="id" style="plain" required="true"
+                type="xsd:string">
+                <doc><p xmlns="http://www.w3.org/1999/xhtml"
+                        >Hypervisor ID.</p></doc>
+            </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="samples/os-hypervisors-response.json"/>
+                        href="../api_samples/os-hypervisors/hypervisors-list-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-list-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-    <method name="GET" id="statistics_hypervisors">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Shows detailed
-                hypervisors API information for each server. Typically
-                configured as an admin-only extension using
-                policy.json settings.</p>
+    <method name="GET" id="showHypervisor">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc">Shows information for a specified
+                hypervisor. Typically configured as an admin-only
+                extension by using <filename>policy.json</filename>
+                settings.</para>
         </wadl:doc>
-        <request>
-            <param name="HypervisorHostname" style="plain"
-                required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                        Retrieved from the per-server listing.
-                    </p></doc>
-            </param>
-            <representation mediaType="application/json"
-            > </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="samples/os-hypervisors-stats-list.json"
+                        href="../api_samples/os-hypervisors/hypervisors-detail-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-detail-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listHypervisorInstances">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc">Lists instances that belong to specific hypervisors.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-servers-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-servers-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getHypervisorStats">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc">Shows hypervisor statistics over all compute nodes.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-statistics-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-statistics-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getHypervisorUptime">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para role="shortdesc">Shows the uptime for a specified hypervisor.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-uptime-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-hypervisors/hypervisors-uptime-resp.xml"
                     />
                 </doc>
             </representation>
