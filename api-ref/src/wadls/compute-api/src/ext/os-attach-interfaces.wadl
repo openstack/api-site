@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:atom="http://www.w3.org/2005/Atom">
+    <resources base="https://servers.api.openstack.com">
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenantID" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc>
+                        <p xmlns="http://www.w3.org/1999/xhtml">The
+                            ID for the tenant or account in a
+                            multi-tenancy cloud.</p>
+                    </doc>
+                </param>
+                <resource id="Servers" path="servers">
+                    <resource path="{server_id}">
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc>
+                                <p
+                                    xmlns="http://www.w3.org/1999/xhtml"
+                                    >The UUID for the server of
+                                    interest to you.</p>
+                            </doc>
+                        </param>
+                        <resource path="os-attach-interfaces">
+                            <method href="#createAttachInterface"/>
+                            <method href="#listAttachedInterfaces"/>
+                            <resource path="{attachment_id}">
+                                <param name="attachment_id" style="template"
+                                    type="csapi:UUID">
+                                    <doc>
+                                        <p
+                                            xmlns="http://www.w3.org/1999/xhtml"
+                                            >The interface ID.</p>
+                                    </doc>
+                                </param>
+                                <method href="#showAttachedInterface"/></resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="createAttachInterface">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
+            <p xmlns="http://www.w3.org/1999/xhtml">Creates an interface for a port and uses the interface to attach the port to a server instance.</p>
+        </wadl:doc>
+        <request>
+            <param name="interfaceAttachment" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Specify the <code>interfaceAttachment</code> element in the request body.</p>
+                </doc>
+            </param>
+            <param name="port_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The ID of the port for which you want to create an interface.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-create-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-create-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="202">
+            <param name="fixed_ips" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Fixed IP addresses with subnet IDs.</p>
+                </doc>
+            </param>
+            <param name="mac_addr" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The MAC address.</p>
+                </doc>
+            </param>
+            <param name="net_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The network ID.</p>
+                </doc>
+            </param>
+            <param name="port_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The port ID.</p>
+                </doc>
+            </param>
+            <param name="port_state" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The port state.</p>
+                </doc>
+            </param>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-create-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-create-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>   
+ <method name="GET" id="listAttachedInterfaces">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
+            <p xmlns="http://www.w3.org/1999/xhtml">Lists the
+                port interfaces.</p>
+        </wadl:doc>
+        <response status="202">
+            <param name="port_state" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The port state.</p>
+                </doc>
+            </param>
+ <param name="fixed_ips" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Fixed IP addresses with subnet IDs.</p>
+                </doc>
+            </param>
+            <param name="mac_addr" style="plain"
+                type="xsd:string" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The MAC address.</p>
+                </doc>
+            </param>
+            <param name="net_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The network ID.</p>
+                </doc>
+            </param>
+            <param name="port_id" style="plain"
+                type="csapi:uuid" required="true">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">The port ID.</p>
+                </doc>
+            </param>         
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-list-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-list-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showAttachedInterface">
+        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
+            <p xmlns="http://www.w3.org/1999/xhtml">Shows information about a specified port interface.</p>
+        </wadl:doc>
+        <response status="202">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-show-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-attach-interfaces/attach-interfaces-show-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+    </method>
+</application>
+
+
