@@ -1,68 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
-             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-             xmlns:wadl="http://wadl.dev.java.net/2009/02"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             xmlns:csapi="http://docs.openstack.org/compute/api/v2">
-
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                      The ID for the tenant or account in a multi-tenancy cloud.
-                    </p></doc>
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
+                            ID for the tenant or account in a
+                            multi-tenancy cloud. </p></doc>
                 </param>
                 <resource id="Servers" path="servers">
                     <method href="#createServer"/>
 
                     <resource path="{server_id}">
-                        <param name="server_id" style="template" type="csapi:UUID">
-                            <doc><p xmlns="http://www.w3.org/1999/xhtml">
-                              The UUID for the server of interest to you.
-                            </p>
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <doc><p
+                                   xmlns="http://www.w3.org/1999/xhtml"
+                                   > The UUID for the server of
+                                   interest to you. </p>
                             </doc>
                         </param>
-
-                        <method href="#getServer"/>
-
-                    </resource>
-
-                    <resource id="ServersDetail" path="detail">
-                        <method href="#getServersDetailed"/>
-                    </resource>
-
                 </resource>
-           </resource>
-       </resource>
+            </resource>
+        </resource>
+        </resource>
     </resources>
 
     <method name="POST" id="createServer">
         <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Creates one or more servers with an optional reservation ID. 
-                
-            </p>
+            <p xmlns="http://www.w3.org/1999/xhtml"> Creates one or
+                more servers with an optional reservation ID. </p>
         </wadl:doc>
 
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
+        <request> &serverCreateParameters; <param
+                xmlns="http://wadl.dev.java.net/2009/02"
                 name="return_reservation_id" style="query"
                 required="false" type="xsd:string">
                 <doc>
                     <p xmlns="http://www.w3.org/1999/xhtml">Set to
-                        <code>True</code>to generate a
-                        reservation ID for each server. 
-                        Omit this attribute to create servers 
-                        without a reservation ID. 
-                        This extended attribute is enabled when
-                        the service provider enables 
-                        multiple server
-                        launch. </p>
+                            <code>True</code>to generate a reservation
+                        ID for each server. Omit this attribute to
+                        create servers without a reservation ID. This
+                        extended attribute is enabled when the service
+                        provider enables multiple server launch. </p>
                 </doc>
             </param>
-
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="min_count" style="query" required="false"
                 type="xsd:string">
@@ -83,7 +73,6 @@
                         launch.</p>
                 </doc>
             </param>
-           
             <representation mediaType="application/json">
                 <doc>
                     <xsdxt:code
@@ -100,37 +89,48 @@
             </representation>
             <representation mediaType="application/json">
                 <doc>
-                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-post-req.json"/>
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-post-req.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc>
-                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-post-req.xml"/>
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-post-req.xml"
+                    />
                 </doc>
             </representation>
         </request>
-        <response status="202">
-            <representation mediaType="application/json">
+        <response status="202"> &serverResponseParameters;
+                <representation mediaType="application/json">
                 <doc>
-                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-no-resv-post-resp.json"/>
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-no-resv-post-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc>
-                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-no-resv-post-resp.xml"/>
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-no-resv-post-resp.xml"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/json">
                 <doc>
-                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-post-resp.json"/>
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-post-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc>
-                    <xsdxt:code href="../api_samples/os-multiple-create/multiple-create-post-resp.xml"/>
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-post-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-
 </application>
