@@ -4,6 +4,7 @@
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
     <resources base="https://storage.swiftdrive.com/">
         <resource id="version" path="v1">
@@ -13,11 +14,12 @@
                     type="xsd:string">
                     <doc>
                         <p xmlns="http://www.w3.org/1999/xhtml">The
-                            unique identifier of the tenant. </p>
+                            unique identifier of the tenant.</p>
                     </doc>
                 </param>
                 <method href="#retrieveaccountmeta"/>
                 <method href="#updateaccountmeta"/>
+                <method href="#deleteaccountmeta"/>
                 <resource id="container" path="{container}"
                     type="#ObjectsList">
                     <param name="container" style="template"
@@ -25,7 +27,7 @@
                         <doc>
                             <p xmlns="http://www.w3.org/1999/xhtml">
                                 The unique identifier of the
-                                container. </p>
+                                container.</p>
                         </doc>
                     </param>
                     <method href="#createcontainer"/>
@@ -40,7 +42,7 @@
                                 <p
                                    xmlns="http://www.w3.org/1999/xhtml"
                                    > The unique identifier of the
-                                   object. </p>
+                                   object.</p>
                             </doc>
                         </param>
                         <method href="#createobject"/>
@@ -69,10 +71,10 @@
     <!--               All Methods                             -->
     <!--*******************************************************-->
     <method name="GET" id="listContainers">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List Containers">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists storage
-                containers, sorted by name. </p>
+            <para role="shortdesc">Lists storage containers, sorted by
+                name.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -114,12 +116,11 @@
     </method>
 
     <method name="HEAD" id="retrieveaccountmeta">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Retrieve Account Metadata">
-            <p xmlns="http://www.w3.org/1999/xhtml">Gets container
-                metadata, such as the number of containers and the
-                total bytes stored in OpenStack Object Storage, for
-                the tenant. </p>
+            <para role="shortdesc">Gets container metadata, such as
+                the number of containers and the total bytes stored in
+                OpenStack Object Storage, for the tenant.</para>
         </wadl:doc>
         <response status="204">
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -145,12 +146,12 @@
         </response>
     </method>
     <method name="POST" id="updateaccountmeta">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create/Update Account Metadata">
-            <p xmlns="http://www.w3.org/1999/xhtml">Creates or updates
-                account metadata by associating custom metadata
-                headers with the account level URI. These headers must
-                have the format, X-Account-Meta-*. </p>
+            <para role="shortdesc">Creates or updates account metadata
+                by associating custom metadata headers with the
+                account level URI. These headers must have the format,
+                X-Account-Meta-*.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -171,11 +172,47 @@
         </request>
         <response status="204"> </response>
     </method>
+    <method name="POST" id="deleteaccountmeta">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete Account Metadata">
+            <para role="shortdesc">Deletes a metadata
+                header.</para>
+            <para>To delete a metadata header, send
+                an empty value for that particular header, such as for
+                the <code>X-Account-Meta-Book</code> header.</para>
+            <para>No response body is returned. A status code of 2xx
+                (between 200 and 299, inclusive) indicates
+                success.</para>
+        </wadl:doc>
+        <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="X-Remove-Account-Meta" style="header"
+                required="false" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>If the tool you use to
+                        communicate with Object Storage, such as older
+                        versions of cURL, does not support empty
+                        headers, send the
+                            <code>X-Remove-Account-Meta-name:
+                            arbitrary value</code> header. For
+                        example, <code>X-Remove-Account-Meta-Book:
+                            x</code>. The arbitrary value is
+                        ignored.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/http">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deleteaccountmeta_httphead.msg"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="204"> </response>
+    </method>
     <method name="PUT" id="createcontainer">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create Container">
-            <p xmlns="http://www.w3.org/1999/xhtml">Creates a
-                container. </p>
+            <para role="shortdesc">Creates a container.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -196,20 +233,18 @@
         <response status="201"> </response>
     </method>
     <method name="DELETE" id="deletecontainer">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete Container">
-            <p xmlns="http://www.w3.org/1999/xhtml">Deletes an empty
-                container. </p>
+            <para role="shortdesc">Deletes an empty container.</para>
         </wadl:doc>
         <response status="204"> </response>
     </method>
     <method name="HEAD" id="retrievecontainermeta">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get Container Metadata">
-            <p xmlns="http://www.w3.org/1999/xhtml">Gets container
-                metadata, including the number of objects and the
-                total bytes of all objects stored in the container.
-            </p>
+            <para role="shortdesc">Gets container metadata, including
+                the number of objects and the total bytes of all
+                objects stored in the container.</para>
         </wadl:doc>
         <response status="204">
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -235,12 +270,12 @@
         </response>
     </method>
     <method name="POST" id="updateacontainermeta">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create or Update Container Metadata">
-            <p xmlns="http://www.w3.org/1999/xhtml">Creates or updates
-                the arbitrary container metadata by associating custom
-                metadata headers with the container level URI. These
-                headers must have the format, X-Container-Meta-*. </p>
+            <para role="shortdesc">Creates or updates the arbitrary
+                container metadata by associating custom metadata
+                headers with the container level URI. These headers
+                must have the format, X-Container-Meta-*.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -261,10 +296,10 @@
         <response status="204"> </response>
     </method>
     <method name="GET" id="listObjects">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List Objects">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists the objects
-                stored in the container. </p>
+            <para role="shortdesc">Lists the objects stored in the
+                container.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -320,10 +355,10 @@
         </response>
     </method>
     <method name="GET" id="retrieveobject">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get Object Data">
-            <p xmlns="http://www.w3.org/1999/xhtml">Gets data for the
-                specified object. </p>
+            <para role="shortdesc">Gets data for the specified
+                object.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/http">
@@ -334,10 +369,10 @@
         </response>
     </method>
     <method name="PUT" id="createobject">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create or Update Object">
-            <p xmlns="http://www.w3.org/1999/xhtml">Creates or updates
-                the content and metadata for a specified object. </p>
+            <para role="shortdesc">Creates or updates the content and
+                metadata for a specified object.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -395,11 +430,10 @@
         <response status="201"> </response>
     </method>
     <method name="PUT" id="putcopiedobject">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Copy Object">
-            <p xmlns="http://www.w3.org/1999/xhtml">Copies an object
-                to another object in the OpenStack Object Storage
-                system. </p>
+            <para role="shortdesc">Copies an object to another object
+                in the OpenStack Object Storage system.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -426,11 +460,11 @@
         <response status="201"> </response>
     </method>
     <method name="COPY" id="copyobject">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Copy Object">
-            <p xmlns="http://www.w3.org/1999/xhtml">Copies an object
-                to another object with a new name in the OpenStack
-                Object Storage system. </p>
+            <para role="shortdesc">Copies an object to another object
+                with a new name in the OpenStack Object Storage
+                system.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -451,10 +485,10 @@
         <response status="201"> </response>
     </method>
     <method name="HEAD" id="retrieveobjectmeta">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get Object Metadata">
-            <p xmlns="http://www.w3.org/1999/xhtml">Gets object
-                metadata and other standard HTTP headers. </p>
+            <para role="shortdesc">Gets object metadata and other
+                standard HTTP headers.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/http">
@@ -466,14 +500,14 @@
         </response>
     </method>
     <method name="POST" id="updateaobjmeta">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update Object Metadata">
-            <p xmlns="http://www.w3.org/1999/xhtml">Updates arbitrary
-                key/value metadata. Metadata must be in the format
+            <para role="shortdesc">Updates arbitrary key/value
+                metadata. Metadata must be in the format
                 X-Object-Meta-*. You can also assign X-Delete-At or
                 X-Delete-After to expiring objects. You cannot use
                 this operation to change other headers, such as
-                Content-Type. </p>
+                Content-Type.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -496,8 +530,8 @@
                 type="xsd:int">
                 <doc><p xmlns="http://www.w3.org/1999/xhtml">The
                         certain date, in the format of a Unix Epoch
-                        timestamp, after which the object will be
-                        removed. Stored in header.</p></doc>
+                        timestamp, after which the object is removed.
+                        Stored in header.</p></doc>
             </param>
             <representation mediaType="application/http">
                 <doc xml:lang="EN">
@@ -509,13 +543,12 @@
         <response status="202"> </response>
     </method>
     <method name="DELETE" id="deleteobject">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete Object">
-            <p xmlns="http://www.w3.org/1999/xhtml">Permanently
-                deletes an object from the OpenStack Object Storage
-                system. In combination with the COPY command, you can
-                use COPY and then DELETE to effectively move an
-                object. </p>
+            <para role="shortdesc">Permanently deletes an object from
+                the OpenStack Object Storage system. In combination
+                with the COPY command, you can use COPY and then
+                DELETE to effectively move an object.</para>
         </wadl:doc>
         <response status="204"> </response>
     </method>
