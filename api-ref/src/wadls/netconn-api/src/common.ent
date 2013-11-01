@@ -91,21 +91,28 @@
 
      <!ENTITY networkListParameters
            '
-     <param required="true" name="status"  style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network status.</p></doc></param>
+      <param required="true" name="admin_state_up" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">A Boolean value that indicates the administrative status of the network.</p></doc></param>
+       <param required="true" name="id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network ID.</p></doc></param>
+       <param required="true" name="name"    style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network name.</p></doc></param>
+       <param required="true" name="shared"  style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">Indicates whether this network is shared  across all tenants. By default, only administrative users can change this value.</p></doc></param>   
+       <param required="true" name="status"  style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network status.</p></doc></param>
      <param required="true" name="subnets" style="plain" type="xsd:dict"><doc><p xmlns="http://www.w3.org/1999/xhtml">The associated subnets.</p></doc></param>
-     <param required="true" name="name"    style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network name.</p></doc></param>
-     <param required="true" name="admin_state_up" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">A Boolean value that indicates the administrative status of the network.</p></doc></param>
      <param required="true" name="tenant_id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The tenant ID.</p></doc></param>
-     <param required="true" name="id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network ID.</p></doc></param>
-     <param required="true" name="shared"  style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">Indicates whether this network is shared  across all tenants. By default, only administrative users can change this value.</p></doc></param>   
+    
+     
         '>
    <!-- Network Create Parameters -->
 	<!ENTITY networkCreateParameters
 	      '
-	 <param required="false" name="name"           style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network name.</p></doc></param>
-     <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">Indicates the administrative status of the network.</p></doc></param>
+	  <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">Indicates the administrative status of the network.</p></doc></param>
+	  <param required="false" name="name"           style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network name.</p></doc></param>
      <param required="false" name="shared"         style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">Indicates whether this network is shared across all tenants. By default, only administrative users can change this value.</p></doc></param>
      <param required="false" name="tenant_id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the tenant that owns the network. Only  administrative users can set the tenant ID. You cannot change this value through authorization policies.</p></doc></param>
+      '>
+         <!ENTITY networkUpdateParameters
+	      '
+	 <param required="false" name="name"           style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The network name.</p></doc></param>
+     <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">Indicates the administrative status of the network.</p></doc></param>
          '>
     <!-- Network Provider Parameters -->
    <!ENTITY networkProviderParameters
@@ -143,6 +150,8 @@
      <param required="false" name="mac_address" style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The MAC address. If you specify an address that is not valid, a 400 Bad Request error is returned. If you do not specify a MAC address, OpenStack Networking tries to allocate one. If a failure occurs, a 503 Service Unavailable error is returned.</p></doc></param>
      <param required="false" name="fixed_ips" style="plain" type="xsd:dict"><doc><p xmlns="http://www.w3.org/1999/xhtml">If you specify only a subnet ID, OpenStack Networking allocates an available IP from that subnet to the port. If you specify both a subnet ID and an IP address, OpenStack Networking tries to allocate the specified address to the port.</p></doc></param>
       <param required="false" name="security_groups" style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">Security groups. Specify one or more security group IDs.</p></doc></param>
+      <param required="true" name="network_id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the The network ID.</p></doc></param>
+        
          '>
     <!-- Port binding Parameters -->
    <!ENTITY portBindingParameters
@@ -152,6 +161,37 @@
 <param required="false" name="binding:profile"  style="plain" type="xsd:dict"><doc><p xmlns="http://www.w3.org/1999/xhtml">A dictionary the enables the application running on the specified host to pass and receive vif port-specific information to the plug-in.</p></doc></param>
 <param required="false" name="binding:capabilities"  style="plain" type="xsd:dict"><doc><p xmlns="http://www.w3.org/1999/xhtml">Read-only. A dictionary that enables the application to pass information about functions that the Networking API povides. Specify the following value:  port_filter : Boolean to define whether port filtering features such as security group and anti-MAC/IP spoofing are provided.</p></doc></param>
          '>
+	
+	<!-- Subnet Parameters -->
+	
+	 <!ENTITY subnetListParameters
+           '
+    
+     <param required="true" name="name"    style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The subnet name.</p></doc></param>  
+     <param required="true" name="network_id" style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the attached network.</p></doc></param>
+     <param required="true" name="tenant_id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the tenant who owns the network. Only administrative users can specify a tenant ID other than their own.</p></doc></param>
+     <param required="true" name="allocation_pools"      style="plain" type="xsd:dict"><doc><p xmlns="http://www.w3.org/1999/xhtml">The start and end addresses for the allocation pools.</p></doc></param>
+     <param required="true" name="gateway_ip"  style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The gateway IP address.</p></doc></param>   
+     <param required="true" name="ip_version"  style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The IP version, which is 4 or 6.</p></doc></param>   
+     <param required="true" name="cidr" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">The CIDR.</p></doc></param>
+      <param required="true" name="id" style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the subnet.</p></doc></param>
+     <param required="true" name="enable_dhcp" style="plain" type="xsd:boolean"><doc><p xmlns="http://www.w3.org/1999/xhtml">Set to true if DHCP is enabled and false if DHCP is disabled.</p></doc></param>
+       '>
+   <!-- Subnet Create Parameters -->
+	<!ENTITY subnetCreateParameters
+	      '
+    
+     <param required="false" name="name"    style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The subnet name.</p></doc></param>  
+     <param required="true" name="network_id" style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the attached network.</p></doc></param>
+     <param required="false" name="tenant_id"      style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the tenant who owns the network. Only administrative users can specify a tenant ID other than their own.</p></doc></param>
+     <param required="false" name="allocation_pools"      style="plain" type="xsd:dict"><doc><p xmlns="http://www.w3.org/1999/xhtml">The start and end addresses for the allocation pools.</p></doc></param>
+     <param required="false" name="gateway_ip"  style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The gateway IP address.</p></doc></param>   
+     <param required="false" name="ip_version"  style="plain" type="xsd:string"><doc><p xmlns="http://www.w3.org/1999/xhtml">The IP version, which is 4 or 6.</p></doc></param>   
+     <param required="true" name="cidr" style="plain" type="xsd:bool"><doc><p xmlns="http://www.w3.org/1999/xhtml">The CIDR.</p></doc></param>
+     <param required="false" name="id" style="plain" type="csapi:uuid"><doc><p xmlns="http://www.w3.org/1999/xhtml">The ID of the subnet.</p></doc></param>
+     <param required="false" name="enable_dhcp" style="plain" type="xsd:boolean"><doc><p xmlns="http://www.w3.org/1999/xhtml">Set to true if DHCP is enabled and false if DHCP is disabled.</p></doc></param>
+       '>
+	
 	<!-- Server List Parameters -->
 
      <!ENTITY serverListParameters

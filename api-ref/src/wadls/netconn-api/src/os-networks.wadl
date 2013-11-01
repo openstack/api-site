@@ -11,27 +11,16 @@
 <!--*******************************************************-->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+<application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns="http://wadl.dev.java.net/2009/02" 
-    xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xsi:schemaLocation="http://docs.openstack.org/compute/api/v1.1
-    xsd/api.xsd
-    http://docs.openstack.org/common/api/v1.0
-    xsd/api-common.xsd
-    http://wadl.dev.java.net/2009/02 
-    http://www.w3.org/Submission/wadl/wadl.xsd">
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
 
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
-
     <resources base="https://neutron.example.com/">
-
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
@@ -41,34 +30,38 @@
                             tenant ID in a multi-tenancy cloud.</p>
                     </doc>
                 </param>
-        <resource id="Networks" type="#NetworkList" path="networks">
-            <method href="#listNetworks" />
-            <method href="#createNetwork" />
-            <resource path="{network_id}">
-                <param name="network_id" style="template" type="csapi:UUID">
-                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Network ID">
-                        <p>The UUID for the network of interest to you.</p></wadl:doc>
-                </param>
-                <method href="#showNetwork"/>
-                <method href="#updateNetwork"/>
-                <method href="#deleteNetwork"/>
-            </resource>
-        </resource>
+                <resource id="Networks" type="#NetworkList"
+                    path="networks">
+                    <method href="#listNetworks"/>
+                    <method href="#createNetwork"/>
+                    <method href="#bulkCreateNetwork"/>
+                    <resource path="{network_id}">
+                        <param name="network_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Network ID">
+                                <p>The UUID for the network of
+                                   interest to you.</p></wadl:doc>
+                        </param>
+                        <method href="#showNetwork"/>
+                        <method href="#updateNetwork"/>
+                        <method href="#deleteNetwork"/>
+                    </resource>
+                </resource>
             </resource>
         </resource>
     </resources>
-        
-
 
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
 
     <method name="GET" id="listNetworks">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Networks">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-               Lists networks to which the specified tenant has access.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Networks">
+            <para role="shortdesc">Lists networks to which the
+                specified tenant has access.</para>
         </wadl:doc>
         <response status="200"> &networkListParameters;
                 <representation mediaType="application/json">
@@ -77,21 +70,19 @@
                         href="api_samples/networks-get-resp.json"/>
                 </doc>
             </representation>
-            <representation mediaType="application/xml"> <doc
-                    xml:lang="EN">
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/networks-get-resp.xml"/>
                 </doc>
             </representation>
         </response>
+        <response status="401"/>
     </method>
-
     <method name="POST" id="createNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Create Network">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Creates a network.
-            </p>
-
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Network">
+            <para role="shortdesc">Creates a network.</para>
         </wadl:doc>
         <request> &networkCreateParameters; <representation
                 mediaType="application/json">
@@ -108,7 +99,7 @@
             </representation>
         </request>
         <response status="201"> &networkListParameters;
-            <representation mediaType="application/json">
+                <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/network-post-resp.json"/>
@@ -121,15 +112,58 @@
                 </doc>
             </representation>
         </response>
+        <response status="400 401"/>
     </method>
-
+    <method name="POST" id="bulkCreateNetwork">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Bulk Create Networks">
+            <para role="shortdesc">Creates multiple networks in a
+                single request.</para>
+            <para>In the request body, specify a list of
+                networks.</para>
+            <para>The bulk create operation is always atomic. Either
+                all or no networks in the request body are
+                created.</para>
+        </wadl:doc>
+        <request> &networkCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/networks-post-create-bulk-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/networks-post-create-bulk-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201"> &networkListParameters;
+                <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/networks-create-bulk-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/networks-create-bulk-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401"/>
+    </method>
     <method name="GET" id="showNetwork">
-
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Show Networks">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Shows information for the specified network.
-            </p>
-
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show Networks">
+            <para role="shortdesc">Shows information for a specified
+                network.</para>
         </wadl:doc>
         <response status="200"> &networkListParameters;
                 <representation mediaType="application/json">
@@ -147,16 +181,14 @@
                 </doc>
             </representation>
         </response>
+        <response status="401 404"/>
     </method>
-
     <method name="PUT" id="updateNetwork">
-
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Update Network">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Updates the specified network.
-            </p>
-    </wadl:doc>
-        <request> &networkCreateParameters; <representation
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update Network">
+            <para role="shortdesc">Updates a specified network.</para>
+        </wadl:doc>
+        <request> &networkUpdateParameters; <representation
                 mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
@@ -172,7 +204,7 @@
                 </doc>
             </representation>
         </request>
-        <response status="201"> &networkListParameters;
+        <response status="200"> &networkListParameters;
                 <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
@@ -188,16 +220,15 @@
                 </doc>
             </representation>
         </response>
+        <response status="400 401 403 404"/>
     </method>
-
     <method name="DELETE" id="deleteNetwork">
-
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Delete Network">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Deletes the specified network and its associated resources.
-            </p>
-
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete Network">
+            <para role="shortdesc">Deletes a specified network and its
+                associated resources.</para>
         </wadl:doc>
         <response status="204"/>
+        <response status="401 404 409"/>
     </method>
 </application>

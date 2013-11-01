@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
-
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -9,20 +7,17 @@
 <!--                                                       -->
 <!--        xmllint -noent os-subnets.wadl                 -->
 <!--*******************************************************-->
-
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-   xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-   xmlns="http://wadl.dev.java.net/2009/02"
-   xmlns:wadl="http://wadl.dev.java.net/2009/02"
-   xmlns:common="http://docs.openstack.org/common/api/v1.0"
-   xmlns:atom="http://www.w3.org/2005/Atom"
-   xsi:schemaLocation="http://docs.openstack.org/netconn/api/v1.0
-                       xsd/api.xsd
-                       http://docs.openstack.org/common/api/v1.0
-                       xsd/api-common.xsd
-                       ">
-
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xref="http://www.w3.org/1999/xref"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
@@ -32,24 +27,32 @@
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="csapi:UUID">
-                    <doc>
-                        <p xmlns="http://www.w3.org/1999/xhtml">The
-                            tenant ID in a multi-tenancy cloud.</p>
-                    </doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The tenant ID in a multi-tenancy
+                            cloud.</para>
+                    </wadl:doc>
                 </param>
-        <resource id="Subnets" type="#SubnetList" path="subnets">
-            <method href="#listSubnets" />
-            <method href="#createSubnet" />
-            <resource path="{subnet_id}">
-                <param name="subnet_id" style="template" type="csapi:UUID">
-                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Subnet ID">
-                        <p>The UUID for the subnet of interest to you.</p></wadl:doc>
-                </param>
-                <method href="#showSubnet"/>
-                <method href="#updateSubnet"/>
-                <method href="#removeSubnet"/>
-            </resource>
-        </resource>
+                <resource id="Subnets" type="#SubnetList"
+                    path="subnets">
+                    <method href="#listSubnets"/>
+                    <method href="#createSubnet"/>
+                    <method href="#bulkCreateSubnet"/>
+                    <resource path="{subnet_id}">
+                        <param name="subnet_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Subnet ID">
+                                <para>The UUID for the subnet of
+                                   interest to you.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#showSubnet"/>
+                        <method href="#updateSubnet"/>
+                        <method href="#removeSubnet"/>
+                    </resource>
+                </resource>
             </resource>
         </resource>
     </resources>
@@ -59,54 +62,221 @@
     <!--*******************************************************-->
 
     <method name="GET" id="listSubnets">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Subnets">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Lists subnets to which the specified tenant has access.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Subnets">
+            <para role="shortdesc">Lists subnets to which the
+                specified tenant has access.</para>
+            <para>Default policy settings returns exclusively subnets
+                owned by the tenant submitting the request, unless the
+                request is submitted by an user with administrative
+                rights. You can control which attributes are returned
+                by using the fields query parameter. You can filter
+                results by using query string parameters. For
+                information, see <xref
+                    linkend="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                />.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/subnets-get-resp.json" />
+                    <xsdxt:code
+                        href="api_samples/subnets-get-res.json"/>
                 </doc>
             </representation>
-                        <!-- Need to verify samples -->
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnets-get-res.xml"
+                    />
+                </doc>
+            </representation>
         </response>
+        <response status="401"/>
     </method>
 
     <method name="POST" id="createSubnet">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Create Subnet">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Creates a subnet on a specified network.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Subnet">
+            <para role="shortdesc">Creates a subnet on a specified
+                network.</para>
+            <para>By default, OpenStack Networking creates IP v4
+                subnets. To create an IP v6 subnet, you must specify
+                the value 6 for the <code>ip_version</code> attribute
+                in the request body. OpenStack Networking does not try
+                to derive the correct IP version from the provided
+                CIDR. If the parameter for the gateway address,
+                    <code>gateway_ip</code>, is not specified,
+                OpenStack Networking allocates an address from the
+                cidr for the gateway for the subnet.</para>
+            <para>To specify a subnet without a gateway, specify the
+                value null for the <code>gateway_ip</code> attribute
+                in the request body. If allocation pools attribute,
+                    <code>allocation_pools</code>, is not specified,
+                OpenStack Networking automatically allocates pools for
+                covering all IP addresses in the CIDR, excluding the
+                address reserved for the subnet gateway. Otherwise,
+                you can explicitly specify allocation pools as shown
+                in the following example.</para>
+            <para>When <code>allocation_pools</code> and
+                    <code>gateway_ip</code> are both specified, it is
+                up to the user to ensure that the gateway IP does not
+                overlap with the specified allocation pools; otherwise
+                a 409 Conflict error occurs.</para>
         </wadl:doc>
-        <!--             Need to verify, samples are mixed          -->
+        <request> &subnetCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-post-create-bulk-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-post-create-bulk-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201"> &subnetListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-create-bulk-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-create-bulk-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401 403 404 409"/>
     </method>
-
-    <method name="GET" id="showSubnet">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Show Subnet">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Shows information for a specified subnet.
-            </p>
+    <method name="POST" id="bulkCreateSubnet">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Subnet">
+            <para role="shortdesc">Creates multiple subnets in a
+                single request. Specify a list of subnets in the
+                request body.</para>
+            <para>The bulk create operation is always atomic. Either
+                all or no subnets in the request body are
+                created.</para>
         </wadl:doc>
-        <!--             Need to verify, samples are mixed          -->
+        <request> &subnetCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-post-create-bulk-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-post-create-bulk-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201"> &subnetListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-create-bulk-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnets-create-bulk-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401 403 404 409"/>
+    </method>
+    <method name="GET" id="showSubnet">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show Subnet">
+            <para role="shortdesc">Shows information for a specified
+                subnet.</para>
+            <para>You can control which attributes are returned by
+                using the fields query parameter. For information, see
+                    <xref
+                    linkend="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                />.</para>
+        </wadl:doc>
+        <response status="201"> &subnetListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnet-get-res.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnet-get-res.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401 404"/>
     </method>
 
     <method name="PUT" id="updateSubnet">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Update Subnet">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Updates a specified subnet.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update Subnet">
+            <para role="shortdesc">Updates a specified subnet.</para>
+            <para>Some attributes, such as IP version (ip_version),
+                CIDR (cidr), and IP allocation pools
+                (allocation_pools) cannot be updated. Attempting to
+                update these attributes results in a 400 Bad Request
+                error.</para>
         </wadl:doc>
-        <!--             Need to verify, samples are mixed          -->
+        <request> &subnetCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnet-post-req.json"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnet-post-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201"> &subnetListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/subnet-post-res.json"/>
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnet-post-res.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401 403 404"/>
     </method>
 
     <method name="DELETE" id="removeSubnet">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Delete Subnet">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Deletes a specified subnet.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete Subnet">
+            <para role="shortdesc">Deletes a specified subnet.</para>
+            <para>The operation fails if IP addresses from the subnet
+                that you want to delete are still allocated.</para>
         </wadl:doc>
-        <response status="204" />
+        <response status="204"/>
+        <response status="401 404 409"/>
     </method>
 </application>

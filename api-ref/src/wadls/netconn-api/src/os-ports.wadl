@@ -12,20 +12,14 @@
 
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xref="http://www.w3.org/1999/xref"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xsi:schemaLocation="http://docs.openstack.org/compute/api/v1.1
-    xsd/api.xsd
-    http://docs.openstack.org/common/api/v1.0
-    xsd/api-common.xsd
-    http://wadl.dev.java.net/2009/02 
-    http://www.w3.org/Submission/wadl/wadl.xsd">
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
 
     <!--*******************************************************-->
     <!--             All Resources                             -->
@@ -36,25 +30,31 @@
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="csapi:UUID">
-                    <doc>
-                        <p xmlns="http://www.w3.org/1999/xhtml">The
-                            tenant ID in a multi-tenancy cloud.</p>
-                    </doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The tenant ID in a multi-tenancy
+                            cloud.</para>
+                    </wadl:doc>
                 </param>
-        <resource id="Ports" type="#PortList" path="ports">
-            <method href="#listPorts" />
-            <method href="#createPort" />
-            <resource path="{port_id}">
-                <param name="port_id" style="template" type="csapi:UUID">
-                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Port ID">
-                        <p>The UUID for the port of interest to you.</p></wadl:doc>
-                </param>
-                <method href="#showPort"/>
-                <method href="#updatePort"/>
-                <method href="#removePort"/>
+                <resource id="Ports" type="#PortList" path="ports">
+                    <method href="#listPorts"/>
+                    <method href="#createPort"/>
+                    <method href="#bulkCreatePorts"/>
+                    <resource path="{port_id}">
+                        <param name="port_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Port ID">
+                                <para>The UUID for the port of
+                                   interest to you.</para></wadl:doc>
+                        </param>
+                        <method href="#showPort"/>
+                        <method href="#updatePort"/>
+                        <method href="#removePort"/>
+                    </resource>
+                </resource>
             </resource>
-        </resource>
-        </resource>
         </resource>
     </resources>
 
@@ -63,107 +63,194 @@
     <!--*******************************************************-->
 
     <method name="GET" id="listPorts">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="List Ports">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Lists ports to which the tenant has access.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Ports">
+            <para role="shortdesc">Lists ports to which the tenant has
+                access.</para>
+            <para>Default policy settings return only those subnets
+                that are owned by the tenant who submits the request,
+                unless the request is submitted by an user with
+                administrative rights. Users can control which
+                attributes are returned by using the fields query
+                parameter. Additionally, you can filter results by
+                using query string parameters. For information, see
+                    <xref
+                    linkend="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                />.</para>
         </wadl:doc>
-        <response status="200"> &portListParameters; 
-            <representation mediaType="application/json">
+        <response status="200"> &portListParameters; <representation
+                mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-get-resp.json" />
+                    <xsdxt:code href="api_samples/ports-get-resp.json"
+                    />
                 </doc>
             </representation>
             <representation mediaType="application/xml">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-get-resp.xml" />
+                    <xsdxt:code href="api_samples/ports-get-resp.xml"
+                    />
                 </doc>
             </representation>
         </response>
-    </method>
-    
-    <method name="POST" id="createPort">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Create Port">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Creates a port on a specified network.
-            </p>
-        </wadl:doc>
-        <!--             Need to verify, samples are mixed          -->
-        <request> &portCreateParameters; <representation mediaType="application/json">
-            <doc xml:lang="EN">
-                <xsdxt:code href="api_samples/port-post-create-req.json" />
-            </doc>
-        </representation>
-           </request>
-        <response status="200"> &portListParameters;
-           <!-- <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port-post-resp.json" />
-                </doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-post-resp.xml" />
-                </doc>
-            </representation> -->
-        </response>
-    </method>
-    
-    <method name="GET" id="showPort">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Show Port">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Shows information for a specified port.
-            </p>
-        </wadl:doc>
-        <!--             Need to verify, samples are mixed          -->
-        <response status="200"> &portListParameters; 
-            <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-get-resp.json" />
-                </doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-get-resp.xml" />
-                </doc>
-            </representation>
-        </response>
-    </method>
-    
-    <method name="PUT" id="updatePort">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Update Port">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Updates a specified port.
-            </p>
-        </wadl:doc>
-        <!--             Need to verify, samples are mixed          -->
-        <request> &portCreateParameters;  <representation mediaType="application/json">
-            <doc xml:lang="EN">
-                <xsdxt:code href="api_samples/port-post-create-req.json" />
-            </doc>
-        </representation>
-            </request>
-        <response status="200"> &portListParameters; 
-            <!--<representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port-post-resp.json" />
-                </doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-post-resp.xml" />
-                </doc>
-            </representation> -->
-        </response>
-    </method>
-    
-    <method name="DELETE" id="removePort">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Delete Port">
-            <p xmlns="http://www.w3.org/1999/xhtml">
-                Deletes a specified port.
-            </p>
-        </wadl:doc>
-        <response status="204" />
+        <response status="401"/>
     </method>
 
+    <method name="POST" id="createPort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Port">
+            <para role="shortdesc">Creates a port on a specified
+                network.</para>
+            <para>You must specify the network where the port is to
+                created in the <code>network_id</code> attribute in
+                the request body.</para>
+        </wadl:doc>
+        <request> &portCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port-post-create-req.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="201"> &portListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401 403 404 409"/>
+        <response status="503"/>
+    </method>
+    <method name="POST" id="bulkCreatePorts">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Bulk Create Ports">
+            <para role="shortdesc"> Creates multiple ports in a single
+                request. Specify a list of ports in the request
+                body.</para>
+            <para>Guarantees the atomic completion of the bulk
+                operation.</para>
+        </wadl:doc>
+        <request> &portCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/ports-post-create-bulk-req.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/ports-post-create-bulk-req.xml"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201"> &portListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/ports-create-bulk-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/ports-create-bulk-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401 403 404 409"/>
+        <response status="503"/>
+    </method>
+    <method name="GET" id="showPort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show Port">
+            <para role="shortdesc">Shows information for a specified
+                port.</para>
+        </wadl:doc>
+        <response status="200"> &portListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/ports-get-resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code href="api_samples/ports-get-resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401 404"/>
+    </method>
+    <method name="PUT" id="updatePort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update Port">
+            <para role="shortdesc">Updates a specified port.</para>
+            <para>You can update information for a port, such as its
+                symbolic name and associated IPs. When you update IPs
+                for a port, any previously associated IPs are removed,
+                returned to the respective subnets allocation pools,
+                and replaced by the IPs specified in the body for the
+                update request. Therefore, this operation replaces the
+                    <code>fixed_ip</code> attribute when it is
+                specified in the request body. If the updated IP
+                addresses are not valid or are already in use, the
+                operation fails and the existing IP addresses are not
+                removed from the port.</para>
+            <para>When you update security groups for a port and the
+                operation succeeds, any associated security groups are
+                removed and replaced by the security groups specified
+                in the body for the update request. Therefore, this
+                operation replaces the <code>security_groups</code>
+                attribute when you specify it in the request body.
+                However, if the specified security groups are not
+                valid, the operation fails and the existing security
+                groups are not removed from the port.</para>
+        </wadl:doc>
+        <request> &portCreateParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port-post-create-req.json"/>
+                </doc>
+            </representation>
+        </request>
+        <response status="200"> &portListParameters; <representation
+                mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.json"
+                    />
+                </doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.xml"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400 401 403 404 409"/>
+    </method>
+
+    <method name="DELETE" id="removePort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete Port">
+            <para role="shortdesc">Deletes a specified port.</para>
+            <para>Any IP addresses that are associated with the port
+                are returned to the respective subnets allocation
+                pools.</para>
+        </wadl:doc>
+        <response status="204"/>
+        <response status="401 403 404"/>
+    </method>
 </application>
