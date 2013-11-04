@@ -125,10 +125,10 @@
 
      <!ENTITY networkListParameters
            '
-      <param required="true" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>A Boolean value that indicates the administrative status of the network.</para></wadl:doc></param>
+      <param required="true" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The administrative state of the network.</para></wadl:doc></param>
        <param required="true" name="id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network ID.</para></wadl:doc></param>
        <param required="true" name="name"    style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network name.</para></wadl:doc></param>
-       <param required="true" name="shared"  style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network is shared  across all tenants. By default, only administrative users can change this value.</para></wadl:doc></param>   
+       <param required="true" name="shared"  style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network is shared across all tenants.</para></wadl:doc></param>   
        <param required="true" name="status"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network status.</para></wadl:doc></param>
      <param required="true" name="subnets" style="plain" type="xsd:dict"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The associated subnets.</para></wadl:doc></param>
      <param required="true" name="tenant_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The tenant ID.</para></wadl:doc></param>
@@ -138,22 +138,18 @@
    <!-- Network Create Parameters -->
 	<!ENTITY networkCreateParameters
 	      '
-	  <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates the administrative status of the network.</para></wadl:doc></param>
+	  <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The administrative state of the network.</para></wadl:doc></param>
 	  <param required="true" name="name"           style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network name.</para></wadl:doc></param>
-     <param required="false" name="shared"         style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network is shared across all tenants. By default, only administrative users can change this value.</para></wadl:doc></param>
-     <param required="false" name="tenant_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the tenant that owns the network. Only  administrative users can set the tenant ID. You cannot change this value through authorization policies.</para></wadl:doc></param>
+     <param required="false" name="shared"         style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Admin-only. Indicates whether this network is shared across all tenants.</para></wadl:doc></param>
+     <param required="false" name="tenant_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the tenant that owns the network. Only administrative users can specify a tenant ID other than their own. You cannot change this value through authorization policies.</para></wadl:doc></param>
       '>
-         <!ENTITY networkUpdateParameters
-	      '
-	 <param required="false" name="name"           style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network name.</para></wadl:doc></param>
-     <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates the administrative status of the network.</para></wadl:doc></param>
-         '>
+
     <!-- Network Provider Parameters -->
    <!ENTITY networkProviderParameters
          '
-     <param required="false" name="provider:physical_network" style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the tenant that owns the network. Only administrative users can set the tenant ID. You cannot change this value through authorization policies.</para></wadl:doc></param>
-<param required="false" name="provider:network_type"     style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Specifies the type of physical network that is mapped to this network resource. Examples are flat, vlan, and gre.</para></wadl:doc></param>
-<param required="false" name="provider:segmentation_id"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Identifies an isolated segment on the physical network. The nature of the segment depends on the segmentation model defined by network_type. For instance, if	network_type is vlan, this is a vlan ID. If	network_type is gre, this value is a gre key.</para></wadl:doc></param>
+<param required="false" name="provider:physical_network" style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The physical network where this network object is implemented. The Networking API v2.0 does not provide a way to list available physical networks. For example, the Open vSwitch plug-in configuration file defines a symbolic name that maps to specific bridges on each Compute host.</para></wadl:doc></param>
+<param required="false" name="provider:network_type"     style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The type of physical network that maps to this network resource. Examples are flat, vlan, vxlan, and gre.</para></wadl:doc></param>
+<param required="false" name="provider:segmentation_id"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>An isolated segment on the physical network. The network_type attribute defines the segmentation model. For example, if network_type is vlan, this ID is a vlan identifier. If network_type is gre, this ID is a gre key.</para></wadl:doc></param>
          '>
          
          
@@ -161,9 +157,9 @@
            '
      <param required="true" name="status"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The port status. Value is UP or DOWN.</para></wadl:doc></param>
      <param required="true" name="name"    style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The port name.</para></wadl:doc></param>  
-     <param required="true" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>A Boolean value that indicates the administrative status of the router.</para></wadl:doc></param>
+     <param required="true" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The administrative state of the router.</para></wadl:doc></param>
      <param required="true" name="network_id" style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the attached network.</para></wadl:doc></param>
-     <param required="true" name="tenant_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the tenant who owns the network. Only administrative users can specify a tenant ID other than their own.</para></wadl:doc></param>
+     <param required="true" name="tenant_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the tenant who owns the network.  Only administrative users can specify a tenant ID other than their own.</para></wadl:doc></param>
      <param required="true" name="binding:vif_type"      style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The VIF type.</para></wadl:doc></param>
      <param required="true" name="device_owner"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the entity that uses this port. For example, a dhcp agent.</para></wadl:doc></param>   
      <param required="true" name="binding:capabilities"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The binding capabilities.</para></wadl:doc></param>   
@@ -177,14 +173,14 @@
    <!-- Port Create Parameters -->
 	<!ENTITY portCreateParameters
 	      '
-     <param required="false" name="status"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The port status. Value is UP or DOWN.</para></wadl:doc></param>
+     <param required="false" name="status"  style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The status of the port.</para></wadl:doc></param>
      <param required="false" name="name"    style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>A symbolic name for the port.</para></wadl:doc></param>  
-     <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>A Boolean value that indicates the administrative status of the router. Set to true for UP. Set to false for DOWN.</para></wadl:doc></param>
+     <param required="false" name="admin_state_up" style="plain" type="xsd:bool"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The administrative status of the router. Set to true for UP. Set to false for DOWN.</para></wadl:doc></param>
      <param required="false" name="tenant_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the tenant who owns the network. Only administrative users can specify a tenant ID other than their own.</para></wadl:doc></param>
      <param required="false" name="mac_address" style="plain" type="xsd:string"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The MAC address. If you specify an address that is not valid, a 400 Bad Request error is returned. If you do not specify a MAC address, OpenStack Networking tries to allocate one. If a failure occurs, a 503 Service Unavailable error is returned.</para></wadl:doc></param>
      <param required="false" name="fixed_ips" style="plain" type="xsd:dict"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>If you specify only a subnet ID, OpenStack Networking allocates an available IP from that subnet to the port. If you specify both a subnet ID and an IP address, OpenStack Networking tries to allocate the specified address to the port.</para></wadl:doc></param>
-      <param required="false" name="security_groups" style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Security groups. Specify one or more security group IDs.</para></wadl:doc></param>
-      <param required="true" name="network_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the The network ID.</para></wadl:doc></param>
+     <param required="false" name="security_groups" style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Security groups. Specify one or more security group IDs.</para></wadl:doc></param>
+     <param required="true" name="network_id"      style="plain" type="csapi:uuid"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The ID of the The network ID.</para></wadl:doc></param>
         
          '>
     <!-- Port binding Parameters -->
@@ -245,7 +241,6 @@
 
      <!ENTITY flavorListParameters
            '
-
             <param xmlns="http://wadl.dev.java.net/2009/02" name="changes-since" style="query" required="false" type="xsd:dateTime"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>A time/date stamp for when the flavor last changed.</para></wadl:doc></param>
             <param xmlns="http://wadl.dev.java.net/2009/02" name="minDisk" style="query" required="false" type="xsd:int"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Integer value for the minimum disk space in GB so you can filter results.</para></wadl:doc></param>
             <param xmlns="http://wadl.dev.java.net/2009/02" name="minRam"  style="query" required="false" type="xsd:int"><wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Integer value for the minimum RAM so you can filter results.</para></wadl:doc></param>
