@@ -1,148 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section xmlns="http://docbook.org/ns/docbook"
     xmlns:xi="http://www.w3.org/2001/XInclude"
-    xmlns:xlink="http://www.w3.org/1999/xlink" 
-    xml:id="Setting-Up-Python-novaclient"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="cli-intro"
     version="5.0">
-    <title>Setting Up python-novaclient</title>
-
-<para>For more serious scripting work, you can use a client like the
-        python-novaclient client. The python-novaclient implements
-        Compute API through a command-line interface. You only need a
-        user name and password to use the python-novaclient tool. </para>
-    <para>Installing the python-novaclient gives you a <code>nova</code> shell command that enables
-    Compute API interactions from the command line. You install the client, and then provide
-    your user name and password, set as environment variables for convenience, and then you
-    can have the ability to send commands to your cloud on the command-line.</para>
-    <para>To install python-novaclient, install from Pypi
-        like so. </para>
-    <programlisting language="bash" role="gutter: false">
-$ pip install python-novaclient
-    </programlisting>
-    <para>The <link xlink:href="http://docs.openstack.org/cli/quick-start/content/index.html">CLI guide</link> offers more detailed install
-        instructions including how to source your credentials.</para>
-    
-<section xml:id="Listing-Images-a09140"><title>Listing Images</title><para>Before you can go about the business of building your cloud, you
-            want to know what images are available to you by asking
-            the image service what kinds of configurations are
-            available. The image service could be compared to iTunes
-            for your cloud - you can view the playlist of images
-            before using your favorite image to create a new instance
-            in the cloud. To get the list of images, their names,
-            status, and ID, use this command:
-            <programlisting language="bash" role="gutter: false">
-$ nova image-list
-
-+----+--------------------------------------+--------+--------+
-| ID |                 Name                 | Status | Server |
-+----+--------------------------------------+--------+--------+
-| 12 | natty-server-cloudimg-amd64-kernel   | ACTIVE |        |
-| 13 | natty-server-cloudimg-amd64          | ACTIVE |        |
-| 14 | oneiric-server-cloudimg-amd64-kernel | ACTIVE |        |
-| 15 | oneiric-server-cloudimg-amd64        | ACTIVE |        |
-+----+--------------------------------------+--------+--------+
-        </programlisting></para>
-    <para>Next you need to know the relative sizes of each of these. </para>
-    
-    <para>With the information about what is available to you, you can choose the combination of image and flavor to create your virtual servers and launch instances. </para></section>
-    <section xml:id="Listing-Flavors"><title>Listing Flavors</title>
-        <para>You also need to know the ID of the flavor 
-        To get the list of flavors, their names,
-        status, and ID, use this command:</para>
-            <programlisting language="bash" role="gutter: false">
-$ nova flavor-list
-        
-+----+-----------+-----------+------+-----------+------+-------+-------------+
-| ID |    Name   | Memory_MB | Disk | Ephemeral | Swap | VCPUs | RXTX_Factor |
-+----+-----------+-----------+------+-----------+------+-------+-------------+
-| 1  | m1.tiny   | 512       | 0    | N/A       | 0    | 1     |             |
-| 2  | m1.small  | 2048      | 20   | N/A       | 0    | 1     |             |
-| 3  | m1.medium | 4096      | 40   | N/A       | 0    | 2     |             |
-| 4  | m1.large  | 8192      | 80   | N/A       | 0    | 4     |             |
-| 5  | m1.xlarge | 16384     | 160  | N/A       | 0    | 8     |             |
-+----+-----------+-----------+------+-----------+------+-------+-------------+        
-    </programlisting>
-        <para>With the information about what is available to you, you can choose the combination of image and flavor to create your virtual servers and launch instances. </para></section>
-    
-    <section xml:id="Listing-Images-a01518"><title>Launching Instances </title>
-    
-    <para> To launch a server, you choose an image you want to match
-            up to a size, find the ID for the image and the ID for the
-            flavor so you can size it, and create the command with the
-            IDs. From the information we got previously, we know that
-            an Ubuntu Natty image has an ID of 13, and if you want to
-            start small with about 2 GB of memory and 20 GB of disk
-            space, you'd choose the m1.small flavor which has an ID of
-            2 when using the 1.1 API on TryStack. Put those parameters
-            in with the "boot" command and you can create a new
-            virtual server. <note>
-                <para>When using an endpoint that supports 1.1 of the
-                    Compute API, you can launch instances with an ID.
-                    When using an endpoint that supports v2 of the
-                    Compute API, you must use the UUID to launch an
-                    instance.</para>
-            </note></para>
-    <para>
-        <programlisting language="bash" role="gutter: false">
- $ nova boot --flavor=2 --image=13 testserver
- 
- +-----------+--------------------------------------+
-|  Property |                Value                 |
-+-----------+--------------------------------------+
-| adminPass | ****************                     |
-| created   | 2011-09-01T21:40:41Z                 |
-| flavor    | m1.small                             |
-| hostId    |                                      |
-| id        | 1805                                 |
-| image     | natty                                |
-| metadata  | {}                                   |
-| name      | testserver                           |
-| progress  | 0                                    |
-| status    | BUILD                                |
-| updated   | 2011-09-01T21:40:41Z                 |
-| uuid      | ce044452-f22e-4ea4-a3ec-d1cde80cf996 |
-+-----------+--------------------------------------+
- </programlisting>
-    </para>
-    <para>Now, you can view this server in your new cloud by using the nova list
-        command:<programlisting language="bash" role="gutter: false">
-$ nova list
-+------+------------+--------+--------------------------------+
-|  ID  |    Name    | Status |            Networks            |
-+------+------------+--------+--------------------------------+
-| 1805 | testserver | ACTIVE | private=10.4.96.81             |
-+------+------------+--------+--------------------------------+
-            </programlisting></para>
-    
-    <para>There are three statuses you may see - ACTIVE, BUILDING, and UNKNOWN. The BUILDING status is transient and you likely will not see it. If you see UNKNOWN, run <code>nova list</code> again until it goes away.</para>
-    <para>To view all the information about a particular server, use
-                <code>nova show</code> with the ID of the server that
-            you got from the nova list command.</para>
-    <programlisting language="bash" role="gutter: false">
-$ nova show 1805
-
-+-----------------+----------------------------------------------------------+
-|     Property    |                          Value                           |
-+-----------------+----------------------------------------------------------+
-| created         | 2011-09-01T21:40:41Z                                     |
-| flavor          | m1.small                                                 |
-| hostId          | 58a7430169aa42cde5ce2456b0cb5bb5ac1ab0703bab6420e8a49e6e |
-| id              | 1805                                                     |
-| image           | natty                                                    |
-| metadata        | {}                                                       |
-| name            | testserver                                               |
-| private network | 10.4.96.81                                               |
-| progress        | 100                                                      |
-| status          | ACTIVE                                                   |
-| updated         | 2011-09-01T21:40:46Z                                     |
-| uuid            | ce044452-f22e-4ea4-a3ec-d1cde80cf996                     |
-+-----------------+----------------------------------------------------------+
-
-        </programlisting>
-    <para>You can now launch that image again, but add more information to the server when you
-        boot it so that you can more easily identify it amongst your ever-growing elastic cloud.
-        Use the -meta option with a key=value pair, where you can make up the string for both the
-        key and the value. For example, you could add a description and also the creator of the
-        server.
-        <programlisting language="bash" role="gutter: false">$ nova boot --flavor=2 --image=13 testserver --meta description='Use for testing purposes' --meta creator=joecool</programlisting></para>
-</section></section>
+    <title>OpenStack command-line clients</title>
+    <para>For scripting work, you can use a command-line client like
+        the <systemitem role="client">python-novaclient</systemitem>
+        client. This client enables you to use the Compute API through
+        a command-line interface. </para>
+    <para>For information about the command-line clients, see <link
+            xlink:href="http://docs.openstack.org/user-guide/content/"
+                ><citetitle>OpenStack End User
+            Guide</citetitle></link> and <link
+            xlink:href="http://docs.openstack.org/user-guide-admin/content/"
+                ><citetitle>OpenStack Admin User
+            Guide</citetitle></link>.</para>
+    <section xml:id="cli_clients_install">
+        <title>Install the clients</title>
+        <para>Use <command>pip</command> to install the OpenStack
+            clients on a Mac OS X or Linux system. It is easy and
+            ensures that you get the latest version of the client from
+            the <link xlink:href="http://pypi.python.org/pypi">Python
+                Package Index</link>. Also, <command>pip</command>
+            lets you update or remove a package. After you install the
+            clients, you must source an <filename
+                xmlns:raxm="http://docs.rackspace.com/api/metadata"
+                >openrc</filename> file to set required environment
+            variables before you can request OpenStack services
+            through the clients or the APIs. For complete information
+            about the OpenStack clients including how to source the
+                <filename>openrc</filename> file, see <link
+                xlink:href="http://docs.openstack.org/user-guide/content/"
+                xmlns:svg="http://www.w3.org/2000/svg"
+                xmlns:html="http://www.w3.org/1999/xhtml"
+                    ><citetitle>OpenStack End User
+                Guide</citetitle></link> and <link
+                xlink:href="http://docs.openstack.org/user-guide-admin/content/"
+                xmlns:svg="http://www.w3.org/2000/svg"
+                xmlns:html="http://www.w3.org/1999/xhtml"
+                    ><citetitle>OpenStack Admin User
+                Guide</citetitle></link>.</para>
+        <para>You must install each client separately.</para>
+        <para>Run the following command to install or update a client
+            package:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install [--upgrade] python-<replaceable>PROJECT</replaceable>client</userinput></screen>
+        <para>Where <replaceable>PROJECT</replaceable> is the project
+            name.</para>
+        <para>For example, to install the nova client, run the
+            following command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install python-novaclient</userinput></screen>
+        <para>To update the nova client, run the following
+            command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install --upgrade python-novaclient</userinput></screen>
+        <para>To remove the nova client, run the following
+            command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip uninstall python-novaclient</userinput></screen>
+        <para>Before you can issue client commands, you must download
+            and source the <filename>openrc</filename> file to set
+            environment variables.</para>
+    </section>
+    <section xml:id="list-images">
+        <title>Launch an instance</title>
+        <para>To launch instances, you must choose a name, an image,
+            and a flavor for your instance. </para>
+        <para>To list available images, call the Compute API through
+            the nova client, as follows:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova image-list</userinput></screen>
+        <screen><?db-font-size 60%?><computeroutput>+--------------------------------------+---------------------------------+--------+--------+
+| ID                                   | Name                            | Status | Server |
++--------------------------------------+---------------------------------+--------+--------+
+| 949c80c8-b4ac-4315-844e-69f9bef39ed1 | cirros-0.3.1-x86_64-uec         | ACTIVE |        |
+| 2d96f33d-ff66-4cac-b377-820cdf51204a | cirros-0.3.1-x86_64-uec-kernel  | ACTIVE |        |
+| eda9e5cb-4c8c-4e88-b580-7fac80ad8e78 | cirros-0.3.1-x86_64-uec-ramdisk | ACTIVE |        |
++--------------------------------------+---------------------------------+--------+--------+</computeroutput></screen>
+        <para>To list flavors, run the following command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova flavor-list</userinput></screen>
+        <screen><?db-font-size 60%?><computeroutput>+----+-----------+-----------+------+-----------+------+-------+-------------+-----------+
+| ID | Name      | Memory_MB | Disk | Ephemeral | Swap | VCPUs | RXTX_Factor | Is_Public |
++----+-----------+-----------+------+-----------+------+-------+-------------+-----------+
+| 1  | m1.tiny   | 512       | 0    | 0         |      | 1     | 1.0         | True      |
+| 2  | m1.small  | 2048      | 20   | 0         |      | 1     | 1.0         | True      |
+| 3  | m1.medium | 4096      | 40   | 0         |      | 2     | 1.0         | True      |
+| 4  | m1.large  | 8192      | 80   | 0         |      | 4     | 1.0         | True      |
+| 42 | m1.nano   | 64        | 0    | 0         |      | 1     | 1.0         | True      |
+| 5  | m1.xlarge | 16384     | 160  | 0         |      | 8     | 1.0         | True      |
+| 84 | m1.micro  | 128       | 0    | 0         |      | 1     | 1.0         | True      |
++----+-----------+-----------+------+-----------+------+-------+-------------+-----------+</computeroutput>       </screen>
+        <para>To launch an instance, note the IDs of your desired
+            image and flavor. </para>
+        <para>To launch an instance named
+                <literal>my_instance</literal>, run the <command>nova
+                boot</command> command with the image and flavor IDs
+            and the server name, as follows:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova boot --image 949c80c8-b4ac-4315-844e-69f9bef39ed1 --flavor 2 my_instance</userinput></screen>
+        <screen><?db-font-size 60%?><computeroutput>+-------------------------------------+--------------------------------------+
+| Property                            | Value                                |
++-------------------------------------+--------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                               |
+| OS-EXT-AZ:availability_zone         | nova                                 |
+| OS-EXT-SRV-ATTR:host                | None                                 |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                 |
+| OS-EXT-SRV-ATTR:instance_name       | instance-00000001                    |
+| OS-EXT-STS:power_state              | 0                                    |
+| OS-EXT-STS:task_state               | scheduling                           |
+| OS-EXT-STS:vm_state                 | building                             |
+| accessIPv4                          |                                      |
+| accessIPv6                          |                                      |
+| adminPass                           | XysUgJRnkB2y                         |
+| config_drive                        |                                      |
+| created                             | 2013-11-07T17:34:16Z                 |
+| flavor                              | m1.small                             |
+| hostId                              |                                      |
+| id                                  | 66129319-1f1d-420d-a226-bf9fc5ea0138 |
+| image                               | cirros-0.3.1-x86_64-uec              |
+| key_name                            | None                                 |
+| metadata                            | {}                                   |
+| name                                | my_instance                          |
+| progress                            | 0                                    |
+| security_groups                     | [{u'name': u'default'}]              |
+| status                              | BUILD                                |
+| tenant_id                           | 604bbe45ac7143a79e14f3158df67091     |
+| updated                             | 2013-11-07T17:34:16Z                 |
+| user_id                             | 3273a50d6cfb4a2ebc75e83cb86e1554     |
++-------------------------------------+--------------------------------------+</computeroutput></screen>
+        <para>Use the <command>nova list</command> command to view
+            your server:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova list</userinput></screen>
+        <screen><?db-font-size 60%?><computeroutput>+--------------------------------------+-------------+--------+------------+-------------+------------------+
+| ID                                   | Name        | Status | Task State | Power State | Networks         |
++--------------------------------------+-------------+--------+------------+-------------+------------------+
+| 66129319-1f1d-420d-a226-bf9fc5ea0138 | my_instance | ACTIVE | None       | Running     | private=10.0.0.2 |
++--------------------------------------+-------------+--------+------------+-------------+------------------+</computeroutput></screen>
+        <para>To view details for a specified server, use the
+                <command>nova show</command> command. Include the ID
+            of the server:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova show 66129319-1f1d-420d-a226-bf9fc5ea0138</userinput></screen>
+        <screen><?db-font-size 60%?><computeroutput>+-------------------------------------+----------------------------------------------------------------+
+| Property                            | Value                                                          |
++-------------------------------------+----------------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                         |
+| OS-EXT-AZ:availability_zone         | nova                                                           |
+| OS-EXT-SRV-ATTR:host                | devstack-grizzly                                               |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | devstack-grizzly                                               |
+| OS-EXT-SRV-ATTR:instance_name       | instance-00000001                                              |
+| OS-EXT-STS:power_state              | 1                                                              |
+| OS-EXT-STS:task_state               | None                                                           |
+| OS-EXT-STS:vm_state                 | active                                                         |
+| accessIPv4                          |                                                                |
+| accessIPv6                          |                                                                |
+| config_drive                        |                                                                |
+| created                             | 2013-11-07T17:34:16Z                                           |
+| flavor                              | m1.small (2)                                                   |
+| hostId                              | d57e6f9f7885c615794b4d5a87103509620b6a7f567f7e7bd57e97a2       |
+| id                                  | 66129319-1f1d-420d-a226-bf9fc5ea0138                           |
+| image                               | cirros-0.3.1-x86_64-uec (949c80c8-b4ac-4315-844e-69f9bef39ed1) |
+| key_name                            | None                                                           |
+| metadata                            | {}                                                             |
+| name                                | my_instance                                                    |
+| private network                     | 10.0.0.2                                                       |
+| progress                            | 0                                                              |
+| security_groups                     | [{u'name': u'default'}]                                        |
+| status                              | ACTIVE                                                         |
+| tenant_id                           | 604bbe45ac7143a79e14f3158df67091                               |
+| updated                             | 2013-11-07T17:34:32Z                                           |
+| user_id                             | 3273a50d6cfb4a2ebc75e83cb86e1554                               |
++-------------------------------------+----------------------------------------------------------------+</computeroutput></screen>
+    </section>
+</section>
