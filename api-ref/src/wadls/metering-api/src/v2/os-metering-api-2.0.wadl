@@ -7,6 +7,17 @@ xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
             <resource path="alarms">
                 <method href="#listAlarms" />
                 <method href="#createAlarm" />
+                <resource path="{alarm_id}">
+                    <method href="#showAlarm" />
+                    <method href="#updateAlarm" />
+                    <resource path="state">
+                        <method href="#updateAlarmState" />
+                        <method href="#showAlarmState" />
+                    </resource>
+                    <resource path="history">
+                        <method href="#showAlarmHistory" />
+                    </resource>
+                </resource>
             </resource>
             <resource path="meters">
                 <method href="#listMeters" />
@@ -109,7 +120,7 @@ xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
             Ceilometer.</para>
         </wadl:doc>
         <request>
-            <param name="body" required="false" style="query"
+            <param name="samples" required="false" style="query"
             type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
                 <doc>
                     <p xmlns="http://www.w3.org/1999/xhtml">a list of
@@ -172,6 +183,82 @@ xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
         <wadl:doc title="Create alarm" xml:lang="EN"
         xmlns="http://www.w3.org/1999/xhtml">
             <para role="shortdesc">Create a new alarm.</para>
+        </wadl:doc>
+        <request>
+            <param name="data" required="false" style="query"
+            type="Alarm" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">a alarm
+                    within the request body.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="showAlarm" name="GET">
+        <wadl:doc title="Show alarm" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Return this alarm.</para>
+        </wadl:doc>
+        <request />
+        <response status="200" />
+    </method>
+    <method id="updateAlarm" name="PUT">
+        <wadl:doc title="Update alarm" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Modify this alarm.</para>
+        </wadl:doc>
+        <request>
+            <param name="data" required="false" style="query"
+            type="Alarm" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">a alarm
+                    within the request body.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="showAlarmHistory" name="GET">
+        <wadl:doc title="Show alarm history" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Assembles the alarm history
+            requested.</para>
+        </wadl:doc>
+        <request>
+            <param name="q" required="false" style="query"
+            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
+                    rules for the changes to be described.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="updateAlarmState" name="PUT">
+        <wadl:doc title="Update alarm state" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Set the state of this
+            alarm.</para>
+        </wadl:doc>
+        <request>
+            <param name="state" required="false" style="query"
+            type="Enum(ok, alarm, insufficient data)"
+            xmlns="http://wadl.dev.java.net/2009/02">
+                <doc>
+                    <p xmlns="http://www.w3.org/1999/xhtml">a alarm
+                    state within the request body.</p>
+                </doc>
+            </param>
+        </request>
+        <response status="200" />
+    </method>
+    <method id="showAlarmState" name="GET">
+        <wadl:doc title="Show alarm state" xml:lang="EN"
+        xmlns="http://www.w3.org/1999/xhtml">
+            <para role="shortdesc">Get the state of this
+            alarm.</para>
         </wadl:doc>
         <request />
         <response status="200" />
