@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                    type="csapi:uuid">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Tenant ID"><para>The ID
+                            for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="Servers" path="servers">
-                    <resource path="{server_id}">
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   >The UUID for the server of
-                                   interest to you. </p>
-                            </doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Server ID"
+                                   ><para>The UUID for the server of
+                                   interest to you.</para>
+                            </wadl:doc>
                         </param>
-                        <resource path="action">
+                        <resource path="action" id="action">
                             <method href="#getConsoleOutput"/>
                         </resource>
                     </resource>
@@ -34,49 +34,66 @@
             </resource>
         </resource>
     </resources>
-
     <method name="POST" id="getConsoleOutput">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Get Console Output for Server Instance.">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Gets console
-                output. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get Console Output for an Instance">
+            <para role="shortdesc">Gets console output for a server
+                instance.</para>
         </wadl:doc>
         <request>
+            <param name="os-getConsoleOutput" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Get console output action"
+                        ><para>Specify the
+                            <code>os-getConsoleOutput</code> action in
+                        the request body.</para></wadl:doc>
+            </param>
             <param name="length" style="plain">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Number of
-                        lines to fetch from end of console log. </p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Length">
+                    <para>Number of lines to fetch from the end of
+                        console log.</para>
+                </wadl:doc>
             </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Get console output: JSON request">
                     <xsdxt:code
                         href="../api_samples/os-console-output/console-output-post-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Get console output: XML request">
                     <xsdxt:code
                         href="../api_samples/os-console-output/console-output-post-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Get console output: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-console-output/console-output-post-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Get console output: XML response">
                     <xsdxt:code
                         href="../api_samples/os-console-output/console-output-post-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
