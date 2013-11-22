@@ -25,15 +25,16 @@
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="csapi:UUID">
-                    <doc>
-                        <p xmlns="http://www.w3.org/1999/xhtml">The
-                            tenant ID in a multi-tenancy cloud.</p>
-                    </doc>
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The tenant ID in a multi-tenancy
+                            cloud.</para>
+                    </wadl:doc>
                 </param>
                 <resource id="Servers" type="#ServerList"
                     path="servers">
-                    <method href="#createServer"/>
+                    <method href="#createServer-os-block-device"/>
                 </resource>
             </resource>
         </resource>
@@ -47,12 +48,12 @@
         <method href="#versionDetails"/>
     </resource_type>
     <resource_type id="ServerList">
-        <doc xml:lang="EN" title="Server List">
-            <p xmlns="http://www.w3.org/1999/xhtml">A list of servers.
-                Each server contains IDs, names, and links. Other
-                attributes are omitted.</p>
-        </doc>
-        <method href="#listServers"/>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Server List">
+            <para>A list of servers. Each server contains IDs, names,
+                and links. Other attributes are omitted.</para>
+        </wadl:doc>
+        <method href="#listServers-os-block-device"/>
     </resource_type>
 
     <!--*******************************************************-->
@@ -60,110 +61,114 @@
     <!--*******************************************************-->
 
     <!-- Servers -->
-    <method name="POST" id="createServer">
-        <doc xml:lang="EN" title="Create Server">
-            <p xmlns="http://www.w3.org/1999/xhtml">Creates a server
-                with a block device mapping. </p>
-        </doc>
-
+    <method name="POST" id="createServer-os-block-device">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Server">
+            <para role="shortdesc">Creates a server with a block
+                device mapping.</para>
+        </wadl:doc>
         <request> &serverCreateParameters; <param
                 name="block_device_mapping_v2" style="plain"
                 required="true" type="csapi:blockDeviceMapping"
                 path="/csapi:server">
-                <doc xml:lang="EN" title="block_device_mapping_v2">
-                    <p xmlns="http://www.w3.org/1999/xhtml"
-                        >block_device_mapping_v2.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="block_device_mapping_v2">
+                    <para>block_device_mapping_v2.</para>
+                </wadl:doc>
             </param>
             <param name="device_name" style="plain" type="xsd:string"
                 required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">A device
-                        name where the volume is attached in the
-                        system at /dev/dev_name. This value is
-                        typically vda.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A device name where the volume is attached
+                        in the system at /dev/dev_name. This value is
+                        typically vda.</para>
+                </wadl:doc>
             </param>
             <param name="source_type" style="plain" type="xsd:string"
                 required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Either
-                        snap or any other value, including a blank
-                        string. snap means that the volume was created
-                        from a snapshot.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Either snap or any other value, including a
+                        blank string. snap means that the volume was
+                        created from a snapshot.</para>
+                </wadl:doc>
             </param>
             <param name="destination_type" style="plain"
                 type="xsd:string" required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Either
-                        snap or any other value, including a blank
-                        string. snap means that the volume was created
-                        from a snapshot.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Either snap or any other value, including a
+                        blank string. snap means that the volume was
+                        created from a snapshot.</para>
+                </wadl:doc>
             </param>
             <param name="delete_on_termination" style="plain"
                 type="xsd:bool" required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Set to
-                        True (or 1) to delete the volume when the
-                        instance is deleted. Set to False (or 0) to
-                        retain the volume when the instance is
-                        deleted.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Set to True (or 1) to delete the volume when
+                        the instance is deleted. Set to False (or 0)
+                        to retain the volume when the instance is
+                        deleted.</para>
+                </wadl:doc>
             </param>
             <param name="guest_format" style="plain" type="xsd:string"
                 required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Guest
-                        format.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Guest format.</para>
+                </wadl:doc>
             </param>
             <param name="uuid" style="plain" type="csapi:uuid"
                 required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The device
-                        ID.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The device ID.</para>
+                </wadl:doc>
             </param>
             <param name="boot_index" style="plain" type="xsd:string"
                 required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The boot
-                        index.</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The boot index.</para>
+                </wadl:doc>
             </param>
             <representation mediaType="application/json">
-                <doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-block-device-mapping-v2-boot/server-post-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml"
                 element="csapi:server">
-                <doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-block-device-mapping-v2-boot/server-post-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
-        <response status="202"> &serverResponseParameters;
-                <representation mediaType="application/json">
-                <doc>
+        <response status="202"> &serverListParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-block-device-mapping-v2-boot/server-post-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml"
                 element="csapi:server">
-                <doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-block-device-mapping-v2-boot/server-post-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <response status="422">
@@ -172,6 +177,51 @@
                 element="csapi:UnprocessableEntity"/>
         </response>
         <!-- All other common faults except build in progess -->
-        &commonFaults; &getFaults; &postPutFaults; &buildFaults;
-    </method>
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults; </method>
+    <method name="GET" id="listServers-os-block-device">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Servers">
+            <para role="shortdesc">Lists IDs, names, and links for all
+                servers.</para>
+        </wadl:doc>
+        <request> &serverListParameters; </request>
+        <response status="200 203">
+            <param name="servers" style="plain" required="true"
+                type="csapi:ServersWithOnlyIDsNamesLinks"
+                path="/csapi:servers/atom:link[@rel='servers']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>List of servers.</para>
+                </wadl:doc>
+                <link resource_type="#ServerList" rel="servers"/>
+            </param>
+            <param name="next" style="plain" type="xsd:anyURI"
+                path="/csapi:servers/atom:link[@rel='next']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Moves to the next item in the
+                        list.</para></wadl:doc>
+                <link resource_type="#ServerList" rel="next"/>
+            </param>
+            <param name="previous" style="plain" type="xsd:anyURI"
+                path="/csapi:servers/atom:link[@rel='previous']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Moves to the previous item in
+                        the list.</para></wadl:doc>
+                <link resource_type="#ServerList" rel="previous"/>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/servers-list-resp.json"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml"
+                element="csapi:servers">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><xsdxt:code
+                        href="../api_samples/servers-list-resp.xml"/>
+                </wadl:doc>
+            </representation>
+        </response>
+        <!-- Common Faults --> &commonFaults; </method>
 </application>
