@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml"> The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                    <wadl:doc
+                        xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                        xml:lang="EN" title="Tenant ID"><para>The ID
+                            for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
-
                 <resource id="Servers" path="servers">
-                    <resource path="{server_id}">
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > The UUID for the server of
-                                   interest to you. </p>
-                            </doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Server UUID"
+                                   ><para>The UUID for the server of
+                                   interest to you.</para>
+                            </wadl:doc>
                         </param>
-                        <resource path="action">
+                        <resource path="action" id="action">
                             <method href="#stop"/>
                             <method href="#start"/>
                         </resource>
@@ -37,50 +36,73 @@
             </resource>
         </resource>
     </resources>
-
     <method name="POST" id="stop">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Halts a running server. Changes
-                status to STOPPED. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Stop Server">
+            <para role="shortdesc">Stops a running server. Changes
+                status to STOPPED.</para>
         </wadl:doc>
         <request>
+            <param name="os-stop" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Stop action"><para>Specify
+                        the <code>os-stop</code> action in the request
+                        body.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Stop server: JSON request">
                     <xsdxt:code
                         href="../api_samples/os-server-start-stop/server-stop-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Stop server: XML request">
                     <xsdxt:code
                         href="../api_samples/os-server-start-stop/server-stop-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="202"/>
     </method>
-
     <method name="POST" id="start">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-                ><para role="shortdesc"> Returns a STOPPED server to
-                ACTIVE status. </para>
+            title="Start Server"><para role="shortdesc">Returns a
+                STOPPED server to ACTIVE status.</para>
         </wadl:doc>
         <request>
+            <param name="os-start" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Start action"><para>Specify
+                        the <code>os-start</code> action in the
+                        request body.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Start server: JSON request">
                     <xsdxt:code
                         href="../api_samples/os-server-start-stop/server-start-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc
+                    xmlns="http://wadl:docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Start server: XML request">
                     <xsdxt:code
                         href="../api_samples/os-server-start-stop/server-stop-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="202"/>
