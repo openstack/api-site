@@ -1,190 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- (C) 2012-2013 OpenStack LLC., All Rights Reserved -->
-
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud. </p></doc>
+                    type="csapi:uuid">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
-
                 <resource id="Flavors" path="flavors">
-                    <method href="#createFlavor"/>
-
-                    <resource path="{flavor_id}">
+                    <method href="#createFlavor-extradata"/>
+                    <resource path="{flavor_id}" id="flavor_id">
                         <param name="flavor_id" style="template">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   >The ID of the flavor of interest
-                                   to you. </p></doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The ID of the flavor of interest
+                                   to you.</para></wadl:doc>
                         </param>
-
-                        <method href="#getFlavor"/>
-
+                        <method href="#getFlavor-extradata"/>
                     </resource>
-
-                    <resource path="detail">
-                        <method href="#getFlavorsDetails"/>
+                    <resource path="detail" id="detail">
+                        <method href="#getFlavorsDetails-extradata"/>
                     </resource>
-
                 </resource>
             </resource>
         </resource>
     </resources>
-
-    <method name="POST" id="createFlavor">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Creates a flavor.
-                Includes the rxtx_factor, OS-FLV-EXT-DATA:ephemeral,
-                and swap extended attributes.</p>
+    <method name="POST" id="createFlavor-extradata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Flavor with Extra Data">
+            <para role="shortdesc">Creates a flavor. Includes the
+                rxtx_factor, OS-FLV-EXT-DATA:ephemeral, and swap
+                extended attributes.</para>
         </wadl:doc>
-
         <request>
             <param style="plain" name="name" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The name
-                        for the flavor.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The name for the flavor.</para></wadl:doc>
             </param>
             <param style="plain" name="ram" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                        amount of RAM, in MBs, for the
-                    flavor.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The amount of RAM, in MBs, for
+                        the flavor.</para></wadl:doc>
             </param>
             <param style="plain" name="vcpus" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                        virtual CPUs, in a whole integer amount, for
-                        the flavor.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The virtual CPUs, in a whole
+                        integer amount, for the
+                    flavor.</para></wadl:doc>
             </param>
             <param style="plain" name="disk" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                        amount of disk space, in GBs, for the
-                        flavor.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The amount of disk space, in
+                        GBs, for the flavor.</para></wadl:doc>
             </param>
             <param style="plain" name="id" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The ID, a
-                        unique integer value, for the
-                    flavor.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The ID, a unique integer
+                        value, for the flavor.</para></wadl:doc>
             </param>
-
             <param style="plain" name="rxtx_factor" required="true">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">Enables
-                        you to override the bandwidth cap value, which
-                        defaults to the bandwidth cap value for the
-                        network to which the flavor is attached. The
-                        new bandwidth cap is calculated by multiplying
-                        the rxtx_factor valued that you specify by the
-                        rxtx_base property for the network. </p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Enables you to override the
+                        bandwidth cap value, which defaults to the
+                        bandwidth cap value for the network to which
+                        the flavor is attached. The new bandwidth cap
+                        is calculated by multiplying the rxtx_factor
+                        valued that you specify by the rxtx_base
+                        property for the network.</para></wadl:doc>
             </param>
             <param style="plain" name="OS-FLV-EXT-DATA:ephemeral"
                 required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The size
-                        of secondary drive, in GBs, to attach to a
-                        server. </p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The size of secondary drive, in GBs, to
+                        attach to a server.</para>
+                </wadl:doc>
             </param>
             <param style="plain" name="swap" required="true">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The amount
-                        of swap disk space, in GBs, to allocate to a
-                        server. </p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The amount of swap disk space, in GBs, to
+                        allocate to a server.</para>
+                </wadl:doc>
             </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-post-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-post-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-post-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
-            <response status="200">
-                <representation mediaType="application/xml">
-                    <doc xml:lang="EN">
-                        <xsdxt:code
-                            href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-post-resp.xml"
-                        />
-                    </doc>
-                </representation>
-            </response>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-post-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
         </response>
     </method>
-
-    <method name="GET" id="getFlavor">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Gets details for a
-                specified flavor. Includes the rxtx_factor,
+    <method name="GET" id="getFlavor-extradata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get Flavor Extra Data Details">
+            <para role="shortdesc">Gets details for a specified
+                flavor. Includes the rxtx_factor,
                 OS-FLV-EXT-DATA:ephemeral, and swap extended
-                attributes.</p>
+                attributes.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-get-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <response status="200">
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-get-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
-    <method name="GET" id="getFlavorsDetails">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists details for
-                available flavors. Includes the rxtx_factor,
-                OS-FLV-EXT-DATA:ephemeral, and swap extended
-                attributes.</p>
+    <method name="GET" id="getFlavorsDetails-extradata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Flavors with Extra Data">
+            <para role="shortdesc">Lists available flavors. Includes
+                the rxtx_factor, OS-FLV-EXT-DATA:ephemeral, and swap
+                extended attributes.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-list-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <response status="200">
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/OS-FLV-EXT-DATA/flavors-extra-data-list-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
 </application>
