@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
-
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:db="http://docbook.org/ns/docbook"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-
     <resources base="https://servers.api.openstack.com">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             title="Flavor access" xml:lang="EN"/>
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="xsd:string">
+                    type="csapi:UUID">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para> The ID for the tenant or account in a
-                            multi-tenancy cloud. </para></wadl:doc>
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="flavors" path="flavors">
                     <method href="#detailAccess"/>
                     <method href="#createAccess"/>
-                    <resource path="{flavor_id}">
+                    <resource path="{flavor_id}" id="flavor_id">
                         <param name="flavor_id" style="template"
                             type="csapi:uuid" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN"><para role="shortdesc">
                                    The ID of the flavor of interest to
-                                   you. </para></wadl:doc>
+                                   you.</para></wadl:doc>
                         </param>
                         <method href="#showAccess"/>
-                        <resource path="os-flavor-access">
+                        <resource path="os-flavor-access"
+                            id="os-flavor-access">
                             <method href="#listAccess"/>
                         </resource>
-                        <resource path="action">
+                        <resource path="action" id="action">
                             <method href="#addTenantAccess"/>
                             <method href="#removeTenantAccess"/>
                         </resource>
@@ -46,188 +46,307 @@
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="detailAccess">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Lists all flavors. Includes the
-                access type, which is public or private. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Flavors with Access Type">
+            <para role="shortdesc">Lists flavors and includes the
+                access type, which is public or private.</para>
         </wadl:doc>
-        <response status="200">
+        <response status="200"> &flavorRespParameters; <param
+                xmlns="http://wadl.dev.java.net/2009/02"
+                name="os-flavor-access:is_public" style="plain"
+                required="true" type="xsd:Boolean">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Set to true if access is
+                        public.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-detail-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-detail-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
     <method name="POST" id="createAccess">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Creates a private flavor. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create Private Flavor">
+            <para role="shortdesc">Creates a private flavor.</para>
         </wadl:doc>
-        <request>
+        <request> &flavorReqParameters; <param
+                xmlns="http://wadl.dev.java.net/2009/02"
+                name="os-flavor-access:is_public" style="plain"
+                required="true" type="xsd:Boolean">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Set to true if access is
+                        public. Set to false if access is
+                        private.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-create-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-create-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
-        <response status="200">
+        <response status="200"> &flavorRespParameters; <param
+                xmlns="http://wadl.dev.java.net/2009/02"
+                name="os-flavor-access:is_public" style="plain"
+                required="true" type="xsd:Boolean">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Set to true if access is
+                        public.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-create-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-create-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
     <method name="GET" id="showAccess">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Gets the flavor access type, which
-                is either public or private. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show Flavor Access Type">
+            <para role="shortdesc">Gets the flavor access type, which
+                is public or private.</para>
         </wadl:doc>
-        <response status="200">
+        <response status="200"> &flavorRespParameters; <param
+                xmlns="http://wadl.dev.java.net/2009/02"
+                name="os-flavor-access:is_public" style="plain"
+                required="true" type="xsd:Boolean">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Set to true if access is
+                        public.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-show-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-show-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
     <method name="GET" id="listAccess">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Lists tenants with access to the
-                specified private flavor. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List Tenants with Access to Private Flavor">
+            <para role="shortdesc">Lists tenants with access to the
+                specified private flavor.</para>
         </wadl:doc>
         <response status="200">
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="flavor_id" style="plain" required="true"
+                type="xsd:int">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The flavor
+                    ID.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="tenant_id" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The tenant
+                    ID.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-list-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-list-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
     <method name="POST" id="addTenantAccess">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Gives the specified tenant access
-                to the specified private flavor. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add Access to Private Flavor">
+            <para role="shortdesc">Gives a specified tenant access to
+                the specified private flavor.</para>
         </wadl:doc>
         <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="addTenantAccess" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Specify the
+                            <code>addTenantAccess</code>
+                        action.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="tenant" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The name of the tenant to
+                        which to give access.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-add-tenant-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-add-tenant-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="flavor_id" style="plain" required="true"
+                type="xsd:int">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The flavor
+                    ID.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="tenant_id" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The tenant
+                    ID.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-add-tenant-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-add-tenant-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
     <method name="DELETE" id="removeTenantAccess">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc"> Revokes access from the specified
-                tenant for the specified private flavor. </para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete Access from Private Flavor">
+            <para role="shortdesc">Revokes access from the specified
+                tenant for the specified private flavor.</para>
         </wadl:doc>
         <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="removeTenantAccess" style="plain"
+                required="true" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Specify the
+                            <code>removeTenantAccess</code>
+                        action.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="tenant" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The name of the tenant from
+                        which to revoke access.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-remove-tenant-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-remove-tenant-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="flavor_id" style="plain" required="true"
+                type="xsd:int">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The flavor
+                    ID.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="tenant_id" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The tenant
+                    ID.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-remove-tenant-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-flavor-access/flavor-access-remove-tenant-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
