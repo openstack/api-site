@@ -73,6 +73,7 @@
                                    the image is being shared.</para>
                                 </wadl:doc>
                             </param>
+                            <method href="#getImageMember-v2"/>
                             <method href="#deleteImageMember-v2"/>
                             <method href="#updateImageMember-v2"/>
                         </resource>
@@ -97,7 +98,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Create Image">
             <para role="shortdesc">Creates a virtual machine (VM)
-                image. (Since Images v2.0.)</para>
+                image. (Since Image API v2.0.)</para>
             <para>Created with a Location header that contains the
                 newly-created URI for the image. Response body
                 represents the created image entity.</para>
@@ -167,7 +168,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update Image">
             <para role="shortdesc">Updates a specified image. (Since
-                Images v2.0.)</para>
+                Image API v2.0.)</para>
             <para>Request body must conform to one of the following
                 media types:</para>
             <itemizedlist spacing="compact">
@@ -175,7 +176,7 @@
                     <para>application/openstack-images-v2.0-json-patch</para>
                 </listitem>
                 <listitem>
-                    <para>application/openstack-images-v2.1-json-patch (Since Images v2.2)</para>
+                    <para>application/openstack-images-v2.1-json-patch (Since Image API v2.2)</para>
                 </listitem>
             </itemizedlist>
             <para>You can also use the PATCH method to add or remove
@@ -210,7 +211,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Get Image Details">
             <para role="shortdesc">Gets details for a specified image.
-                (Since Images v2.0.)</para>
+                (Since Image API v2.0.)</para>
             <para>Response body is a single image
             entity.</para></wadl:doc>
         <response status="200">
@@ -227,7 +228,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List Images">
             <para role="shortdesc">Lists public virtual machine (VM)
-                images. (Since Images v2.0.)</para>
+                images. (Since Image API v2.0.)</para>
             <para>Returns a subset of the larger collection of images
                 and a link that you can use to get the next set of
                 images. You should always check for the presence of a
@@ -405,7 +406,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List Image Members">
             <para role="shortdesc">Lists the tenants with whom this
-                image has been shared. (Since Images v2.1.)
+                image has been shared. (Since Image API v2.1.)
             </para>
             <para>If a user with whom this image is shared makes this
                   call, the member list contains only information for
@@ -433,7 +434,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Delete Image">
             <para role="shortdesc">Deletes a
-                specified image. (Since Images v2.0.)</para>
+                specified image. (Since Image API v2.0.)</para>
             <para>You cannot delete images with the 'protected'
                 attribute set to true (boolean); the response returns
                 the HTTP 403 status code.</para>
@@ -449,7 +450,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Upload Binary Image Data">
             <para role="shortdesc">Uploads binary
-                image data. (Since Images v2.0.)</para>
+                image data. (Since Image API v2.0.)</para>
             <para>An image record must exist before a client can store
                 binary image data with it.</para>
             <para>Content-Type must be 'application/octet-stream.'
@@ -463,7 +464,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Download Binary Image Data">
             <para role="shortdesc">Downloads binary
-                image data. (Since Images v2.0.)</para>
+                image data. (Since Image API v2.0.)</para>
             <para>Response body contains the raw binary data that
                 represents the actual virtual disk. The Content-Type
                 header is 'application/octet-stream.' The Content-MD5
@@ -479,7 +480,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Add Image Tag">
             <para role="shortdesc">Adds a specified
-                tag to a specified image. (Since Images v2.0.)</para>
+                tag to a specified image. (Since Image API v2.0.)</para>
         </wadl:doc>
         <response status="200"/>
     </method>
@@ -487,15 +488,31 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Delete Image Tag">
             <para role="shortdesc">Deletes a
-                specified tag from a specified image. (Since Images v2.0.)</para>
+                specified tag from a specified image. (Since Image API v2.0.)</para>
         </wadl:doc>
         <response status="204"/>
+    </method>
+    <method name="GET" id="getImageMember-v2">
+        <wadl:doc xml:lang="EN" title="Get Image Member Details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets details for a specified image member. </para>
+            <para>Response body is a single image member entity. (Since Image
+                API 2.2.)</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/image-member-details-response.json"/>
+                </doc>
+            </representation>
+        </response>
     </method>
     <method name="POST" id="createImageMember-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Create Image Member">
             <para role="shortdesc">Adds a specified
-                tenant ID as an image member. (Since Images v2.1.)</para>
+                tenant ID as an image member. (Since Image API v2.1.)</para>
         </wadl:doc>
         <request>
             <param name="member" style="plain" type="xsd:string"
@@ -533,7 +550,7 @@
             title="Update Image Member">
             <para role="shortdesc">Sets the
                 specified status for the specified member of the
-                specified image. (Since Images v2.1.)</para>
+                specified image. (Since Image API v2.1.)</para>
         </wadl:doc>
         <request>
             <param name="status" style="plain" type="xsd:string"
@@ -572,7 +589,7 @@
             title="Delete Image Member">
             <para role="shortdesc">Deletes a
                 specified tenant ID from the member list of the
-                specified image. (Since Images v2.1.)</para>
+                specified image. (Since Image API v2.1.)</para>
         </wadl:doc>
         <response status="204"/>
     </method>
