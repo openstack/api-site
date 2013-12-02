@@ -26,10 +26,10 @@
         <resource id="version" type="#VersionDetails" path="v2/">
             <resource id="tenantID" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="csapi:UUID">
+                    type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The tenant ID in a multi-tenancy
+                        <para>The ID for a tenant in a multi-tenancy
                             cloud.</para>
                     </wadl:doc>
                 </param>
@@ -38,8 +38,6 @@
                     <method href="#listNetworks"/>
                     <method href="#createNetwork"/>
                     <method href="#bulkCreateNetwork"/>
-                    <!-- <resource id="server_detail" path="detail"
-                    type="#DetailServerList"/>-->
                     <resource path="{network_id}">
                         <param name="network_id" style="template"
                             type="csapi:UUID">
@@ -57,29 +55,6 @@
             </resource>
         </resource>
     </resources>
-    <!-- <resource id="Networks" type="#NetworkList"
-                    path="networks">
-                    <method href="#listNetworks"/>
-                    &networkCreateParameters;
-                    <method href="#createNetwork"/>
-                    <method href="#bulkCreateNetwork"/>
-                    <resource path="{network_id}">
-                        <param name="network_id" style="template"
-                            type="csapi:UUID">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN" title="Network ID">
-                                <para>The UUID for the network of
-                                   interest to you.</para></wadl:doc>
-                        </param>
-                        <method href="#showNetwork"/>   
-                        <method href="#updateNetwork"/>
-                        <method href="#deleteNetwork"/>          
-                    </resource>
-                </resource>
-            </resource>
-        </resource>
-    </resources>-->
 
     <!--*******************************************************-->
     <!--               All Methods                             -->
@@ -163,41 +138,52 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create Network">
             <para role="shortdesc">Creates a network.</para>
+            <para>This operation does not require a request body. The
+                tenant ID that you specify in the URI is the tenant
+                that creates the network. An admin user can specify
+                another tenant ID in the optional request body, which
+                is the tenant who will own the network.</para>
         </wadl:doc>
         <request>
             <param required="false" name="admin_state_up"
                 style="plain" type="xsd:bool">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The administrative state of
-                        the network.</para></wadl:doc>
+                        the network. A request body is optional: If
+                        you include it, it can specify this optional
+                        attribute.</para></wadl:doc>
             </param>
-            <param required="true" name="name" style="plain"
+            <param required="false" name="name" style="plain"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The network
-                    name.</para></wadl:doc>
+                    xml:lang="EN"><para>The network name. A request
+                        body is optional: If you include it, it can
+                        specify this optional
+                    attribute.</para></wadl:doc>
             </param>
             <param required="false" name="shared" style="plain"
                 type="xsd:bool">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>Admin-only. Indicates whether
-                        this network is shared across all
-                        tenants.</para></wadl:doc>
+                        this network is shared across all tenants. A
+                        request body is optional: If you include it,
+                        it can specify this optional
+                    attribute.</para></wadl:doc>
             </param>
             <param required="false" name="tenant_id" style="plain"
                 type="csapi:uuid">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The ID of the tenant that owns
-                        the network. Only administrative users can
-                        specify a tenant ID other than their own. You
-                        cannot change this value through authorization
-                        policies.</para></wadl:doc>
+                    xml:lang="EN"><para>Admin-only. The UUID of the
+                        tenant that will own the network. This tenant
+                        can be different from the tenant that makes
+                        the create network request. However, only
+                        administrative users can specify a tenant ID
+                        other than their own. You cannot change this
+                        value through authorization
+                    policies.</para></wadl:doc>
             </param>
-
             <representation mediaType="application/json"
                 element="csapi:network">
-
-
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -238,9 +224,8 @@
                 type="xsd:bool">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>Indicates whether this network
-                        is shared across all tenants. By default, only
-                        administrative users can change this
-                        value.</para></wadl:doc>
+                        is shared across all
+                    tenants.</para></wadl:doc>
             </param>
             <param required="true" name="status" style="plain"
                 type="xsd:string">
