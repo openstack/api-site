@@ -4,17 +4,19 @@
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-used-limits-v2">
         <resource id="version" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="csapi:uuid">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud.</p></doc>
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Tenant ID">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="Limits" path="limits">
                     <method href="#getLimits"/>
@@ -22,45 +24,30 @@
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="getLimits">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Returns absolute
-                and rate limit information, including information on
-                currently used absolute limits.</p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get limits">
+            <para role="shortdesc">Gets absolute and rate limit
+                information, including information on currently used
+                absolute limits.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN" title="Used limits: JSON response">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-used-limits/usedlimits-get-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN" title="Used limits: XML response">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-used-limits/usedlimits-get-resp.xml"
                     />
-                </doc>
-            </representation>
-            <representation mediaType="application/json">
-                <doc xml:lang="EN"
-                    title="Used limits for admins: JSON response">
-                    <xsdxt:code
-                        href="../api_samples/os-used-limits-for-admin/usedlimitsforadmin-get-resp.json"
-                    />
-                </doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <doc xml:lang="EN"
-                    title="Used limits for admins: XML response">
-                    <xsdxt:code
-                        href="../api_samples/os-used-limits-for-admin/usedlimitsforadmin-get-resp.xml"
-                    />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
 </application>

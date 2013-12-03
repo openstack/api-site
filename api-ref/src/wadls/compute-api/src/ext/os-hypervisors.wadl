@@ -5,14 +5,16 @@
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2">
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-hypervisors-v2">
         <resource id="version" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="csapi:uuid">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud.</p></doc>
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="os-hypervisors" path="os-hypervisors">
                     <method href="#listHypervisors"/>
@@ -22,14 +24,16 @@
                     <resource id="statistics" path="statistics">
                         <method href="#getHypervisorStats"/>
                     </resource>
-                    <resource path="{hypervisor_hostname}">
+                    <resource path="{hypervisor_hostname}"
+                        id="hypervisor_hostname">
                         <param name="hypervisor_hostname"
                             style="template" type="xsd:string">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   >The name of the host that runs
-                                   the hypervisor.</p>
-                            </doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The name of the
+                                   host that runs the
+                                   hypervisor.</para>
+                            </wadl:doc>
                         </param>
                         <method href="#getHypervisorUptime"/>
                         <resource id="servers" path="servers">
@@ -41,7 +45,8 @@
         </resource>
     </resources>
     <method name="GET" id="listHypervisors">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List hypervisors">
             <para role="shortdesc">Lists hypervisors information for
                 each server obtained through the hypervisor-specific
                 API, such as libvirt or XenAPI.</para>
@@ -49,33 +54,38 @@
         <response status="200">
             <param name="hypervisor_hostname" style="plain"
                 required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml"
-                        >Hypervisor host name, retrieved from the
-                        per-server listing.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Hypervisor host name,
+                        retrieved from the per-server
+                    listing.</para></wadl:doc>
             </param>
             <param name="id" style="plain" required="true"
                 type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml"
-                        >Hypervisor ID.</p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Hypervisor
+                    ID.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-list-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-list-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="showHypervisor">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show hypervisor information">
             <para role="shortdesc">Shows information for a specified
                 hypervisor. Typically configured as an admin-only
                 extension by using <filename>policy.json</filename>
@@ -83,81 +93,95 @@
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-detail-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-detail-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="listHypervisorInstances">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc">Lists instances that belong to specific hypervisors.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List instances for hypervisors">
+            <para role="shortdesc">Lists instances that belong to
+                specific hypervisors.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-servers-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-servers-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="getHypervisorStats">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc">Shows hypervisor statistics over all compute nodes.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show statistics for hypervisors">
+            <para role="shortdesc">Shows hypervisor statistics over
+                all compute nodes.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-statistics-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-statistics-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="getHypervisorUptime">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para role="shortdesc">Shows the uptime for a specified hypervisor.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show hypervisor up time">
+            <para role="shortdesc">Shows the up time for a specified
+                hypervisor.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-uptime-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-uptime-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>

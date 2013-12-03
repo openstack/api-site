@@ -6,26 +6,28 @@
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-keypairs-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
-                    <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud.</p></doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="os-keypairs" path="os-keypairs">
                     <method href="#getKeypair"/>
                     <method href="#createKeypair"/>
-                    <resource path="{keypair_name}">
+                    <resource path="{keypair_name}" id="keypair_name">
                         <param name="keypair_name" style="template"
                             type="xsd:string">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   >The name associated with a
-                                   keypair. </p></doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The name
+                                   associated with a keypair.
+                                </para></wadl:doc>
                         </param>
                         <method href="#deleteKeypair"/>
                         <method href="#showKeypair"/>
@@ -35,94 +37,111 @@
         </resource>
     </resources>
     <method name="GET" id="getKeypair">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Lists keypairs
-                associated with the account. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List keypairs">
+            <para role="shortdesc">Lists keypairs that are associated
+                with the account.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-keypairs/keypairs-get-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-keypairs/keypairs-get-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
 
     <method name="GET" id="showKeypair">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Shows a keypair
-                associated with the account. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show keypair information">
+            <para role="shortdesc">Shows a keypair associated with the
+                account.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="../api_samples/os-keypairs/keypair-show.json"/>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-keypairs/keypair-show.json"
+                    />
+                </wadl:doc>
             </representation>
         </response>
     </method>
 
     <method name="DELETE" id="deleteKeypair">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Deletes a
-                keypair.</p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete keypair">
+            <para role="shortdesc">Deletes a keypair.</para>
         </wadl:doc>
         <response status="202"/>
     </method>
-
     <method name="POST" id="createKeypair">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Generates or
-                imports a keypair. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create or import keypair">
+            <para role="shortdesc">Generates or imports a
+                keypair.</para>
         </wadl:doc>
         <request>
-            <param name="name" style="plain" required="true" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The name
-                        to associate with the keypair.</p></doc>
+            <param name="name" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The name to associate with the
+                        keypair.</para></wadl:doc>
             </param>
-            <param name="public_key" style="plain" type="xsd:string" required="false">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml">The
-                        public ssh key to import. If not provided, a
-                        key is generated. </p></doc>
+            <param name="public_key" style="plain" type="xsd:string"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The public ssh key to import. If not
+                        provided, a key is generated.
+                    </para></wadl:doc>
             </param>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-keypairs/keypairs-import-post-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-keypairs/keypairs-import-post-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-keypairs/keypairs-import-post-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-keypairs/keypairs-import-post-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>

@@ -2,20 +2,22 @@
 <!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-flavorextradata-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="csapi:uuid">
+                    type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>The ID for the tenant or account in a
                             multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="Flavors" path="flavors">
-                    <method href="#createFlavor-extradata"/>
+                    <method href="#createFlavor"/>
                     <resource path="{flavor_id}" id="flavor_id">
                         <param name="flavor_id" style="template">
                             <wadl:doc
@@ -24,18 +26,18 @@
                                 <para>The ID of the flavor of interest
                                    to you.</para></wadl:doc>
                         </param>
-                        <method href="#getFlavor-extradata"/>
+                        <method href="#getFlavor"/>
                     </resource>
                     <resource path="detail" id="detail">
-                        <method href="#getFlavorsDetails-extradata"/>
+                        <method href="#getFlavorsDetails"/>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-    <method name="POST" id="createFlavor-extradata">
+    <method name="POST" id="createFlavor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create Flavor with Extra Data">
+            title="Create flavor with extra data">
             <para role="shortdesc">Creates a flavor. Includes the
                 rxtx_factor, OS-FLV-EXT-DATA:ephemeral, and swap
                 extended attributes.</para>
@@ -128,9 +130,9 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="getFlavor-extradata">
+    <method name="GET" id="getFlavor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Flavor Extra Data Details">
+            title="Get flavor extra data details">
             <para role="shortdesc">Gets details for a specified
                 flavor. Includes the rxtx_factor,
                 OS-FLV-EXT-DATA:ephemeral, and swap extended
@@ -157,9 +159,9 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="getFlavorsDetails-extradata">
+    <method name="GET" id="getFlavorsDetails">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Flavors with Extra Data">
+            title="List flavors with extra data">
             <para role="shortdesc">Lists available flavors. Includes
                 the rxtx_factor, OS-FLV-EXT-DATA:ephemeral, and swap
                 extended attributes.</para>

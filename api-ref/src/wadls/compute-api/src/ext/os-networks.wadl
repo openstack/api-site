@@ -7,7 +7,8 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:csapi="http://docs.rackspacecloud.com/csapi/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-networks-v2">
         <resource id="version" type="#VersionDetails" path="v2">
             <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
@@ -20,32 +21,32 @@
                 <method href="#CreateNetwork"/>
                 <resource id="os-networks" path="os-networks">
                     <method href="#ListNetworks"/>
-                    <resource path="add">
+                    <resource path="add" id="add">
                         <param name="id" style="template"
-                            required="true" type="csapi:UUID">
+                            required="true" type="csapi:uuid">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
                                 <para>The UUID of the network to add
                                    to the project. Specify
                                    <code>None</code> to choose a
-                                   random available network.</para>
-                            </wadl:doc>
+                                   random available
+                                network.</para></wadl:doc>
                         </param>
                         <method href="#AddNetwork"/>
                     </resource>
-                    <resource path="{id}">
+                    <resource path="{id}" id="id">
                         <param name="id" style="template"
                             required="true" type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The unique
-                                   identifier associated with the
-                                   network.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>The unique identifier associated
+                                   with the network.</para></wadl:doc>
                         </param>
                         <method href="#GetNetwork"/>
                         <method href="#DeleteNetwork"/>
-                        <resource path="action">
+                        <resource path="action" id="action">
                             <method href="#AssociateHost"/>
                             <method href="#DisassociateHost"/>
                             <method href="#DisassociateNetwork"/>
@@ -57,65 +58,61 @@
         </resource>
     </resources>
     <method name="GET" id="ListNetworks">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="List Networks">
-            <para role="shortdesc">Lists all networks that are
-                available to the tenant.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List networks">
+            <para role="shortdesc">Lists networks that are available
+                to the tenant.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-networks/networks-list-resp.json"
                     />
-                </wadl:doc>
+                </doc>
             </representation>
             <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-networks/networks-list-resp.xml"
                     />
-                </wadl:doc>
+                </doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="GetNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Get Network Detail">
-            <para role="shortdesc">Gets information about a specified
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show network information">
+            <para role="shortdesc">Shows information for a specified
                 network.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-networks/network-show-resp.json"
                     />
-                </wadl:doc>
+                </doc>
             </representation>
             <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-networks/network-show-resp.xml"
                     />
-                </wadl:doc>
+                </doc>
             </representation>
         </response>
     </method>
     <method name="DELETE" id="DeleteNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Delete Network">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete network">
             <para role="shortdesc">Deletes a specified network.</para>
         </wadl:doc>
         <response status="202"/>
     </method>
     <method name="POST" id="DisassociateNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Disassociate Network">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Disassociate network">
             <para role="shortdesc">Disassociates a specified network
                 from a project so that the network can be
                 reused.</para>
@@ -141,8 +138,8 @@
         <response status="202"/>
     </method>
     <method name="POST" id="DisassociateProject">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Disassociate Project">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Disassociate project">
             <para role="shortdesc">Disassociates the project from a
                 specified network.</para>
         </wadl:doc>
@@ -167,8 +164,8 @@
         <response status="202"/>
     </method>
     <method name="POST" id="DisassociateHost">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Disassociate Host">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Disassociate host">
             <para role="shortdesc">Disassociates the host from a
                 specified network.</para>
         </wadl:doc>
@@ -193,8 +190,8 @@
         <response status="202"/>
     </method>
     <method name="POST" id="AssociateHost">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Associate Host">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Associate host">
             <para role="shortdesc">Associates a specified network with
                 a host.</para>
         </wadl:doc>
@@ -219,107 +216,124 @@
         <response status="202"/>
     </method>
     <method name="POST" id="AddNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Add Network">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add network">
             <para role="shortdesc">Adds a specified network to a
                 project.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-networks/network-add-req.json"
                     />
-                </wadl:doc>
+                </doc>
             </representation>
             <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <doc xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-networks/network-add-req.xml"
                     />
-                </wadl:doc>
+                </doc>
             </representation>
         </request>
         <response status="202"/>
     </method>
     <method name="POST" id="CreateNetwork">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN"
-            title="Create Network">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create network">
             <para role="shortdesc">Creates a network.</para>
         </wadl:doc>
         <request>
             <param name="network" style="plain" required="true"
                 type="csapi:dict">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>A dictionary representation of
-                        a network.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">A dictionary representation
+                        of a network. </para></wadl:doc>
             </param>
             <param name="label" style="plain" required="true"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Network
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">Network
                     label.</para></wadl:doc>
             </param>
             <param name="bridge" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>VIFs on this network are
-                        connected to this bridge.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">VIFs on this network are
+                        connected to this bridge. </para></wadl:doc>
             </param>
             <param name="bridge_interface" style="plain"
                 required="false" type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The bridge is connected to
-                        this interface.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">The bridge is connected to
+                        this interface. </para></wadl:doc>
             </param>
             <param name="cidr" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>IPv4 subnet.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">IPv4
+                    subnet.</para></wadl:doc>
             </param>
             <param name="multi_host" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Multi host.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">Multi
+                    host.</para></wadl:doc>
             </param>
             <param name="vlan" style="plain" required="false"
                 type="csapi:UUID">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Vlan id.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">Vlan id. </para></wadl:doc>
             </param>
             <param name="cidr_v6" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>IPv6 subnet.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">IPv6
+                    subnet.</para></wadl:doc>
             </param>
             <param name="dns1" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>First DNS.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">First
+                    DNS.</para></wadl:doc>
             </param>
             <param name="dns2" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Second DNS.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">Second
+                    DNS.</para></wadl:doc>
             </param>
             <param name="gateway" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>IPv4
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">IPv4
                     gateway.</para></wadl:doc>
             </param>
             <param name="gateway_v6" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>IPv6
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">IPv6
                     gateway.</para></wadl:doc>
             </param>
             <param name="project_id" style="plain" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Project id.</para></wadl:doc>
+                    xml:lang="EN" title="Create multiple servers">
+                    <para role="shortdesc">Project
+                    id.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"

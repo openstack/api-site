@@ -7,9 +7,10 @@
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="multiple-create-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -18,16 +19,15 @@
                         cloud.</para></wadl:doc>
                 </param>
                 <resource id="Servers" path="servers">
-                    <method href="#createServer-multiple"/>
-
-                    <resource path="{server_id}">
+                    <method href="#createServer"/>
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN"><para>The UUID for the
-                                   server of interest to you.</para>
-                            </wadl:doc>
+                                   server of interest to
+                                you.</para></wadl:doc>
                         </param>
                     </resource>
                 </resource>
@@ -35,43 +35,36 @@
         </resource>
     </resources>
 
-    <method name="POST" id="createServer-multiple">
+    <method name="POST" id="createServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create Multiple Servers">
+            title="Create multiple servers">
             <para role="shortdesc">Creates one or more servers with an
                 optional reservation ID.</para>
         </wadl:doc>
-
         <request> &serverCreateParameters; <param
                 name="return_reservation_id" style="query"
                 required="false" type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>Set to <code>True</code>to generate a
-                        reservation ID for each server. Omit this
-                        attribute to create servers without a
-                        reservation ID. This extended attribute is
+                    xml:lang="EN"><para>Set to <code>True</code>to
+                        generate a reservation ID for each server.
+                        Omit this attribute to create servers without
+                        a reservation ID. This extended attribute is
                         enabled when the service provider enables
-                        multiple server launch.</para>
-                </wadl:doc>
+                        multiple server launch.</para></wadl:doc>
             </param>
             <param name="min_count" style="query" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The minimum number of servers to launch when
-                        the service provider enables multiple server
-                        launch.</para>
-                </wadl:doc>
+                    xml:lang="EN"><para>The minimum number of servers
+                        to launch when the service provider enables
+                        multiple server launch.</para></wadl:doc>
             </param>
             <param name="max_count" style="query" required="false"
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The maximum number of servers to launch when
-                        the service provider enables multiple server
-                        launch.</para>
-                </wadl:doc>
+                    xml:lang="EN"><para>The maximum number of servers
+                        to launch when the service provider enables
+                        multiple server launch.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"

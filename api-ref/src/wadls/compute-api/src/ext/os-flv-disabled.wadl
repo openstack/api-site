@@ -4,10 +4,11 @@
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <resources base="https://servers.api.openstack.com">
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-flv-disabled-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -17,27 +18,30 @@
                 </param>
                 <resource id="Flavors" path="flavors">
                     <resource path="{flavor_id}" id="flavor_id">
-                        <param name="flavor_id" style="template" type="csapi:uuid" required="true">
+                        <param name="flavor_id" style="template"
+                            type="csapi:uuid" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
                                 <para>The ID of the flavor of interest
                                    to you.</para></wadl:doc>
                         </param>
-                        <method href="#getFlavor-flvdisabled"/>
+                        <method href="#getFlavor"/>
                     </resource>
                     <resource path="detail" id="detail">
-                        <method href="#getFlavorsDetails-flvdisabled"/>
+                        <method href="#getFlavorsDetails"/>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-    <method name="GET" id="getFlavor-flvdisabled">
+    <method name="GET" id="getFlavor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get flavor disabled status details">
             <para role="shortdesc">Gets details for a specified
-                flavor. Includes the <literal>OS-FLV-DISABLED:disabled</literal> attribute.</para>
+                flavor. Includes the
+                    <literal>OS-FLV-DISABLED:disabled</literal>
+                attribute.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -60,11 +64,12 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="getFlavorsDetails-flvdisabled">
+    <method name="GET" id="getFlavorsDetails">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List flavors with flavor disabled status">
             <para role="shortdesc">Lists available flavors. Includes
-                the <literal>OS-FLV-DISABLED:disabled</literal> attribute.</para>
+                the <literal>OS-FLV-DISABLED:disabled</literal>
+                attribute.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">

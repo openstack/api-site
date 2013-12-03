@@ -17,33 +17,41 @@
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
     </grammars>
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-instance-actions-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The
-                            ID for the tenant or account in a
+                        xml:lang="EN">
+                        <para>The ID for the tenant or account in a
                             multi-tenancy cloud.</para></wadl:doc>
                 </param>
                 <resource id="Servers" path="servers">
-                    <resource path="{server_id}">
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
-                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The UUID of the server instance
-                                   for which you want to list actions.
-                        </para></wadl:doc>
+                            <wadl:doc xml:lang="EN"
+                                xmlns="http://docbook.org/ns/docbook"
+                                   ><para>The UUID of the server
+                                   instance for which you want to list
+                                   actions.</para></wadl:doc>
                         </param>
-                        <resource path="os-instance-actions">
+                        <resource path="os-instance-actions"
+                            id="os-instance-actions">
                             <method href="#listActions"/>
-                            <resource path="{action_id}">
+                            <resource path="{action_id}"
+                                id="action_id">
                                 <param name="action_id"
                                    style="template" type="csapi:UUID">
-                                   <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The UUID of the action for which
-                                   you want to get details.</para></wadl:doc>
+                                   <wadl:doc xml:lang="EN"
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   title="Get Action Details">
+                                   <para>The UUID of the action for
+                                   which you want to get details.
+                                   </para>
+                                   </wadl:doc>
                                 </param>
                                 <method href="#getActionDetails"/>
                             </resource>
@@ -53,28 +61,26 @@
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="listActions">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"
-            title="Get Server Actions">
-            <para role="shortdesc">Lists available actions
-                for a specified server.</para><para>Deployers set permissions for this request in the
-                <filename>policy.json</filename> file. By default, all users 
-                can list actions.</para>
-        </wadl:doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List server actions">
+            <para role="shortdesc">Lists available actions for a
+                specified server. Deployers set permissions for this
+                request in the <filename>policy.json</filename> file.
+                By default, all users can list
+            actions.</para></wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../api_samples/os-instance-actions/instance-actions-list-resp.json"
                     />
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../api_samples/os-instance-actions/instance-actions-list-resp.xml"
                     />
@@ -83,25 +89,26 @@
         </response>
     </method>
     <method name="GET" id="getActionDetails">
-        <wadl:doc xml:lang="EN" title="Get Action Details"
-            xmlns="http://docbook.org/ns/docbook">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get action details">
             <para role="shortdesc">Gets details for a specified action
-                for a specified server instance. Deployers set permissions for this request in the
-                <filename>policy.json</filename> file. By default, only administrators can get details for an action. 
-                 </para>
-        </wadl:doc>
+                for a specified server instance. Deployers set
+                permissions for this request in the
+                    <filename>policy.json</filename> file. By default,
+                only administrators can get details for an action.
+            </para></wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../api_samples/os-instance-actions/instance-action-get-resp.json"
                     />
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../api_samples/os-instance-actions/instance-action-get-resp.xml"
                     />
@@ -110,5 +117,4 @@
         </response>
         <!-- Common Faults and GET Faults--> &commonFaults;
         &getFaults; </method>
-
 </application>

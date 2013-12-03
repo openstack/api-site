@@ -12,55 +12,48 @@
     %common;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.openstack.org/api/compute/2.0"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
-    xsi:schemaLocation="http://docs.openstack.org/compute/api/v1.1
-    ../xsd/api.xsd
-    http://docs.openstack.org/common/api/v1.0
-    ../xsd/api-common.xsd
-    ">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
     </grammars>
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-volume-attachments-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
-                    <doc>
-                        <p xmlns="http://www.w3.org/1999/xhtml"> The
-                            ID for the tenant or account in a
-                            multi-tenancy cloud. </p>
-                    </doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para>
+                    </wadl:doc>
                 </param>
                 <resource id="Servers" path="servers">
-                    <resource path="{server_id}">
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
-                            <doc>
-                                <p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > The UUID for the server of
-                                   interest to you. </p>
-                            </doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The UUID for the server of
+                                   interest to you.</para></wadl:doc>
                         </param>
                         <resource path="os-volume_attachments"
-                            type="#Volumes">
+                            type="#Volumes" id="os-volume-attachments">
                             <resource path="{attachment_id}"
-                                type="#VolumeAttachmentList">
+                                type="#VolumeAttachmentList"
+                                id="attachment_id">
                                 <param name="attachment_id"
                                    style="template" type="xsd:string">
-                                   <doc xml:lang="EN"
-                                   title="attachment_id">
-                                   <p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > Volume attachment ID. </p>
-                                   </doc>
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xml:lang="EN">
+                                   <para>Volume attachment
+                                   ID.</para></wadl:doc>
                                 </param>
                             </resource>
                         </resource>
@@ -73,18 +66,18 @@
     <!--               Resource Types                          -->
     <!--*******************************************************-->
     <resource_type id="Volumes">
-        <doc xml:lang="EN" title="Volumes">
-            <p xmlns="http://www.w3.org/1999/xhtml"> A list of volume
-                attachments associated with a server. </p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Volume attachment list">
+            <para>A list of volume attachments associated with a
+                server.</para></wadl:doc>
         <method href="#attachVolume"/>
         <method href="#listVolumeAttachments"/>
     </resource_type>
     <resource_type id="VolumeAttachmentList">
-        <doc xml:lang="EN" title="Volume Attachment List">
-            <p xmlns="http://www.w3.org/1999/xhtml"> A list of volume
-                attachments associated with a server. </p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Volume attachment list">
+            <para>A list of volume attachments associated with a
+                server.</para></wadl:doc>
         <method href="#getVolumeAttachmentDetails"/>
         <method href="#deleteVolumeAttachment"/>
     </resource_type>
@@ -94,66 +87,75 @@
     <!--****************************************************** -->
     <!-- Volume Actions -->
     <method name="POST" id="attachVolume">
-        <doc xml:lang="EN" title="Attach Volume to Server">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Attaches a volume
-                to the specified server. </p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Attach volume">
+            <para role="shortdesc">Attaches a volume to the specified
+                server.</para></wadl:doc>
         <request>
             <param name="volumeId" style="template" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml"> ID of
-                        the volume to attach. </p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>ID of the volume to attach.
+                    </para></wadl:doc>
             </param>
             <param name="device" style="template" type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml"> Name of
-                        the device such as, /dev/vdb. Use "auto" for
-                        auto-assign (if supported). </p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Name of the device such as, /dev/vdb. Use
+                        "auto" for auto-assign (if
+                    supported).</para></wadl:doc>
             </param>
             <param name="volumeAttachment" style="template"
                 type="xsd:string">
-                <doc><p xmlns="http://www.w3.org/1999/xhtml"> A
-                        dictionary representation of a volume
-                        attachment. </p></doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A dictionary representation of a volume
+                        attachment.</para></wadl:doc>
             </param>
             <representation mediaType="application/xml"
                 element="csapi:attachvolume">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/attach-volume-to-server-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/attach-volume-to-server-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="202">
             <representation mediaType="application/xml"
                 element="csapi:attachvolume">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/attach-volume-to-server-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/attach-volume-to-server-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
         &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="GET" id="listVolumeAttachments">
-        <doc xml:lang="EN" title="List Volume Attachments">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists the volume
-                attachments for the specified server. </p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List volume attachments">
+            <para role="shortdesc">Lists the volume attachments for a
+                specified server.</para></wadl:doc>
         <request>
             <representation mediaType="application/xml"
                 element="csapi:attachvolume"/>
@@ -162,26 +164,30 @@
         </request>
         <response status="202">
             <representation mediaType="application/xml"
-                element="csapi:attachvolume"><doc xml:lang="EN">
+                element="csapi:attachvolume">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/list-volume-attachments-resp.xml"
                     />
-                </doc></representation>
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/list-volume-attachments-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
         &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="GET" id="getVolumeAttachmentDetails">
-        <doc xml:lang="EN" title="Get Volume Attachment Details">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists volume
-                details for the specified volume attachment ID. </p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show volume attachment details">
+            <para role="shortdesc">Shows details for the specified
+                volume attachment.</para></wadl:doc>
         <request>
             <representation mediaType="application/xml"
                 element="csapi:attachvolume"/>
@@ -190,27 +196,30 @@
         </request>
         <response status="202">
             <representation mediaType="application/xml"
-                element="csapi:attachvolume"> <doc xml:lang="EN">
+                element="csapi:attachvolume">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/volume-attachment-detail-resp.xml"
                     />
-                </doc></representation>
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-volumes/volume-attachment-detail-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <!-- Common, GET, postput, inProgress Faults--> &commonFaults;
         &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="DELETE" id="deleteVolumeAttachment">
-        <doc xml:lang="EN" title="Delete Volume Attachment">
-            <p xmlns="http://www.w3.org/1999/xhtml"> Deletes the
-                specified volume attachment from the specified server.
-            </p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete volume attachment">
+            <para role="shortdesc">Deletes the specified volume
+                attachment from a specified server. </para></wadl:doc>
         <request>
             <representation mediaType="application/xml"
                 element="csapi:attachvolume"/>

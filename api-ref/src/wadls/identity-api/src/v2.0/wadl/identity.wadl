@@ -12,14 +12,13 @@
     %common;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
+    xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:csapi="http://docs.openstack.org/identity/api/v2.0"
- >
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
@@ -28,25 +27,23 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
 
-    <resources base="http://localhost:5000">
+    <resources base="http://localhost:5000" xml:id="identity-v2.0">
         <resource id="version" type="#VersionDetails" path="v2.0/">
             <resource id="extensions" type="#ExtensionList"
                 path="extensions">
                 <resource id="extension" path="{alias}">
                     <param name="alias" style="template"
                         type="xsd:string">
-                        <doc>
-                            <p xmlns="http://www.w3.org/1999/xhtml"
-                                >The extension name.</p>
-                        </doc>
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN"><para> The extension
+                                name.</para></wadl:doc>
                     </param>
-                    <method href="#getExtension"/>
+                    <method href="#getExtension-v2.0"/>
                 </resource>
             </resource>
             <resource id="tokens" path="tokens">
-
-                <method href="#authenticate"/>
-
+                <method href="#authenticate-v2.0"/>
                 <resource id="tenants" path="tenants">
                     <param name="X-Auth-Token" style="header"
                         type="xsd:string" required="true">
@@ -80,14 +77,14 @@
     <!--*******************************************************-->
 
     <resource_type id="VersionDetails">
-        <method href="#getVersionInfo"/>
+        <method href="#getVersionInfo-v2.0"/>
     </resource_type>
     <resource_type id="ExtensionList">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List Extensions">
-            <para role="shortdesc">Lists supported extensions. </para>
+            <para role="shortdesc">Lists supported extensions.</para>
         </wadl:doc>
-        <method href="#listExtensions"/>
+        <method href="#listExtensions-v2.0"/>
     </resource_type>
 
     <!--*******************************************************-->
@@ -96,12 +93,12 @@
 
     <!-- Version -->
 
-    <method name="GET" id="getVersionInfo">
-        <doc xml:lang="EN" title="Get Version Details">
-            <p xmlns="http://www.w3.org/1999/xhtml">Gets detailed
-                information about a specified version of the Identity
-                Service API.</p>
-        </doc>
+    <method name="GET" id="getVersionInfo-v2.0">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get version details">
+            <para role="shortdesc">Gets detailed information about a
+                specified version of the Identity Service API.</para>
+        </wadl:doc>
         <response status="200 203">
             <!-- <param name="location" style="plain" type="xsd:anyURI"
                 required="true"
@@ -127,9 +124,9 @@
             </representation>
         </response> &commonFaults; &getFaults; </method>
     <!-- Extensions -->
-    <method name="GET" id="listExtensions">
+    <method name="GET" id="listExtensions-v2.0">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List Extensions">
+            title="List extensions">
             <para role="shortdesc">Lists available extensions.</para>
         </wadl:doc>
         <response status="200 203">
@@ -163,9 +160,9 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getExtension">
+    <method name="GET" id="getExtension-v2.0">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get Extension Details">
+            title="Get extension details">
             <para role="shortdesc">Gets detailed information for a
                 specified extension.</para>
             <para>Specify the extension alias in the URI.</para>
@@ -190,7 +187,7 @@
             </representation>
         </response> &commonFaults; &getFaults; </method>
     <!-- Token Operations -->
-    <method name="POST" id="authenticate">
+    <method name="POST" id="authenticate-v2.0">
         <wadl:doc xml:lang="EN" title="Authenticate"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Authenticates and generates a
@@ -303,7 +300,7 @@
         </response> &commonFaults; &getFaults; </method>
     <!-- Tenant Operations -->
     <method name="GET" id="listTenants">
-        <wadl:doc title="List Tenants" xml:lang="EN"
+        <wadl:doc title="List tenants" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Lists tenants to which the
                 specified token has access.</para>

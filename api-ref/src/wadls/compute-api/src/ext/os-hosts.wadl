@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
-    <resources base="https://servers.api.openstack.com">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-hosts-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
-                    type="csapi:UUID">
-                    <doc>
-                        <p xmlns="http://www.w3.org/1999/xhtml">The ID for the tenant or account in a
-                            multi-tenancy cloud. </p>
-                    </doc>
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Tenant ID">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para>
+                    </wadl:doc>
                 </param>
-                <resource path="os-hosts">
+                <resource path="os-hosts" id="os-hosts">
                     <method href="#listHosts"/>
-                    <resource path="{host_name}">
+                    <resource path="{host_name}" id="host_name">
                         <param name="host_name" style="template"
                             type="xsd:string">
-                            <doc>
-                                <p xmlns="http://www.w3.org/1999/xhtml">The name of the host of interest
-                                   to you. </p>
-                            </doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Host name">
+                                <para role="shortdesc">The name of the
+                                   host of interest to you.</para>
+                            </wadl:doc>
                         </param>
                         <method href="#showHost"/>
                         <method href="#updateHost"/>
-                        <resource path="startup">
-                            <method href="#startup"/>
+                        <resource path="startup" id="startup">
+                            <method href="#startupHost"/>
                         </resource>
-                        <resource path="shutdown">
-                            <method href="#shutdown"/>
+                        <resource path="shutdown" id="shutdown">
+                            <method href="#shutdownHost"/>
                         </resource>
-                        <resource path="reboot">
-                            <method href="#reboot"/>
+                        <resource path="reboot" id="reboot">
+                            <method href="#rebootHost"/>
                         </resource>
                     </resource>
                 </resource>
@@ -45,185 +46,206 @@
         </resource>
     </resources>
     <method name="GET" id="listHosts">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Lists all hosts. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List hosts">
+            <para role="shortdesc">Lists hosts.</para>
         </wadl:doc>
         <request>
             <param name="service" style="query" required="false"
                 type="xsd:string">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The service name. To filter the returned
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Service name">
+                    <para>The service name. To filter the returned
                         list by service name, specify
-                            <literal>?service={service}</literal> in
-                        the URI.</p>
-                </doc>
+                            <code>?service={service}</code> in the
+                        URI.</para>
+                </wadl:doc>
             </param>
             <param path="?zone={zone}" name="zone" style="query"
                 required="false" type="xsd:string">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The zone. To filter the returned list by
-                        zone, specify <literal>?zone={zone}</literal>
-                        in the URI. </p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Zone">
+                    <para>The zone. To filter the returned list by
+                        zone, specify <code>?zone={zone}</code> in the
+                        URI.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="List hosts: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/hosts-list-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="List hosts: XML response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/hosts-list-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="PUT" id="updateHost">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Enables a host or puts it in maintenance mode.
-            </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update host">
+            <para role="shortdesc">Enables a host or puts it in
+                maintenance mode. </para>
         </wadl:doc>
         <request>
             <param name="status" style="plain" required="true"
                 type="xsd:string">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Valid values are 'enable' or 'disable.'
-                    </p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Status">
+                    <para>Valid values are enable or disable.</para>
+                </wadl:doc>
             </param>
             <param name="maintenance_mode" style="plain"
                 required="true" type="xsd:string">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Valid values are 'enable' or
-                        'disable.'</p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Maintenance mode">
+                    <para>Valid values are enable or disable.</para>
+                </wadl:doc>
             </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Update host: JSON request">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-put-maintenance-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Update host: XML request">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-put-maintenance-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Update host: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-put-maintenance-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Update host: XML response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-put-maintenance-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
 
     <method name="GET" id="showHost">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Shows information for a specified host. </p>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show host information">
+            <para role="shortdesc">Shows information for a specified
+                host.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Show host information: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Show host information: XML response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="GET" id="startup">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Starts a host. </p>
+    <method name="GET" id="startupHost">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Start host">
+            <para role="shortdesc">Starts a host.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Start host: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-startup.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Start host: XML response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-startup.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
-    <method name="GET" id="shutdown">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Shuts down a host. </p>
+    <method name="GET" id="shutdownHost">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Shut down host">
+            <para role="shortdesc">Shuts down a host.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Shut down host: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-shutdown.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Shut down host: XML response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-shutdown.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
-
-
-    <method name="GET" id="reboot">
-        <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN">
-            <p xmlns="http://www.w3.org/1999/xhtml">Reboots a host. </p>
+    <method name="GET" id="rebootHost">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Reboot host">
+            <para role="shortdesc">Reboots a host.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Reboot host: JSON response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-reboot.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Reboot host: XML response">
                     <xsdxt:code
                         href="../api_samples/os-hosts/host-get-reboot.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
-
 </application>

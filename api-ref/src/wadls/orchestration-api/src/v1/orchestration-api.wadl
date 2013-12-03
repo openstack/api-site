@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2012-2013 Openstack Foundation, All Rights Reserved -->
+<!-- Useful for describing APIs -->
+<!DOCTYPE application[
+<!-- Useful for describing APIs -->
+<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
+<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
+<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
+<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-    <resources base="https://heat.example.com/">
+    <resources base="https://heat.example.com/"
+        xml:id="orchestration-api-v1.0">
         <resource id="version" path="v1">
             <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template">
@@ -21,8 +30,8 @@
                             required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The name of an
-                                   existing stack.</para></wadl:doc>
+                                xml:lang="EN"><para>The name of a
+                                   stack.</para></wadl:doc>
                         </param>
                         <method href="#stack_find"/>
                         <resource path="resources" id="resources">
@@ -37,7 +46,7 @@
                                 <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
                                    xml:lang="EN"><para>The unique
-                                   identifier of an existing
+                                   identifier for a
                                    stack.</para></wadl:doc>
                             </param>
                             <method href="#stack_show"/>
@@ -99,14 +108,14 @@
     </resources>
     <method name="GET" id="stack_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Stack Data">
+            title="List stack data">
             <para role="shortdesc">Lists active stacks.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
     <method name="POST" id="stack_create">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create Stack">
+            title="Create stack">
             <para role="shortdesc">Creates a stack.</para>
         </wadl:doc>
         <request>
@@ -155,7 +164,6 @@
                     xml:lang="EN"><para>The timeout for stack creation
                         in minutes.</para></wadl:doc>
             </param>
-
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -163,52 +171,45 @@
                 </wadl:doc>
             </representation>
         </request>
-
         <response status="201"/>
     </method>
-
     <method name="GET" id="stack_find">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Find Stack">
-            <para role="shortdesc">Finds the canonical URL for a stack
-                with a specified name.</para>
-            <para>Also works with verbs other than GET, so you can
-                perform PUT and DELETE operations on a current stack.
-                Set your client to follow redirects. Note that when
-                redirecting, the request method should not change, as
-                defined in RFC2626. However, in many clients the
-                default behaviour is to change the method to GET when
-                receiving a 302 because this behaviour is ubiquitous
-                in web browsers.</para>
+            title="Find stack">
+            <para role="shortdesc">Finds the canonical URL for a
+                specified stack.</para>
+            <para>Also works with verbs other than &GET;, so you can
+                perform &PUT; and &DELETE; operations on a current
+                stack. Set your client to follow redirects. Note that
+                when redirecting, the request method should not
+                change, as defined in RFC2626. However, in many
+                clients the default behavior is to change the method
+                to &GET; when you receive a 302 because this behavior
+                is ubiquitous in web browsers.</para>
         </wadl:doc>
-
         <response status="302"/>
     </method>
-
     <method name="GET" id="stack_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Stack Data">
-            <para role="shortdesc">Gets data about a stack.</para>
+            title="Get stack data">
+            <para role="shortdesc">Gets data about a specified
+                stack.</para>
         </wadl:doc>
-
         <response status="200"/>
     </method>
-
     <method name="GET" id="stack_template">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Stack Template">
-            <para role="shortdesc">Gets a template for a stack.</para>
+            title="Get stack template">
+            <para role="shortdesc">Gets a template for a specified
+                stack.</para>
         </wadl:doc>
-
         <response status="200"/>
     </method>
-
     <method name="PUT" id="stack_update">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Update Stack">
-            <para role="shortdesc">Updates a stack.</para>
+            title="Update stack">
+            <para role="shortdesc">Updates a specified stack.</para>
         </wadl:doc>
-
         <request>
             <param name="template_url" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -216,7 +217,6 @@
                         instantiate. This is ignored if the template
                         is supplied inline.</para></wadl:doc>
             </param>
-
             <param name="template" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>A JSON template to
@@ -224,13 +224,11 @@
                         template URL if both are
                     supplied.</para></wadl:doc>
             </param>
-
             <param name="environment" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>A JSON environment for the
                         stack.</para></wadl:doc>
             </param>
-
             <param name="files" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>A map of file names (Provider
@@ -238,13 +236,11 @@
                         environment) to JSON template
                     bodies.</para></wadl:doc>
             </param>
-
             <param name="param_name-n" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>User-defined parameter names
                         to pass to the template.</para></wadl:doc>
             </param>
-
             <param name="param_value-n" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>User-defined parameter values
@@ -255,7 +251,6 @@
                     xml:lang="EN"><para>The timeout for stack creation
                         in minutes.</para></wadl:doc>
             </param>
-
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -265,21 +260,19 @@
         </request>
         <response status="202"/>
     </method>
-
     <method name="DELETE" id="stack_delete">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete Stack">
-            <para role="shortdesc">Deletes a stack.</para>
+            title="Delete stack">
+            <para role="shortdesc">Deletes a specified stack.</para>
         </wadl:doc>
         <response status="204"/>
     </method>
-
     <method name="POST" id="template_validate">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Validate Template">
-            <para role="shortdesc">Validates a template.</para>
+            title="Validate template">
+            <para role="shortdesc">Validates a specified
+                template.</para>
         </wadl:doc>
-
         <request>
             <param name="template_url" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -287,7 +280,6 @@
                         instantiate. This is ignored if the template
                         is supplied inline.</para></wadl:doc>
             </param>
-
             <param name="template" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>A JSON template to
@@ -295,7 +287,6 @@
                         template URL if both are
                     supplied.</para></wadl:doc>
             </param>
-
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -306,71 +297,64 @@
         </request>
         <response status="200"/>
     </method>
-
     <method name="GET" id="resource_type_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Resource Types">
+            title="List resource types">
             <para role="shortdesc">Lists the supported template
                 resource types.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
-
     <method name="GET" id="stack_resources_find">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Find Stack Resources">
+            title="Find stack resources">
             <para role="shortdesc">Finds the canonical URL for the
-                resource list of a stack with a specified name.</para>
+                resource list of a specified stack.</para>
         </wadl:doc>
         <response status="302"/>
     </method>
-
     <method name="GET" id="resource_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Resources">
+            title="List resources">
             <para role="shortdesc">Lists resources in a stack.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
-
     <method name="GET" id="resource_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Resource Data">
+            title="Get resource data">
             <para role="shortdesc">Gets data for a specified
                 resource.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
-
     <method name="GET" id="resource_metadata">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Resource Metadata">
+            title="Get resource metadata">
             <para role="shortdesc">Gets metadata for a specified
                 resource.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
-
     <method name="GET" id="stack_events_find">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Find Stack Events">
+            title="Find stack events">
             <para role="shortdesc">Finds the canonical URL for the
-                event list of a stack with a specified name.</para>
+                event list of a specified stack.</para>
         </wadl:doc>
         <response status="302"/>
     </method>
     <method name="GET" id="stack_event_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Stack Events">
+            title="List stack events">
             <para role="shortdesc">Lists events for a specified
                 stack.</para>
         </wadl:doc>
-
         <response status="200"/>
     </method>
     <method name="GET" id="resource_event_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Resource Events">
+            title="List resource events">
             <para role="shortdesc">Lists events for a specified stack
                 resource.</para>
         </wadl:doc>
@@ -378,7 +362,7 @@
     </method>
     <method name="GET" id="event_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show Event">
+            title="Show event">
             <para role="shortdesc">Gets data about a specified
                 event.</para>
         </wadl:doc>

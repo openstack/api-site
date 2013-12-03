@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:db="http://docbook.org/ns/docbook"
-    xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-    <resources base="https://glance.example.com/">
+    <resources base="https://glance.example.com/"
+        xml:id="os-ext-img-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -20,15 +17,15 @@
                             multi-tenancy cloud.</para>
                     </wadl:doc>
                 </param>
-
                 <resource id="Images" type="#ImageList" path="images">
                     <method href="#createImage"/>
-                    <resource path="detail" type="#DetailImageList"/>
-                    <resource path="{image_id}">
+                    <resource path="detail" id="detail"
+                        type="#DetailImageList"/>
+                    <resource path="{image_id}" id="image_id">
                         <param name="image_id" style="template"
                             type="xsd:string">
                             <wadl:doc
-                                xmlns="http://www.w3.org/1999/xhtml"
+                                xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN" title="Image ID">
                                 <para>Image ID stored through the
                                    image API. Typically a UUID.</para>
@@ -37,6 +34,7 @@
                         <method href="#getImage"/>
                     </resource>
                 </resource>
+
             </resource>
         </resource>
     </resources>
@@ -44,9 +42,17 @@
     <!--               Resource Types                          -->
     <!--*******************************************************-->
     <resource_type id="ImageList">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Image list">
+            <para>List of images.</para>
+        </wadl:doc>
         <method href="#listImage"/>
     </resource_type>
     <resource_type id="DetailImageList">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Image list with details">
+            <para>List of images with details.</para>
+        </wadl:doc>
         <method href="#listDetailImage"/>
     </resource_type>
     <!-- Method definitions -->
@@ -79,7 +85,7 @@
     </method>
     <method name="GET" id="listDetailImage">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List images (detailed)">
+            title="List details for images">
             <para role="shortdesc">Lists details for available images.
                 Includes the image size.</para>
         </wadl:doc>

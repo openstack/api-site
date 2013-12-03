@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter [
+<!-- Some useful entities borrowed from HTML -->
+<!ENTITY ndash  "&#x2013;">
+<!ENTITY mdash  "&#x2014;">
+<!ENTITY hellip "&#x2026;">
+<!ENTITY plusmn "&#xB1;">
+<!ENTITY nbsp "&#160;">
+<!-- Useful for describing APIs -->
+<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
+<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
+<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
+<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
+]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xref="http://www.w3.org/1999/xref"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    version="5.0-extension RackBook-2.0" xml:id="identity-v3-ext"
+    xlink:href="#identity-v3-ext">
+    <title>Identity Service API v3 extensions</title>
+    <para>Adds capabilities to the core Identity Service Admin API
+        v3.</para>
+    <para>Query the Identity Service API to list available extensions
+        with a &GET; request to <code>v3/extensions</code>.</para>
+    <section xml:id="identity_v3_OS-OAUTH1-ext">
+        <title>OS-OAUTH1 extension</title>
+        <para>Enables users to delegate roles to third-party consumers
+            through the <link xlink:href="http://oauth.net/core/1.0a/"
+                >OAuth 1.0a specification</link>.</para>
+        <para>A user is an Identity Service API user who delegates its
+            roles and who authorizes request tokens. A consumer is a
+            third-party application that uses OAuth to access a
+            protected resource. An OAuth-derived token enables admin
+            users to act on behalf of the authorizing user. A request
+            token is a token that the consumer uses to get
+            authorization from the user and exchanges with an OAuth
+            verifier for an access token. The OAuth verifier is a
+            required string that is provided with the corresponding
+            request token in exchange for an access token. An access
+            token is a token that the consumer uses to request
+            Identity Service API tokens on behalf of the authorizing
+            user instead of using the credentials for the user.</para>
+        <para>Request and access tokens use token keys to identify
+            themselves. For OpenStack purposes, the token key is the
+            token ID. The consumer uses a token secret to establish
+            ownership of a specified token. Both request and access
+            tokens have token secrets.</para>
+        <para>Delegated authentication through OAuth occurs as
+            follows:</para>
+        <orderedlist>
+            <listitem>
+                <para>A user creates a consumer.</para>
+            </listitem>
+            <listitem>
+                <para>The consumer gets an unauthorized request token.
+                    Then, the consumer uses the request token to
+                    initiate user authorization.</para>
+            </listitem>
+            <listitem>
+                <para>The user authorizes the request token.</para>
+            </listitem>
+            <listitem>
+                <para>The consumer exchanges the authorized request
+                    token and the OAuth verifier for an access
+                    token.</para>
+                <para>The authorizing user receives the request token
+                    key from the consumer out-of-band.</para>
+            </listitem>
+            <listitem>
+                <para>The consumer uses the access token to request a
+                    Identity Service API token.</para>
+            </listitem>
+        </orderedlist>
+        <!--<wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            href="../wadls/identity-api/src/v3/wadl/OS-OAUTH1.wadl"/>-->
+    </section>
+</chapter>

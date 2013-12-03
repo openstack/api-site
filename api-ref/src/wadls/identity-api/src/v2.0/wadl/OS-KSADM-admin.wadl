@@ -15,17 +15,13 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
+    xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:csapi="http://docs.openstack.org/identity/api/v2.0"
-   >
-
+>
     <grammars>
-        <!--<include href="../xsd/api.xsd"/>-->
-
-        <include href="../xsd/api-common.xsd"/>
         <include href="../xsd/OS-KSADM.xsd"/>
     </grammars>
     <!--*******************************************************-->
@@ -33,18 +29,18 @@
     <!--*******************************************************-->
 
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:35357">
-        <resource id="version" path="v2.0">
+    <resources base="http://localhost:35357" xml:id="OS-KSADM-admin-v2.0">
+        <resource id="version-v2.0" path="v2.0">
             <param name="X-Auth-Token" style="header"
                 type="xsd:string" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>A valid authentication token
                         for an administrative user.</para></wadl:doc>
             </param>
-            <resource id="users" path="users">
+            <resource id="users-v2.0" path="users">
                 <method href="#listUsers"/>
                 <method href="#addUser"/>
-                <resource id="userById" path="{userId}">
+                <resource id="userById-v2.0" path="{userId}">
                     <param name="userId" style="template"
                         required="true" type="xsd:string">
                         <wadl:doc
@@ -55,7 +51,7 @@
                     </param>
                     <method href="#updateUser"/>
                     <method href="#deleteUser"/>
-                    <resource id="userRoles" path="roles">
+                    <resource id="userRoles-v2.0" path="roles">
                         <param name="serviceId" style="query"
                             required="false" type="xsd:string">
                             <wadl:doc
@@ -79,9 +75,9 @@
                                    size.</para></wadl:doc>
                         </param>
                         <method href="#listUserRoles"/>
-                        <resource id="user-roles-OS-KSADM"
+                        <resource id="user-roles-OS-KSADM-v2.0"
                             path="OS-KSADM">
-                            <resource id="userRoleById"
+                            <resource id="userRoleById-v2.0"
                                 path="{roleId}">
                                 <param name="roleId" style="template"
                                    type="xsd:int">
@@ -96,15 +92,15 @@
                             </resource>
                         </resource>
                     </resource>
-                    <resource id="user-OS-KSADM" path="OS-KSADM">
-                        <resource id="enabled" path="enabled">
+                    <resource id="user-OS-KSADM-v2.0" path="OS-KSADM">
+                        <resource id="enabled-v2.0" path="enabled">
                             <method href="#setUserEnabled"/>
                         </resource>
-                        <resource id="userCredentials"
+                        <resource id="userCredentials-v2.0"
                             path="credentials">
-                            <method href="#addUserCredential"/>
-                            <method href="#listCredentials"/>
-                            <resource id="userCredentialsByType"
+                            <method href="#addUserCredential-KSADM"/>
+                            <method href="#listCredentials-KSADM"/>
+                            <resource id="credential-type-v2.0"
                                 path="{credential-type}">
                                 <param name="credentialType"
                                    style="template"
@@ -123,9 +119,9 @@
                     </resource>
                 </resource>
             </resource>
-            <resource id="tenants" path="tenants">
+            <resource id="tenants-v2.0" path="tenants">
                 <method href="#addTenant"/>
-                <resource id="tenantById" path="{tenantId}">
+                <resource id="tenantById-v2.0" path="{tenantId}">
                     <param name="tenantId" style="template"
                         type="xsd:string">
                         <wadl:doc
@@ -135,7 +131,7 @@
                     </param>
                     <method href="#updateTenant"/>
                     <method href="#deleteTenant"/>
-                    <resource id="usersForTenant" path="users">
+                    <resource id="usersForTenant-v2.0" path="users">
                         <param name="marker" style="query"
                             required="false" type="xsd:string">
                             <wadl:doc
@@ -152,7 +148,7 @@
                                 </para></wadl:doc>
                         </param>
                         <method href="#listUsersForTenant"/>
-                        <resource id="userForTenant" path="{userId}">
+                        <resource id="userForTenant-v2.0" path="{userId}">
                             <param name="userId" style="template"
                                 type="xsd:string">
                                 <wadl:doc
@@ -160,13 +156,13 @@
                                    xml:lang="EN"><para>The user
                                    ID.</para></wadl:doc>
                             </param>
-                            <resource id="userRolesForTenant"
+                            <resource id="userRolesForTenant-v2.0"
                                 path="roles">
                                 <resource
-                                   id="tenant-user-role-OS-KSADM"
+                                    id="tenant-user-role-OS-KSADM-v2.0"
                                    path="OS-KSADM">
                                    <resource
-                                   id="userSpecificRoleForTenant"
+                                       id="userSpecificRoleForTenant-v2.0"
                                    path="{roleId}">
                                    <param name="roleId"
                                    style="template" type="xsd:string">
@@ -187,8 +183,8 @@
                     </resource>
                 </resource>
             </resource>
-            <resource id="role-service-OS-KSADM" path="OS-KSADM">
-                <resource id="roles" path="roles">
+            <resource id="role-service-OS-KSADM-v2.0" path="OS-KSADM">
+                <resource id="roles-v2.0" path="roles">
                     <param name="name" style="plain" type="xsd:string"
                         required="true">
                         <wadl:doc
@@ -197,7 +193,7 @@
                             name.</para></wadl:doc>
                     </param>
                     <method href="#getRoleByName"/>
-                    <resource id="roles_list">
+                    <resource id="roles_list-v2.0">
                         <param name="serviceId" style="plain"
                             required="false" type="xsd:string">
                             <wadl:doc
@@ -208,7 +204,7 @@
                         <method href="#listRoles"/>
                     </resource>
                     <method href="#addRole"/>
-                    <resource id="roleId" path="{roleId}">
+                    <resource id="roleId-v2.0" path="{roleId}">
                         <param name="roleId" style="template"
                             type="xsd:string">
                             <wadl:doc
@@ -220,7 +216,7 @@
                         <method href="#deleteRole"/>
                     </resource>
                 </resource>
-                <resource id="services" path="services">
+                <resource id="services-v2.0" path="services">
                     <param name="marker" style="query"
                         required="false" type="xsd:string">
                         <wadl:doc
@@ -239,7 +235,7 @@
                     <method href="#listServices"/>
                     <method href="#addService"/>
 
-                    <resource id="serviceName">
+                    <resource id="serviceName-v2.0">
                         <param name="name" style="query"
                             type="xsd:string" required="true">
                             <wadl:doc
@@ -250,7 +246,7 @@
 
                         <method href="#getServiceByName"/>
                     </resource>
-                    <resource id="serviceId" path="{serviceId}">
+                    <resource id="serviceId-v2.0" path="{serviceId}">
                         <param name="serviceId" style="template"
                             type="xsd:string">
                             <wadl:doc
@@ -608,7 +604,7 @@
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
     <!-- User Credentials -->
-    <method name="POST" id="addUserCredential">
+    <method name="POST" id="addUserCredential-KSADM">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Add User Credentials">
             <para role="shortdesc">Adds a credential to a user.</para>
@@ -651,7 +647,7 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
-    <method name="GET" id="listCredentials">
+    <method name="GET" id="listCredentials-KSADM">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List Credentials">
             <para role="shortdesc">Lists credentials.</para>

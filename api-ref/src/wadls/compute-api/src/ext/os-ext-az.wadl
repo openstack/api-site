@@ -3,11 +3,12 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-    <resources base="https://servers.api.openstack.com">
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-ext-az-v2">
         <resource id="version" type="#VersionDetails" path="v2/">
-            <resource id="tenantID" path="{tenant_id}">
+            <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -16,30 +17,30 @@
                         </para></wadl:doc>
                 </param>
                 <resource id="Servers" path="servers">
-                    <resource path="{server_id}">
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The UUID for the
-                                   server of interest to you.</para>
+                                xml:lang="EN">
+                                <para>The UUID for the server of
+                                   interest to you.</para>
                             </wadl:doc>
                         </param>
                         <method href="#showServer"/>
                     </resource>
-                    <resource path="detail">
+                    <resource path="detail" id="detail">
                         <method href="#detailServers"/>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-
     <method name="GET" id="showServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get server availability zone"><para
-                role="shortdesc">Gets the availability zone for the
-                specified instance. </para>
+            title="Show server">
+            <para role="shortdesc">Shows information for a specified
+                server, including its availability zone.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -60,12 +61,11 @@
             </representation>
         </response>
     </method>
-
     <method name="GET" id="detailServers">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List details for all servers"><para
-                role="shortdesc">Lists details for all servers.
-                Includes their current availability zone. </para>
+            title="List details for servers">
+            <para role="shortdesc">Lists details for servers,
+                including their current availability zone.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">

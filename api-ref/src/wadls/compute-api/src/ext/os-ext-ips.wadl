@@ -3,32 +3,32 @@
 <!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
-
-    <resources base="https://servers.api.openstack.com">
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-ext-ips-v2">
         <resource id="version" type="#VersionDetails" path="v2">
             <resource id="tenant_id" path="{tenant_id}">
-                <param name="tenant_id" style="template">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
+                        xml:lang="EN" title="Tenant ID">
                         <para>The unique identifier of the tenant or
-                            account.</para>
-                    </wadl:doc>
+                            account.</para></wadl:doc>
                 </param>
                 <resource id="Servers" path="servers">
-                    <resource path="{server_id}">
+                    <resource path="{server_id}" id="server_id">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The UUID for the
-                                   server of interest to
-                                you.</para></wadl:doc>
+                                xml:lang="EN" title="Server ID">
+                                <para>The UUID for the server of
+                                   interest to you.</para></wadl:doc>
                         </param>
-                        <resource path="action">
+                        <resource path="action" id="action">
                             <method href="#serverIPDetails"/>
                         </resource>
                     </resource>
@@ -44,8 +44,7 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show IP type">
             <para role="shortdesc">Shows the type of IP assigned to a
-                specified server. The type is either fixed or
-                floating.</para>
+                specified server, either fixed or floating.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -69,10 +68,9 @@
 
     <method name="GET" id="serversIPList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List IP types">
-            <para role="shortdesc">Lists all servers and shows their
-                IPs by type. The type is either fixed or
-                floating.</para>
+            title="List servers with IP type">
+            <para role="shortdesc">Lists all servers showing their IPs
+                by type, either fixed or floating.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">

@@ -10,14 +10,16 @@
 <!--*******************************************************-->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "../v2/common.ent">
 %common;]>
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://wadl.dev.java.net/2009/02"
+<application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:imageapi="http://docs.openstack.org/image/api/v2.2"
-    xmlns:csapi="http://docs.openstack.org/image/api/v2.0">
+    xmlns:imageapi="http://docs.openstack.org/image/api/v2">
     <grammars>
         <include href="../v2/xsd/api.xsd"/>
         <include href="../v2/xsd/api-common.xsd"/>
@@ -25,12 +27,13 @@
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
-    <resources base="https://glance.example.com/">
+    <resources base="https://glance.example.com/"
+        xml:id="os-image-v2.0">
         <resource id="info" path="v2">
             <resource id="images" path="images">
                 <method href="#createImage"/>
                 <method href="#listImages"/>
-                <resource path="{image_id}">
+                <resource path="{image_id}" id="image_id">
                     <param name="image_id" style="template"
                         type="csapi:uuid">
                         <wadl:doc
@@ -48,14 +51,13 @@
                         <method href="#getImageFile"/>
                     </resource>
                     <resource id="Tags" path="tags">
-                        <resource path="{tag}">
+                        <resource path="{tag}" id="tag">
                             <param name="tag" style="template"
                                 type="xsd:string">
                                 <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN" title="Tag">
-                                   <para>Image tag.</para>
-                                </wadl:doc>
+                                   xml:lang="EN" title="Image tag"
+                                   ><para>Image tag.</para></wadl:doc>
                             </param>
                             <method href="#addImageTag"/>
                             <method href="#deleteImageTag"/>
@@ -70,7 +72,7 @@
     <!--*******************************************************-->
     <method name="POST" id="createImage">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create Image">
+            title="Create image">
             <para role="shortdesc">Creates a virtual machine (VM)
                 image.</para>
         </wadl:doc>
@@ -80,9 +82,9 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Images name">
                     <para>Name for the image. The name of an image is
-                        not unique to a Glance node. The API cannot
-                        expect users to know the names of images owned
-                        by others.</para>
+                        not unique to an Image Service node. The API
+                        cannot expect users to know the names of
+                        images owned by others.</para>
                 </wadl:doc>
             </param>
             <param name="id" style="plain" type="csapi:uuid"
@@ -90,7 +92,6 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Image ID">
                     <para>The image ID.</para>
-
                 </wadl:doc>
             </param>
             <param name="visibility" style="plain" type="xsd:string"
@@ -99,7 +100,6 @@
                     xml:lang="EN" title="Visibility">
                     <para>Image visibility. Public or private. Default
                         is public.</para>
-
                 </wadl:doc>
             </param>
             <param name="tags" style="plain" type="xsd:dict"
@@ -111,7 +111,8 @@
             </param>
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../v2.2/samples/image-create-req.json"/>
+                    <xsdxt:code
+                        href="../v2/samples/image-create-req.json"/>
                 </doc>
             </representation>
         </request>
@@ -120,7 +121,7 @@
                 Created with a Location header that contains the
                 newly-created URI for the image. Response body
                 represents the created image entity. <xsdxt:code
-                    href="../v2.2/samples/image-create-response.json"/>
+                    href="../v2/samples/image-create-response.json"/>
             </doc>
             <param name="location" style="plain" type="xsd:anyURI"
                 required="true"
@@ -136,18 +137,19 @@
                 element="image">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="../v2.2/samples/image-create-response.json"/>
+                        href="../v2/samples/image-create-response.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
 
     <method name="PATCH" id="updateImage">
-        <wadl:doc xml:lang="EN" title="Update Image"
+        <wadl:doc xml:lang="EN" title="Update image"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Updates a specified image.</para>
             <para>Request body must conform to the
-                'application/openstack-images-v2.0-json-patch' media
+                'application/openstack-images-json-patch' media
                 type.</para>
             <para>You can also use the PATCH method to add or remove
                 image properties.</para>
@@ -171,7 +173,6 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Image ID">
                     <para>The image ID.</para>
-
                 </wadl:doc>
             </param>
             <param name="visibility" style="plain" type="xsd:string"
@@ -192,7 +193,8 @@
             <representation mediaType="application/json"
                 element="image">
                 <doc xml:lang="EN">
-                    <xsdxt:code href="../v2.2/samples/image-update-req.json"/>
+                    <xsdxt:code
+                        href="../v2/samples/image-update-req.json"/>
                 </doc>
             </representation>
         </request>
@@ -201,14 +203,15 @@
                 element="image">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="../v2.2/samples/image-details-response.json"/>
+                        href="../v2/samples/image-details-response.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
     <!-- Get Image -->
     <method name="GET" id="getImage">
-        <wadl:doc xml:lang="EN" title="Get Image Details"
+        <wadl:doc xml:lang="EN" title="Get image details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Gets details for a specified
                 image.</para>
@@ -219,13 +222,14 @@
                 element="image">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="../v2.2/samples/image-details-response.json"/>
+                        href="../v2/samples/image-details-response.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="listImages">
-        <wadl:doc xml:lang="EN" title="List Images"
+        <wadl:doc xml:lang="EN" title="List images"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Lists public virtual machine (VM)
                 images.</para>
@@ -368,13 +372,14 @@
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="../v2.2/samples/image-list-response.json"/>
+                        href="../v2/samples/image-list-response.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
     <method name="DELETE" id="deleteImage">
-        <wadl:doc xml:lang="EN" title="Delete Image"
+        <wadl:doc xml:lang="EN" title="Delete image"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Deletes a specified image.</para>
             <para>You cannot delete images with the 'protected'
@@ -388,7 +393,7 @@
         <response status="204"/>
     </method>
     <method name="PUT" id="storeImageFile">
-        <wadl:doc xml:lang="EN" title="Upload Binary Image Data"
+        <wadl:doc xml:lang="EN" title="Upload binary image data"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Uploads binary image data.</para>
             <para>An image record must exist before a client can store
@@ -402,7 +407,7 @@
         <response status="204"/>
     </method>
     <method name="GET" id="getImageFile">
-        <wadl:doc xml:lang="EN" title="Download Binary Image Data"
+        <wadl:doc xml:lang="EN" title="Download binary image data"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Downloads binary image data.</para>
             <para>Response body contains the raw binary data that
@@ -420,7 +425,7 @@
     </method>
     <method name="PUT" id="addImageTag">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Image Tag">
+            title="Add image tag">
             <para role="shortdesc">Adds a specified tag to a specified
                 image.</para>
             <para>The tag you want to add should be encoded into the
@@ -441,19 +446,19 @@
         <response status="204"/>
     </method>
     <method name="DELETE" id="deleteImageTag">
-        <wadl:doc xml:lang="EN" title="Delete Image Tag"
+        <wadl:doc xml:lang="EN" title="Delete image tag"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Deletes a specified tag from a
                 specified image.</para>
-            <para>The tag you want to delete should be encoded into
-                the request URI. For example, to remove the tag
-                'miracle' from image
-                e7db3b45-8db7-47ad-8109-3fb55c2c24fd, you would
-                    <code>DELETE
-                    /v2/images/e7db3b45-8db7-47ad-8109-3fb55c2c24fd/tags/miracle</code>.
-                The request body is ignored. An HTTP status of 204 is
-                returned. Subsequent attempts to delete the tag result
-                in a 404 response code.</para>
+            <para>Encode the tag that you want to delete into the
+                request URI. For example, to remove the tag
+                    <code>miracle</code> from image
+                    <code>e7db3b45-8db7-47ad-8109-3fb55c2c24fd</code>,
+                make a <code>DELETE
+                    /v2/images/e7db3b45-8db7-47ad-8109-3fb55c2c24fd/tags/miracle</code>
+                request. The request body is ignored. An HTTP 204
+                status code is returned. Subsequent attempts to delete
+                the tag result in a 404 response code.</para>
         </wadl:doc>
         <response status="204"/>
         <response status="404"/>

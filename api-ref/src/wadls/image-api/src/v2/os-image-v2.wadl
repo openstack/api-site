@@ -15,8 +15,8 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:imageapi="http://docs.openstack.org/image/api/v2.2"
-    xmlns:csapi="http://docs.openstack.org/image/api/v2.0">
+    xmlns:imageapi="http://docs.openstack.org/image/api/v2"
+    xmlns:csapi="http://docs.openstack.org/image/api/v2">
     <grammars>
         <include href="xsd/api.xsd"/>
         <include href="xsd/api-common.xsd"/>
@@ -25,57 +25,54 @@
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
-    <resources base="https://glance.example.com/">
+    <resources base="https://glance.example.com/" xml:id="os-image-v2">
         <resource id="info" path="v2">
-            <resource id="Images" type="#ImageList" path="images">
-                <method href="#createImage-v2"/>
-                <resource path="{image_id}">
+            <resource id="Images" type="#ImageList"
+                path="images">
+                <method href="#createImage"/>
+                <resource path="{image_id}" id="image_id">
                     <param name="image_id" style="template"
                         type="csapi:uuid">
                         <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
-                            xml:lang="EN" title="Image ID">
-                            <para>Image ID stored through the image
-                                API. Typically a UUID.</para>
-                        </wadl:doc>
+                            xml:lang="EN" title="Image ID">Image ID
+                            stored through the image API. Typically a
+                            UUID.</wadl:doc>
                     </param>
-                    <method href="#getImage-v2"/>
-                    <method href="#updateImage-v2"/>
-                    <method href="#deleteImage-v2"/>
+                    <method href="#getImage"/>
+                    <method href="#updateImage"/>
+                    <method href="#deleteImage"/>
                     <resource id="file" path="file">
-                        <method href="#storeImageFile-v2"/>
-                        <method href="#getImageFile-v2"/>
+                        <method href="#storeImageFile"/>
+                        <method href="#getImageFile"/>
                     </resource>
                     <resource id="Tags" path="tags">
-                        <resource path="{tag}">
+                        <resource path="{tag}" id="tag">
                             <param name="tag" style="template"
                                 type="xsd:string">
                                 <wadl:doc
                                    xmlns="http://www.w3.org/1999/xhtml"
-                                   xml:lang="EN" title="Tag">
-                                   <para>Image tag.</para>
-                                </wadl:doc>
+                                   title="Tag">Image tag.</wadl:doc>
                             </param>
-                            <method href="#addImageTag-v2"/>
-                            <method href="#deleteImageTag-v2"/>
+                            <method href="#addImageTag"/>
+                            <method href="#deleteImageTag"/>
                         </resource>
                     </resource>
                     <resource id="Members" type="#MemberList"
                         path="members">
-                        <method href="#createImageMember-v2"/>
-                        <resource path="{member_id}">
+                        <method href="#createImageMember"/>
+                        <resource path="{member_id}" id="member_id">
                             <param name="member_id" style="template"
                                 type="xsd:string">
                                 <wadl:doc
                                    xmlns="http://www.w3.org/1999/xhtml"
-                                   xml:lang="EN" title="Members">
-                                   <para>Image member ID. For example,
-                                   the tenant ID of the user with whom
-                                   the image is being shared.</para>
-                                </wadl:doc>
+                                   xml:lang="EN" title="Members">Image
+                                   member ID. For example, the tenant
+                                   ID of the user with whom the image
+                                   is being shared.</wadl:doc>
                             </param>
-                            <method href="#getImageMember-v2"/>
-                            <method href="#deleteImageMember-v2"/>
-                            <method href="#updateImageMember-v2"/>
+                            <method href="#getImageMember"/>
+                            <method href="#deleteImageMember"/>
+                            <method href="#updateImageMember"/>
                         </resource>
                     </resource>
                 </resource>
@@ -86,17 +83,17 @@
     <!--               Resource Types                          -->
     <!--*******************************************************-->
     <resource_type id="ImageList">
-        <method href="#listImages-v2"/>
+        <method href="#listImages"/>
     </resource_type>
     <resource_type id="MemberList">
-        <method href="#listImageMembers-v2"/>
+        <method href="#listImageMembers"/>
     </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-    <method name="POST" id="createImage-v2">
+    <method name="POST" id="createImage">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Create Image">
+            title="Create image">
             <para role="shortdesc">Creates a virtual machine (VM)
                 image. (Since Image API v2.0.)</para>
             <para>Created with a Location header that contains the
@@ -107,19 +104,17 @@
             <param name="name" style="plain" type="xsd:string"
                 required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Images name">
-                    <para>Name for the image. The name of an image is
-                        not unique to a Image Service node. The API
-                        cannot expect users to know the names of
-                        images owned by others.</para>
-                </wadl:doc>
+                    xml:lang="EN" title="Images name">Name for the
+                    image. The name of an image is not unique to a
+                    Image Service node. The API cannot expect users to
+                    know the names of images owned by
+                    others.</wadl:doc>
             </param>
             <param name="id" style="plain" type="csapi:uuid"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Image ID">
-                    <para>The image ID.</para>
-                </wadl:doc>
+                    xml:lang="EN" title="Image ID">The image
+                    ID.</wadl:doc>
             </param>
             <param name="visibility" style="plain" type="xsd:string"
                 required="false">
@@ -149,7 +144,7 @@
                 required="true"
                 path="/common:version/atom:link[@rel='self']/@href">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Image Location">
+                    xml:lang="EN" title="Image location">
                     <para>The location for the image identified by a
                         URI.</para>
                 </wadl:doc>
@@ -164,9 +159,9 @@
             </representation>
         </response>
     </method>
-    <method name="PATCH" id="updateImage-v2">
+    <method name="PATCH" id="updateImage">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Update Image">
+            title="Update image">
             <para role="shortdesc">Updates a specified image. (Since
                 Image API v2.0.)</para>
             <para>Request body must conform to one of the following
@@ -176,7 +171,8 @@
                     <para>application/openstack-images-v2.0-json-patch</para>
                 </listitem>
                 <listitem>
-                    <para>application/openstack-images-v2.1-json-patch (Since Image API v2.2)</para>
+                    <para>application/openstack-images-v2.1-json-patch
+                        (Since Image API v2.2)</para>
                 </listitem>
             </itemizedlist>
             <para>You can also use the PATCH method to add or remove
@@ -207,9 +203,9 @@
         </response>
     </method>
     <!-- Get Image -->
-    <method name="GET" id="getImage-v2">
+    <method name="GET" id="getImage">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get Image Details">
+            title="Get image details">
             <para role="shortdesc">Gets details for a specified image.
                 (Since Image API v2.0.)</para>
             <para>Response body is a single image
@@ -224,9 +220,9 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="listImages-v2">
+    <method name="GET" id="listImages">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List Images">
+            title="List images">
             <para role="shortdesc">Lists public virtual machine (VM)
                 images. (Since Image API v2.0.)</para>
             <para>Returns a subset of the larger collection of images
@@ -336,9 +332,9 @@
                 type="imageapi:string">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>Filter parameter. Shows images shared
-                        with me by the specified owner, where the
-                        owner is indicated by tenant ID.</para>
+                    <para>Filter parameter. Shows images shared with
+                        me by the specified owner, where the owner is
+                        indicated by tenant ID.</para>
                 </wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -402,39 +398,36 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="listImageMembers-v2">
+    <method name="GET" id="listImageMembers">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List Image Members">
+            title="List image members">
             <para role="shortdesc">Lists the tenants with whom this
-                image has been shared. (Since Image API v2.1.)
-            </para>
+                image has been shared. (Since Image API v2.1.) </para>
             <para>If a user with whom this image is shared makes this
-                  call, the member list contains only information for
-                  that user.
-            </para>
+                call, the member list contains only information for
+                that user. </para>
             <para>If a user with whom this image has not been shared
-                  makes this call, the call returns the HTTP 404
-                  status code.
-            </para>
+                makes this call, the call returns the HTTP 404 status
+                code. </para>
         </wadl:doc>
-        <request>
-        </request>
+        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/image-members-list-response.json"/>
+                        href="samples/image-members-list-response.json"
+                    />
                 </wadl:doc>
             </representation>
         </response>
         <response status="404"/>
     </method>
-    <method name="DELETE" id="deleteImage-v2">
+    <method name="DELETE" id="deleteImage">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete Image">
-            <para role="shortdesc">Deletes a
-                specified image. (Since Image API v2.0.)</para>
+            title="Delete image">
+            <para role="shortdesc">Deletes a specified image. (Since
+                Image API v2.0.)</para>
             <para>You cannot delete images with the 'protected'
                 attribute set to true (boolean); the response returns
                 the HTTP 403 status code.</para>
@@ -446,11 +439,11 @@
         <response status="204"/>
         <response status="403"/>
     </method>
-    <method name="PUT" id="storeImageFile-v2">
+    <method name="PUT" id="storeImageFile">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Upload Binary Image Data">
-            <para role="shortdesc">Uploads binary
-                image data. (Since Image API v2.0.)</para>
+            title="Upload binary image data">
+            <para role="shortdesc">Uploads binary image data. (Since
+                Image API v2.0.)</para>
             <para>An image record must exist before a client can store
                 binary image data with it.</para>
             <para>Content-Type must be 'application/octet-stream.'
@@ -460,11 +453,11 @@
         </wadl:doc>
         <response status="204"/>
     </method>
-    <method name="GET" id="getImageFile-v2">
+    <method name="GET" id="getImageFile">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Download Binary Image Data">
-            <para role="shortdesc">Downloads binary
-                image data. (Since Image API v2.0.)</para>
+            title="Download binary image data">
+            <para role="shortdesc">Downloads binary image data. (Since
+                Image API v2.0.)</para>
             <para>Response body contains the raw binary data that
                 represents the actual virtual disk. The Content-Type
                 header is 'application/octet-stream.' The Content-MD5
@@ -476,24 +469,24 @@
         </wadl:doc>
         <response status="200 204"/>
     </method>
-    <method name="PUT" id="addImageTag-v2">
+    <method name="PUT" id="addImageTag">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Add Image Tag">
-            <para role="shortdesc">Adds a specified
-                tag to a specified image. (Since Image API v2.0.)</para>
+            title="Add image tag">
+            <para role="shortdesc">Adds a specified tag to a specified
+                image. (Since Image API v2.0.)</para>
         </wadl:doc>
         <response status="200"/>
     </method>
-    <method name="DELETE" id="deleteImageTag-v2">
+    <method name="DELETE" id="deleteImageTag">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete Image Tag">
-            <para role="shortdesc">Deletes a
-                specified tag from a specified image. (Since Image API v2.0.)</para>
+            title="Delete image tag">
+            <para role="shortdesc">Deletes a specified tag from a
+                specified image. (Since Image API v2.0.)</para>
         </wadl:doc>
         <response status="204"/>
     </method>
-    <method name="GET" id="getImageMember-v2">
-        <wadl:doc xml:lang="EN" title="Get Image Member Details"
+    <method name="GET" id="getImageMember">
+        <wadl:doc xml:lang="EN" title="Get image member details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Gets details for a specified image member.</para>
             <para>Response body is a single image member entity. (Since Image
@@ -503,16 +496,17 @@
             <representation mediaType="application/json">
                 <doc xml:lang="EN">
                     <xsdxt:code
-                        href="samples/image-member-details-response.json"/>
+                        href="samples/image-member-details-response.json"
+                    />
                 </doc>
             </representation>
         </response>
     </method>
-    <method name="POST" id="createImageMember-v2">
+    <method name="POST" id="createImageMember">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Create Image Member">
-            <para role="shortdesc">Adds a specified
-                tenant ID as an image member. (Since Image API v2.1.)</para>
+            title="Create image member">
+            <para role="shortdesc">Adds a specified tenant ID as an
+                image member. (Since Image API v2.1.)</para>
         </wadl:doc>
         <request>
             <param name="member" style="plain" type="xsd:string"
@@ -545,12 +539,12 @@
             </representation>
         </response>
     </method>
-    <method name="PUT" id="updateImageMember-v2">
+    <method name="PUT" id="updateImageMember">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Update Image Member">
-            <para role="shortdesc">Sets the
-                specified status for the specified member of the
-                specified image. (Since Image API v2.1.)</para>
+            title="Update image member">
+            <para role="shortdesc">Sets the specified status for the
+                specified member of the specified image. (Since Image
+                API v2.1.)</para>
         </wadl:doc>
         <request>
             <param name="status" style="plain" type="xsd:string"
@@ -584,12 +578,12 @@
             </representation>
         </response>
     </method>
-    <method name="DELETE" id="deleteImageMember-v2">
+    <method name="DELETE" id="deleteImageMember">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete Image Member">
-            <para role="shortdesc">Deletes a
-                specified tenant ID from the member list of the
-                specified image. (Since Image API v2.1.)</para>
+            title="Delete image member">
+            <para role="shortdesc">Deletes a specified tenant ID from
+                the member list of the specified image. (Since Image
+                API v2.1.)</para>
         </wadl:doc>
         <response status="204"/>
     </method>
