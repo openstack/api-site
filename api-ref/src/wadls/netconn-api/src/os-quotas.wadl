@@ -11,143 +11,154 @@
 <!--*******************************************************-->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
-<application xmlns:capi="http://docs.openstack.org/common/api/v1.0"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:db="http://docbook.org/ns/docbook"
-    xmlns:csapi="http://docs.openstack.org/netconn/api/v1.0"
-    xmlns:osapi="http://docs.openstack.org/netconn/api/v1.0"
+<application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xsi:schemaLocation="http://docs.openstack.org/netconn/api/v1.0
-    xsd/api.xsd
-    http://docs.openstack.org/common/api/v1.0
-    xsd/common.xsd
-    http://wadl.dev.java.net/2009/02 
-    http://www.w3.org/Submission/wadl/wadl.xsd
-    ">
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
+    xmlns:osapi="http://docs.openstack.org/compute/api/v1.1">
 
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
 
     <resources base="https://neutron.example.com/">
-        <resource id="version" type="#VersionDetails" path="v2/">
-        <resource id="Quotas" type="#QuotaList" path="quotas">
-            <method href="#listQuotas"/>
-            <resource path="{tenant_id}">
-                <param name="tenant_id" style="template" type="csapi:UUID">
-                    <wadl:doc xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" title="Tenant ID">
-                        <p>The tenant ID in a multi-tenancy cloud.</p></wadl:doc>
-                </param>
-                <method href="#showQuota"/>
-                <method href="#updateQuota"/>
-                <method href="#resetQuota"/>
+        <resource id="version" type="#VersionDetails" path="v2.0/">
+            <resource id="Quotas" type="#QuotaList" path="quotas">
+                <method href="#listQuotas"/>
+                <resource path="{tenant_id}">
+                    <param name="tenant_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN" title="Tenant ID">The tenant
+                            ID in a multi-tenancy cloud.</wadl:doc>
+                    </param>
+                    <method href="#showQuota"/>
+                    <method href="#updateQuota"/>
+                    <method href="#resetQuota"/>
+                </resource>
             </resource>
         </resource>
-        </resource>
     </resources>
-    
 
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
 
     <method name="GET" id="listQuotas">
-        <wadl:doc xml:lang="EN" 
-            xmlns="http://docbook.org/ns/docbook" title="List Quotas">
-            <para role="shortdesc">Lists quotas for tenants who have non-default quota values.
-            </para>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List quotas">
+            <para role="shortdesc">Lists quotas for tenants who have
+                non-default quota values.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/quotas-list-res.json" />
-                </doc>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/quotas-list-res.json"/>
+                </wadl:doc>
             </representation>
         </response>
-        <response status="401" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="csapi:unauthorized"/>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="csapi:unauthorized"/>
             <representation mediaType="application/json"/>
         </response>
-        <response status="403" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="csapi:forbidden"/>
+        <response status="403"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="csapi:forbidden"/>
             <representation mediaType="application/json"/>
-        </response>       
+        </response>
     </method>
     <method name="GET" id="showQuota">
-        <wadl:doc xml:lang="EN" 
-            xmlns="http://docbook.org/ns/docbook" title="Show Quota">
-            <para role="shortdesc">
-                Shows quotas for a specified tenant.
-            </para>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show quota">
+            <para role="shortdesc">Shows quotas for a specified
+                tenant.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/quotas-show-res.json" />
-                </doc>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/quotas-show-res.json"/>
+                </wadl:doc>
             </representation>
         </response>
-        <response status="401" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="osapi:unauthorized"/>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="osapi:unauthorized"/>
             <representation mediaType="application/json"/>
         </response>
-        <response status="403" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="osapi:forbidden"/>
+        <response status="403"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="osapi:forbidden"/>
             <representation mediaType="application/json"/>
         </response>
     </method>
-
     <method name="PUT" id="updateQuota">
-        <wadl:doc xml:lang="EN" 
-            xmlns="http://docbook.org/ns/docbook" title="Update Quota">
-            <para role="shortdesc">
-                Updates quotas for a specified tenant. Use when non-default quotas are desired.
-            </para>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update quota">
+            <para role="shortdesc">Updates quotas for a specified
+                tenant. Use when non-default quotas are
+                desired.</para>
         </wadl:doc>
-        <request><representation mediaType="application/json">
-            <doc xml:lang="EN">
-                <xsdxt:code href="api_samples/quotas-put-req.json" />
-            </doc>
-        </representation></request>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="api_samples/quotas-put-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/quotas-put-res.json" />
-                </doc>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="api_samples/quotas-put-res.json"
+                    />
+                </wadl:doc>
             </representation>
         </response>
-        <response status="401" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="osapi:unauthorized"/>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="osapi:unauthorized"/>
             <representation mediaType="application/json"/>
         </response>
-        <response status="403" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="osapi:forbidden"/>
+        <response status="403"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="osapi:forbidden"/>
             <representation mediaType="application/json"/>
         </response>
     </method>
-
     <method name="DELETE" id="resetQuota">
-        <wadl:doc xml:lang="EN" 
-            xmlns="http://docbook.org/ns/docbook" title="Reset Quota">
-            <para role="shortdesc">
-                Resets quotas to default values for a specified tenant.
-            </para>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Reset quota">
+            <para role="shortdesc">Resets quotas to default values for
+                a specified tenant.</para>
         </wadl:doc>
-        <response status="204" />
-        <response status="401" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="osapi:unauthorized"/>
+        <response status="204"/>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="osapi:unauthorized"/>
             <representation mediaType="application/json"/>
         </response>
-        <response status="403" xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml" element="osapi:forbidden"/>
+        <response status="403"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="osapi:forbidden"/>
             <representation mediaType="application/json"/>
         </response>
     </method>
-
 </application>

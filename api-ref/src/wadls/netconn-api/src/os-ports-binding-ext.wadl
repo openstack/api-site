@@ -12,39 +12,35 @@
 
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+<application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
-    xmlns:atom="http://www.w3.org/2005/Atom"
-    xsi:schemaLocation="http://docs.openstack.org/compute/api/v1.1
-    xsd/api.xsd
-    http://docs.openstack.org/common/api/v1.0
-    xsd/api-common.xsd
-    http://wadl.dev.java.net/2009/02 
-    http://www.w3.org/Submission/wadl/wadl.xsd">
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
 
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
 
     <resources base="https://neutron.example.com/">
-        <resource id="version" type="#VersionDetails" path="v2">
-        <resource id="Ports" type="#PortList" path="ports">
-            <method href="#listPorts" />
-            <method href="#createPort" />
-            <resource path="{port_id}">
-                <param name="port_id" style="template" type="csapi:UUID">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Port ID">
-                        <para>The UUID for the port of interest to you.</para></wadl:doc>
-                </param>
-                <method href="#showPort"/>
-                <method href="#updatePort"/>
+        <resource id="version" type="#VersionDetails" path="v2.0/">
+            <resource id="Ports" type="#PortList" path="ports">
+                <method href="#listPorts"/>
+                <method href="#createPort"/>
+                <resource path="{port_id}">
+                    <param name="port_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Port ID">The UUID for
+                            the port of interest to you.</wadl:doc>
+                    </param>
+                    <method href="#showPort"/>
+                    <method href="#updatePort"/>
+                </resource>
             </resource>
-        </resource>
         </resource>
     </resources>
 
@@ -53,88 +49,124 @@
     <!--*******************************************************-->
 
     <method name="GET" id="listPorts">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List Ports">
-            <para role="shortdesc">Lists ports to which the tenant has access.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List ports">
+            <para role="shortdesc">Lists ports to which the tenant has
+                access.</para>
         </wadl:doc>
-        <response status="200"> &portListParameters; &portBindingParameters;
-            <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-get-resp.json" />
-                </doc>
+        <response status="200"> &portListParameters;
+            &portBindingParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="api_samples/ports-get-resp.json"
+                    />
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/ports-get-resp.xml" />
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="api_samples/ports-get-resp.xml"
+                    />
+                </wadl:doc>
             </representation>
         </response>
     </method>
 
     <method name="POST" id="createPort">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create Port">
-            <para role="shortdesc">Creates a port on the specified network.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create port">
+            <para role="shortdesc">Creates a port on the specified
+                network.</para>
         </wadl:doc>
         <!--             Need to verify, samples are mixed          -->
-        <request> &portCreateParameters; &portBindingParameters; <representation mediaType="application/json">
-            <doc xml:lang="EN">
-                <xsdxt:code href="api_samples/port-post-create-req.json" />
-            </doc>
-        </representation>
-           </request>
-        <response status="200"> &portListParameters; &portBindingParameters;
-          <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port_create_or_update_resp.json" />
-                </doc>
+        <request> &portCreateParameters; &portBindingParameters;
+                <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port-post-create-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &portListParameters;
+            &portBindingParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.json"
+                    />
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port_create_or_update_resp.xml" />
-                </doc>
-            </representation> 
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
         </response>
     </method>
 
     <method name="GET" id="showPort">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show Port">
-            <para role="shortdesc">Shows information for the specified port.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show port">
+            <para role="shortdesc">Shows information for the specified
+                port.</para>
         </wadl:doc>
         <!--             Need to verify, samples are mixed          -->
-        <response status="200"> &portListParameters; &portBindingParameters;
-            <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port-get-resp.json" />
-                </doc>
+        <response status="200"> &portListParameters;
+            &portBindingParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="api_samples/port-get-resp.json"
+                    />
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port-get-resp.xml" />
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="api_samples/port-get-resp.xml"/>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="PUT" id="updatePort">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update Port">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update port">
             <para role="shortdesc">Updates the specified port.</para>
         </wadl:doc>
         <!--             Need to verify, samples are mixed          -->
-        <request> &portCreateParameters; &portBindingParameters; <representation mediaType="application/json">
-            <doc xml:lang="EN">
-                <xsdxt:code href="api_samples/port-post-create-req.json" />
-            </doc>
-        </representation>
-            </request>
-        <response status="200"> &portListParameters; &portBindingParameters;
-            <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port_create_or_update_resp.json" />
-                </doc>
+        <request> &portCreateParameters; &portBindingParameters;
+                <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port-post-create-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &portListParameters;
+            &portBindingParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.json"
+                    />
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="api_samples/port_create_or_update_resp.xml" />
-                </doc>
-            </representation> 
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/port_create_or_update_resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
         </response>
     </method>
 </application>

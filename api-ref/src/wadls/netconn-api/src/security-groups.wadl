@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+
+<!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://www.w3.org/2001/XMLSchema"
+    xmlns:secgr="http://docs.openstack.org/neutron/api/v2.0">
+    <grammars>
+        <include href="../xsd/secgr.xsd"/>
+    </grammars>
+    <resources base="https://servers.api.openstack.com/">
+        <resource id="version" type="#VersionDetails" path="v2.0/">
+            <resource id="security_groups" path="security-groups">
+                <method href="#listSecGroups"/>
+                <method href="#createSecGroup"/>
+                <resource id="get_security_group"
+                    path="{security_group_id}">
+                    <param name="security_group_id" style="template"
+                        type="csapi:uuid">
+                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN">The unique identifier of the
+                            security group.</wadl:doc>
+                    </param>
+                    <method href="#getSecGroup"/>
+                    <method href="#deleteSecGroup"/>
+                </resource>
+            </resource>
+            <resource id="security_groups_rules"
+                path="security-group-rules">
+                <method href="#listSecGroupRules"/>
+                <method href="#createSecGroupRule"/>
+                <resource path="{rules-security-groups-id}">
+                    <param name="rules-security-groups-id"
+                        style="template" type="csapi:uuid">
+                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN">The unique identifier of the
+                            security group rule.</wadl:doc>
+                    </param>
+                    <method href="#getSecGroupRule"/>
+                    <method href="#deleteSecGroupRule"/>
+                </resource>
+            </resource>
+            <resource id="Servers" path="servers">
+                <resource path="{server_id}">
+                    <param name="server_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN">The UUID of the
+                            instance.</wadl:doc>
+                    </param>
+                    <resource path="os-security-groups">
+                        <method href="#listSecGroupsByServer"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="listSecGroups">
+        <wadl:doc xml:lang="EN" title="List security groups"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists all OpenStack Networking
+                security groups to which the specified tenant has
+                access.</para>
+            <para>The list shows the unique ID for each security group
+                and the rules that are associated with each security
+                group.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><xsdxt:code
+                        href="api_samples/security-groups-list-get-req.json"
+                    /></wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <param name="security_group" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                        ><para>Security group
+                    object.</para></wadl:doc>
+            </param>
+            <param name="description" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group description.</para></wadl:doc>
+            </param>
+            <param name="id" type="csapi:uuid" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        UUID for the security group.</para></wadl:doc>
+            </param>
+            <param name="name" type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group name.</para></wadl:doc>
+            </param> &securityGroupRule; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-list-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="POST" id="createSecGroup">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create security group">
+            <para role="shortdesc">Creates an OpenStack Networking
+                security group.</para>
+            <para>This operation creates a security group with default
+                security group rules for the IPv4 and IPv6 ether
+                types.</para>
+        </wadl:doc>
+        <request>
+            <param name="name" type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>A
+                        symbolic name for the security group. Not
+                        required to be unique.</para></wadl:doc>
+            </param>
+            <param name="description" type="xsd:string"
+                required="false">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                        ><para>Describes the security
+                    group.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-create-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201">
+            <param name="security_group" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                        ><para>Security group
+                    object.</para></wadl:doc>
+            </param>
+            <param name="description" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group description.</para></wadl:doc>
+            </param>
+            <param name="id" type="csapi:uuid" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        UUID for the security group.</para></wadl:doc>
+            </param>
+            <param name="name" type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group name.</para></wadl:doc>
+            </param> &securityGroupRule; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-create-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:badRequest"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="GET" id="getSecGroup">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show security group">
+            <para role="shortdesc">Shows information for a specified
+                security group.</para>
+            <para>This operation returns a response body that contains
+                the description, name, ID, and security group rules
+                associated with the specified security group and
+                tenant ID.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-get-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <param name="security_group" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                        ><para>Security group
+                    object.</para></wadl:doc>
+            </param>
+            <param name="description" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group description.</para></wadl:doc>
+            </param>
+            <param name="id" type="csapi:uuid" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        UUID for the security group.</para></wadl:doc>
+            </param>
+            <param name="name" type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group name.</para></wadl:doc>
+            </param> &securityGroupRule; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteSecGroup">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete security group">
+            <para role="shortdesc">Deletes an OpenStack Networking
+                security group.</para>
+            <para>This operation deletes an OpenStack Networking
+                security group and its associated security group
+                rules, provided that a port is not associated with the
+                security group.</para>
+            <para>This operation does not require a request body. This
+                operation does not return a response body.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-delete-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="204">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-delete-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="GET" id="listSecGroupRules">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List security group rules">
+            <para role="shortdesc">Lists a summary of all OpenStack
+                Networking security group rules that the specified
+                tenant can access.</para>
+            <para>The list provides the unique ID for each security
+                group rule.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-list-get-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &securityGroupRule; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-list-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="POST" id="createSecGroupRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create security group rule">
+            <para role="shortdesc">Creates an OpenStack Networking
+                security group rule.</para>
+        </wadl:doc>
+        <request>
+            <param required="true" name="direction" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">Ingress or
+                    egress: The direction in which the security group
+                    rule is applied. For a compute instance, an
+                    ingress security group rule is applied to incoming
+                    (ingress) traffic for that instance. An egress
+                    rule is applied to traffic leaving the
+                    instance.</wadl:doc>
+            </param>
+            <param required="true" name="security_group_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The security
+                    group ID to associate with this security group
+                    rule.</wadl:doc>
+            </param>
+            <param required="false" name="port_range_min"
+                style="plain" type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The minimum
+                    port number in the range that is matched by the
+                    security group rule. If the protocol is TCP or
+                    UDP, this value must be less than or equal to the
+                    value of the port_range_max attribute. If the
+                    protocol is ICMP, this value must be an ICMP
+                    type.</wadl:doc>
+            </param>
+            <param required="false" name="port_range_max"
+                style="plain" type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The maximum
+                    port number in the range that is matched by the
+                    security group rule. The port_range_min attribute
+                    constrains the port_range_max attribute. If the
+                    protocol is ICMP, this value must be an ICMP
+                    type.</wadl:doc>
+            </param>
+            <param required="false" name="protocol" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The protocol
+                    that is matched by the security group rule. Valid
+                    values are null, tcp, udp, and icmp.</wadl:doc>
+            </param>
+            <param required="false" name="remote_group_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The remote
+                    group ID to be associated with this security group
+                    rule. You can specify either remote_group_id or
+                    remote_ip_prefix in the request body.</wadl:doc>
+            </param>
+            <param required="false" name="remote_ip_prefix"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The remote
+                    IP prefix to be associated with this security
+                    group rule. You can specify either remote_group_id
+                    or remote_ip_prefix in the request body. This
+                    attribute matches the specified IP prefix as the
+                    source IP address of the IP packet.</wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-create-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201">
+            <param name="security_group" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"
+                        ><para>Security group
+                    object.</para></wadl:doc>
+            </param>
+            <param name="description" type="xsd:string"
+                required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group description.</para></wadl:doc>
+            </param>
+            <param name="id" type="csapi:uuid" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        UUID for the security group.</para></wadl:doc>
+            </param>
+            <param name="name" type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook"><para>The
+                        security group name.</para></wadl:doc>
+            </param> &securityGroupRule; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/security-groups-create-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="400"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:badRequest"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="409"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:buildInProgress"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="GET" id="getSecGroupRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show security group rule">
+            <para role="shortdesc">Shows detailed information for a
+                specified security group rule.</para>
+            <para>The response body contains the following information
+                about the security group rule:</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-get-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &securityGroupRule; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteSecGroupRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete security group rule">
+            <para role="shortdesc">Deletes a specified rule from a
+                OpenStack Networking security group.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-delete-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="204">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-delete-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+</application>
