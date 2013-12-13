@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
+	xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0">
+    <resources base="https://servers.api.openstack.com">
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenantID" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The ID for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
+                </param>
+                <resource id="Flavors" path="flavors">
+                    <resource path="{flavor_id}" id="flavor_id">
+                        <param name="flavor_id" style="template" type="csapi:uuid" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The ID of the flavor of interest
+                                   to you.</para></wadl:doc>
+                        </param>
+                        <method href="#getFlavor-flvdisabled"/>
+                    </resource>
+                    <resource path="detail" id="detail">
+                        <method href="#getFlavorsDetails-flvdisabled"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="getFlavor-flvdisabled">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get flavor disabled status details">
+            <para role="shortdesc">Gets details for a specified
+                flavor. Includes the <literal>OS-FLV-DISABLED:disabled</literal> attribute.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-FLV-DISABLED/flavor-show-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-FLV-DISABLED/flavor-show-get-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getFlavorsDetails-flvdisabled">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List flavors with flavor disabled status">
+            <para role="shortdesc">Lists available flavors. Includes
+                the <literal>OS-FLV-DISABLED:disabled</literal> attribute.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-FLV-DISABLED/flavor-detail-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/OS-FLV-DISABLED/flavor-detail-get-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
