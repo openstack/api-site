@@ -13,21 +13,18 @@
 ]>
 
 <application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
-    xmlns:OS-KSADM="http://docs.openstack.org/identity/api/ext/OS-KSADM/v1.0"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xsi:schemaLocation="http://docs.openstack.org/identity/api/v2.0 ../xsd/api.xsd
-        http://docs.openstack.org/common/api/v1.0 ../xsd/api-common.xsd
-        http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
-        http://docs.openstack.org/identity/api/ext/OS-KSADM/v1.0 ../xsd/OS-KSADM.xsd
-        ">
+    xmlns:csapi="http://docs.openstack.org/identity/api/v2.0"
+   >
 
     <grammars>
-        <include href="../xsd/api.xsd"/>
+        <!--<include href="../xsd/api.xsd"/>-->
+
         <include href="../xsd/api-common.xsd"/>
         <include href="../xsd/OS-KSADM.xsd"/>
     </grammars>
@@ -52,8 +49,9 @@
                         required="true" type="xsd:string">
                         <wadl:doc
                             xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The user
-                            ID.</para></wadl:doc>
+                            xml:lang="EN"><para>The ID of the user for
+                                which you want to perform the
+                                request.</para></wadl:doc>
                     </param>
                     <method href="#updateUser"/>
                     <method href="#deleteUser"/>
@@ -65,17 +63,33 @@
                                 xml:lang="EN"><para>The service
                                    ID.</para></wadl:doc>
                         </param>
+                        <param name="marker" style="query"
+                            required="false" type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The ID of the last
+                                   item in the previous
+                                list.</para></wadl:doc>
+                        </param>
+                        <param name="limit" style="query"
+                            required="false" type="xsd:int">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The page
+                                   size.</para></wadl:doc>
+                        </param>
                         <method href="#listUserRoles"/>
                         <resource id="user-roles-OS-KSADM"
                             path="OS-KSADM">
                             <resource id="userRoleById"
                                 path="{roleId}">
                                 <param name="roleId" style="template"
-                                   type="xsd:string">
+                                   type="xsd:int">
                                    <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The role
-                                   ID.</para></wadl:doc>
+                                   xml:lang="EN"><para>The ID of the
+                                   role that you want to add or
+                                   delete.</para></wadl:doc>
                                 </param>
                                 <method href="#addUserRole"/>
                                 <method href="#deleteUserRole"/>
@@ -94,7 +108,7 @@
                                 path="{credential-type}">
                                 <param name="credentialType"
                                    style="template"
-                                   type="OS-KSADM:extensibleCredentialsType"
+                                   type="extensibleCredentialsType"
                                    required="true">
                                    <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
@@ -346,7 +360,7 @@
     <method name="GET" id="listUsersForTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List Users for a Tenant">
-            <para role="shortdesc">Lists all the users for a
+            <para role="shortdesc">Lists all users for a
                 tenant.</para>
         </wadl:doc>
         <response status="200 203">
@@ -406,23 +420,14 @@
         <wadl:doc xml:lang="EN" title="Add User"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Adds a user.</para>
-            <table rules="all">
-                <caption>Add User Request Attributes</caption>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>user</td>
-                        <td>string</td>
-                        <td>Required. The user name.</td></tr>
-                </tbody></table>
         </wadl:doc>
         <request>
+            <param name="user" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The user
+                    name.</para></wadl:doc>
+            </param>
             <representation mediaType="application/xml"
                 element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -431,10 +436,9 @@
                         href="../OS-KSADM/samples/userwithoutid.xml"/>
                 </wadl:doc>
                 <param name="user" style="plain" path="/identity:user"
-                    type="OS-KSADM:UserForCreate">
+                    type="UserForCreate">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">The name for the
-                        user.</wadl:doc>
+                        xml:lang="EN">The user name.</wadl:doc>
                 </param>
             </representation>
             <representation mediaType="application/json">
@@ -532,7 +536,7 @@
                     />
                 </wadl:doc>
                 <param name="user" style="plain" path="/identity:user"
-                    type="OS-KSADM:UserWithOnlyEnabled">
+                    type="UserWithOnlyEnabled">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">The user name.</wadl:doc>
                 </param>
@@ -564,29 +568,32 @@
     <!-- User Roles -->
     <method name="GET" id="listUserRoles">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Global Roles for User">
+            title="List global roles for user">
             <para role="shortdesc">Lists global roles for a specified
                 user.</para>
         </wadl:doc>
         <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../OS-KSADM/samples/user-role-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/xml"
                 element="identity:roles">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/roles.xml"/>
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/roles.json"
+                    <xsdxt:code
+                        href="../OS-KSADM/samples/user-role-list-resp.xml"
                     />
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
     <method name="PUT" id="addUserRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Global Role to User">
+            title="Add global role to user">
             <para role="shortdesc">Adds a specific global role to a
                 user.</para>
         </wadl:doc>
@@ -750,6 +757,15 @@
             <para role="shortdesc">Lists roles.</para>
         </wadl:doc>
         <response status="200 203">
+            <param name="roles" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Role object.</para></wadl:doc>
+            </param> &roleResponse; <param name="roles_links"
+                style="plain" required="true" type="xsd:dict">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Role links.</para></wadl:doc>
+            </param>
             <representation mediaType="application/xml"
                 element="identity:roles">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -805,15 +821,13 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
-
     <method name="GET" id="getRoleByName">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Role by Name">
+            title="Get role information by name">
             <para role="shortdesc">Gets a role by name.</para>
         </wadl:doc>
-
-        <response status="200 203">
-            <param name="Location" type="xsd:anyURI" style="header">
+        <response status="200 203"> &roleResponse; <param
+                name="Location" type="xsd:anyURI" style="header">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">The location.</wadl:doc>
             </param>
@@ -834,11 +848,12 @@
 
     <method name="GET" id="getRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Role">
-            <para role="shortdesc">Gets a role.</para>
+            title="Get role information">
+            <para role="shortdesc">Gets information for a specified
+                role.</para>
         </wadl:doc>
-        <response status="200 203">
-            <param name="Location" type="xsd:anyURI" style="header">
+        <response status="200 203"> &roleResponse; <param
+                name="Location" type="xsd:anyURI" style="header">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">The location.</wadl:doc>
             </param>
@@ -873,7 +888,7 @@
 
         <response status="200 203">
             <representation mediaType="application/xml"
-                element="OS-KSADM:services">
+                element="services">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -896,7 +911,7 @@
 
         <response status="200 203">
             <representation mediaType="application/xml"
-                element="OS-KSADM:service">
+                element="service">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/service.xml"
@@ -918,7 +933,7 @@
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/xml"
-                element="OS-KSADM:service">
+                element="service">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/service.xml"
@@ -940,7 +955,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml"
-                element="OS-KSADM:service">
+                element="service">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/service.xml"
@@ -961,7 +976,7 @@
                     xml:lang="EN">The location.</wadl:doc>
             </param>
             <representation mediaType="application/xml"
-                element="OS-KSADM:service">
+                element="service">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/service.xml"
