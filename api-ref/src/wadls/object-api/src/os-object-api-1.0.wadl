@@ -19,6 +19,7 @@
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
     <resources base="https://storage.swiftdrive.com/">
         <resource id="version" path="v1">
@@ -435,8 +436,81 @@
     <method name="GET" id="retrieveobject">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get object data">
-            <para role="shortdesc">Gets data for the specified
+            <para role="shortdesc">Gets data for a specified
                 object.</para>
+            <para>You can perform conditional &GET; requests by using
+                the following HTTP headers in the request:</para>
+            <itemizedlist>
+                <listitem>
+                    <para><literal>If-Match</literal></para>
+                </listitem>
+                <listitem>
+                    <para><literal>If-None-Match</literal></para>
+                </listitem>
+                <listitem>
+                    <para><literal>If-Modified-Since</literal></para>
+                </listitem>
+                <listitem>
+                    <para><literal>If-Unmodified-Since</literal></para>
+                </listitem>
+            </itemizedlist>
+            <para>These headers are documented in <link
+                    xlink:href="http://www.ietf.org/rfc/rfc2616.txt"
+                    >http://www.ietf.org/rfc/rfc2616.txt</link>.</para>
+            <para>You can use the HTTP <code>Range</code> header to
+                fetch portions of data by using one or more range
+                specifications. To specify many ranges, separate the
+                range specifications with a comma.</para>
+            <para>The types of range specifications are:</para>
+            <itemizedlist>
+                <listitem>
+                    <para><emphasis role="bold">Byte range
+                            specification</emphasis>. Use
+                        FIRST_BYTE_OFFSET to specify the start of the
+                        data range, and LAST_BYTE_OFFSET to specify
+                        the end. You can omit the LAST_BYTE_OFFSET and
+                        if you do, the value defaults to the offset of
+                        the last byte of data.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Suffix byte range
+                            specification</emphasis>. Use LENGTH bytes
+                        to specify the length of the data
+                        range.</para>
+                </listitem>
+            </itemizedlist>
+            <para>The following forms of the header specify the
+                following ranges of data:</para>
+            <itemizedlist>
+                <listitem><para><code>Range: bytes=-5</code>. The last
+                        five bytes.</para></listitem>
+                <listitem>
+                    <para><code>Range: bytes=10-15</code>. The five
+                        bytes of data after a 10-byte
+                    offset.</para></listitem><listitem>
+                    <para><code>Range: bytes=10-15,-5</code>. A
+                        multi-part response that contains the last
+                        five bytes and the five bytes of data after a
+                        10-byte offset. The <code>Content-Type</code>
+                        of the response is then
+                            <code>multipart/byteranges</code>.</para></listitem>
+                <listitem>
+                    <para><code>Range: bytes=4-6</code>. Bytes 4 to 6
+                        inclusive.</para></listitem>
+                <listitem>
+                    <para><code>Range: bytes=2-2</code>. Byte 2, the
+                        third byte of the data.</para></listitem>
+                <listitem>
+                    <para><code>Range: bytes=6-</code>. Byte 6 and
+                        after.</para></listitem>
+                <listitem>
+                    <para><code>Range: bytes=1-3,2-5</code>. A
+                        multi-part response that contains bytes 1 to 3
+                        inclusive, and bytes 2 to 5 inclusive. The
+                            <code>Content-Type</code> of the response
+                        is then
+                        <code>multipart/byteranges</code>.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <param name="X-newest" style="header" type="xsd:boolean">
