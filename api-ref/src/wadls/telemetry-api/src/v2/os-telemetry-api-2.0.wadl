@@ -1,396 +1,407 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
-xmlns:wadl="http://wadl.dev.java.net/2009/02"
-xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:Enum="http://docs.rackspacecloud.com/xsd-ext/v1.0">
     <resources base="http://www.example.com">
         <resource path="v2">
             <resource path="alarms">
-                <method href="#listAlarms" />
-                <method href="#createAlarm" />
+                <method href="#listAlarms"/>
+                <method href="#createAlarm"/>
                 <resource path="{alarm_id}">
-                    <method href="#showAlarm" />
-                    <method href="#updateAlarm" />
+                    <method href="#showAlarm"/>
+                    <method href="#updateAlarm"/>
                     <resource path="state">
-                        <method href="#updateAlarmState" />
-                        <method href="#showAlarmState" />
+                        <method href="#updateAlarmState"/>
+                        <method href="#showAlarmState"/>
                     </resource>
                     <resource path="history">
-                        <method href="#showAlarmHistory" />
+                        <method href="#showAlarmHistory"/>
                     </resource>
                 </resource>
             </resource>
             <resource path="meters">
-                <method href="#listMeters" />
+                <method href="#listMeters"/>
                 <resource path="{meter_id}">
-                    <method href="#showMeter" />
-                    <method href="#createMeter" />
+                    <method href="#showMeter"/>
+                    <method href="#createMeter"/>
                     <resource path="statistics">
-                        <method href="#showMeterStatistics" />
+                        <method href="#showMeterStatistics"/>
                     </resource>
                 </resource>
             </resource>
             <resource path="resources">
-                <method href="#listResources" />
+                <method href="#listResources"/>
                 <resource path="{resource_id}">
-                    <method href="#showResource" />
+                    <method href="#showResource"/>
                 </resource>
             </resource>
         </resource>
     </resources>
     <method id="listResources" name="GET">
         <wadl:doc title="List resources" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Retrieve definitions of all of the
-            resources.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists definitions for all
+                resources.</para>
         </wadl:doc>
         <request>
             <param name="q" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
-                    rules for the resources to be returned.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Filter rules for the resources to be
+                        returned.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_resource.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_resource.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_resource.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_resource.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="showResource" name="GET">
-        <wadl:doc title="Show resource" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Retrieve details about one
-            resource.</para>
+        <wadl:doc title="Show resource information" xml:lang="EN"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets details for a specified
+                resource.</para>
         </wadl:doc>
         <request>
             <param name="resource_id" required="false" style="query"
-            type="xsd:string"
-            xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">The UUID
-                    of the resource.</p>
-                </doc>
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The UUID of the resource.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/resource.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/resource.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/resource.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/resource.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="listMeters" name="GET">
         <wadl:doc title="List meters" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Return all known meters, based on
-            the data recorded so far.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists meters, based on the data
+                recorded so far.</para>
         </wadl:doc>
         <request>
             <param name="q" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
-                    rules for the meters to be returned.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Filter rules for the meters to be
+                        returned.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_meter.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_meter.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_meter.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_meter.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="showMeter" name="GET">
         <wadl:doc title="Show meter" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Return samples for the
-            meter.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets samples for a specified
+                meter.</para>
         </wadl:doc>
         <request>
             <param name="q" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
-                    rules for the data to be returned.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Filter rules for the data to be
+                        returned.</para>
+                </wadl:doc>
             </param>
             <param name="limit" required="false" style="query"
-            type="xsd:int" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Maximum
-                    number of samples to return.</p>
-                </doc>
+                type="xsd:int">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Maximum number of samples to return.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_sample.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_sample.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="createMeter" name="POST">
         <wadl:doc title="Create meter" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Post a list of new Samples to
-            Ceilometer.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Posts list of samples to
+                Telemetry.</para>
         </wadl:doc>
         <request>
             <param name="samples" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">a list of
-                    samples within the request body.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A list of samples within the request
+                        body.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_sample.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_sample.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="showMeterStatistics" name="GET">
         <wadl:doc title="Show meter statistics" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
+            xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Computes the statistics of the
-            samples in the time range given.</para>
+                samples in a specified time range.</para>
         </wadl:doc>
         <request>
             <param name="q" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
-                    rules for the data to be returned.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Filter rules for the data to be
+                        returned.</para>
+                </wadl:doc>
             </param>
             <param name="groupby" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Fields
-                    for group by aggregation</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Fields for group by aggregation</para>
+                </wadl:doc>
             </param>
             <param name="period" required="false" style="query"
-            type="xsd:int" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Returned
-                    result will be an array of statistics for a
-                    period long of that number of seconds.</p>
-                </doc>
+                type="xsd:int">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Returned result will be an array of
+                        statistics for a period long of that number of
+                        seconds.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_statistics.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_statistics.json"
+                    />
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_statistics.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_statistics.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="listAlarms" name="GET">
         <wadl:doc title="List alarms" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Return all alarms, based on the
-            query provided.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists alarms, based on the
+                specified query.</para>
         </wadl:doc>
         <request>
             <param name="q" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
-                    rules for the alarms to be returned.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Filter rules for the alarms to be
+                        returned.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_alarm.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_alarm.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_alarm.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/list_alarm.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="createAlarm" name="POST">
         <wadl:doc title="Create alarm" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Create a new alarm.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Creates an alarm.</para>
         </wadl:doc>
         <request>
             <param name="data" required="false" style="query"
-            type="Alarm" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">a alarm
-                    within the request body.</p>
-                </doc>
+                type="Alarm" xmlns="http://wadl.dev.java.net/2009/02">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>a alarm within the request body.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/alarm.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/alarm.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="showAlarm" name="GET">
         <wadl:doc title="Show alarm" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Return this alarm.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Show information for a specified
+                alarm.</para>
         </wadl:doc>
-        <request />
+        <request/>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/alarm.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/alarm.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="updateAlarm" name="PUT">
         <wadl:doc title="Update alarm" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Modify this alarm.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Updates a specified alarm.</para>
         </wadl:doc>
         <request>
             <param name="data" required="false" style="query"
-            type="Alarm" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">a alarm
-                    within the request body.</p>
-                </doc>
+                type="Alarm" xmlns="http://wadl.dev.java.net/2009/02">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>a alarm within the request body.</para>
+                </wadl:doc>
             </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.json" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/alarm.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
-                xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.xml" />
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/alarm.xml"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method id="showAlarmHistory" name="GET">
         <wadl:doc title="Show alarm history" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Assembles the alarm history
-            requested.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Assembles the history for a
+                specified alarm.</para>
         </wadl:doc>
         <request>
             <param name="q" required="false" style="query"
-            type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">Filter
-                    rules for the changes to be described.</p>
-                </doc>
+                type="xsd:list">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Filter rules for the changes to be
+                        described.</para>
+                </wadl:doc>
             </param>
         </request>
-        <response status="200" />
+        <response status="200"/>
     </method>
     <method id="updateAlarmState" name="PUT">
         <wadl:doc title="Update alarm state" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Set the state of this
-            alarm.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Sets the state of a specified
+                alarm.</para>
         </wadl:doc>
         <request>
             <param name="state" required="false" style="query"
-            type="Enum(ok, alarm, insufficient data)"
-            xmlns="http://wadl.dev.java.net/2009/02">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml">a alarm
-                    state within the request body.</p>
-                </doc>
+                type="xsd:dict">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>An alarm state within the request body.
+                        Valid values are ok, alarm, or insufficient
+                        data.</para>
+                </wadl:doc>
             </param>
         </request>
-        <response status="200" />
+        <response status="200"/>
     </method>
     <method id="showAlarmState" name="GET">
         <wadl:doc title="Show alarm state" xml:lang="EN"
-        xmlns="http://www.w3.org/1999/xhtml">
-            <para role="shortdesc">Get the state of this
-            alarm.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets the state of a specified
+                alarm.</para>
         </wadl:doc>
-        <request />
-        <response status="200" />
+        <request/>
+        <response status="200"/>
     </method>
 </application>
