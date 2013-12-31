@@ -5,43 +5,46 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
 
     <resources base="https://servers.api.openstack.com">
         <resource id="version" type="#VersionDetails" path="v2">
             <resource id="tenant_id" path="{tenant_id}">
-                <param name="tenant_id" style="template">
-                    <doc>
-                        <p xmlns="http://www.w3.org/1999/xhtml"> The
-                            unique identifier of the tenant or
-                            account. </p>
-                    </doc>
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The unique identifier of the tenant or
+                            account.</para>
+                    </wadl:doc>
                 </param>
                 <resource id="os-floating-ips" path="os-floating-ips">
                     <method href="#ListFloatingIPs"/>
                     <method href="#AllocateFloatingIP"/>
                     <resource path="{id}">
-                        <method href="#DetailFloatingIP"/>
-                        <method href="#DeallocateFloatingIP"/>
-
                         <param name="id" style="template"
                             required="true">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > The unique identifier associated
-                                   with allocated floating IP address.
-                                </p></doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The unique
+                                   identifier associated with
+                                   allocated floating IP address.
+                                </para></wadl:doc>
                         </param>
+                        <method href="#DetailFloatingIP"/>
+                        <method href="#DeallocateFloatingIP"/>
                     </resource>
                 </resource>
                 <resource id="Servers" path="servers">
                     <resource path="{server_id}">
                         <param name="server_id" style="template"
                             type="csapi:UUID">
-                            <doc><p
-                                   xmlns="http://www.w3.org/1999/xhtml"
-                                   > The UUID for the server of
-                                   interest to you. </p></doc>
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The UUID for the
+                                   server of interest to
+                                you.</para></wadl:doc>
                         </param>
                         <resource path="action">
                             <method href="#AddFloatingIP"/>
@@ -54,106 +57,115 @@
     </resources>
     <method name="GET" id="ListFloatingIPs">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Floating IPs">
+            title="List floating IPs">
             <para role="shortdesc">Lists floating IP addresses
                 associated with the tenant or account.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-list-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-list-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="POST" id="AllocateFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Allocate Floating IP">
+            title="Allocate floating IP">
             <para role="shortdesc">Allocates a new floating IP address
                 to a tenant or account.</para>
         </wadl:doc>
         <request>
             <param name="pool" style="plain">
-                <doc>
-                    <p xmlns="http://www.w3.org/1999/xhtml"> Pool to
-                        allocate IP address from. Will use default
-                        pool if not specified. </p>
-                </doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Pool to allocate IP address from. Will use
+                        default pool if not specified.</para>
+                </wadl:doc>
             </param>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-create-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-create-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-create-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-create-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
         <response status="400">
-            <doc xml:lang="EN"><p xmlns="http://www.w3.org/1999/xhtml"
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                xml:lang="EN"><p xmlns="http://www.w3.org/1999/xhtml"
                     >If there are no floating IPs available, the
                     extension returns an error code 400 with a message
                     indicating that no more floating IPs are
-                    available.</p></doc>
+                    available.</p></wadl:doc>
         </response>
     </method>
     <method name="GET" id="DetailFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Floating IP Detail">
+            title="Show floating IP information">
             <para role="shortdesc">Shows information for a specified
                 floating IP address.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-get-resp.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-get-resp.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="DELETE" id="DeallocateFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Deallocate Floating IP">
+            title="Deallocate floating IP">
             <para role="shortdesc">Deallocates the floating IP address
                 associated with floating_IP_address_ID.</para>
         </wadl:doc>
@@ -161,48 +173,52 @@
     </method>
     <method name="POST" id="AddFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Floating IP">
+            title="Add floating IP">
             <para role="shortdesc">Adds a floating IP address to an
                 instance.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-add-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-add-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="202"/>
     </method>
     <method name="POST" id="RemoveFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Remove Floating IP">
+            title="Remove floating IP">
             <para role="shortdesc">Removes a floating IP from an
                 instance.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-remove-req.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
-                <doc xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-floating-ips/floating-ips-remove-req.xml"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </request>
         <response status="202"/>
