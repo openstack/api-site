@@ -21,7 +21,8 @@
     xmlns:db="http://docbook.org/ns/docbook"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-    <resources base="https://storage.swiftdrive.com/">
+    <resources base="https://storage.swiftdrive.com/"
+        xml:id="object-v1">
         <resource id="version" path="v1">
             <resource id="account" path="{account}"
                 type="#ContainersList">
@@ -117,26 +118,140 @@
             title="List containers">
             <para role="shortdesc">Lists storage containers, sorted by
                 name.</para>
+            <para>The sort order for the name is based on a <link
+                    xlink:href="http://www.sqlite.org/datatype3.html#collation"
+                    >binary comparison</link>, a single built-in
+                collating sequence that compares string data by using
+                the SQLite memcmp() function, regardless of text
+                encoding. The following list describes the optional
+                query parameters that are supported with this
+                request.</para>
+            <para>At this time, a prefix query parameter is not
+                supported at the account level.</para>
+            <para>A list of containers is returned in the response
+                body, one container per line.</para>
+            <para>The HTTP response status code is a value from 200 to
+                299, inclusive.</para>
+            <para><b>Serialized list output</b></para>
+            <para>If you append the <code>format=xml</code> or
+                    <code>format=json</code> argument to the storage
+                account URL, the service serves extended container
+                information serialized in the specified format. The
+                sample responses are formatted for readability. The
+                following example HTTP request asks for a JSON
+                response, so the response returns an HTTP header and a
+                JSON response.</para>
+            <para><b>Control a large number of containers</b></para>
+            <para>The system returns a maximum of 10,000 container
+                names for each request. To get subsequent container
+                names, you must make another request with the marker
+                parameter. The marker indicates where the last list
+                left off; the system returns container names greater
+                than this marker, up to 10,000 names again. Note that
+                the marker value should be URL-encoded before you send
+                the HTTP request. If 10,000 is more than desired, use
+                the limit parameter. If the number of container names
+                returned equals the specified limit, or 10,000 if no
+                limit is specified, you can assume there are more
+                container names.</para>
+            <para>For example, for a list of five container names, if
+                you specify a limit of two, two items are returned.
+                You can assume there are more container names to list,
+                so make another request with a marker of the last item
+                returned.</para>
+            <para>Again, two items are returned, and there might be
+                more. You now receive a one-item response, which is
+                fewer than than the limit number of container names.
+                This indicates that this is the end of the list. By
+                using end_marker, you can limit the result set to
+                container names less than the specified value.</para>
         </wadl:doc>
         <request>
-            <param name="X-newest" style="header" type="xsd:boolean">
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="limit" style="query" required="false"
+                type="xsd:int">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Set to <literal>True</literal>
-                        in &HEAD; and &GET; requests to have Object
-                        Storage query all replicas to return the most
-                        recent one. If you omit this header, Object
-                        Storage responds faster after it finds one
-                        valid replica. Because setting this header to
-                            <literal>True</literal> is more expensive
-                        for the back-end, use it only when it is
-                        absolutely needed.</para></wadl:doc>
+                    xml:lang="EN"><para>For an integer value
+                            <replaceable>n</replaceable>, limits the
+                        number of results to n
+                    values.</para></wadl:doc>
             </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="marker" style="query" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Given a string value
+                            <replaceable>x</replaceable>, returns
+                        container names greater in value than the
+                        specified marker.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="end_marker" style="query" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Given a string value
+                            <replaceable>x</replaceable>, returns
+                        container names less in value than the
+                        specified marker.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="format" style="query" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Value of the serialized
+                        response format. Either json or
+                    xml.</para></wadl:doc>
+            </param>
+           <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="List containers request: HTTP">
+                    <xsdxt:code
+                        href="samples/listcontainers_httphead.msg"/>
+                </wadl:doc>
+            </representation> -->
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Get container details request: HTTP with JSON">
+                    <xsdxt:code
+                        href="samples/getcontainer_details_httphead.msg"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Get container details request: HTTP with XML">
+                    <xsdxt:code
+                        href="samples/getcontainer_details_httphead_xml.msg"
+                    />
+                </wadl:doc>
+            </representation>
         </request>
         <response status="200">
-            <representation mediaType="application/xml"/>
-            <representation mediaType="application/json" xml:lang="EN">
+            <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                    xml:lang="EN"
+                    title="Get container details response: XML">
+                    <xsdxt:code
+                        href="samples/getcontainer_details_response.xml"
+                    />
+                </wadl:doc>
+            </representation>
+            <!--<representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="List containers response: HTTP">
+                    <xsdxt:code
+                        href="samples/listcontainers_http_response.msg"
+                    />
+                </wadl:doc>
+            </representation>-->
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="List containers response: JSON">
                     <xsdxt:code href="samples/containerlist.json"/>
                 </wadl:doc>
             </representation>
@@ -145,9 +260,21 @@
     <method name="HEAD" id="retrieveaccountmeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get account metadata">
-            <para role="shortdesc">Gets container metadata, such as
-                the number of containers and the total bytes stored in
-                OpenStack Object Storage, for the tenant.</para>
+            <para role="shortdesc">Gets the number of containers and
+                the total bytes that are stored in Object Storage for
+                the tenant.</para>
+            <para>This information is returned in the
+                    <code>X-Account-Container-Count</code> and
+                    <code>X-Account-Bytes-Used</code>custom headers.
+                Because the storage system is designed to store large
+                amounts of data, care should be taken when
+                representing the total bytes response as an integer;
+                when possible, convert it to a 64-bit unsigned integer
+                if your platform supports that primitive type.</para>
+            <para>If the request succeeds, the HTTP return code is
+                from 200 to 299, inclusive. An invalid account or
+                access key returns a 401 (Unauthorized) error
+                code.</para>
         </wadl:doc>
         <request>
             <param name="X-newest" style="header" type="xsd:boolean">
@@ -178,7 +305,7 @@
                     xml:lang="EN"><para>The count of bytes used in
                         total. Stored in header.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -186,6 +313,7 @@
                 </wadl:doc>
             </representation>
         </response>
+        <response status="401"/>
     </method>
     <method name="POST" id="updateaccountmeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -193,7 +321,11 @@
             <para role="shortdesc">Creates or updates account metadata
                 by associating custom metadata headers with the
                 account level URI. These headers must have the format,
-                X-Account-Meta-*.</para>
+                    <code>X-Account-Meta-*</code>.</para>
+            <para>Subsequent requests for the same key/value pair
+                overwrite the previous value.</para>
+            <para>If the request succeeds, the HTTP return code is
+                from 200 to 299, inclusive.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -204,7 +336,7 @@
                         asterisk (*) represents the name of metadata.
                         Stored in header.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -222,9 +354,15 @@
             <para>To delete a metadata header, send an empty value for
                 that particular header, such as for the
                     <code>X-Account-Meta-Book</code> header.</para>
-            <para>No response body is returned. A status code of 2xx
-                (between 200 and 299, inclusive) indicates
-                success.</para>
+            <para>If the tool you use to communicate with Object
+                Storage, such as older versions of cURL, does not
+                support empty headers, send the
+                        <code>X-Remove-Account-Meta-<replaceable>name</replaceable>:</code>
+                <replaceable>arbitrary value</replaceable> header. For
+                example, <code>X-Remove-Account-Meta-Book: x</code>.
+                The arbitrary value is ignored.</para>
+            <para>If the request succeeds, the HTTP return code is
+                from 200 to 299, inclusive.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -241,7 +379,7 @@
                             x</code>. The arbitrary value is
                         ignored.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -266,7 +404,7 @@
                         The asterisk (*) represents the name of
                         metadata. Stored in header.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -319,7 +457,7 @@
                     xml:lang="EN"><para>The count of bytes used in
                         total. (stored in header)</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -345,7 +483,7 @@
                         represents the name of metadata. Stored in
                         header.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -409,18 +547,6 @@
                     xml:lang="EN"><para>Value of the delimiter, that
                         all the object names nested in the container
                         are returned.</para></wadl:doc>
-            </param>
-            <param name="X-newest" style="header" type="xsd:boolean">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Set to <literal>True</literal>
-                        in &HEAD; and &GET; requests to have Object
-                        Storage query all replicas to return the most
-                        recent one. If you omit this header, Object
-                        Storage responds faster after it finds one
-                        valid replica. Because setting this header to
-                            <literal>True</literal> is more expensive
-                        for the back-end, use it only when it is
-                        absolutely needed.</para></wadl:doc>
             </param>
         </request>
         <response status="200">
@@ -527,7 +653,7 @@
             </param>
         </request>
         <response status="200">
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/getobj_http.msg"/>
@@ -556,17 +682,16 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The new browser behavior for
                         the file, so that the downloader can save the
-                        file rather than displaying it by using
-                        default browser settings. Stored in
-                        header.</para></wadl:doc>
+                        file rather than displaying it using default
+                        browser settings. Stored in
+                    header.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="Content-Encoding" style="header"
                 required="false" type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The underlying media type of
-                        the compressed file. Stored in
-                    header.</para></wadl:doc>
+                        the compressed file.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="X-Delete-At" style="header" required="false"
@@ -574,8 +699,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The certain date, in the
                         format of a Unix Epoch timestamp, when the
-                        object is removed. Stored in
-                    header.</para></wadl:doc>
+                        object will be removed.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="X-Delete-After" style="header" required="false"
@@ -583,7 +707,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The certain date, in the
                         format of a Unix Epoch timestamp, after which
-                        the object is removed. Stored in
+                        the object will be removed. Stored in
                         header.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -594,7 +718,7 @@
                         represents the name of metadata. Stored in
                         header.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/createobj_http.msg"/>
@@ -615,9 +739,9 @@
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The container and object name
-                        of the <emphasis role="bold">source</emphasis>
-                        object in the form of “/container/object”.
-                        Stored in header.</para></wadl:doc>
+                        of the <b>source</b> object in the form of
+                        “/container/object”. Stored in
+                    header.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="Content-Length" style="header" required="true"
@@ -627,7 +751,7 @@
                         zero under this situation. Stored in
                         header.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/copyobj_httphead.msg"/>
@@ -649,12 +773,10 @@
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The container and object name
-                        of the <emphasis role="bold"
-                            >destination</emphasis> object in the form
-                        of “/container/object”. (stored in
-                        header)</para></wadl:doc>
+                        of the destination object in the form of
+                            <code>“/container/object”</code>.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/copyobj_httphead.msg"/>
@@ -684,7 +806,7 @@
             </param>
         </request>
         <response status="200">
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/getobjmeta_httphead.msg"
@@ -709,8 +831,7 @@
                 type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The container metadata. *
-                        represents the name of metadata. Stored in
-                        header.</para></wadl:doc>
+                        represents the name of metadata.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="X-Delete-At" style="header" required="false"
@@ -718,19 +839,17 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The certain date, in the
                         format of a Unix Epoch timestamp, when the
-                        object will be removed. Stored in
-                        header.</para></wadl:doc>
+                        object will be removed.</para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="X-Delete-After" style="header" required="false"
                 type="xsd:int">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The certain date, in the
-                        format of a UNIX Epoch timestamp, after which
-                        the object is removed. Stored in
-                        header.</para></wadl:doc>
+                        format of a Unix Epoch timestamp, after which
+                        the object is removed.</para></wadl:doc>
             </param>
-            <representation mediaType="application/http">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
