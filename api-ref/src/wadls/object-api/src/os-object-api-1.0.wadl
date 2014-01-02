@@ -437,7 +437,7 @@
     </method>
     <method name="POST" id="updateacontainermeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create or update account metadata">
+            title="Create or update container metadata">
             <para role="shortdesc">Creates or updates the arbitrary
                 container metadata by associating custom metadata
                 headers with the container level URI. These headers
@@ -464,6 +464,43 @@
         </request>
         <response status="204"> </response>
     </method>
+    <method name="POST" id="deletcontainermeta">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete container metadata">
+            <para role="shortdesc">Deletes container metadata</para>
+            <para>To delete container metadata, send an empty value
+                for that particular header, such as for the
+                    <code>X-Container-Meta-Book</code> header. If the
+                tool you use to communicate with Object Storage, such
+                as older versions of cURL, does not support empty
+                headers, send the
+                        <code>X-Remove-Container-Meta-<replaceable>name</replaceable>:
+                        <replaceable>arbitrary
+                    value</replaceable></code> header. For example,
+                    <code>X-Remove-Container-Meta-Book: x</code>. The
+                arbitrary value is ignored.</para>
+        </wadl:doc>
+        <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="X-Remove-Container-Meta-name" style="header"
+                required="false" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The account metadata to
+                        remove. The <replaceable>name</replaceable>
+                        represents the name of metadata that you want
+                        to remove.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deletecontainermeta_httphead.msg"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="204"> </response>
+    </method>
     <method name="POST" id="deleteaaccountmeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete account metadata">
@@ -473,7 +510,8 @@
                     <code>X-Account-Meta-Book</code> header. If the
                 tool you use to communicate with Object Storage, such
                 as older versions of cURL, does not support empty
-                headers, send the <code>X-Remove-Account-Meta-name:
+                headers, send the
+                        <code>X-Remove-Account-Meta-<replaceable>name</replaceable>:
                         <replaceable>arbitrary
                     value</replaceable></code> header. For example,
                     <code>X-Remove-Account-Meta-Book: x</code>. The
