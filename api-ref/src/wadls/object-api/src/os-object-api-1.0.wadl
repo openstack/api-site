@@ -31,7 +31,7 @@
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The unique identifier of the
+                        <para>The unique identifier for the
                             tenant.</para></wadl:doc>
                 </param>
                 <method href="#retrieveaccountmeta"/>
@@ -51,6 +51,7 @@
                     <method href="#deletecontainer"/>
                     <method href="#retrievecontainermeta"/>
                     <method href="#updateacontainermeta"/>
+                    <method href="#deleteacontainermeta"/>
                     <resource id="object" path="{object}"
                         type="#RetrieveObject">
                         <param name="object" style="template"
@@ -221,14 +222,16 @@
             <para role="shortdesc">Gets the number of containers and
                 the total bytes that are stored in Object Storage for
                 the tenant.</para>
-            <para>This information is returned in the
-                    <code>X-Account-Container-Count</code> and
-                    <code>X-Account-Bytes-Used</code>custom headers.
-                Because the storage system is designed to store large
-                amounts of data, care should be taken when
-                representing the total bytes response as an integer;
-                when possible, convert it to a 64-bit unsigned integer
-                if your platform supports that primitive type.</para>
+            <para>Returns the number of containers in the
+                    <code>X-Account-Container-Count</code> header and
+                the total number of bytes that are stored in Object
+                Storage for the tenant in the
+                    <code>X-Account-Bytes-Used</code> header. Because
+                the storage system can store large amounts of data,
+                take care when you represent the total bytes response
+                as an integer; when possible, convert it to a 64-bit
+                unsigned integer if your platform supports that
+                primitive type.</para>
             <para>If the request succeeds, the HTTP return code is
                 from 200 to 299, inclusive. An invalid account or
                 access key returns a 401 (Unauthorized) error
@@ -254,18 +257,20 @@
                 required="true" type="xsd:int">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The number of containers.
-</para></wadl:doc>
+                    </para></wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                 name="X-Account-Bytes-Used" style="header"
                 required="true" type="xsd:int">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The count of bytes used in
-                        total.</para></wadl:doc>
+                    xml:lang="EN"><para>The total number of bytes that
+                        are stored in Object Storage for the
+                        tenant.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                    xml:lang="EN"
+                    title="Get account metadata response: HTTP">
                     <xsdxt:code
                         href="samples/getaccountmeta_httphead.msg"/>
                 </wadl:doc>
@@ -276,10 +281,13 @@
     <method name="POST" id="updateaccountmeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create or update account metadata">
-            <para role="shortdesc">Creates or updates account metadata
-                by associating custom metadata headers with the
-                account level URI. These headers must have the format,
-                <code>X-Account-Meta-<replaceable>name</replaceable></code>.</para>
+            <para role="shortdesc">Creates or updates account
+                metadata,</para>
+            <para>You can associate custom metadata headers with the
+                account level URI. To create or update an account
+                metadata header, submit a &POST; request. These
+                headers must have the format,
+                        <code>X-Account-Meta-<replaceable>name</replaceable></code>.</para>
             <para>Subsequent requests for the same key/value pair
                 overwrite the previous value.</para>
             <para>If the request succeeds, the HTTP return code is
@@ -287,11 +295,12 @@
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Account-Meta-name" style="header" required="false"
-                type="xsd:string">
+                name="X-Account-Meta-name" style="header"
+                required="false" type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"><para>The account metadata. The
-                        <replaceable>name</replaceable> represents the name of metadata.</para></wadl:doc>
+                            <replaceable>name</replaceable> represents
+                        the name of metadata.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -307,7 +316,7 @@
     <method name="POST" id="deleteaccountmeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete account metadata">
-            <para role="shortdesc">Deletes a metadata header.</para>
+            <para role="shortdesc">Deletes account metadata.</para>
             <para>To delete a metadata header, send an empty value for
                 that particular header, such as for the
                     <code>X-Account-Meta-Book</code> header.</para>
@@ -318,6 +327,8 @@
                 <replaceable>arbitrary value</replaceable> header. For
                 example, <code>X-Remove-Account-Meta-Book: x</code>.
                 The arbitrary value is ignored.</para>
+            <para>This operation does not accept a request
+                body.</para>
             <para>If the request succeeds, the HTTP return code is
                 from 200 to 299, inclusive.</para>
         </wadl:doc>
@@ -338,7 +349,8 @@
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                    xml:lang="EN"
+                    title="Delete account metadata request: HTTP">
                     <xsdxt:code
                         href="samples/deleteaccountmeta_httphead.msg"
                     />
@@ -425,26 +437,63 @@
     </method>
     <method name="POST" id="updateacontainermeta">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create or update container metadata">
+            title="Create or update account metadata">
             <para role="shortdesc">Creates or updates the arbitrary
                 container metadata by associating custom metadata
                 headers with the container level URI. These headers
-                must have the format, X-Container-Meta-*.</para>
+                must have the format,
+                        <code>X-Container-Meta-<replaceable>name</replaceable></code>.</para>
         </wadl:doc>
         <request>
             <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Container-Meta" style="header"
+                name="X-Container-Meta-name" style="header"
                 required="false" type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The container metadata. *
-                        represents the name of
-                    metadata.</para></wadl:doc>
+                    xml:lang="EN"><para>The container metadata. The
+                            <replaceable>name</replaceable> represents
+                        the name of metadata.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="samples/updatecontainermeta_httphead.msg"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="204"> </response>
+    </method>
+    <method name="POST" id="deleteaaccountmeta">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete account metadata">
+            <para role="shortdesc">Deletes account metadata</para>
+            <para>To delete a metadata header, send an empty value for
+                that particular header, such as for the
+                    <code>X-Account-Meta-Book</code> header. If the
+                tool you use to communicate with Object Storage, such
+                as older versions of cURL, does not support empty
+                headers, send the <code>X-Remove-Account-Meta-name:
+                        <replaceable>arbitrary
+                    value</replaceable></code> header. For example,
+                    <code>X-Remove-Account-Meta-Book: x</code>. The
+                arbitrary value is ignored.</para>
+        </wadl:doc>
+        <request>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="X-Remove-Account-Meta-name" style="header"
+                required="false" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The account metadata to
+                        remove. The <replaceable>name</replaceable>
+                        represents the name of metadata that you want
+                        to remove.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deleteaccountmeta_httphead.msg"
                     />
                 </wadl:doc>
             </representation>
