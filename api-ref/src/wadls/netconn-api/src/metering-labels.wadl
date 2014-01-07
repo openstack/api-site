@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+
+<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://www.w3.org/2001/XMLSchema"
+    xmlns:metering="http://docs.openstack.org/neutron/api/v2.0">
+    <grammars>
+        <include href="../xsd/metering.xsd"/>
+    </grammars>
+    <resources base="https://servers.api.openstack.com/">
+        <resource id="version">
+            <resource id="metering_labels" path="metering-labels">
+                <method href="#listMeteringLabels"/>
+                <method href="#createMeteringLabel"/>
+                <resource id="get_metering_label"
+                    path="{metering_label_id}">
+                    <param name="metering_label_id" style="template"
+                        type="csapi:uuid">
+                        <doc><p xmlns="http://www.w3.org/1999/xhtml">
+                                The unique identifier of the metering
+                                label. </p></doc>
+                    </param>
+                    <method href="#getMeteringLabel"/>
+                    <method href="#deleteMeteringLabel"/>
+                </resource>
+            </resource>
+            <resource id="metering_label_rules"
+                path="metering-label-rules">
+                <method href="#listMeteringLabelRules"/>
+                <method href="#createMeteringLabelRule"/>
+                <resource path="{metering-label-rule-id}">
+                    <param name="metering-label-rule-id"
+                        style="template" type="csapi:uuid">
+                        <doc><p xmlns="http://www.w3.org/1999/xhtml">
+                                The unique identifier of metering label rule.
+                                </p></doc>
+                    </param>
+                    <method href="#getMeteringLabelRule"/>
+                    <method href="#deleteMeteringLabelRule"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="listMeteringLabels">
+        <wadl:doc xml:lang="EN" title="List Metering Labels"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists a summary of all
+                l3 metering labels belonging to the specified
+                tenant.</para>
+            <para>The list includes the unique ID for each metering
+                labels.</para>
+            <para>This operation does not require a request
+                body.</para>
+            <para>This operation returns a response body.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN"><xsdxt:code
+                        href="../samples/metering-labels-list-get-req.json"
+                    /></doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-labels-list-get-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="POST" id="createMeteringLabel">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create Metering Label">
+            <para role="shortdesc">Creates a l3 metering label.
+                </para>
+            <para>This operation requires a request body.</para>
+            <para>The following table describes the required and
+                optional attributes in the request body:</para>
+            <table width="75%" rules="all"><caption>Create Metering Label
+                    Rule Request Attributes</caption>
+                <thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><para>name</para></td>
+                        <td><para>Required</para></td>
+                        <td><para>The name of the metering label.
+                                </para></td></tr>
+                    <tr><td><para>description</para></td>
+                        <td><para>Optional</para></td><td><para>
+                                Description for the metering label.
+                                </para></td></tr>
+                </tbody></table>
+            <para>This operation returns a response body, which
+                contains the following informations about the metering label:
+                </para>
+            <itemizedlist><listitem><para><code>name</code>.
+                        Name of the metering label.</para></listitem>
+                <listitem><para><code>description</code>. Description of
+                        the metering label.</para></listitem>
+                <listitem><para><code>tenant_id</code>. The tenant ID for the
+                        specified metering label.
+                        </para></listitem>
+                        <listitem><para><code>id</code>. The metering label ID
+                        </para></listitem>
+                </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-create-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-create-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:badRequest"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="GET" id="getMeteringLabel">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show Metering Label">
+            <para role="shortdesc">Shows informations for a specified
+                metering label.</para>
+            <para>This operation does not require a request
+                body.</para>
+            <para>This operation returns a response body that contains
+                the description, name, ID.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-get-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-get-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteMeteringLabel">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Metering Label">
+            <para role="shortdesc">Deletes a l3 metering label.
+                </para>
+            <para>This operation deletes a l3 metering label.
+                </para>
+            <para>This operation does not require a request body. This
+                operation does not return a response body.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-delete-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="204">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-delete-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="GET" id="listMeteringLabelRules">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List Metering Label Rules">
+            <para role="shortdesc">Lists a summary of all
+                l3 metering label rules belonging to the specified
+                tenant.</para>
+            <para>The list provides the unique ID for each metering
+                label rule.</para>
+            <para>This operation does not require a request body. This
+                operation returns a response body.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rules-list-get-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rules-list-get-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="POST" id="createMeteringLabelRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create Metering Label Rule">
+            <para role="shortdesc">Creates a l3 metering label rule.
+                </para>
+            <para>This operation requires a request body.</para>
+            <para>The following table describes the required and
+                optional attributes in the request body:</para>
+            <table width="75%" rules="all"><caption>Create Metering Label
+                    Rule Request Attributes</caption>
+                <thead><tr><th>Attribute</th><th>Required</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><para>direction</para></td>
+                        <td><para>Optional</para></td>
+                        <td><para>Ingress or egress: The direction in
+                                which metering rule is
+                                applied. Default: ingress
+                                </para></td></tr>
+                    <tr><td><para>metering_label_id</para></td>
+                        <td><para>Required</para></td>
+                        <td><para>The meteting label ID to associate
+                                with this metering rule.
+                            </para></td></tr>
+                    <tr><td><para>excluded</para></td>
+                        <td><para>Optional</para></td><td><para>
+                                Specify whether the remote_ip_prefix will be
+                                excluded or not from traffic counters of the metering
+                                label, ie: to not count the traffic of a
+                                specific IP address of a range. Default: False
+                                </para></td></tr>
+                    <tr><td><para>remote_ip_prefix</para></td>
+                        <td><para>Required</para></td><td><para>The
+                                remote IP prefix to be associated with
+                                this metering rule.
+                    packet.</para></td></tr></tbody></table>
+            <para>This operation returns a response body.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rule-create-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rule-create-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="400"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:badRequest"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="409"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:buildInProgress"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="GET" id="getMeteringLabelRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show Metering Label Rule">
+            <para role="shortdesc">Shows detailed informations for a
+                specified metering label rule.</para>
+            <para>This operation does not require a request
+                body.</para>
+            <para>This operation returns a response body, which
+                contains the following informations about the metering label
+                rule:</para>
+            <itemizedlist><listitem><para><code>direction</code>.
+                        Either ingress or egress.</para></listitem>
+                <listitem><para><code>excluded</code>. Either True or
+                        False.</para></listitem>
+                <listitem><para>The ID for the specified metering label
+                        rule</para></listitem>
+                <listitem><para>The remote IP prefix</para></listitem>
+                <listitem><para>The metering label ID for the metering label
+                        with which the rule is associated</para></listitem>
+                </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rule-get-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rule-get-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteMeteringLabelRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete Metering Label Rule">
+            <para role="shortdesc">Deletes a specified l3 metering label rule.
+                </para>
+            <para>This operation does not require a request
+                body.</para>
+            <para>This operation does not return a response body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rule-delete-req.json"
+                    />
+                </doc>
+            </representation>
+        </request>
+        <response status="204">
+            <representation mediaType="application/json">
+                <doc xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/metering-label-rule-delete-resp.json"
+                    />
+                </doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+        <response status="404"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="metering:itemNotFound"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+</application>
