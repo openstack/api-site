@@ -1,72 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE application [
-<!-- Some useful entities borrowed from HTML -->
-<!ENTITY ndash  "&#x2013;">
-<!ENTITY mdash  "&#x2014;">
-<!ENTITY hellip "&#x2026;">
-<!ENTITY asterisk "&#42;">
-
-<!-- Useful for describing APIs -->
-<!ENTITY COPY   '<command xmlns="http://docbook.org/ns/docbook">COPY</command>'>
-<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
-<!ENTITY HEAD   '<command xmlns="http://docbook.org/ns/docbook">HEAD</command>'>
-<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
-<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
-<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
-]>
-<!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
     <resources base="https://storage.swiftdrive.com/"
         xml:id="object-v1">
         <resource id="version" path="v1">
             <resource id="account" path="{account}"
-                type="#ContainersList">
+                type="#AccountDetails">
                 <param name="account" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The unique identifier for the
+                        <para>The unique name for the account. An
+                            account is also known as the project or
                             tenant.</para></wadl:doc>
                 </param>
-                <method href="#retrieveaccountmeta"/>
-                <method href="#updateaccountmeta"/>
-                <method href="#deleteaccountmeta"/>
+                <method href="#showAccountMeta"/>
+                <method href="#updateAccountMeta"/>
                 <resource id="container" path="{container}"
-                    type="#ObjectsList">
+                    type="#ContainerDetails">
                     <param name="container" style="template"
                         type="xsd:string">
                         <wadl:doc
                             xmlns="http://docbook.org/ns/docbook"
                             xml:lang="EN">
-                            <para>The unique identifier of the
+                            <para>The unique name for the
                                 container.</para></wadl:doc>
                     </param>
-                    <method href="#createcontainer"/>
-                    <method href="#deletecontainer"/>
-                    <method href="#retrievecontainermeta"/>
-                    <method href="#updateacontainermeta"/>
-                    <method href="#deleteacontainermeta"/>
+                    <method href="#createContainer"/>
+                    <method href="#deleteContainer"/>
+                    <method href="#updateContainerMeta"/>
+                    <method href="#showContainerMeta"/>
                     <resource id="object" path="{object}"
-                        type="#RetrieveObject">
+                        type="#ObjectDetails">
                         <param name="object" style="template"
                             type="xsd:string">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
-                                <para>The unique identifier of the
+                                <para>The unique name for the
                                    object.</para></wadl:doc>
                         </param>
-                        <method href="#createobject"/>
-                        <method href="#deleteobject"/>
-                        <method href="#copyobject"/>
-                        <method href="#retrieveobjectmeta"/>
-                        <method href="#updateaobjmeta"/>
+                        <method href="#createOrReplaceObject"/>
+                        <method href="#copyObject"/>
+                        <method href="#deleteObject"/>
+                        <method href="#showObjectMeta"/>
+                        <method href="#updateObjectMeta"/>
                     </resource>
                 </resource>
             </resource>
@@ -75,839 +62,1004 @@
     <!--*******************************************************-->
     <!--               Resource Types                          -->
     <!--*******************************************************-->
-    <resource_type id="ContainersList">
-        <method href="#listContainers"/>
+    <resource_type id="AccountDetails">
+        <method href="#showAccountDetails"/>
     </resource_type>
-    <resource_type id="ObjectsList">
-        <method href="#listObjects"/>
+    <resource_type id="ContainerDetails">
+        <method href="#showContainerDetails"/>
     </resource_type>
-    <resource_type id="RetrieveObject">
-        <method href="#retrieveobject"/>
+    <resource_type id="ObjectDetails">
+        <method href="#getObject"/>
     </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-    <method name="GET" id="listContainers">
+    <!--*******************************************************-->
+    <!--               Account-level operations                -->
+    <!--*******************************************************-->
+    <method name="GET" id="showAccountDetails">
+        <!-- Show account details and list containers -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List containers">
-            <para role="shortdesc">Lists storage containers, sorted by
-                name.</para>
+            title="Show account details and list containers">
+            <para role="shortdesc">Shows details for a specified
+                account and lists containers, sorted by name, in the
+                account.</para>
             <para>The sort order for the name is based on a <link
                     xlink:href="http://www.sqlite.org/datatype3.html#collation"
                     >binary comparison</link>, a single built-in
                 collating sequence that compares string data by using
-                the SQLite memcmp() function, regardless of text
-                encoding. The following list describes the optional
-                query parameters that are supported with this
-                request.</para>
-            <para>At this time, a prefix query parameter is not
-                supported at the account level.</para>
-            <para>A list of containers is returned in the response
-                body, one container per line.</para>
-            <para>The HTTP response status code is a value from 200 to
-                299, inclusive.</para>
-            <para><emphasis role="bold">Serialized list
-                    output</emphasis></para>
-            <para>If you append the <code>format=xml</code> or
-                    <code>format=json</code> argument to the storage
-                account URL, the service serves extended container
-                information serialized in the specified format. The
-                sample responses are formatted for readability. The
-                following example HTTP request asks for a JSON
-                response, so the response returns an HTTP header and a
-                JSON response.</para>
-            <para><emphasis role="bold">Control a large number of
-                    containers</emphasis></para>
-            <para>The system returns a maximum of 10,000 container
-                names for each request. To get subsequent container
-                names, you must make another request with the marker
-                parameter. The marker indicates where the last list
-                left off; the system returns container names greater
-                than this marker, up to 10,000 names again. Note that
-                the marker value should be URL-encoded before you send
-                the HTTP request. If 10,000 is more than desired, use
-                the limit parameter. If the number of container names
-                returned equals the specified limit, or 10,000 if no
-                limit is specified, you can assume there are more
-                container names.</para>
-            <para>For example, for a list of five container names, if
-                you specify a limit of two, two items are returned.
-                You can assume there are more container names to list,
-                so make another request with a marker of the last item
-                returned.</para>
-            <para>Again, two items are returned, and there might be
-                more. You now receive a one-item response, which is
-                fewer than than the limit number of container names.
-                This indicates that this is the end of the list. By
-                using end_marker, you can limit the result set to
-                container names less than the specified value.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="limit" style="query" required="false"
-                type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>For an integer value
-                            <replaceable>n</replaceable>, limits the
-                        number of results to
-                            <replaceable>n</replaceable>
-                        values.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="marker" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Given a string value
-                            <replaceable>x</replaceable>, returns
-                        container names greater in value than the
-                        specified marker.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="end_marker" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Given a string value
-                            <replaceable>x</replaceable>, returns
-                        container names less in value than the
-                        specified marker.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="format" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Value of the serialized
-                        response format. Either json or
-                    xml.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"
-                    title="Get container details request: HTTP with JSON">
-                    <xsdxt:code
-                        href="samples/getcontainer_details_httphead.msg"
-                    />
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"
-                    title="Get container details request: HTTP with XML">
-                    <xsdxt:code
-                        href="samples/getcontainer_details_httphead_xml.msg"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"
-                    title="Get container details response: XML">
-                    <xsdxt:code
-                        href="samples/getcontainer_details_response.xml"
-                    />
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"
-                    title="List containers response: JSON">
-                    <xsdxt:code href="samples/containerlist.json"/>
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="HEAD" id="retrieveaccountmeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get account metadata">
-            <para role="shortdesc">Gets the number of containers and
-                the total bytes that are stored in Object Storage for
-                the tenant.</para>
-            <para>Returns the number of containers in the
-                    <code>X-Account-Container-Count</code> header and
-                the total number of bytes that are stored in Object
-                Storage for the tenant in the
-                    <code>X-Account-Bytes-Used</code> header. Because
-                the storage system can store large amounts of data,
-                take care when you represent the total bytes response
-                as an integer; when possible, convert it to a 64-bit
-                unsigned integer if your platform supports that
-                primitive type.</para>
-            <para>If the request succeeds, the HTTP return code is
-                from 200 to 299, inclusive. An invalid account or
-                access key returns a 401 (Unauthorized) error
-                code.</para>
-        </wadl:doc>
-        <request>
-            <param name="X-newest" style="header" type="xsd:boolean">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Set to <literal>True</literal>
-                        in &HEAD; and &GET; requests to have Object
-                        Storage query all replicas to return the most
-                        recent one. If you omit this header, Object
-                        Storage responds faster after it finds one
-                        valid replica. Because setting this header to
-                            <literal>True</literal> is more expensive
-                        for the back-end, use it only when it is
-                        absolutely needed.</para></wadl:doc>
-            </param>
-        </request>
-        <response status="204">
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Account-Container-Count" style="header"
-                required="true" type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The number of containers.
-                    </para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Account-Bytes-Used" style="header"
-                required="true" type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The total number of bytes that
-                        are stored in Object Storage for the
-                        tenant.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"
-                    title="Get account metadata response: HTTP">
-                    <xsdxt:code
-                        href="samples/getaccountmeta_httphead.msg"/>
-                </wadl:doc>
-            </representation>
-        </response>
-        <response status="401"/>
-    </method>
-    <method name="POST" id="updateaccountmeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create or update account metadata">
-            <para role="shortdesc">Creates or updates account
-                metadata,</para>
-            <para>You can associate custom metadata headers with the
-                account level URI. To create or update an account
-                metadata header, submit a &POST; request. These
-                headers must have the format,
-                        <code>X-Account-Meta-<replaceable>name</replaceable></code>.</para>
-            <para>Subsequent requests for the same key/value pair
-                overwrite the previous value.</para>
-            <para>If the request succeeds, the HTTP return code is
-                from 200 to 299, inclusive.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Account-Meta-name" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The account metadata. The
-                            <replaceable>name</replaceable> represents
-                        the name of metadata.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="samples/updateaccountmeta_httphead.msg"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="204"> </response>
-    </method>
-    <method name="POST" id="deleteaccountmeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete account metadata">
-            <para role="shortdesc">Deletes account metadata.</para>
-            <para>To delete a metadata header, send an empty value for
-                that particular header, such as for the
-                    <code>X-Account-Meta-Book</code> header.</para>
-            <para>If the tool you use to communicate with Object
-                Storage, such as older versions of cURL, does not
-                support empty headers, send the
-                        <code>X-Remove-Account-Meta-<replaceable>name</replaceable>:</code>
-                <replaceable>arbitrary value</replaceable> header. For
-                example, <code>X-Remove-Account-Meta-Book: x</code>.
-                The arbitrary value is ignored.</para>
+                the SQLite <literal>memcmp()</literal> function,
+                regardless of text encoding.</para>
             <para>This operation does not accept a request
                 body.</para>
-            <para>If the request succeeds, the HTTP return code is
-                from 200 to 299, inclusive.</para>
+            <para>Example requests and responses:</para><itemizedlist>
+                <listitem><para>Show account details and list
+                        containers, and ask for a JSON
+                        response:</para><para><code>curl -i
+                            $publicURL?format=json -X GET -H
+                            "X-Auth-Token: $token"</code></para>
+                    <para>See the example response
+                    below.</para></listitem>
+                <listitem>
+                    <para>List containers and ask for an XML response:
+                            <code>curl -i $publicURL?format=xml -X GET
+                            -H "X-Auth-Token:
+                        $token"</code></para><para>See the example
+                        response
+                below.</para></listitem></itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>The response body returns a list of containers. The
+                default response (<code>text/plain</code>) returns one
+                container per line.</para>
+            <para>If you use query parameters to page through a long
+                list of containers, you have reached the end of the
+                list if the number of items in the returned list is
+                less than the request <code>limit</code> value. The
+                list contains more items if the number of items in the
+                returned list equals the <code>limit</code>
+                value.</para>
+            <para>If the request succeeds, the operation returns one
+                of these status codes:</para>
+            <itemizedlist>
+                <listitem><para><returnvalue>200</returnvalue>.
+                        Success. The response body lists the
+                        containers.</para></listitem>
+                <listitem><para><returnvalue>204</returnvalue>.
+                        Success. The response body shows no
+                        containers. Either the account has no
+                        containers or you are paging through a long
+                        list of names by using the
+                        <code>marker</code>, <code>limit</code>, or
+                            <code>end_marker</code> query parameters,
+                        and you have reached the end of the
+                        list.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Remove-Account-Meta-name" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>If the tool you use to
-                        communicate with Object Storage, such as older
-                        versions of cURL, does not support empty
-                        headers, send the
-                            <code>X-Remove-Account-Meta-name:
-                            arbitrary value</code> header. For
-                        example, <code>X-Remove-Account-Meta-Book:
-                            x</code>. The arbitrary value is
-                        ignored.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
+        <request> &limit-requestParameter; &marker-requestParameter;
+            &end-marker-requestParameter; &format-requestParameter;
+            &prefix-requestParameter; &delimiter-requestParameter;
+            &auth-token-requestHeader-required; &newest-requestHeader;
+            &accept-requestHeader; </request>
+        <response status="200 204">
+            &content-length-responseHeader-NAMES;
+            &content-type-responseHeader-NAMES;
+            &account-object-count-responseHeader;
+            &account-bytes-used-responseHeader;
+            &account-container-count-responseHeader;
+            &account-meta-name-responseHeader;
+            &account-meta-temp-url-key-responseHeader;
+            &account-meta-temp-url-key-2-responseHeader;
+            &trans-id-responseHeader; &date-responseHeader;
+            &name-responseField; &count-responseField;
+                &bytes-responseField;<representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN"
-                    title="Delete account metadata request: HTTP">
+                    title="List containers response: HTTP and JSON">
                     <xsdxt:code
-                        href="samples/deleteaccountmeta_httphead.msg"
+                        href="samples/account_containers_list_http_response_json.txt"
+                        /><xsdxt:code
+                        href="samples/account_containers_list_response.json"
                     />
                 </wadl:doc>
             </representation>
-        </request>
-        <response status="204"> </response>
-    </method>
-    <method name="PUT" id="createcontainer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create container">
-            <para role="shortdesc">Creates a container.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Container-Meta" style="header"
-                required="false" type="xsd:string">
+            <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The custom container metadata.
-                        The asterisk (*) represents the name of
-                        metadata.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                    xml:lang="EN"
+                    title="List containers response: HTTP and XML">
                     <xsdxt:code
-                        href="samples/createcontainer_httphead.msg"/>
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="201"> </response>
-    </method>
-    <method name="DELETE" id="deletecontainer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete container">
-            <para role="shortdesc">Deletes an empty container.</para>
-        </wadl:doc>
-        <response status="204"> </response>
-    </method>
-    <method name="HEAD" id="retrievecontainermeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get container metadata">
-            <para role="shortdesc">Gets container metadata, including
-                the number of objects and the total bytes of all
-                objects stored in the container.</para>
-        </wadl:doc>
-        <request>
-            <param name="X-newest" style="header" type="xsd:boolean">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Set to <literal>True</literal>
-                        in &HEAD; and &GET; requests to have Object
-                        Storage query all replicas to return the most
-                        recent one. If you omit this header, Object
-                        Storage responds faster after it finds one
-                        valid replica. Because setting this header to
-                            <literal>True</literal> is more expensive
-                        for the back-end, use it only when it is
-                        absolutely needed.</para></wadl:doc>
-            </param>
-        </request>
-        <response status="204">
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Container-Object-Count" style="header"
-                required="true" type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The number of
-                    objects.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Container-Bytes-Used" style="header"
-                required="true" type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The count of bytes used in
-                        total.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                        href="samples/account_containers_list_http_response_xml.txt"/>
                     <xsdxt:code
-                        href="samples/getcontainermeta_httphead.msg"/>
+                        href="samples/account_containers_list_response.xml"
+                    />
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="POST" id="updateacontainermeta">
+    <method name="POST" id="updateAccountMeta">
+        <!-- create, update, delete account metadata -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create or update container metadata">
-            <para role="shortdesc">Creates or updates the arbitrary
-                container metadata by associating custom metadata
-                headers with the container level URI. These headers
-                must have the format,
-                        <code>X-Container-Meta-<replaceable>name</replaceable></code>.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Container-Meta-name" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The container metadata. The
-                            <replaceable>name</replaceable> represents
-                        the name of metadata.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="samples/updatecontainermeta_httphead.msg"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="204"> </response>
-    </method>
-    <method name="POST" id="deletcontainermeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete container metadata">
-            <para role="shortdesc">Deletes container metadata</para>
-            <para>To delete container metadata, send an empty value
-                for that particular header, such as for the
-                    <code>X-Container-Meta-Book</code> header. If the
-                tool you use to communicate with Object Storage, such
-                as older versions of cURL, does not support empty
-                headers, send the
-                        <code>X-Remove-Container-Meta-<replaceable>name</replaceable>:
-                        <replaceable>arbitrary
-                    value</replaceable></code> header. For example,
-                    <code>X-Remove-Container-Meta-Book: x</code>. The
-                arbitrary value is ignored.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Remove-Container-Meta-name" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The account metadata to
-                        remove. The <replaceable>name</replaceable>
-                        represents the name of metadata that you want
-                        to remove.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="samples/deletecontainermeta_httphead.msg"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="204"> </response>
-    </method>
-    <method name="POST" id="deleteaaccountmeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete account metadata">
-            <para role="shortdesc">Deletes account metadata</para>
+            title="Create, update, or delete account metadata">
+            <para role="shortdesc">Creates, updates, or deletes
+                account metadata.</para>
+            <para>To create, update, or delete metadata, use the
+                    <code>X-Account-Meta-{name}</code> header, where
+                    <code>{name}</code> is the name of the metadata
+                item.</para>
+            <para>Subsequent requests for the same key and value pair
+                overwrite the previous value.</para>
             <para>To delete a metadata header, send an empty value for
                 that particular header, such as for the
                     <code>X-Account-Meta-Book</code> header. If the
                 tool you use to communicate with Object Storage, such
-                as older versions of cURL, does not support empty
+                as an older version of cURL, does not support empty
                 headers, send the
-                        <code>X-Remove-Account-Meta-<replaceable>name</replaceable>:
-                        <replaceable>arbitrary
-                    value</replaceable></code> header. For example,
-                    <code>X-Remove-Account-Meta-Book: x</code>. The
-                arbitrary value is ignored.</para>
+                    <code>X-Remove-Account-Meta-{name}</code>:
+                    <replaceable>arbitrary value</replaceable> header.
+                For example, <code>X-Remove-Account-Meta-Book:
+                    x</code>. The operation ignores the arbitrary
+                value.</para>
+            <para>If the container already has other custom metadata
+                items, a request to create, update, or delete metadata
+                does not affect those items.</para>
+            <para>This operation does not accept a request
+                body.</para>
+            <para>Example requests and responses:</para><itemizedlist>
+                <listitem><para>Create account
+                            metadata:</para><para><code>curl -i
+                            $publicURL -X POST -H "X-Auth-Token:
+                            $token" -H "X-Account-Meta-Book: MobyDick"
+                            -H "X-Account-Meta-Subject:
+                            Literature"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx8c2dd6aee35442a4a5646-0052d954fb
+Date: Fri, 17 Jan 2014 16:06:19 GMT</programlisting></para></listitem>
+                <listitem><para>Update account
+                            metadata:</para><para><code>curl -i
+                            $publicURL -X POST -H "X-Auth-Token:
+                            $token" -H "X-Account-Meta-Subject:
+                            AmericanLiterature"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx1439b96137364ab581156-0052d95532
+Date: Fri, 17 Jan 2014 16:07:14 GMT</programlisting></para></listitem>
+                <listitem><para>Delete account
+                            metadata:</para><para><code>curl -i
+                            $publicURL -X POST -H "X-Auth-Token:
+                            $token" -H "X-Remove-Account-Meta-Subject:
+                            x"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx411cf57701424da99948a-0052d9556f
+Date: Fri, 17 Jan 2014 16:08:15 GMT</programlisting></para></listitem>
+            </itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>If the request succeeds, the operation returns the
+                    <returnvalue>204</returnvalue> status code.</para>
+            <para>To confirm your changes, issue a show account
+                metadata request.</para>
         </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Remove-Account-Meta-name" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The account metadata to
-                        remove. The <replaceable>name</replaceable>
-                        represents the name of metadata that you want
-                        to remove.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="samples/deleteaccountmeta_httphead.msg"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="204"> </response>
+        <request> &auth-token-requestHeader-required;
+            &account-meta-temp-url-key-requestHeader;
+            &account-meta-temp-url-key-2-requestHeader;
+            &account-meta-name-requestHeader; </request>
+        <response status="204"> &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP; &trans-id-responseHeader;
+            &date-responseHeader; </response>
     </method>
-    <method name="GET" id="listObjects">
+    <method name="HEAD" id="showAccountMeta">
+        <!-- show account metadata -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List objects">
-            <para role="shortdesc">Lists the objects stored in the
+            title="Show account metadata">
+            <para role="shortdesc">Shows metadata for a specified
+                account.</para>
+            <para>Metadata for the account includes:</para>
+            <itemizedlist>
+                <listitem><para>Number of containers</para></listitem>
+                <listitem><para>Number of objects</para></listitem>
+                <listitem><para>Total number of bytes that are stored
+                        in Object Storage for the
+                    account</para></listitem>
+            </itemizedlist>
+            <para>Because the storage system can store large amounts
+                of data, take care when you represent the total bytes
+                response as an integer; when possible, convert it to a
+                64-bit unsigned integer if your platform supports that
+                primitive type.</para>
+            <para>This operation does not accept a request
+                body.</para>
+            <para>Do not include metadata headers in this
+                request.</para>
+            <para>Show account metadata
+                    request:</para><para><code>curl -i $publicURL -X
+                    HEAD -H "X-Auth-Token: $token"</code></para>
+            <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+X-Account-Object-Count: 1
+X-Account-Meta-Book: MobyDick
+X-Timestamp: 1389453423.35964
+X-Account-Bytes-Used: 14
+X-Account-Container-Count: 2
+Content-Type: text/plain; charset=utf-8
+Accept-Ranges: bytes
+X-Trans-Id: txafb3504870144b8ca40f7-0052d955d4
+Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>If the account or authentication token is not valid,
+                the operation returns the <errorcode>401</errorcode>
+                <errortext>Unauthorized</errortext> error code.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-required;
+            &newest-requestHeader; </request>
+        <response status="204"> &account-object-count-responseHeader;
+            &account-container-count-responseHeader;
+            &account-bytes-used-responseHeader;
+            &account-meta-name-responseHeader;
+            &account-meta-temp-url-key-responseHeader;
+            &account-meta-temp-url-key-2-responseHeader;
+            &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP; &trans-id-responseHeader;
+            &date-responseHeader;</response> &fault401; </method>
+
+    <!--*******************************************************-->
+    <!--               Container-level operations              -->
+    <!--*******************************************************-->
+    <method name="GET" id="showContainerDetails">
+        <!-- show container details -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show container details and list objects">
+            <para role="shortdesc">Shows details for a specified
+                container and lists objects, sorted by name, in the
                 container.</para>
+            <para>Specify query parameters in the request to filter
+                the list and return a subset of object names. Omit
+                query parameters to return the complete list of object
+                names that are stored in the container, up to 10,000
+                names. The 10,000 maximum value is configurable. To
+                view the value for the cluster, issue a &GET;
+                    <code>/info</code> request.</para>
+            <para>Example requests and responses:</para><itemizedlist>
+                <listitem>
+                    <para>Show container details for and list objects
+                        in the <code>marktwain</code> container, and
+                        ask for a JSON
+                            response:</para><para><code>curl -i
+                            $publicURL/marktwain?format=json -X GET -H
+                            "X-Auth-Token: $token"</code></para>
+                </listitem><listitem>
+                    <para>Show container details for and list objects
+                        in the <code>marktwain</code> container, and
+                        ask for an XML
+                            response:</para><para><code>curl -i
+                            $publicURL/marktwain?format=xml -X GET -H
+                            "X-Auth-Token: $token"</code></para>
+                </listitem></itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>If you use query parameters to page through a long
+                list of objects, you have reached the end of the list
+                if the number of items in the returned list is less
+                than the request <code>limit</code> value. The list
+                contains more items if the number of items in the
+                returned list equals the <code>limit</code>
+                value.</para>
+            <para>If the request succeeds, the operation returns one
+                of these status codes:</para>
+            <itemizedlist><listitem><para><returnvalue>200</returnvalue>.
+                        Success. The response body lists the
+                        objects.</para></listitem>
+                <listitem><para><returnvalue>204</returnvalue>.
+                        Success. The response body shows no objects.
+                        Either the container has no objects or you are
+                        paging through a long list of names by using
+                        the <code>marker</code>, <code>limit</code>,
+                        or <code>end_marker</code> query parameters,
+                        and you have reached the end of the
+                        list.</para></listitem></itemizedlist>
+            <para>If the container does not exist, the
+                    <errorcode>404</errorcode>
+                <errortext>Not Found</errortext> error code is
+                returned.</para>
         </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="limit" style="query" required="false"
-                type="xsd:int">
+        <request> &limit-requestParameter; &marker-requestParameter;
+            &end-marker-requestParameter; &prefix-requestParameter;
+            &format-requestParameter; &delimiter-requestParameter;
+            &path-requestParameter;
+            &auth-token-requestHeader-required; &accept-requestHeader; </request>
+        <response status="200 204">
+            &content-length-responseHeader-NAMES;
+            &container-object-count-responseHeader;
+            &accept-ranges-responseHeader;
+            &container-meta-name-responseHeader;
+            &container-bytes-used-responseHeader;
+            &content-type-responseHeader-NAMES;
+            &trans-id-responseHeader; &date-responseHeader;
+            &name-responseField; &hash-responseField;
+            &bytes-responseField; &content-type-responseField;
+            &last-modified-responseField; <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The number limit of
-                        results.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="marker" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Value of the marker, that the
-                        object names greater in value than are
-                        returned.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="end_marker" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Value of the marker, that the
-                        object names less in value than are
-                        returned.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="prefix" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Value of the prefix, which the
-                        returned object names begin
-                    with.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="format" style="query" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Value of the serialized
-                        response format, either json or
-                    xml.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="delimiter" style="query" required="false"
-                type="xsd:char">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Value of the delimiter, that
-                        all the object names nested in the container
-                        are returned.</para></wadl:doc>
-            </param>
-        </request>
-        <response status="200">
-            <representation mediaType="application/xml"/>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/objectlist.json"/>
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="retrieveobject">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get object data">
-            <para role="shortdesc">Gets data for a specified
-                object.</para>
-            <para>You can perform conditional &GET; requests by using
-                the following HTTP headers in the request:</para>
-            <itemizedlist>
-                <listitem>
-                    <para><literal>If-Match</literal></para>
-                </listitem>
-                <listitem>
-                    <para><literal>If-None-Match</literal></para>
-                </listitem>
-                <listitem>
-                    <para><literal>If-Modified-Since</literal></para>
-                </listitem>
-                <listitem>
-                    <para><literal>If-Unmodified-Since</literal></para>
-                </listitem>
-            </itemizedlist>
-            <para>These headers are documented in <link
-                    xlink:href="http://www.ietf.org/rfc/rfc2616.txt"
-                    >http://www.ietf.org/rfc/rfc2616.txt</link>.</para>
-            <para>You can use the HTTP <code>Range</code> header to
-                fetch portions of data by using one or more range
-                specifications. To specify many ranges, separate the
-                range specifications with a comma.</para>
-            <para>The types of range specifications are:</para>
-            <itemizedlist>
-                <listitem>
-                    <para><emphasis role="bold">Byte range
-                            specification</emphasis>. Use
-                        FIRST_BYTE_OFFSET to specify the start of the
-                        data range, and LAST_BYTE_OFFSET to specify
-                        the end. You can omit the LAST_BYTE_OFFSET and
-                        if you do, the value defaults to the offset of
-                        the last byte of data.</para>
-                </listitem>
-                <listitem>
-                    <para><emphasis role="bold">Suffix byte range
-                            specification</emphasis>. Use LENGTH bytes
-                        to specify the length of the data
-                        range.</para>
-                </listitem>
-            </itemizedlist>
-            <para>The following forms of the header specify the
-                following ranges of data:</para>
-            <itemizedlist>
-                <listitem><para><code>Range: bytes=-5</code>. The last
-                        five bytes.</para></listitem>
-                <listitem>
-                    <para><code>Range: bytes=10-15</code>. The five
-                        bytes of data after a 10-byte
-                    offset.</para></listitem><listitem>
-                    <para><code>Range: bytes=10-15,-5</code>. A
-                        multi-part response that contains the last
-                        five bytes and the five bytes of data after a
-                        10-byte offset. The <code>Content-Type</code>
-                        of the response is then
-                            <code>multipart/byteranges</code>.</para></listitem>
-                <listitem>
-                    <para><code>Range: bytes=4-6</code>. Bytes 4 to 6
-                        inclusive.</para></listitem>
-                <listitem>
-                    <para><code>Range: bytes=2-2</code>. Byte 2, the
-                        third byte of the data.</para></listitem>
-                <listitem>
-                    <para><code>Range: bytes=6-</code>. Byte 6 and
-                        after.</para></listitem>
-                <listitem>
-                    <para><code>Range: bytes=1-3,2-5</code>. A
-                        multi-part response that contains bytes 1 to 3
-                        inclusive, and bytes 2 to 5 inclusive. The
-                            <code>Content-Type</code> of the response
-                        is then
-                        <code>multipart/byteranges</code>.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <param name="X-newest" style="header" type="xsd:boolean">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Set to <literal>True</literal>
-                        in &HEAD; and &GET; requests to have Object
-                        Storage query all replicas to return the most
-                        recent one. If you omit this header, Object
-                        Storage responds faster after it finds one
-                        valid replica. Because setting this header to
-                            <literal>True</literal> is more expensive
-                        for the back-end, use it only when it is
-                        absolutely needed.</para></wadl:doc>
-            </param>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/getobj_http.msg"/>
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="PUT" id="createobject">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create or update object">
-            <para role="shortdesc">Creates or updates the content and
-                metadata for a specified object.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="ETag" style="header" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The MD5 checksum of your
-                        object's data.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="Content-Disposition" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The new browser behavior for
-                        the file, so that the downloader can save the
-                        file rather than displaying it using default
-                        browser settings.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="Content-Encoding" style="header"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The underlying media type of
-                        the compressed file.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Delete-At" style="header" required="false"
-                type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The certain date, in the
-                        format of a Unix Epoch timestamp, when the
-                        object will be removed.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Delete-After" style="header" required="false"
-                type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The certain date, in the
-                        format of a Unix Epoch timestamp, after which
-                        the object will be removed.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Object-Meta" style="header" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The custom object metadata. *
-                        represents the name of
-                    metadata.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/createobj_http.msg"/>
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="201"> </response>
-    </method>
-    <method name="PUT" id="putcopiedobject">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Copy object">
-            <para role="shortdesc">Copies an object to another object
-                in the OpenStack Object Storage system.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Copy-From" style="header" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The container and object name
-                        of the <emphasis role="italic"
-                            >source</emphasis> object in the form of
-                            <code>/container/object</code>.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="Content-Length" style="header" required="true"
-                type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The content length, which is
-                        zero under this situation.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/copyobj_httphead.msg"/>
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="201"> </response>
-    </method>
-    <method name="COPY" id="copyobject">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Copy object">
-            <para role="shortdesc">Copies an object to another object
-                with a new name in the Object Storage system.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="Destination" style="header" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The container and object name
-                        of the destination object in the form of
-                            <code>/container/object</code>.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/copyobj_httphead.msg"/>
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="201"> </response>
-    </method>
-    <method name="HEAD" id="retrieveobjectmeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get object metadata">
-            <para role="shortdesc">Gets object metadata and other
-                standard HTTP headers.</para>
-        </wadl:doc>
-        <request>
-            <param name="X-newest" style="header" type="xsd:boolean">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Set to <literal>True</literal>
-                        in &HEAD; and &GET; requests to have Object
-                        Storage query all replicas to return the most
-                        recent one. If you omit this header, Object
-                        Storage responds faster after it finds one
-                        valid replica. Because setting this header to
-                            <literal>True</literal> is more expensive
-                        for the back-end, use it only when it is
-                        absolutely needed.</para></wadl:doc>
-            </param>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/getobjmeta_httphead.msg"
-                    />
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="POST" id="updateaobjmeta">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Update object metadata">
-            <para role="shortdesc">Updates arbitrary key/value
-                metadata. Metadata must be in the format
-                X-Object-Meta-*. You can also assign X-Delete-At or
-                X-Delete-After to expiring objects. You cannot use
-                this operation to change other headers, such as
-                Content-Type.</para>
-        </wadl:doc>
-        <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Object-Meta" style="header" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The container metadata. *
-                        represents the name of
-                    metadata.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Delete-At" style="header" required="false"
-                type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The certain date, in the
-                        format of a Unix Epoch timestamp, when the
-                        object will be removed.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="X-Delete-After" style="header" required="false"
-                type="xsd:int">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The certain date, in the
-                        format of a Unix Epoch timestamp, after which
-                        the object is removed.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                    xml:lang="EN"
+                    title="Show container details response: HTTP and JSON">
                     <xsdxt:code
-                        href="samples/updateobjmeta_httphead.msg"/>
+                        href="samples/object_list_http_response_json.txt"/>
+                    <xsdxt:code
+                        href="samples/object_list_response.json"/>
                 </wadl:doc>
             </representation>
-        </request>
-        <response status="202"> </response>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Show container details response: HTTP and XML">
+                    <xsdxt:code
+                        href="samples/object_list_http_response_xml.txt"/>
+                    <xsdxt:code
+                        href="samples/object_list_response.xml"/>
+                </wadl:doc>
+            </representation>
+        </response> &fault404; </method>
+    <method name="PUT" id="createContainer">
+        <!-- create container -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create container">
+            <para role="shortdesc">Creates a container.</para>
+            <para>You do not need to check if a container already
+                exists before issuing a &PUT; operation because the
+                operation is idempotent: It creates a container or
+                updates an existing container, as appropriate.</para>
+            <para>Example requests and responses:</para><itemizedlist>
+                <listitem><para>Create a container with no metadata:
+                            <code>curl -i $publicURL/steven -X PUT -H
+                            "Content-Length: 0" -H "X-Auth-Token:
+                            $token"</code></para>
+                    <para><programlisting>HTTP/1.1 201 Created
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx7f6b7fa09bc2443a94df0-0052d58b56
+Date: Tue, 14 Jan 2014 19:09:10 GMT</programlisting></para></listitem>
+                <listitem>
+                    <para>Create a container with
+                            metadata:</para><para><code>curl -i
+                            $publicURL/marktwain -X PUT -H
+                            "X-Auth-Token: $token" -H
+                            "X-Container-Meta-Book:
+                        TomSawyer"</code></para>
+                    <para><programlisting>HTTP/1.1 201 Created
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx06021f10fc8642b2901e7-0052d58f37
+Date: Tue, 14 Jan 2014 19:25:43 GMT</programlisting></para></listitem>
+            </itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-required;
+            &container-read-requestHeader;
+            &container-write-requestHeader;
+            &container-sync-to-requestHeader;
+            &container-sync-key-requestHeader;
+            &versions-location-requestHeader;
+            &container-meta-name-requestHeader; </request>
+        <response status="201 204"> &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP; &trans-id-responseHeader;
+            &date-responseHeader; </response>
     </method>
-    <method name="DELETE" id="deleteobject">
+    <method name="POST" id="updateContainerMeta">
+        <!-- create, update, delete container metadata -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create, update, or delete container metadata">
+            <para role="shortdesc">Creates, updates, or deletes custom
+                metadata for a container.</para>
+            <para>To create, update, or delete a custom metadata item,
+                use the <code>X-Container-Meta-{name}</code> header,
+                where <code>{name}</code> is the name of the metadata
+                item.</para>
+            <para>Subsequent requests for the same key and value pair
+                overwrite the previous value.</para>
+            <para>To delete container metadata, send an empty value
+                for that header, such as for the
+                    <code>X-Container-Meta-Book</code> header. If the
+                tool you use to communicate with Object Storage, such
+                as an older version of cURL, does not support empty
+                headers, send the
+                    <code>X-Remove-Container-Meta-{name}</code>:
+                    <replaceable>arbitrary value</replaceable> header.
+                For example, <code>X-Remove-Container-Meta-Book:
+                    x</code>. The operation ignores the arbitrary
+                value.</para>
+            <para>If the container already has other custom metadata
+                items, a request to create, update, or delete metadata
+                does not affect those items.</para>
+            <para>This operation does not accept a request
+                body.</para>
+            <para>Example requests and
+                        responses:</para><itemizedlist><listitem><para>Create
+                        container metadata:</para><para><code>curl -i
+                            $publicURL/marktwain -X POST -H
+                            "X-Auth-Token: $token" -H
+                            "X-Container-Meta-Author: MarkTwain" -H
+                            "X-Container-Meta-Century:
+                            Nineteenth"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx05dbd434c651429193139-0052d82635
+Date: Thu, 16 Jan 2014 18:34:29 GMT</programlisting></para></listitem>
+                <listitem><para>Update container
+                            metadata:</para><para><code>curl -i
+                            $publicURL/marktwain -X POST -H
+                            "X-Auth-Token: $token" -H
+                            "X-Container-Meta-Author:
+                            SamuelClemens"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: txe60c7314bf614bb39dfe4-0052d82653
+Date: Thu, 16 Jan 2014 18:34:59 GMT</programlisting></para></listitem>
+                <listitem><para>Delete container
+                            metadata:</para><para><code>curl -i
+                            $publicURL/marktwain -X POST -H
+                            "X-Auth-Token: $token" -H
+                            "X-Remove-Container-Meta-Century:
+                            x"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx7997e18da2a34a9e84ceb-0052d826d0
+Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting></para>
+                </listitem>
+            </itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>If the request succeeds, the operation returns the
+                    <returnvalue>204</returnvalue> status code.</para>
+            <para>To confirm your changes, issue a show container
+                metadata request.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-required;
+            &container-read-requestHeader;
+            &remove-container-name-requestHeader;
+            &container-write-requestHeader;
+            &container-sync-to-requestHeader;
+            &container-sync-key-requestHeader;
+            &versions-location-requestHeader;
+            &remove-versions-location-requestHeader;
+            &container-meta-name-requestHeader; </request>
+        <response status="204"> &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP; &trans-id-responseHeader;
+            &date-responseHeader; </response>
+    </method>
+    <method name="HEAD" id="showContainerMeta">
+        <!-- show container metadata -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show container metadata">
+            <para role="shortdesc">Shows container metadata, including
+                the number of objects and the total bytes of all
+                objects stored in the container.</para>
+            <para>Show container metadata
+                    request:</para><para><code>curl -i
+                    $publicURL/marktwain -X HEAD -H "X-Auth-Token:
+                    $token"</code></para>
+            <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+X-Container-Object-Count: 1
+Accept-Ranges: bytes
+X-Container-Meta-Book: TomSawyer
+X-Timestamp: 1389727543.65372
+X-Container-Meta-Author: SamuelClemens
+X-Container-Bytes-Used: 14
+Content-Type: text/plain; charset=utf-8
+X-Trans-Id: tx0287b982a268461b9ec14-0052d826e2
+Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting></para>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>If the request succeeds, the operation returns the
+                    <returnvalue>204</returnvalue> status code.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-optional;
+            &newest-requestHeader; </request>
+        <response status="204"> &content-length-responseHeader-OP;
+            &container-object-count-responseHeader;
+            &accept-ranges-responseHeader;
+            &container-meta-name-responseHeader;
+            &container-bytes-used-responseHeader;
+            &container-read-responseHeader;
+            &container-write-responseHeader;
+            &container-sync-to-responseHeader;
+            &container-sync-key-responseHeader;
+            &versions-location-responseHeader;
+            &content-type-responseHeader-OP; &trans-id-responseHeader;
+            &date-responseHeader; </response>
+    </method>
+    <method name="DELETE" id="deleteContainer">
+        <!-- delete containers -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete container">
+            <para role="shortdesc">Deletes an empty container.</para>
+            <para>This operation fails unless the container is empty.
+                An empty container has no objects.</para>
+            <para>Delete the <code>steven</code>
+                    container:</para><para><code>curl -i
+                    $publicURL/steven -X DELETE -H "X-Auth-Token:
+                    $token"</code></para>
+            <para>If the container does not exist, the response
+                is:</para>
+            <para><programlisting>HTTP/1.1 404 Not Found
+Content-Length: 70
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx4d728126b17b43b598bf7-0052d81e34
+Date: Thu, 16 Jan 2014 18:00:20 GMT</programlisting></para>
+            <para>If the container exists and the deletion succeeds,
+                the response is:</para>
+            <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: txf76c375ebece4df19c84c-0052d81f14
+Date: Thu, 16 Jan 2014 18:04:04 GMT</programlisting></para>
+            <para>If the container exists but is not empty, the
+                response is:</para>
+            <para><programlisting>HTTP/1.1 409 Conflict
+Content-Length: 95
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx7782dc6a97b94a46956b5-0052d81f6b
+Date: Thu, 16 Jan 2014 18:05:31 GMT
+
+&lt;html>&lt;h1>Conflict&lt;/h1>&lt;p>There was a conflict when trying to complete your request.&lt;/p>&lt;/html></programlisting>
+            </para>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-required; </request>
+        <response status="204"> &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP; &trans-id-responseHeader;
+            &date-responseHeader; </response> &fault404; &fault409; </method>
+    <!--*******************************************************-->
+    <!--               Object-level operations                 -->
+    <!--*******************************************************-->
+    <method name="GET" id="getObject">
+        <!-- Get object content and metadata -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get object content and metadata">
+            <para role="shortdesc">Downloads the object content and
+                gets the object metadata.</para>
+            <para>This operation returns the object metadata in the
+                response headers and the object content in the
+                response body.</para>
+            <para>If this is a large object, the response body
+                contains the concatenated content of the segment
+                objects. To get the manifest instead of concatenated
+                segment objects for a static large object, use the
+                    <code>multipart-manifest</code> query
+                parameter.</para>
+            <para>Example requests and responses:</para><itemizedlist><listitem>
+                    <para>Show object details for the
+                            <code>goodbye</code> object in the
+                            <code>marktwain</code> container:
+                            <code>curl -i $publicURL/marktwain/goodbye
+                            -X GET -H "X-Auth-Token:
+                        $token"</code></para>
+                    <para><programlisting>HTTP/1.1 200 OK
+Content-Length: 14
+Accept-Ranges: bytes
+Last-Modified: Wed, 15 Jan 2014 16:41:49 GMT
+Etag: 451e372e48e0f6b1114fa0724aa79fa1
+X-Timestamp: 1389804109.39027
+X-Object-Meta-Orig-Filename: goodbyeworld.txt
+Content-Type: application/octet-stream
+X-Trans-Id: tx8145a190241f4cf6b05f5-0052d82a34
+Date: Thu, 16 Jan 2014 18:51:32 GMT
+
+Goodbye World!</programlisting></para>
+                </listitem>
+                <listitem>
+                    <para>Show object details for the
+                            <code>goodbye</code> object, which does
+                        not exist, in the <code>janeausten</code>
+                        container:</para><para><code>curl -i
+                            $publicURL/janeausten/goodbye -X GET -H
+                            "X-Auth-Token: $token"</code></para>
+                    <para><programlisting>HTTP/1.1 404 Not Found
+Content-Length: 70
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx073f7cbb850c4c99934b9-0052d82b04
+Date: Thu, 16 Jan 2014 18:55:00 GMT
+
+&lt;html>&lt;h1>Not Found&lt;/h1>&lt;p>The resource could not be found.&lt;/p>&lt;/html></programlisting>
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-optional;
+            &newest-requestHeader; &signature-requestParameter;
+            &expires-requestParameter;
+            &multipart-manifest-get-requestParameter;
+            &range-requestHeader; &if-match-requestHeader;
+            &if-none-match-requestHeader;
+            &if-modified-since-requestHeader;
+            &if-unmodified-since-requestHeader; </request>
+        <response status="200"> &content-length-responseHeader;
+            &accept-ranges-responseHeader;
+            &last-modified-responseHeader; &ETag-responseHeader;
+            &content-type-responseHeader;
+            &content-encoding-responseHeader;
+            &content-disposition-responseHeader;
+            &delete-at-responseHeader;
+            &object-meta-name-responseHeader;
+            &object-manifest-responseHeader;
+            &static-large-object-responseHeader;
+            &trans-id-responseHeader; &date-responseHeader;
+        </response> &fault404; </method>
+    <method name="PUT" id="createOrReplaceObject">
+        <!-- create, replace object -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create or replace object">
+            <para role="shortdesc">Creates a new object with specified
+                data content and metadata, or replaces an existing
+                object with specified data content and
+                metadata.</para>
+            <para>The &PUT; operation always creates a new object. If
+                you use this operation on an existing object, you
+                replace the existing object and metadata rather than
+                modifying the object. Consequently, this operation
+                returns a <code>201 Created</code> status code.</para>
+            <para>If you use this operation to copy a manifest object,
+                the new object is a normal object and not a copy of
+                the manifest. Instead it is a concatenation of all the
+                segment objects. This means that you cannot copy
+                objects larger than 5 GB in size. All metadata is
+                preserved during the object copy. If you specify
+                metadata on the request to copy the object, either
+                &PUT; or &COPY;, the metadata overwrites any
+                conflicting keys on the target (new) object.</para>
+            <para>Example requests and responses:</para>
+            <itemizedlist>
+                <listitem><para>Create object:</para>
+                    <para><code>curl -i
+                            $publicURL/janeausten/helloworld.txt -X
+                            PUT -H "Content-Length: 1" -H
+                            "Content-Type: text/html; charset=UTF-8"
+                            -H "X-Auth-Token: $token"</code></para>
+                    <para><programlisting>HTTP/1.1 201 Created
+Last-Modified: Fri, 17 Jan 2014 17:28:35 GMT
+Content-Length: 116
+Etag: d41d8cd98f00b204e9800998ecf8427e
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx4d5e4f06d357462bb732f-0052d96843
+Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para></listitem>
+                <listitem><para>Replace object:</para><para><code>curl
+                            -i $publicURL/janeausten/helloworld -X PUT
+                            -H "Content-Length: 0" -H "X-Auth-Token:
+                            $token"</code>
+                        <programlisting>HTTP/1.1 201 Created
+Last-Modified: Fri, 17 Jan 2014 17:28:35 GMT
+Content-Length: 116
+Etag: d41d8cd98f00b204e9800998ecf8427e
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx4d5e4f06d357462bb732f-0052d96843
+Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para></listitem>
+            </itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>The <code>201 Created</code> status code indicates a
+                successful write.</para>
+            <para>If the request times out, the operation returns the
+                    <code>408 Request Timeout</code> error
+                code.</para>
+            <para>The <code>411 Length Required</code> error code
+                indicates a missing <code>Transfer-Encoding</code> or
+                    <code>Content-Length</code> request header.</para>
+            <para>If the MD5 checksum of the data that is written to
+                the object store does not match the optional
+                    <code>ETag</code> value, the operation returns the
+                    <code>422 Unprocessable Entity</code> error
+                code.</para>
+        </wadl:doc>
+        <request> &multipart-manifest-put-requestParameter;
+            &signature-requestParameter; &expires-requestParameter;
+            &object-manifest-requestHeader;
+            &auth-token-requestHeader-optional;
+            &content-length-requestHeader-putObj;
+            &transfer-encoding-requestHeader;
+            &content-type-requestHeader; &copy-from-requestHeader;
+            &ETag-requestHeader; &content-disposition-requestHeader;
+            &content-encoding-requestHeader; &delete-at-requestHeader;
+            &delete-after-requestHeader;
+            &object-meta-name-requestHeader; </request>
+        <response status="201"> &last-modified-responseField;
+            &content-length-responseHeader-OP;
+            &ETag-responseHeader-PUT; &content-type-responseHeader;
+            &trans-id-responseHeader; &date-responseHeader;
+        </response> &fault408; &fault411; &fault422; </method>
+    <method name="COPY" id="copyObject">
+        <!-- copy object -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Copy object">
+            <para role="shortdesc">Copies an object to another object
+                in the object store.</para>
+            <para>The new object can be in the same container, but
+                have a different name from the original object. Or,
+                the new object can have the same or a different name
+                and be located in a different container than the
+                original object.</para>
+            <para>Alternatively, you can use &PUT; with the
+                    <code>X-Copy-From</code> request header to
+                accomplish the same operation as the &COPY; object
+                operation.</para>
+            <para>The &PUT; operation always creates a new object. If
+                you use this operation on an existing object, you
+                replace the existing object and metadata rather than
+                modifying the object. Consequently, this operation
+                returns a <code>201 Created</code> success
+                node.</para>
+            <para>If you use this operation to copy a manifest object,
+                the new object is a normal object and not a copy of
+                the manifest. Instead it is a concatenation of all the
+                segment objects. This means that you cannot copy
+                objects larger than 5 GB in size. All metadata is
+                preserved during the object copy. If you specify
+                metadata on the request to copy the object, either
+                &PUT; or &COPY;, the metadata overwrites any
+                conflicting keys on the target (new) object.</para>
+            <para>Example requests and responses:</para>
+            <itemizedlist>
+                <listitem><para>Copy the <code>goodbye</code> object
+                        from the <code>marktwain</code> container to
+                        the <code>janeausten</code> container:
+                            <code>curl -i $publicURL/marktwain/goodbye
+                            -X COPY -H "X-Auth-Token: $token" -H
+                            "Destination: janeausten/goodbye"</code>
+                        <programlisting>HTTP/1.1 201 Created
+Content-Length: 0
+X-Copied-From-Last-Modified: Thu, 16 Jan 2014 21:19:45 GMT
+X-Copied-From: marktwain/goodbye
+Last-Modified: Fri, 17 Jan 2014 18:22:57 GMT
+Etag: 451e372e48e0f6b1114fa0724aa79fa1
+Content-Type: text/html; charset=UTF-8
+X-Object-Meta-Movie: AmericanPie
+X-Trans-Id: txdcb481ad49d24e9a81107-0052d97501
+Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para></listitem>
+                <listitem><para>Alternatively, you can use &PUT; to
+                        copy the <code>goodbye</code> object from the
+                            <code>marktwain</code> container to the
+                            <code>janeausten</code> container. This
+                        request requires a <code>Content-Length</code>
+                        header even if it is set to zero (0).</para>
+                    <para><code>curl -i $publicURL/janeausten/goodbye
+                            -X PUT -H "X-Auth-Token: $token" -H
+                            "X-Copy-From: /marktwain/goodbye" -H
+                            "Content-Length: 0"</code></para>
+                    <para><programlisting>HTTP/1.1 201 Created
+Content-Length: 0
+X-Copied-From-Last-Modified: Thu, 16 Jan 2014 21:19:45 GMT
+X-Copied-From: marktwain/goodbye
+Last-Modified: Fri, 17 Jan 2014 18:22:57 GMT
+Etag: 451e372e48e0f6b1114fa0724aa79fa1
+Content-Type: text/html; charset=UTF-8
+X-Object-Meta-Movie: AmericanPie
+X-Trans-Id: txdcb481ad49d24e9a81107-0052d97501
+Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para>
+                </listitem></itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-optional;
+            &destination-requestHeader; &content-type-requestHeader;
+            &content-encoding-requestHeader;
+            &content-disposition-requestHeader;
+            &object-meta-name-requestHeader; </request>
+        <response status="201"> &content-length-responseHeader-OP;
+            &copied-from-last-modified-responseHeader;
+            &copied-from-responseHeader;
+            &last-modified-responseHeader; &ETag-responseHeader-COPY;
+            &content-type-responseHeader;
+            &object-meta-name-responseHeader;
+            &trans-id-responseHeader; &date-responseHeader;
+        </response>
+    </method>
+    <method name="DELETE" id="deleteObject">
+        <!--delete object -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete object">
             <para role="shortdesc">Permanently deletes an object from
-                the OpenStack Object Storage system. In combination
-                with the &COPY; command, you can use &COPY; and then
-                &DELETE; to effectively move an object.</para>
+                the object store.</para>
+            <para>You can use the &COPY; method to copy the object to
+                a new location. Then, use the &DELETE; method to
+                delete the original object.</para>
+            <para>Object deletion occurs immediately at request time.
+                Any subsequent &GET;, &HEAD;, &POST;, or &DELETE;
+                operations return a <code>404 Not Found</code> error
+                code.</para>
+            <para>For static large object manifests, you can add the
+                    <code>?multipart-manifest=delete</code> query
+                parameter. This operation deletes the segment objects
+                and if all deletions succeed, this operation deletes
+                the manifest object.</para>
+            <para>Example request and response:</para>
+            <itemizedlist><listitem><para>Delete the
+                            <code>helloworld</code> object from the
+                            <code>marktwain</code> container:
+                            <code>curl -i
+                            $publicURL/marktwain/helloworld -X DELETE
+                            -H "X-Auth-Token: $token"</code></para>
+                    <para><programlisting>HTTP/1.1 204 No Content
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx36c7606fcd1843f59167c-0052d6fdac
+Date: Wed, 15 Jan 2014 21:29:16 GMT</programlisting></para></listitem></itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>Normally the &DELETE; operation does not return a
+                response body. However, with the
+                    <code>multipart-manifest=delete</code> query
+                parameter, the response body contains a list of
+                manifest and segment objects and the status of their
+                delete operations.</para>
         </wadl:doc>
-        <response status="204"> </response>
+        <request> &multipart-manifest-delete-requestParameter;
+            &auth-token-requestHeader-optional; </request>
+        <response> &content-length-responseHeader-OP;
+            &content-type-responseHeader; &trans-id-responseHeader;
+            &date-responseHeader; </response>
+    </method>
+    <method name="HEAD" id="showObjectMeta">
+        <!-- show object metadata -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show object metadata">
+            <para role="shortdesc">Shows object metadata.</para>
+            <para>If the <code>Content-Length</code> response header
+                is non-zero, the example cURL command stalls after it
+                prints the response headers because it is waiting for
+                a response body. However, the Object Storage system
+                does not return a response body for the &HEAD;
+                operation.</para>
+            <para>Example requests and
+                        responses:</para><itemizedlist><listitem><para>Show
+                        object metadata:</para><para><code>curl -i
+                            $publicURL/marktwain/goodbye -X HEAD -H
+                            "X-Auth-Token: $token"</code></para>
+                    <para><programlisting>HTTP/1.1 200 OK
+Content-Length: 14
+Accept-Ranges: bytes
+Last-Modified: Thu, 16 Jan 2014 21:12:31 GMT
+Etag: 451e372e48e0f6b1114fa0724aa79fa1
+X-Timestamp: 1389906751.73463
+X-Object-Meta-Book: GoodbyeColumbus
+Content-Type: application/octet-stream
+X-Trans-Id: tx37ea34dcd1ed48ca9bc7d-0052d84b6f
+Date: Thu, 16 Jan 2014 21:13:19 GMT</programlisting></para>
+                </listitem></itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+            <para>If the request succeeds, the operation returns the
+                    <returnvalue>204</returnvalue> status code.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-required;
+            &signature-requestParameter; &expires-requestParameter;
+            &newest-requestHeader; </request>
+        <response status="204"> &last-modified-responseHeader;
+            &content-length-responseHeader;
+            &content-length-responseHeader-HEAD;
+            &content-type-responseHeader; &ETag-responseHeader;
+            &content-encoding-responseHeader;
+            &content-disposition-responseHeader;
+            &delete-at-responseHeader;
+            &object-manifest-responseHeader;
+            &object-meta-name-responseHeader;
+            &static-large-object-responseHeader;
+            &trans-id-responseHeader; &date-responseHeader;</response>
+    </method>
+    <method name="POST" id="updateObjectMeta">
+        <!-- create, update object metadata -->
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create or update object metadata">
+            <para role="shortdesc">Creates or updates object
+                metadata.</para>
+            <para>To create or update custom metadata, use the
+                    <code>X-Object-Meta-{name}</code> header, where
+                    <code>{name}</code> is the name of the metadata
+                item.</para>
+            <para>In addition to the custom metadata, you can also
+                update these system metadata items:
+                    <code>Content-Type</code>
+                <code>Content-Encoiding</code>
+                <code>Content-Disposition</code>
+                <code>X-Delete-At</code>. However you cannot update
+                other system metadata such as
+                    <code>Content-Length</code> or
+                    <code>Last-Modified</code>.</para>
+            <para>A &POST; request deletes any existing custom
+                metadata that you added with a previous &PUT; or
+                &POST; request. Consequently, you must specify all
+                custom metadata in the request. However, system
+                metadata is unchanged by the &POST; request unless you
+                explicitly supply it in a request header.</para>
+            <para>You can also set the <code>X-Delete-At</code> or
+                    <code>X-Delete-After</code> header to define when
+                to expire the object.</para>
+            <para>When used as described in this section, the &POST;
+                operation creates or replaces metadata. This form of
+                the operation has no request body. The form &POST;
+                feature can also use the &POST; operation to upload
+                objects. For more information about form &POST; see
+                    <link
+                    xlink:href="http://docs.openstack.org/api/openstack-object-storage/1.0/content/"
+                        ><citetitle>OpenStack Object Storage API v1
+                        Reference</citetitle></link>.</para>
+            <para>Example requests and
+                        responses:</para><itemizedlist><listitem><para>Create
+                        object metadata:</para><para><code>curl -i
+                            $publicURL/marktwain/goodbye -X POST -H
+                            "X-Auth-Token: $token" -H
+                            "X-Object-Meta-Book:
+                            GoodbyeColumbus"</code></para>
+                    <para><programlisting>HTTP/1.1 202 Accepted
+Content-Length: 76
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: txb5fb5c91ba1f4f37bb648-0052d84b3f
+Date: Thu, 16 Jan 2014 21:12:31 GMT
+
+&lt;html>&lt;h1>Accepted&lt;/h1>&lt;p>The request is accepted for processing.&lt;/p>&lt;/html></programlisting></para></listitem>
+                <listitem><para>Update object
+                            metadata:</para><para><code>curl -i
+                            $publicURL/marktwain/goodbye -X POST -H
+                            "X-Auth-Token: $token" -H
+                            "X-Object-Meta-Book:
+                            GoodbyeOldFriend"</code></para>
+                    <para><programlisting>HTTP/1.1 202 Accepted
+Content-Length: 76
+Content-Type: text/html; charset=UTF-8
+X-Trans-Id: tx5ec7ab81cdb34ced887c8-0052d84ca4
+Date: Thu, 16 Jan 2014 21:18:28 GMT
+
+&lt;html>&lt;h1>Accepted&lt;/h1>&lt;p>The request is accepted for processing.&lt;/p>&lt;/html></programlisting></para></listitem>
+            </itemizedlist>
+            <para>For a complete description of HTTP 1.1 header
+                definitions, see <link
+                    xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
+                    >Header Field Definitions</link>.</para>
+        </wadl:doc>
+        <request> &auth-token-requestHeader-optional;
+            &object-meta-name-requestHeader; &delete-at-requestHeader;
+            &content-disposition-requestHeader;
+            &content-encoding-requestHeader;
+            &delete-after-requestHeader; &content-type-requestHeader; </request>
+        <response status="202"> &content-length-responseHeader-OP;
+            &content-type-responseHeader; &trans-id-responseHeader;
+            &date-responseHeader; </response>
     </method>
 </application>
