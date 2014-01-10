@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2013 Openstack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2014 Openstack Foundation, All Rights Reserved -->
 <!-- Useful for describing APIs -->
 <!DOCTYPE application[
 <!-- Useful for describing APIs -->
@@ -52,6 +52,10 @@
                             <method href="#stack_show"/>
                             <method href="#stack_update"/>
                             <method href="#stack_delete"/>
+                            <resource path="actions" id="actions">
+                                <method href="#stack_action_suspend"/>
+                                <method href="#stack_action_resume"/>
+                            </resource>
                             <resource path="events" id="events2">
                                 <method href="#stack_event_list"/>
                             </resource>
@@ -104,15 +108,17 @@
                     <method href="#resource_type_list"/>
                     <resource id="resource_schema" path="{type_name}">
                         <param name="type_name" style="template"
-                               required="true">
+                            required="true">
                             <wadl:doc
-                             xmlns="http://docbook.org/ns/docbook"
-                             xml:lang="EN">
-                                <para>The name of a resource type.</para>
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The name of a resource
+                                   type.</para>
                             </wadl:doc>
                         </param>
                         <method href="#resource_type_get"/>
-                        <resource id="resource_template" path="template">
+                        <resource id="resource_template"
+                            path="template">
                             <method href="#resource_type_template"/>
                         </resource>
                     </resource>
@@ -182,6 +188,50 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/stack_create.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"/>
+    </method>
+    <method name="POST" id="stack_action_suspend">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Stack action suspend">
+            <para role="shortdesc">Suspends the stack.</para>
+        </wadl:doc>
+        <request>
+            <param name="suspend" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Specify the
+                            <code>suspend</code> action in the request
+                        body.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/stack_action_suspend.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"/>
+    </method>
+    <method name="POST" id="stack_action_resume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Stack action resume">
+            <para role="shortdesc">Resumes a suspended stack.</para>
+        </wadl:doc>
+        <request>
+            <param name="resume" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Specify the
+                            <code>resume</code> action in the request
+                        body.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/stack_action_resume.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -323,7 +373,7 @@
     <method name="GET" id="resource_type_get">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get resource schema">
-            <para role="shortdesc">Gets the interface schema for the
+            <para role="shortdesc">Gets the interface schema for a
                 specified resource type.</para>
         </wadl:doc>
         <response status="200">
@@ -339,8 +389,8 @@
     <method name="GET" id="resource_type_template">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get resource template">
-            <para role="shortdesc">Gets a template representation for a
-                specified resource type.</para>
+            <para role="shortdesc">Gets a template representation for
+                a specified resource type.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
