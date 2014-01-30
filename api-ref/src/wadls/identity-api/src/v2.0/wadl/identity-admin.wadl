@@ -323,20 +323,58 @@
                 are stored.</para>
         </wadl:doc>
         <request>
-            <param name="username" style="plain" type="xsd:string"
-                required="true">
+            <param name="tenantName" style="plain" required="false"
+                type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The user name.</wadl:doc>
+                    ><para>The tenant name. Both the
+                        <code>tenantId</code> and
+                        <code>tenantName</code> attributes are
+                        optional, but should not be specified
+                        together. If both attributes are specified,
+                        the server responds with a <code>400</code>
+                        <code>Bad Request</code>.</para></wadl:doc>
             </param>
-            <param name="tenantName" style="plain" type="xsd:string"
-                required="false">
+            <param name="tenantId" style="plain" required="false"
+                type="capi:UUID">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The tenant name.</wadl:doc>
+                    ><para>The tenant ID. Both the
+                        <code>tenantId</code> and
+                        <code>tenantName</code> attributes are
+                        optional, but should not be specified
+                        together. If both attributes are specified,
+                        the server responds with a <code>400</code>
+                        <code>Bad Request</code>.</para></wadl:doc>
             </param>
-            <param name="tenantId" style="plain" type="xsd:string"
-                required="false">
+            <param name="passwordCredentials" style="plain"
+                required="false" type="xsd:string">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The tenant ID.</wadl:doc>
+                    ><para>A <code>passwordCredentials</code>
+                        object. To authenticate, you must provide
+                        either a user ID and password or a
+                        token.</para></wadl:doc>
+            </param>
+            <param name="username" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>The user name. Required if you include
+                        the <code>passwordCredentials</code> object.
+                        If you do not provide a password credentials,
+                        you must provide a token.</para></wadl:doc>
+            </param>
+            <param name="password" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>The password of the user. Required if
+                        you include the
+                        <code>passwordCredentials</code> object.
+                        If you do not provide a password credentials,
+                        you must provide a token.</para></wadl:doc>
+            </param>
+            <param name="token" style="plain" required="false"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A token. Required if you do not provide
+                        password credentials.</para></wadl:doc>
             </param>
             <representation mediaType="application/json"
                 element="identity:auth">
@@ -344,7 +382,7 @@
                     <xsdxt:sample
                         title="Authenticate with credentials: JSON request">
                         <xsdxt:code
-                            href="../samples/auth_credentials.json"/>
+                            href="../samples/auth_credentials_admin.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -354,18 +392,125 @@
                     <xsdxt:sample
                         title="Authenticate with credentials: XML request">
                         <xsdxt:code
-                            href="../samples/auth_credentials.xml"/>
+                            href="../samples/auth_credentials_admin.xml"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </request>
         <response status="200 203">
+            <param name="access" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>An <code>access</code>
+                        object.</para></wadl:doc>
+            </param>
+            <param name="token" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A <code>token</code>
+                        object.</para></wadl:doc>
+            </param>
+            <param name="issued_at" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A timestamp that indicates when the
+                        token was issued.</para></wadl:doc>
+            </param>
+            <param name="expires" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A timestamp that indicates when the
+                        token expires.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>The authentication token. In the
+                        example, the token is
+                        <code>my_id</code>.</para></wadl:doc>
+            </param>
+            <param name="tenant" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A <code>tenant</code>
+                        object.</para></wadl:doc>
+            </param>
+            <param name="description" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>The description of the tenant. If not
+                        set, this value is
+                        <code>null</code>.</para></wadl:doc>
+            </param>
+            <param name="enabled" style="plain" required="true"
+                type="xsd:boolean">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>Indicates whether the tenant is enabled
+                        or disabled.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>The tenant ID.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>The tenant name.</para></wadl:doc>
+            </param>
+            <param name="serviceCatalog" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A <code>serviceCatalog</code>
+                        object.</para></wadl:doc>
+            </param>
+            <param name="endpoints" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>One or more <code>endpoints</code>
+                        objects. Each object shows the
+                        <code>adminURL</code>,
+                        <code>region</code>, <code>internalURL</code>,
+                        <code>id</code>, and
+                        <code>publicURL</code> for the
+                        endpoint.</para></wadl:doc>
+            </param>
+            <param name="endpoints_links" style="plain"
+                required="true" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>Links for the
+                        endpoint.</para></wadl:doc>
+            </param>
+            <param name="type" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>Endpoint type.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>Endpoint name.</para></wadl:doc>
+            </param>
+            <param name="user" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A <code>user</code> object, which shows
+                        the <code>username</code>,
+                        <code>roles_links</code>, <code>id</code>,
+                        <code>roles</code>, and
+                        <code>name</code>.</para></wadl:doc>
+            </param>
+            <param name="metadata" style="plain" required="true"
+                type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    ><para>A <code>metadata</code> object.</para></wadl:doc>
+            </param>
             <representation mediaType="application/json"
                 element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
                         title="Authenticate with credentials: JSON response">
-                        <xsdxt:code href="../samples/auth.json"/>
+                        <xsdxt:code href="../samples/auth_admin.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -374,7 +519,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
                         title="Authenticate with credentials: XML response">
-                        <xsdxt:code href="../samples/auth.xml"/>
+                        <xsdxt:code href="../samples/auth_admin.xml"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
