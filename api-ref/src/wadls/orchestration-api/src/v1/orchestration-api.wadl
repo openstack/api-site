@@ -24,6 +24,7 @@
                 </param>
                 <resource id="stacks" path="stacks">
                     <method href="#stack_create"/>
+                    <method href="#stack_adopt"/>
                     <method href="#stack_list"/>
                     <resource path="{stack_name}" id="stack_name">
                         <param name="stack_name" style="template"
@@ -52,6 +53,9 @@
                             <method href="#stack_show"/>
                             <method href="#stack_update"/>
                             <method href="#stack_delete"/>
+                            <resource path="abandon" id="abandon">
+                                <method href="#stack_abandon"/>
+                            </resource>
                             <resource path="actions" id="actions">
                                 <method href="#stack_action_suspend"/>
                                 <method href="#stack_action_resume"/>
@@ -268,6 +272,82 @@
         </request>
         <response status="201"/>
     </method>
+    <method name="POST" id="stack_adopt">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Adopt stack">
+            <para role="shortdesc">Adopt stack creates a stack from existing
+                resources.</para>
+        </wadl:doc>
+        <request>
+            <param name="stack_name" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A name for the new stack.</para>
+                </wadl:doc>
+            </param>
+            <param name="template_url" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>URL of the template to
+                        instantiate. This value is ignored if the
+                        template is supplied inline.</para></wadl:doc>
+            </param>
+            <param name="template" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>A JSON template to
+                        instantiate. This value takes precedence over
+                        the template URL if both are
+                    supplied.</para></wadl:doc>
+            </param>
+            <param name="environment" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>A JSON environment for the
+                        stack.</para></wadl:doc>
+            </param>
+            <param name="files" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>A map of file names (Provider
+                        resource templates, as referenced in the
+                        environment) for JSON template
+                    bodies.</para></wadl:doc>
+            </param>
+            <param name="param_name-n" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>User-defined parameter names
+                        to pass to the template.</para></wadl:doc>
+            </param>
+            <param name="param_value-n" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>User-defined parameter values
+                        to pass to the template.</para></wadl:doc>
+            </param>
+            <param name="timeout_mins" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The timeout for stack creation
+                        in minutes.</para></wadl:doc>
+            </param>
+            <param name="adopt_stack_data" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Existing resources data to adopt a
+                         stack. Data returned by abandon stack could be
+                         provided as adopt_stack_data.</para></wadl:doc>
+            </param>
+            <param name="disable_rollback" style="plain"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Enables or disables deletion of all
+                        stack resources when a stack creation fails. Default is
+                        True; all resources are not deleted when stack creation
+                        fails.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_adopt.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"/>
+    </method>
     <method name="POST" id="stack_action_suspend">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Stack action suspend">
@@ -403,6 +483,14 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete stack">
             <para role="shortdesc">Deletes a specified stack.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="DELETE" id="stack_abandon">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Abandon stack">
+            <para role="shortdesc">Deletes a specified stack, but leaves
+                 stack resources intact.</para>
         </wadl:doc>
         <response status="204"/>
     </method>
