@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-layer3-ext.wadl              -->
+<!--*******************************************************-->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/"
+        xml:id="os-layer3-ext-v2.0">
+        <resource id="version" path="v2.0/">
+            <resource id="Routers" type="#RouterList" path="routers">
+                <method href="#createRouter"/>
+                <resource path="{router_id}" id="router_id">
+                    <param xmlns="http://wadl.dev.java.net/2009/02"
+                        name="router_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Router ID">The UUID
+                            of the router.</wadl:doc>
+                    </param>
+                    <method href="#showRouter"/>
+                    <method href="#updateRouter"/>
+                    <method href="#deleteRouter"/>
+                    <resource id="add_router_interface"
+                        path="add_router_interface">
+                        <method href="#addRouterInterface"/>
+                    </resource>
+                </resource>
+                <resource id="remove_router_interface"
+                    path="remove_router_interface">
+                    <method href="#removeRouterInterface"/>
+                </resource>
+            </resource>
+        </resource>
+        <resource id="FloatingIps" type="#FloatingIpList"
+            path="floatingips">
+            <method href="#createFloatingIp"/>
+            <resource path="{floatingip_id}" id="floatingip_id">
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="floatingip_id" style="template"
+                    type="csapi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Floating IP ID">The UUID
+                        of the floating IP.</wadl:doc>
+                </param>
+                <method href="#showFloatingIp"/>
+                <method href="#updateFloatingIp"/>
+                <method href="#deleteFloatingIp"/>
+            </resource>
+        </resource>
+    </resources>
+    <resource_type id="RouterList">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Router list">
+            <para>A list of routers.</para>
+        </wadl:doc>
+        <method href="#listRouters"/>
+    </resource_type>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="GET" id="listRouters">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List routers">
+            <para role="shortdesc">Lists logical routers that are
+                accessible to the tenant who submits the
+                request.</para>
+            <para>Default policy settings return only those routers
+                that are owned by the tenant who submits the request,
+                unless an admin user submits the request.</para>
+            <para>This example request lists routers in JSON
+                format:</para>
+            <programlisting>GET /v2.0/routers
+Accept: application/json</programlisting>
+            <para>Use the <code>fields</code> query parameter to
+                control which fields are returned in the response
+                body. Additionally, you can filter results by using
+                query string parameters. For information, see <link
+                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                    >Filtering and Column Selection</link> in the
+                    <citetitle>OpenStack Networking API v2.0
+                    Reference</citetitle>.</para>
+        </wadl:doc>
+        <response status="200"> &statusParameter;
+            &external-gateway-infoParameter; &nameParameter;
+            &admin-state-upParameter; &tenant-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/routers-get-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &fault401; </method>
+    <method name="POST" id="createRouter">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create router">
+            <para role="shortdesc">Creates a logical router.</para>
+            <para>This operation creates a new logical router. When it
+                is created, a logical router does not have any
+                internal interface; it is not associated to any
+                subnet. You can optionally specify an external gateway
+                for a router at create time. The external gateway for
+                the router must be plugged into an external network.
+                An external network has its extended field
+                    <code>router:external</code> set to true. To
+                specify an external gateway, the identifier of the
+                external network must be passed in the
+                    <code>external_gateway_info</code> attribute in
+                the request body, as follows:</para>
+            <programlisting language="json">"external_gateway_info" :
+{
+  "network_id": &lt;external_network_uuid&gt;
+}</programlisting>
+        </wadl:doc>
+        <request> &routerParameter; &nameParameter;
+            &admin-state-upParameter; <representation
+                mediaType="application/json" element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-post-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"> &routerParameter; &statusParameter;
+            &external-gateway-infoParameter; &nameParameter;
+            &admin-state-upParameter; &tenant-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-post-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; </method>
+    <method name="GET" id="showRouter">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show router details">
+            <para role="shortdesc">Shows details for a specified
+                router.</para>
+            <para>This example request shows details for a router in
+                JSON format:</para>
+            <programlisting>GET /v2.0/routers/{router_id}
+Accept: application/json</programlisting>
+            <para>Use the <code>fields</code> query parameter to
+                control which fields are returned in the response
+                body. For information, see <link
+                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                    >Filtering and Column Selection</link> in the
+                    <citetitle>OpenStack Networking API v2.0
+                    Reference</citetitle>.</para>
+        </wadl:doc>
+        <response status="200"> &routersParameter; &statusParameter;
+            &external-gateway-infoParameter; &nameParameter;
+            &admin-state-upParameter; &tenant-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/routers-get-detail-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; &fault403; &fault404; </method>
+    <method name="PUT" id="updateRouter">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update router">
+            <para role="shortdesc">Updates a logical router.</para>
+            <para>You can update the name, administrative state, and
+                the external gateway. For more information about how
+                to set the external gateway for a router, see the
+                create router operation. This operation does not
+                enable the update of router interfaces. To update a
+                router, use the add router interface and remove router
+                interface operations.</para>
+            <para>This example updates the external gateway
+                information for a router:</para>
+            <programlisting>PUT /v2.0/routers/{router_id}
+Accept: application/json</programlisting>
+        </wadl:doc>
+        <request> &routersParameter; &statusParameter;
+            &external-gateway-infoParameter; &nameParameter;
+            &admin-state-upParameter; &tenant-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-put-update.req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &routerParameter; &statusParameter;
+            &external-gateway-infoParameter; &nameParameter;
+            &admin-state-upParameter; &tenant-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-put-update-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault404; </method>
+    <method name="DELETE" id="deleteRouter">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete router">
+            <para role="shortdesc">Deletes a logical router and, if
+                present, its external gateway interface.</para>
+            <para>This operation fails if the router has attached
+                interfaces.</para>
+            <para>Use the remove router interface operation to remove
+                all router interfaces before you delete the
+                router.</para>
+            <para>This example deletes a router:</para>
+            <programlisting>DELETE /v2.0/routers/{router_id}
+Accept: application/json</programlisting></wadl:doc>
+        <response status="204"/> &fault401; &fault404;
+        &fault409conflict; </method>
+    <method name="PUT" id="addRouterInterface">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add interface to router">
+            <para role="shortdesc">Adds an internal interface to a
+                logical router.</para>
+            <para>This operation attaches a subnet to an internal
+                router interface. You must specify either a subnet or
+                port ID in the request body. If you specify both IDs,
+                the operation returns a <code>400 Bad Request</code>
+                error.</para>
+            <para>If you specify a subnet ID in the request body, the
+                gateway IP address for the subnet is used to create
+                the router interface.</para>
+            <para>If you specify a port ID in the request body, the IP
+                address associated with the port is used to create the
+                router interface.</para>
+            <para>The operation returns a <code>400 Bad Request</code>
+                error if several IP addresses are associated with the
+                specified port, or if no IP address is associated with
+                the port.</para><para>The operation returns a
+                    <code>409 Conflict</code> error if the port is
+                already used.</para>
+            <para>The port ID that is returned by this operation can
+                either be the same ID passed in the request body or
+                the ID of a new port created by this operation to
+                attach the specified subnet to the router. After you
+                run this operation, the device ID of this port is set
+                to the router ID, and the <code>device_owner</code>
+                attribute is set to
+                    <code>network:router_interface</code>, as shown in
+                this example:</para>
+            <programlisting language="json">{
+   "port":{
+      "status":"ACTIVE",
+      "name":"",
+      "admin_state_up":true,
+      "network_id":"5307648b-e836-4658-8f1a-ff7536870c64",
+      "tenant_id":"6b96ff0cb17a4b859e1e575d221683d3",
+      "device_owner":"network:router_interface",
+      "mac_address":"fa:16:3e:f7:d1:9c",
+      "fixed_ips":[
+         {
+            "subnet_id":"a2f1f29d-571b-4533-907f-5803ab96ead1",
+            "ip_address":"10.1.1.1"
+         }
+      ],
+      "id":"3a44f4e5-1694-493a-a1fb-393881c673a4",
+      "device_id":"7177abc4-5ae9-4bb7-b0d4-89e94a4abf3b"
+   }</programlisting>
+        </wadl:doc>
+        <request> &routerParameter; &nameParameter;
+            &admin-state-upParameter; <representation
+                mediaType="application/json" element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-add-interface.req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &subnet-idParameter;
+            &port-idParameter; <representation
+                mediaType="application/json" element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-add-interface-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault404;
+        &fault409;</method>
+    <method name="PUT" id="removeRouterInterface">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Remove interface from router">
+            <para role="shortdesc">Removes an internal interface from
+                a logical router.</para>
+            <para>This operation removes an internal router interface,
+                which detaches a subnet from the router. You must
+                specify either a subnet ID or port ID in the request
+                body; this value is used to identify the router
+                interface to remove.</para>
+            <para>You can also specify both a subnet ID and port ID.
+                If you specify both IDs, the subnet ID must correspond
+                to the subnet ID of the first IP address on the port
+                specified by the port ID. Otherwise, the operation
+                returns a <code>409 Conflict</code> error. The
+                response contains information about the affected
+                router and interface.</para>
+            <para>The operation returns a <code>404 Not Found</code>
+                if the router or the subnet and port do not exist or
+                are not visible to you. As a consequence of this
+                operation, the port connecting the router with the
+                subnet is removed from the subnet for the
+                network.</para>
+            <para>This example removes an interface from a
+                router:</para>
+            <programlisting>PUT /v2.0/routers/{router_id}/remove_router_interface
+Accept: application/json</programlisting>
+        </wadl:doc>
+        <request> &subnet-idParameter; &port-idParameter;
+                <representation mediaType="application/json"
+                element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-remove-interface-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &idParameter; &tenant-idParameter;
+            &port-idParameter; &subnet-idParameter; <representation
+                mediaType="application/json" element="csapi:router">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/router-remove-interface-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault404; &fault409; </method>
+    <method name="GET" id="listFloatingIps">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List floating IPs">
+            <para role="shortdesc">Lists floating IPs that are
+                accessible to the tenant who submits the
+                request.</para>
+            <para>Default policy settings return only those floating
+                IPs that are owned by the tenant who submits the
+                request, unless an admin user submits the
+                request.</para>
+            <para>This example request lists floating IPs in JSON
+                format:</para>
+            <programlisting>GET /v2.0/floatingips
+Accept: application/json</programlisting>
+            <para>Use the <code>fields</code> query parameter to
+                control which fields are returned in the response
+                body. Additionally, you can filter results by using
+                query string parameters. For information, see <link
+                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                    >Filtering and Column Selection</link> in the
+                    <citetitle>OpenStack Networking API v2.0
+                    Reference</citetitle>.</para>
+        </wadl:doc>
+        <response status="200"> &floating-ipsParameter;
+            &router-idParameter; &tenant-idParameter;
+            &floating-network-idParameter; &fixed-ip-addressParameter;
+            &floating-ip-addressParameter; &port-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/floating-ips-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; </method>
+    <method name="POST" id="createFloatingIp">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create floating IP">
+            <para role="shortdesc">Creates a floating IP, and, if you
+                specify port information, associates the floating IP
+                with an internal port.</para>
+            <para>If you do not specify port information in the
+                request, you can issue an &PUT; request.</para>
+            <para>You can create floating IPs on external networks
+                only. If you specify a network that is not external,
+                such as <code>router:external=False</code>, the
+                operation returns a <code>400</code> error.</para>
+            <para>If you do not specify a floating IP address in the
+                request, the operation automatically allocates an
+                address for the floating IP. If the requested floating
+                IP address does not fall in the subnet range for the
+                external network, the operation returns a
+                    <code>400</code> error. If the requested floating
+                IP address is already in use, the operation returns a
+                    <code>409</code> error code.</para>
+            <para>You can associate the floating IP with an internal
+                port by using the port ID attribute in the request
+                body. If you specify a port ID that is not valid, the
+                operation returns a <code>404</code> error
+                code.</para>
+            <para>You must configure an IP address with the internal
+                OpenStack Networking port associated with the floating
+                IP or the operation returns a <code>400</code> error
+                code. Because an OpenStack Networking port might be
+                associated with multiple IP addresses, you can use the
+                    <code>fixed_ip_address</code> attribute in the
+                request body to associate a particular IP address with
+                the floating IP.</para>
+            <para>By default, this operation associates the floating
+                IP with a single IP address that is configured on a
+                port. Therefore, if a port has multiple IP addresses,
+                you must specify the <code>fixed_ip_address</code>
+                attribute.</para>
+            <para>If you specify an IP address that is not valid in
+                the <code>fixed_ip_address</code> attribute, the
+                operation returns a <code>400</code> error code. If
+                the internal OpenStack Networking port and specified
+                IP address are already associated with another
+                floating IP, the operation returns a <code>409</code>
+                error code.</para>
+        </wadl:doc>
+        <request> &floating-ipParameter; &router-idParameter;
+            &tenant-idParameter; &floating-network-idParameter;
+            &fixed-ip-addressParameter; &floating-ip-addressParameter;
+            &port-idParameter; &idParameter; <representation
+                mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/floatingip-post-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &floating-ipParameter;
+            &router-idParameter; &tenant-idParameter;
+            &floating-network-idParameter; &fixed-ip-addressParameter;
+            &floating-ip-addressParameter; &port-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/floatingip-post-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault409; </method>
+    <method name="GET" id="showFloatingIp">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show floating IP details">
+            <para role="shortdesc">Shows details for a specified
+                floating IP.</para>
+            <para>Use the <code>fields</code> query parameter to
+                control which fields are returned in the response
+                body. For information, see <link
+                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
+                    >Filtering and Column Selection</link> in the
+                    <citetitle>OpenStack Networking API v2.0
+                    Reference</citetitle>.</para>
+            <para>This example request shows details for a floating IP
+                in JSON format. This example also filters the result
+                by the <code>fixed_ip_address</code> and
+                    <code>floating_ip_address</code> fields.</para>
+            <programlisting>GET /v2.0/floatingips/{floatingip_id}?fields=fixed_ip_address&amp;fields=floating_ip_address
+Accept: application/json</programlisting>
+        </wadl:doc>
+        <response status="200"> &floating-ipParameter;
+            &router-idParameter; &tenant-idParameter;
+            &floating-network-idParameter; &fixed-ip-addressParameter;
+            &floating-ip-addressParameter; &port-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/floatingip-get-detail-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; &fault403; &fault404; </method>
+    <method name="PUT" id="updateFloatingIp">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update floating IP">
+            <para role="shortdesc">Updates a floating IP and its
+                association with an internal port.</para>
+            <para>The association process is the same as the process
+                for the create floating IP operation.</para>
+            <para>To disassociate a floating IP from a port, set the
+                    <code>port_id</code> attribute to null or omit it
+                from the request body.</para>
+            <para>This example updates a floating IP:</para>
+            <programlisting>PUT /v2.0/floatingips/{floatingip_id}
+Accept: application/json</programlisting>
+            <para>Depending on the request body that you submit, this
+                request associates a port with or disassociates a port
+                from a floating IP.</para>
+        </wadl:doc>
+        <request> &port-idParameter; <representation
+                mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Update floating IP (associate port): JSON">
+                    <xsdxt:code
+                        href="api_samples/floatingip-put-update.req.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Update floating IP (disassociate port): JSON">
+                    <xsdxt:code
+                        href="api_samples/floatingip-put-disassociate-update.req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &floating-ipParameter;
+            &router-idParameter; &tenant-idParameter;
+            &floating-network-idParameter; &fixed-ip-addressParameter;
+            &floating-ip-addressParameter; &port-idParameter;
+            &idParameter; <representation mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Update floating IP (associate port): JSON">
+                    <xsdxt:code
+                        href="api_samples/floatingip-put-update-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json"
+                element="csapi:floatingip">
+                <wadl:doc
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Update floating IP (disassociate port): JSON">
+                    <xsdxt:code
+                        href="api_samples/floatingip-put-disassociate-update-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault404; &fault409; </method>
+    <method name="DELETE" id="deleteFloatingIp">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete floating IP">
+            <para role="shortdesc">Deletes a floating IP and, if
+                present, its associated port.</para>
+            <para>This example deletes a floating IP:</para>
+            <programlisting>DELETE /v2.0/floatingips/{floatingip_id}
+Accept: application/json</programlisting></wadl:doc>
+        <response status="204"/> &fault401; &fault404; </method>
+</application>
