@@ -26,6 +26,9 @@
                     <method href="#stack_create"/>
                     <method href="#stack_adopt"/>
                     <method href="#stack_list"/>
+                    <resource path="preview" id="preview">
+                        <method href="#stack_preview"/>
+                    </resource>
                     <resource path="{stack_name}" id="stack_name">
                         <param name="stack_name" style="template"
                             required="true">
@@ -271,6 +274,114 @@
             </representation>
         </request>
         <response status="201"/>
+    </method>
+    <method name="POST" id="stack_preview">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Preview stack">
+            <para role="shortdesc">Previews a stack.</para>
+        </wadl:doc>
+        <request>
+            <param name="stack_name" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The name of the stack to preview.</para>
+                </wadl:doc>
+            </param>
+            <param name="template_url" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        The URL of the template to instantiate. This
+                        value is ignored if the template is supplied
+                        inline.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="template" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        A JSON template to instantiate. This value
+                        takes precedence over the template URL if both
+                        are supplied.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="environment" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        A JSON environment for the stack.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="files" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        A map of file names (Provider resource
+                        templates, as referenced in the environment)
+                        to JSON template bodies.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="param_name-n" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        User-defined parameter names to pass to the
+                        template.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="param_value-n" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        User-defined parameter values to pass to the
+                        template.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="timeout_mins" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        The timeout for stack creation in minutes.
+                        During a stack preview, this value
+                        is only used as part of stack validation.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="disable_rollback" style="plain"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>
+                        Controls whether a failure during stack
+                        creation causes deletion of all
+                        previously-created resources in that stack.
+                        The default is True; a failure does not cause
+                        deletions. During a stack preview, this value
+                        is only used as part of stack validation.
+                    </para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_create.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_preview.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
     </method>
     <method name="POST" id="stack_adopt">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
