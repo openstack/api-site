@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
-
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/2.0"
@@ -90,28 +88,36 @@
                     xml:lang="EN">
                     <para>The availability zone.</para></wadl:doc>
             </param>
-            <param name="bootable" style="plain" type="xsd:boolean"
+            <param name="source_volid" style="plain" type="csapi:uuid"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>A flag that indicates whether the volume is
-                        bootable. A bootable volume is one from which
-                        you can boot an instance.</para></wadl:doc>
+                    <para>To create a volume from an existing volume,
+                        specify the ID of the existing
+                    volume.</para></wadl:doc>
             </param>
-            <param name="description" style="plain" type="xsd:string"
-                required="false">
+            <param name="display_description" style="plain"
+                type="xsd:string" required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <para>The volume description.</para></wadl:doc>
+            </param>
+            <param name="snapshot_id" style="plain" type="csapi:uuid"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>To create a volume from an existing
+                        snapshot, specify the ID of the existing
+                        volume snapshot.</para></wadl:doc>
             </param>
             <param name="size" style="plain" type="xsd:int"
                 required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>The size of the volume in
+                    <para>The size of the volume, in
                     GBs.</para></wadl:doc>
             </param>
-            <param name="name" style="plain" type="xsd:string"
+            <param name="display_name" style="plain" type="xsd:string"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -125,12 +131,27 @@
                         create the volume. Required to create a
                         bootable volume.</para></wadl:doc>
             </param>
+            <param name="volume_type" style="plain" type="xsd:string"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The associated volume
+                    type.</para></wadl:doc>
+            </param>
+            <param name="bootable" style="plain" type="xsd:boolean"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Enables or disables the bootable attribute.
+                        You can boot an instance from a bootable
+                        volume.</para></wadl:doc>
+            </param>
             <param name="metadata" style="plain" type="xsd:string"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>Metadata to associate with the
-                        volume.</para></wadl:doc>
+                    <para>One or more metadata key and value pairs to
+                        associate with the volume.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -149,37 +170,107 @@
             </representation>
         </request>
         <response status="202">
+            <param name="status" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The volume status.</para></wadl:doc>
+            </param>
+            <param name="display_name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The volume name.</para></wadl:doc>
+            </param>
+            <param name="attachments" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>One or more instance
+                    attachments.</para></wadl:doc>
+            </param>
+            <param name="availability_zone" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The availability zone.</para></wadl:doc>
+            </param>
+            <param name="bootable" style="plain" type="xsd:boolean"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Enables or disables the bootable attribute.
+                        You can boot an instance from a bootable
+                        volume.</para></wadl:doc>
+            </param>
+            <param name="created_at" style="plain" type="xsd:datetime"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Date and time when the volume was
+                        created.</para></wadl:doc>
+            </param>
+            <param name="display_description" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The volume description.</para></wadl:doc>
+            </param>
+            <param name="volume_type" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The associated volume
+                    type.</para></wadl:doc>
+            </param>
+            <param name="snapshot_id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>To create a volume from an existing volume
+                        snapshot, specify the ID of the existing
+                        volume snapshot.</para></wadl:doc>
+            </param>
+            <param name="source_volid" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>To create a volume from an existing volume,
+                        specify the ID of the existing
+                    volume.</para></wadl:doc>
+            </param>
+            <param name="metadata" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>One or more metadata key and value pairs to
+                        associate with the volume.</para></wadl:doc>
+            </param>
             <param name="id" style="plain" type="csapi:uuid"
                 required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <para>The volume ID.</para></wadl:doc>
             </param>
-            <param name="links" style="plain" type="xsd:dict"
+            <param name="size" style="plain" type="xsd:int"
                 required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>The links through which you can access the
-                        volume.</para></wadl:doc>
+                    <para>The size of the volume, in
+                    GBs.</para></wadl:doc>
             </param>
-            <param name="name" style="plain" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The volume name.</para></wadl:doc>
-            </param>
-            <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="samples/volume_create_response.xml"/>
-                </wadl:doc>
-            </representation>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="samples/volume_create_response.json"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/volume_create_response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -381,8 +472,9 @@
             <param name="volume_id" style="query" type="string"
                 required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>The ID of the volume to
-                        snapshot.</para>
+                    xml:lang="EN"><para>To create a snapshot from an
+                        existing volume, specify the ID of the
+                        existing volume.</para>
                 </wadl:doc>
             </param>
             <param name="force" style="query" type="xsd:boolean"
