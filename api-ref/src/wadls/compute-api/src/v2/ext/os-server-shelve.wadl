@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-server-shelve-v2">
+        <resource id="version" type="#VersionDetails" path="v2/">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Tenant ID"><para>The ID
+                            for the tenant or account in a
+                            multi-tenancy cloud.</para></wadl:doc>
+                </param>
+                <resource id="Servers" path="servers">
+                    <resource path="{server_id}" id="server_id">
+                        <param name="server_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Server UUID"
+                                   ><para>The UUID for the server of
+                                   interest to you.</para></wadl:doc>
+                        </param>
+                        <resource path="action" id="action">
+                            <method href="#shelve"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="shelve">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Shelve server">
+            <para role="shortdesc">Shelves a running server and
+                changes its status to SHELVED_OFFLOADED.</para>
+        </wadl:doc>
+        <request>
+            <param name="shelve" style="plain" type="xsd:string"
+                required="true" id="os-shelve">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve action"><para>Specify
+                        the <code>shelve</code> action in the request
+                        body.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-shelve.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve server: XML request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-shelve.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+</application>
