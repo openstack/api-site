@@ -31,7 +31,8 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:35357" xml:id="identity-admin-v3">
+    <resources base="http://localhost:35357"
+        xml:id="identity-admin-v3">
         <!-- FYI: double slash needed in path to get a single slash to display -->
         <resource id="versions" path="v3">
             <method href="#getVersionDetails"/>
@@ -62,8 +63,9 @@
                 <resource id="endpointsID" path="{endpoint_id}">
                     <param name="endpoint_id" style="template"
                         type="capi:uuid" required="true">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            >The endpoint ID.</wadl:doc>
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook">The
+                            endpoint ID.</wadl:doc>
                     </param>
                     <method href="#updateEndpoint"/>
                     <method href="#deleteEndpoint"/>
@@ -275,11 +277,83 @@
                     <method href="#getRole"/>
                     <method href="#updateRole"/>
                     <method href="#deleteRole"/>
-                    <resource id="roleIDUsers" path="users">
-                        &listRoleUsersParams; <method
-                            href="#listRoleUsers"/>
-                    </resource>
                 </resource>
+            </resource>
+            <resource id="role_assignments" path="role_assignments">
+                <param name="group.id" style="query" type="xsd:string"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Filters on group ID.
+                            Specify <code>group.id={group_id}</code>
+                            to list all role assignments for the
+                            specified group.</para></wadl:doc>
+                </param>
+                <param name="role.id" style="query" type="xsd:string"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Filters on role ID.
+                            Specify <code>role.id={role_id}</code> to
+                            list all role assignments for the
+                            specified role.</para></wadl:doc>
+                </param>
+                <param name="scope.domain.id" style="query"
+                    type="xsd:string"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Filters on domain ID.
+                            Specify
+                                <code>scope.domain.id={domain_id}</code>
+                            to list all role assignments for the
+                            specified domain.</para></wadl:doc>
+                </param>
+                <param name="scope.project.id" style="query"
+                    type="xsd:string"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Filters on project ID.
+                            Specify
+                                <code>scope.project.id={project_id}</code>
+                            to list all role assignments for the
+                            specified project.</para></wadl:doc>
+                </param>
+                <param name="user.id" style="query" type="xsd:string"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Filters on user ID.
+                            Specify <code>user.id={user_id}</code> to
+                            list all role assignments for the
+                            specified user.</para></wadl:doc>
+                </param>
+                <param name="effective" style="query" type="xsd:key"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Lists effective
+                            assignments at the user, project, and
+                            domain level, allowing for the effects of
+                            group membership.</para>
+                        <para>The group role assignment entities
+                            themselves are not returned in the
+                            collection.</para>
+                        <para>This represents the effective role
+                            assignments that would be included in a
+                            scoped token. You can use the other query
+                            parameters with the <code>effective</code>
+                            parameter.</para>
+                    </wadl:doc>
+                </param>
+                <method href="#listRoleAssignments"/>
             </resource>
             <resource id="policies" path="policies"> &authHeader;
                     <method href="#createPolicy"/>
@@ -1643,13 +1717,14 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Add Credential">
             <para role="shortdesc">Adds a credential.</para>
-            <para>The following example shows how to create an EC2-style
-                  credential where the credential blob is a JSON-serialized
-                  dictionary that contains <code>access</code> and
-                  <code>secret</code>. This format is required when you specify
-                  the <code>ec2</code> type. To specify other credentials, such
-                  as <code>access_key</code>, simply change the type and
-                  contents of the data blob.</para>
+            <para>The following example shows how to create an
+                EC2-style credential where the credential blob is a
+                JSON-serialized dictionary that contains
+                    <code>access</code> and <code>secret</code>. This
+                format is required when you specify the
+                    <code>ec2</code> type. To specify other
+                credentials, such as <code>access_key</code>, simply
+                change the type and contents of the data blob.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1820,19 +1895,71 @@
         <!--No request body is provided-->
         <response status="204"> </response> &commonFaults; &getFaults; </method>
 
-    <method name="GET" id="listRoleUsers">
+    <method name="GET" id="listRoleAssignments">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List Users for Role">
-            <para role="shortdesc">Lists users with a specified
-                role.</para>
+            title="List role assignments">
+            <para role="shortdesc">Lists role assignments.</para>
+            <para>The list of all role assignments can be long. To
+                filter the list, use the query parameters.</para>
+            <para>Some typical examples are:</para>
+            <para><code>GET /role_assignments?user.id={user_id}</code>
+                lists all role assignments for the specified
+                user.</para>
+            <para><code>GET
+                    /role_assignments?scope.project.id={project_id}</code>
+                lists all role assignments for the specified
+                project.</para>
+            <para>Each role assignment entity in the collection
+                contains a link to the assignment that created this
+                entity.</para>
+            <para>Use the <code>effective</code> query parameter to
+                list effective assignments at the user, project, and
+                domain level. This parameter allows for the effects of
+                group membership. The group role assignment entities
+                themselves are not returned in the collection. This
+                represents the effective role assignments that would
+                be included in a scoped token. You can use the other
+                query parameters with the <code>effective</code>
+                parameter.</para>
+            <para>For example, to determine what a user can actually
+                do, issue this request: <code>GET
+                    /role_assignments?user.id={user_id}&amp;effective</code></para>
+            <para>To return the equivalent set of role assignments
+                that would be included in the token response of a
+                project-scoped token, issue: <code>GET
+                    /role_assignments?user.id={user_id}&amp;scope.project.id={project_id}&amp;effective</code></para>
+            <para>In the response, the entity <code>links</code>
+                section for entities that are included by virtue of
+                group members also contains a url that you can use to
+                access the membership of the group.</para>
         </wadl:doc>
-        <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="List all role assignments: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/RoleListUsersResponse.json"
+                            href="../samples/listRoleAssignments.txt"
+                        />
+                    </xsdxt:sample>
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RoleAssignmentsListResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    title="List effective role assignments: JSON response">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/listRoleAssignmentsEffective.txt"
+                        />
+                    </xsdxt:sample>
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RoleAssignmentsEffectiveListResponse.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
