@@ -88,20 +88,21 @@
                                    id="metadata">
                                    <method href="#resource_metadata"/>
                                    </resource>
-                                   <resource path="events" id="events3">
-                                       <resource path="{event_id}"
-                                        id="event_id">
-                                        <param name="event_id"
-                                        style="template" required="true">
-                                        <wadl:doc
-                                        xmlns="http://docbook.org/ns/docbook"
-                                        xml:lang="EN"><para>The unique
-                                        identifier of an event related to
-                                        the resource in the
-                                        stack.</para></wadl:doc>
-                                        </param>
-                                        <method href="#event_show"/>
-                                       </resource>
+                                   <resource path="events"
+                                   id="events3">
+                                   <resource path="{event_id}"
+                                   id="event_id">
+                                   <param name="event_id"
+                                   style="template" required="true">
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xml:lang="EN"><para>The unique
+                                   identifier of an event related to
+                                   the resource in the
+                                   stack.</para></wadl:doc>
+                                   </param>
+                                   <method href="#event_show"/>
+                                   </resource>
                                    </resource>
                                 </resource>
                             </resource>
@@ -111,8 +112,7 @@
                         </resource>
                     </resource>
                 </resource>
-                <resource id="validate_template"
-                    path="validate">
+                <resource id="validate_template" path="validate">
                     <method href="#template_validate"/>
                 </resource>
                 <resource id="resource_types" path="resource_types">
@@ -136,6 +136,54 @@
                 </resource>
                 <resource path="build_info" id="build_info">
                     <method href="#build_info_show"/>
+                </resource>
+                <resource id="software_configs"
+                    path="software_configs">
+                    <method href="#software_config_create"/>
+                    <resource path="{config_id}" id="config_id">
+                        <param name="config_id" style="template"
+                            required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The ID of the
+                                   configuration.</para></wadl:doc>
+                        </param>
+                        <method href="#software_config_show"/>
+                        <method href="#software_config_delete"/>
+                    </resource>
+                </resource>
+                <resource id="software_deployments"
+                    path="software_deployments">
+                    <method href="#software_deployment_index"/>
+                    <method href="#software_deployment_create"/>
+                    <resource path="{deployment_id}"
+                        id="deployment_id">
+                        <param name="deployment_id" style="template"
+                            required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The ID of the
+                                   deployment.</para></wadl:doc>
+                        </param>
+                        <method href="#software_deployment_show"/>
+                        <method href="#software_deployment_update"/>
+                        <method href="#software_deployment_delete"/>
+                    </resource>
+                    <resource id="deployment_metadata" path="metadata">
+                        <resource path="{server_id}" id="server_id">
+                            <param name="server_id" style="template"
+                                required="true">
+                                <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xml:lang="EN"><para>The ID of the
+                                   server for which to fetch
+                                   configuration
+                                   metadata.</para></wadl:doc>
+                            </param>
+                            <method
+                                href="#software_deployment_metadata"/>
+                        </resource>
+                    </resource>
                 </resource>
             </resource>
         </resource>
@@ -290,75 +338,60 @@
             <param name="template_url" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        The URL of the template to instantiate. This
-                        value is ignored if the template is supplied
-                        inline.
-                    </para>
+                    <para>The URL of the template to instantiate.
+                        This value is ignored if the template is
+                        supplied inline.</para>
                 </wadl:doc>
             </param>
             <param name="template" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        A JSON template to instantiate. This value
+                    <para>A JSON template to instantiate. This value
                         takes precedence over the template URL if both
-                        are supplied.
-                    </para>
+                        are supplied.</para>
                 </wadl:doc>
             </param>
             <param name="environment" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        A JSON environment for the stack.
-                    </para>
+                    <para>A JSON environment for the stack.</para>
                 </wadl:doc>
             </param>
             <param name="files" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        A map of file names (Provider resource
+                    <para>A map of file names (Provider resource
                         templates, as referenced in the environment)
-                        to JSON template bodies.
-                    </para>
+                        to JSON template bodies.</para>
                 </wadl:doc>
             </param>
             <param name="param_name-n" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        User-defined parameter names to pass to the
-                        template.
-                    </para>
+                    <para>User-defined parameter names to pass to the
+                        template.</para>
                 </wadl:doc>
             </param>
             <param name="param_value-n" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        User-defined parameter values to pass to the
-                        template.
-                    </para>
+                    <para>User-defined parameter values to pass to
+                        the template.</para>
                 </wadl:doc>
             </param>
             <param name="timeout_mins" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        The timeout for stack creation in minutes.
-                        During a stack preview, this value
-                        is only used as part of stack validation.
-                    </para>
+                    <para>The timeout for stack creation in minutes.
+                        During a stack preview, this value is only
+                        used as part of stack validation.</para>
                 </wadl:doc>
             </param>
             <param name="disable_rollback" style="plain"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>
-                        Controls whether a failure during stack
+                    <para>Controls whether a failure during stack
                         creation causes deletion of all
                         previously-created resources in that stack.
                         The default is True; a failure does not cause
@@ -386,7 +419,7 @@
     <method name="POST" id="stack_adopt">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Adopt stack">
-            <para role="shortdesc">Adopt stack creates a stack from existing
+            <para role="shortdesc">Creates a stack from existing
                 resources.</para>
         </wadl:doc>
         <request>
@@ -436,19 +469,22 @@
                     xml:lang="EN"><para>The timeout for stack creation
                         in minutes.</para></wadl:doc>
             </param>
-            <param name="adopt_stack_data" style="plain" required="true">
+            <param name="adopt_stack_data" style="plain"
+                required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Existing resources data to adopt a
-                         stack. Data returned by abandon stack could be
-                         provided as adopt_stack_data.</para></wadl:doc>
+                    xml:lang="EN"><para>Existing resources data to
+                        adopt a stack. Data returned by abandon stack
+                        could be provided as
+                    adopt_stack_data.</para></wadl:doc>
             </param>
             <param name="disable_rollback" style="plain"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Enables or disables deletion of all
-                        stack resources when a stack creation fails. Default is
-                        True; all resources are not deleted when stack creation
-                        fails.</para></wadl:doc>
+                    xml:lang="EN"><para>Enables or disables deletion
+                        of all stack resources when a stack creation
+                        fails. Default is True; all resources are not
+                        deleted when stack creation
+                    fails.</para></wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -461,7 +497,7 @@
     </method>
     <method name="POST" id="stack_action_suspend">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Stack action suspend">
+            title="Suspend stack">
             <para role="shortdesc">Suspends a stack.</para>
         </wadl:doc>
         <request>
@@ -483,7 +519,7 @@
     </method>
     <method name="POST" id="stack_action_resume">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Stack action resume">
+            title="Resume stack">
             <para role="shortdesc">Resumes a suspended stack.</para>
         </wadl:doc>
         <request>
@@ -521,8 +557,8 @@
     </method>
     <method name="GET" id="stack_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get stack data">
-            <para role="shortdesc">Gets data about a specified
+            title="Show stack details">
+            <para role="shortdesc">Shows details for a specified
                 stack.</para>
         </wadl:doc>
         <response status="200"/>
@@ -600,8 +636,8 @@
     <method name="DELETE" id="stack_abandon">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Abandon stack">
-            <para role="shortdesc">Deletes a specified stack, but leaves
-                 stack resources intact.</para>
+            <para role="shortdesc">Deletes a specified stack but
+                leaves its resources intact.</para>
         </wadl:doc>
         <response status="204"/>
     </method>
@@ -646,8 +682,8 @@
 
     <method name="GET" id="resource_type_get">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get resource schema">
-            <para role="shortdesc">Gets the interface schema for a
+            title="Show resource schema">
+            <para role="shortdesc">Shows the interface schema for a
                 specified resource type.</para>
         </wadl:doc>
         <response status="200">
@@ -662,9 +698,9 @@
 
     <method name="GET" id="resource_type_template">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get resource template">
-            <para role="shortdesc">Gets a template representation for
-                a specified resource type.</para>
+            title="Show resource template">
+            <para role="shortdesc">Shows the template representation
+                for a specified resource type.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
@@ -686,16 +722,16 @@
     </method>
     <method name="GET" id="resource_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get resource data">
-            <para role="shortdesc">Gets data for a specified
+            title="Show resource data">
+            <para role="shortdesc">Shows data for a specified
                 resource.</para>
         </wadl:doc>
         <response status="200"/>
     </method>
     <method name="GET" id="resource_metadata">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get resource metadata">
-            <para role="shortdesc">Gets metadata for a specified
+            title="Show resource metadata">
+            <para role="shortdesc">Shows metadata for a specified
                 resource.</para>
         </wadl:doc>
         <response status="200"/>
@@ -726,8 +762,8 @@
     </method>
     <method name="GET" id="event_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show event">
-            <para role="shortdesc">Gets data about a specified
+            title="Show event details">
+            <para role="shortdesc">Shows details for a specified
                 event.</para>
         </wadl:doc>
         <response status="200"/>
@@ -735,8 +771,8 @@
     <method name="GET" id="build_info_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show build information">
-            <para role="shortdesc">Shows build information for the
-                heat deployment.</para>
+            <para role="shortdesc">Shows build information for a heat
+                deployment.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -746,5 +782,292 @@
                 </wadl:doc>
             </representation>
         </response>
+    </method>
+    <method name="POST" id="software_config_create">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create configuration">
+            <para role="shortdesc">Creates a software
+                configuration.</para>
+        </wadl:doc>
+        <request>
+            <param name="config" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Configuration script or manifest that
+                        defines which configuration is
+                        performed.</para>
+                </wadl:doc>
+            </param>
+            <param name="group" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Namespace that groups this software
+                        configuration by when it is delivered to a
+                        server. This setting might imply which
+                        configuration tool performs the
+                        configuration.</para>
+                </wadl:doc>
+            </param>
+            <param name="name" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The name of the configuration to
+                        create.</para>
+                </wadl:doc>
+            </param>
+            <param name="inputs" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Schema that represents the inputs that this
+                        software configuration expects.</para>
+                </wadl:doc>
+            </param>
+            <param name="outputs" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Schema that represents the outputs that this
+                        software configuration produces.</para>
+                </wadl:doc>
+            </param>
+            <param name="options" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Map containing options specific to the
+                        configuration management tool used by this
+                        resource.</para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/config_create_req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/config_create_resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="software_config_show">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show configuration details">
+            <para role="shortdesc">Shows details for a software
+                configuration.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/config_show.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="software_config_delete">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete config">
+            <para role="shortdesc">Deletes a software
+                configuration.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="GET" id="software_deployment_index">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List deployments">
+            <para role="shortdesc">Lists all available software
+                deployments.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/deployment_list.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="software_deployment_metadata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show server configuration metadata">
+            <para role="shortdesc">Shows the deployment configuration
+                metadata for a specified server.</para>
+            <para>Use the <code>group</code> property to specify the
+                configuration hook to which the pass the metadata
+                item.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deployment_metadata.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="software_deployment_create">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create deployment">
+            <para role="shortdesc">Creates a software
+                deployment.</para>
+        </wadl:doc>
+        <request>
+            <param name="config_id" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the software configuration resource that runs when applying to the server.</para>
+                </wadl:doc>
+            </param>
+            <param name="server_id" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the compute server to which the
+                        configuration applies.</para>
+                </wadl:doc>
+            </param>
+            <param name="action" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The current stack action that triggers this
+                        deployment resource.</para>
+                </wadl:doc>
+            </param>
+            <param name="stack_user_project_id" style="plain"
+                required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Authentication project ID which can also
+                        perform operations on this deployment.</para>
+                </wadl:doc>
+            </param>
+            <param name="status" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Current status of the deployment, expected
+                        to be one of IN_PROGRESS, COMPLETE or
+                        FAILED.</para>
+                </wadl:doc>
+            </param>
+            <param name="status_reason" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Reason for the last status change, which
+                        will be an error description for status
+                        FAILED.</para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deployment_create_req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deployment_create_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="software_deployment_show">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show deployment details">
+            <para role="shortdesc">Shows details for a specified
+                software deployment.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/deployment_show.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="software_deployment_update">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update deployment">
+            <para role="shortdesc">Updates a specified software
+                deployment.</para>
+        </wadl:doc>
+        <request>
+            <param name="config_id" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>ID of the software configuration resource to
+                        run when applying to the server. This ID might
+                        not be the same configuration ID with which
+                        the deployment was created because ephemeral
+                        configurations are created throughout the life
+                        cycle of the deployment.</para>
+                </wadl:doc>
+            </param>
+            <param name="action" style="plain" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Current stack action this deployment
+                        resource is being triggered in.</para>
+                </wadl:doc>
+            </param>
+            <param name="status" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Current status of the deployment, expected
+                        to be one of IN_PROGRESS, COMPLETE or
+                        FAILED.</para>
+                </wadl:doc>
+            </param>
+            <param name="status_reason" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Reason for the last status change, which
+                        will be an error description for status
+                        FAILED.</para>
+                </wadl:doc>
+            </param>
+            <param name="output_values" style="plain" required="false">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Map of output values for the deployment, as
+                        signalled from the server.</para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deployment_update_req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/deployment_update_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="software_deployment_delete">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete deployment">
+            <para role="shortdesc">Deletes a specified software
+                deployment.</para>
+        </wadl:doc>
+        <response status="204"/>
     </method>
 </application>
