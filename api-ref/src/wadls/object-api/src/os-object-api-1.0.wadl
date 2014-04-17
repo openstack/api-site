@@ -383,7 +383,7 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
             &format-requestParameter; &delimiter-requestParameter;
             &path-requestParameter;
             &auth-token-requestHeader-required; &newest-requestHeader;
-            &accept-requestHeader;  </request>
+            &accept-requestHeader; </request>
         <response status="200 204">
             &content-length-responseHeader-NAMES;
             &container-object-count-responseHeader;
@@ -740,11 +740,17 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
                 the new object is a normal object and not a copy of
                 the manifest. Instead it is a concatenation of all the
                 segment objects. This means that you cannot copy
-                objects larger than 5 GB in size. All metadata is
-                preserved during the object copy. If you specify
-                metadata on the request to copy the object, either
-                &PUT; or &COPY;, the metadata overwrites any
-                conflicting keys on the target (new) object.</para>
+                objects larger than 5 GB.</para>
+            <para>You can use &COPY; as an alternate to the &POST;
+                operation by copying to the same object. With the
+                &POST; operation you must specify all metadata items,
+                whereas with the &COPY; operation, you only need to
+                specify changed or additional items.</para>
+            <para>All metadata is preserved during the object copy. If
+                you specify metadata on the request to copy the
+                object, either &PUT; or &COPY;, the metadata
+                overwrites any conflicting keys on the target (new)
+                object.</para>
             <para>Example requests and responses:</para>
             <itemizedlist>
                 <listitem><para>Create object:</para>
@@ -814,11 +820,12 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para></listitem>
             title="Copy object">
             <para role="shortdesc">Copies an object to another object
                 in the object store.</para>
-            <para>The new object can be in the same container, but
-                have a different name from the original object. Or,
-                the new object can have the same or a different name
-                and be located in a different container than the
-                original object.</para>
+            <para>You can copy an object to a new object with the same
+                name. Copying to the same name is an alternative to
+                using &POST; to add metadata to an object. With
+                &POST;, you must specify all the metadata. With
+                &COPY;, you can add additional metadata to the
+                object.</para>
             <para>Alternatively, you can use &PUT; with the
                     <code>X-Copy-From</code> request header to
                 accomplish the same operation as the &COPY; object
@@ -881,6 +888,11 @@ Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para>
                 definitions, see <link
                     xlink:href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14"
                     >Header Field Definitions</link>.</para>
+            <note><para>When several replicas exist, the system copies
+                    from the most recent replica. That is, the &COPY;
+                    operation behaves as though the
+                        <code>X-Newest</code> header is in the
+                    request.</para></note>
         </wadl:doc>
         <request> &auth-token-requestHeader-optional;
             &destination-requestHeader; &content-type-requestHeader;
