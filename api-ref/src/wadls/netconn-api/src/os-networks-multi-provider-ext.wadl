@@ -5,7 +5,7 @@
 <!--                                                       -->
 <!--     You can resolve the entites with xmllint          -->
 <!--                                                       -->
-<!--        xmllint -noent os-networks-provider-ext.wadl   -->
+<!--  xmllint -noent os-networks-multi-provider-ext.wadl   -->
 <!--*******************************************************-->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
@@ -20,7 +20,7 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
     <resources base="https://neutron.example.com/"
-        xml:id="os-networks-provider-ext-v2.0">
+        xml:id="os-networks-multi-provider-ext-v2.0">
         <resource id="version" path="v2.0/">
             <resource id="Networks" path="networks">
                 <method href="#listNetworks"/>
@@ -35,8 +35,8 @@
                             you.</para></wadl:doc>
                     </param>
                     <method href="#showNetwork"/>
-                    <method href="#updateNetwork"/>
-                    <method href="#deleteNetwork"/>
+                    <!-- <method href="#updateNetwork"/>-->
+                    <!--<method href="#deleteNetwork"/>-->
                 </resource>
             </resource>
         </resource>
@@ -48,48 +48,55 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List networks">
             <para role="shortdesc">Lists networks that are accessible
-                to the tenant who submits the request.</para>
+                to the tenant who submits the request. Networks with
+                multiple segments include the <code>segments</code>
+                list in the response.</para>
         </wadl:doc>
         <response status="200"> &networkListParameters;
-            &networkProviderParameters; <representation
-                mediaType="application/json">
+            &networkSegmentParameter; &networkProviderParameters;
+                <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/networks-get-detail-resp.json"
+                        href="api_samples/networks-multi-list-resp.json"
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/xml">
+            <!--<representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/networks-get-detail-resp.xml"
+                        href="api_samples/networks-multi-get-detail-resp.xml"
                     />
                 </wadl:doc>
-            </representation>
+            </representation>-->
         </response>
     </method>
     <method name="POST" id="createNetwork">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            title="Create network" xml:lang="EN">
-            <para role="shortdesc">Creates a network.</para>
+            title="Create network with multiple segment mappings"
+            xml:lang="EN">
+            <para role="shortdesc">Creates a network with multiple
+                segment mappings.</para>
         </wadl:doc>
-        <request> &networkCreateParameters; &networkProviderParameters; <representation
+        <request> &networkCreateParameters; &networkSegmentParameter;
+            &networkProviderParameters; <representation
                 mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-post-req.json"/>
+                        href="api_samples/network-multi-post-req.json"
+                    />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/xml">
+            <!--  <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-post-req.xml"/>
+                        href="api_samples/network-multi-post-req.xml"
+                    />
                 </wadl:doc>
-            </representation>
+            </representation>-->
         </request>
         <response status="201"> &networkListParameters;
             &networkProviderParameters; <representation
@@ -97,92 +104,95 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-post-resp.json"/>
+                        href="api_samples/network-multi-post-resp.json"
+                    />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/xml">
+            <!--<representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-post-resp.xml"/>
+                        href="api_samples/network-multi-post-resp.xml"
+                    />
                 </wadl:doc>
-            </representation>
+            </representation>-->
         </response>
     </method>
     <method name="GET" id="showNetwork">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            title="Show network details">
+            title="Show details for a network with multiple segments">
             <para role="shortdesc">Shows details for a specified
-                network.</para>
+                network with multiple segments.</para>
         </wadl:doc>
         <response status="200"> &networkListParameters;
-            &networkProviderParameters; <representation
-                mediaType="application/json">
+            &networkSegmentParameter; &networkProviderParameters;
+                <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/networks-get-detail-resp.json"
+                        href="api_samples/networks-multi-get-detail-resp.json"
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/xml">
+            <!--<representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/networks-get-detail-resp.xml"
+                        href="api_samples/networks-multi-get-detail-resp.xml"
                     />
                 </wadl:doc>
-            </representation>
+            </representation>-->
         </response>
     </method>
-    <method name="PUT" id="updateNetwork">
+    <!--<method name="PUT" id="updateNetwork">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            title="Update network">
-            <para role="shortdesc">Updates a specified network.</para>
+            title="Update network with multiple segments">
+            <para role="shortdesc">Updates a specified network with
+                multiple segments.</para>
         </wadl:doc>
-        <request> &networkCreateParameters;
+        <request> &networkCreateParameters; &networkSegmentParameter;
             &networkProviderParameters; <representation
                 mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-put-update.req.json"
+                        href="api_samples/network-multi-put-update.req.json"
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/xml">
+            <!-\-  <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-put-update.req.xml"
+                        href="api_samples/network-multi-put-update.req.xml"
                     />
                 </wadl:doc>
-            </representation>
+            </representation>-\->
         </request>
         <response status="201"> &networkListParameters;
-            &networkProviderParameters; <representation
-                mediaType="application/json">
+            &networkSegmentParameter; &networkProviderParameters;
+                <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-put-update-resp.json"
+                        href="api_samples/network-multi-put-update-resp.json"
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/xml">
+            <!-\-   <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/network-put-update-resp.xml"
+                        href="api_samples/network-multi-put-update-resp.xml"
                     />
                 </wadl:doc>
-            </representation>
+            </representation>-\->
         </response>
-    </method>
-    <method name="DELETE" id="deleteNetwork">
+    </method>-->
+    <!--<method name="DELETE" id="deleteNetwork">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             title="Delete network">
             <para role="shortdesc">Deletes a specified network.</para>
         </wadl:doc>
-    </method>
+    </method>-->
 </application>

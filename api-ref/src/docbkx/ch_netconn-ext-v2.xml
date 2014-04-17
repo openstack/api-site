@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter [
+<!-- Some useful entities borrowed from HTML -->
+<!ENTITY ndash  "&#x2013;">
+<!ENTITY mdash  "&#x2014;">
+<!ENTITY hellip "&#x2026;">
+<!ENTITY plusmn "&#xB1;">
+<!ENTITY nbsp "&#160;">
+<!-- Useful for describing APIs -->
+<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
+<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
+<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
+<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
+]>
 <chapter xmlns="http://docbook.org/ns/docbook"
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -9,16 +22,52 @@
     <title>Networking API v2.0 extensions</title>
     <section xml:id="quotas-ext">
         <title>Quotas extension (quotas)</title>
-        <para>Lists, shows information for, updates, and resets
-            quotas.</para>
+        <para>List, show details for, update, and reset quotas.</para>
         <wadl:resources href="../wadls/netconn-api/src/os-quotas.wadl"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
     <section xml:id="network_provider-ext">
-        <title>Networks provider extended attributes
-            (networks)</title>
+        <title>Networks provider extension (networks)</title>
+        <para>Enables administrative users to specify how an OpenStack
+            Networking network object is mapped to the underlying
+            networking infrastructure. Also, enables administrative
+            users to view such attributes when they query networks. To
+            this aim, this extension defines a set of
+                <literal>provider</literal>-prefixed
+            attributes.</para>
         <wadl:resources
             href="../wadls/netconn-api/src/os-networks-provider-ext.wadl"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+    </section>
+    <section xml:id="network_multi_provider-ext">
+        <title>Networks multiple provider extension (networks)</title>
+        <para>Enables administrative users to define multiple physical
+            bindings for an OpenStack Networking network and list or
+            show details for networks with multiple physical
+            bindings.</para>
+        <para>You cannot update any <literal>provider</literal>
+            attributes. If you try to do so, an error occurs.</para>
+        <para>To delete a network with multiple physical bindings,
+            issue a normal delete network request, as follows:</para>
+        <screen><uri>DELETE v2.0/networks/​{network_id}</uri>​</screen>
+        <para>To define multiple physical bindings for a network,
+            include a <literal>segments</literal> list in the request
+            body of a <code>POST /v2.0/networks</code> request. Each
+            element in the <literal>segments</literal> list has the
+            same structure as the provider network attributes. These
+            attributes are <literal>provider:network_type</literal>,
+                <literal>provider:physical_network</literal>, and
+                <literal>provider:segmentation_id</literal>. The
+            validation rules for these attributes are the same as for
+            the <link
+                xlink:href="http://api.openstack.org/api-ref-networking.html#network_provider-ext"
+                >Networks provider extended attributes</link>. You
+            cannot use both extensions at the same time.</para>
+        <para>The NSX and ML2 plug-ins support this extension. With
+            the ML2 plug-in, you can specify multiple VLANs for a
+            specified network, a VXLAN tunnel ID, and a VLAN.</para>
+        <wadl:resources
+            href="../wadls/netconn-api/src/os-networks-multi-provider-ext.wadl"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
     <section xml:id="port_binding-ext">
@@ -35,10 +84,9 @@
     </section>
     <section xml:id="layer3">
         <title>Layer-3 networking</title>
-        <para>The Layer-3 networking extension enables you to route
-            packets between subnets, forward packets from internal
-            networks to external ones, and access instances from
-            external networks through floating IPs.</para>
+        <para>Route packets between subnets, forward packets from
+            internal networks to external ones, and access instances
+            from external networks through floating IPs.</para>
         <para>This extension introduces these resources:</para>
         <itemizedlist>
             <listitem>
@@ -97,9 +145,10 @@
         <section status="final" xml:id="metering-ext"
             xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <title>Metering labels and rules</title>
-            <para>Creates, modifies, and deletes OpenStack Layer3 Metering labels
-                and rules.</para>
-            <wadl:resources href="../wadls/netconn-api/src/metering-labels.wadl"/>
+            <para>Create, modify, and delete OpenStack Layer-3
+                metering labels and rules.</para>
+            <wadl:resources
+                href="../wadls/netconn-api/src/metering-labels.wadl"/>
         </section>
     </section>
 </chapter>
