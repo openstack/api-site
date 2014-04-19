@@ -42,10 +42,10 @@
                 <method href="#checkTokens"/>
                 <method href="#revokeTokens"/>
             </resource>
-            <resource id="catalog" path="services"> &authTokenHeader;
+            <resource id="services" path="services"> &authTokenHeader;
                     <method href="#createService"/>
                 <method href="#listServices"/>
-                <resource id="catalogID" path="{service_id}">
+                <resource id="service_id" path="{service_id}">
                     <param name="service_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -63,7 +63,7 @@
             <resource id="endpoints" path="endpoints">
                 &authTokenHeader; <method href="#createEndpoint"/>
                 <method href="#listEndpoints"/>
-                <resource id="endpointsID" path="{endpoint_id}">
+                <resource id="endpoint_id" path="{endpoint_id}">
                     <param name="endpoint_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -80,7 +80,7 @@
             <resource id="domains" path="domains">
                 <method href="#createDomain"/>
                 <method href="#listDomains"/>
-                <resource id="domainID" path="{domain_id}">
+                <resource id="domain_id" path="{domain_id}">
                     <param name="domain_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -93,7 +93,7 @@
                     <method href="#getDomain"/>
                     <method href="#updateDomain"/>
                     <method href="#deleteDomain"/>
-                    <resource id="domainIDUserIDRoles"
+                    <resource id="users_user_id_roles"
                         path="users/{user_id}/roles">
                         <param name="user_id" style="template"
                             type="capi:uuid" required="true"
@@ -105,8 +105,7 @@
                                    ID.</para></wadl:doc>
                         </param>
                         <method href="#listDomainUserRoles"/>
-                        <resource id="domainIDUserIDRoleID"
-                            path="{role_id}">
+                        <resource id="role_id" path="{role_id}">
                             <param name="role_id" style="template"
                                 type="capi:uuid" required="true"
                                 xmlns="http://wadl.dev.java.net/2009/02">
@@ -121,7 +120,7 @@
                             <method href="#revokeDomainUserRole"/>
                         </resource>
                     </resource>
-                    <resource id="domainIDGroupIDRoles"
+                    <resource id="groups_group_id_roles"
                         path="groups/{group_id}/roles">
                         <param name="group_id" style="template"
                             type="capi:uuid" required="true"
@@ -133,7 +132,7 @@
                                    ID.</para></wadl:doc>
                         </param>
                         <method href="#listDomainGroupRoles"/>
-                        <resource id="domainIDGroupIDRoleID"
+                        <resource id="domain-group-role_id"
                             path="{role_id}">
                             <param name="role_id" style="template"
                                 type="capi:uuid" required="true"
@@ -152,7 +151,7 @@
             <resource id="projects" path="projects"> &authTokenHeader;
                     <method href="#createProject"/>
                 <method href="#listProjects"/>
-                <resource id="projectID" path="{project_id}">
+                <resource id="project_id" path="{project_id}">
                     <param name="project_id" style="template"
                         type="xsd:string" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -164,12 +163,12 @@
                     <method href="#getProject"/>
                     <method href="#updateProject"/>
                     <method href="#deleteProject"/>
-                    <resource id="projectIDUsers" path="users">
+                    <resource id="users" path="users">
                         &descriptionQueryParam; &domain_idQueryParam;
                         &emailQueryParam; &enabledQueryParam;
                         &nameQueryParam; <method
                             href="#listProjectUsers"/>
-                        <resource id="projectIDUserIDRoles"
+                        <resource id="user_id_roles"
                             path="{user_id}/roles">
                             <param name="user_id" style="template"
                                 type="capi:uuid" required="true"
@@ -179,7 +178,7 @@
                                    >The user ID.</wadl:doc>
                             </param>
                             <method href="#listProjectUserRoles"/>
-                            <resource id="projectIDUserIDRoleID"
+                            <resource id="project-user-role_id"
                                 path="{role_id}">
                                 <param name="role_id" style="template"
                                    type="capi:uuid" required="true"
@@ -195,7 +194,7 @@
                             </resource>
                         </resource>
                     </resource>
-                    <resource id="projectIDGroupIDRoles"
+                    <resource id="project-groups-roles"
                         path="groups/{group_id}/roles">
                         <param name="group_id" style="template"
                             type="capi:uuid" required="true"
@@ -208,27 +207,47 @@
                         </param>
                         <method href="#listProjectGroupRoles"/>
                     </resource>
-                    <resource id="projectIDGroupIDRoleID"
-                        path="{role_id}">
-                        <param name="role_id" style="template"
-                            type="capi:uuid" required="true"
-                            xmlns="http://wadl.dev.java.net/2009/02">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                                xml:lang="EN"><para>The role
+                    <resource path="groups" id="groups-roles">
+                        <resource path="​{group_id}" id="group_id">
+                            <param name="group_id" style="template"
+                                type="capi:uuid" required="true"
+                                xmlns="http://wadl.dev.java.net/2009/02">
+                                <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                                   xml:lang="EN"><para>The group
                                    ID.</para></wadl:doc>
-                        </param>
-                        <method href="#grantProjectGroupRole"/>
-                        <method href="#checkProjectGroupRole"/>
-                        <method href="#revokeProjectGroupRole"/>
+                            </param>
+                            <resource path="roles" id="roles">
+                                <resource
+                                   id="project-group-role-role_id"
+                                   path="{role_id}">
+                                   <param name="role_id"
+                                   style="template" type="capi:uuid"
+                                   required="true"
+                                   xmlns="http://wadl.dev.java.net/2009/02">
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                                   xml:lang="EN"><para>The role
+                                   ID.</para></wadl:doc>
+                                   </param>
+                                   <method
+                                   href="#grantProjectGroupRole"/>
+                                   <method
+                                   href="#checkProjectGroupRole"/>
+                                   <method
+                                   href="#revokeProjectGroupRole"/>
+                                </resource>
+                            </resource>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
-            <resource id="users" path="users"> &authTokenHeader;
-                    <method href="#createUser"/>
+            <resource id="create-users" path="users">
+                &authTokenHeader; <method href="#createUser"/>
                 <method href="#listUsers"/>
-                <resource id="userID" path="{user_id}">
+                <resource id="user_id" path="{user_id}">
                     <param name="user_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -240,23 +259,23 @@
                     <method href="#getUser"/>
                     <method href="#updateUser"/>
                     <method href="#deleteUser"/>
-                    <resource id="userIDGroups" path="groups">
+                    <resource id="groups" path="groups">
                         <method href="#listUserGroups"/>
                     </resource>
-                    <resource id="userIDProjects" path="projects">
+                    <resource id="user-projects" path="projects">
                         <method href="#listUserProjects"/>
                     </resource>
-                    <resource id="userIDRoles" path="roles">
+                    <resource id="user-roles" path="roles">
                         &nameQueryParam; &project_idQueryParam;
                         &domain_idQueryParam; <method
                             href="#listUserRoles"/>
                     </resource>
                 </resource>
             </resource>
-            <resource id="groups" path="groups">
+            <resource id="create-groups" path="groups">
                 <method href="#createGroup"/>
                 <method href="#listGroups"/>
-                <resource id="groupID" path="{group_id}">
+                <resource id="group-group_id" path="{group_id}">
                     <param name="group_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -268,11 +287,12 @@
                     <method href="#getGroup"/>
                     <method href="#updateGroup"/>
                     <method href="#deleteGroup"/>
-                    <resource id="groupIDUsers" path="users">
+                    <resource id="group-users" path="users">
                         &nameQueryParam; &pageQueryParam;
                         &per_pageQueryParam; <method
                             href="#listGroupUsers"/>
-                        <resource id="groupIDUserIDs" path="{user_id}">
+                        <resource id="group-user-user_id"
+                            path="{user_id}">
                             <param name="user_id" style="template"
                                 type="capi:uuid" required="true"
                                 xmlns="http://wadl.dev.java.net/2009/02">
@@ -290,7 +310,7 @@
             <resource id="credentials" path="credentials">
                 <method href="#createCredential"/>
                 <method href="#listCredentials"/>
-                <resource id="credentialID" path="{credential_id}">
+                <resource id="credential_id" path="{credential_id}">
                     <param name="credential_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -305,10 +325,10 @@
                     <method href="#deleteCredential"/>
                 </resource>
             </resource>
-            <resource id="roles" path="roles"> &authTokenHeader;
-                    <method href="#createRole"/>
+            <resource id="create-roles" path="roles">
+                &authTokenHeader; <method href="#createRole"/>
                 <method href="#listRoles"/>
-                <resource id="roleID" path="{role_id}">
+                <resource id="role-role_id" path="{role_id}">
                     <param name="role_id" style="template"
                         type="capi:uuid" required="true"
                         xmlns="http://wadl.dev.java.net/2009/02">
@@ -401,7 +421,7 @@
             <resource id="policies" path="policies"> &authTokenHeader;
                     <method href="#createPolicy"/>
                 <method href="#listPolicies"/>
-                <resource id="policyID" path="{policy_id}">
+                <resource id="policy_id" path="{policy_id}">
                     <param name="policy_id" style="template"
                         type="capi:uuid" required="true">
                         <wadl:doc
@@ -1573,13 +1593,10 @@
                 mediaType="application/json"/>
             <representation mediaType="application/xml"/>
         </request>
-        <response status="200">
-            &descriptionResponseParam;
-            &domain-idResponseParam;
-            &idResponseParam;
-            &linksResponseParam;
-            &nameResponseParam;
-            <representation mediaType="application/json">
+        <response status="200"> &descriptionResponseParam;
+            &domain-idResponseParam; &idResponseParam;
+            &linksResponseParam; &nameResponseParam; <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:sample>
@@ -1629,13 +1646,10 @@
                 group.</para>
         </wadl:doc>
         <!--No request body is provided-->
-        <response status="200">
-            &descriptionResponseParam;
-            &domain-idResponseParam;
-            &idResponseParam;
-            &linksResponseParam;
-            &nameResponseParam;
-            <representation mediaType="application/json">
+        <response status="200"> &descriptionResponseParam;
+            &domain-idResponseParam; &idResponseParam;
+            &linksResponseParam; &nameResponseParam; <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:sample>
@@ -1725,7 +1739,7 @@
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-       </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults; </method>
     <!--Credential Operations-->
     <method name="GET" id="listCredentials">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
