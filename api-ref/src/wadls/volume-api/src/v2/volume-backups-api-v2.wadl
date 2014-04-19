@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/2.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://volume.example.com/"
+        xml:id="volume-backups-v2">
+        <resource id="version" path="v2">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The unique identifier of the tenant or
+                            account.</para></wadl:doc>
+                </param>
+                <resource id="backups" path="backups">
+                    <method href="#createBackup"/>
+                    <method href="#listBackups"/>
+                    <resource path="detail" id="detail">
+                        <method href="#listBackupsDetails"/>
+                    </resource>
+                    <resource path="{backup_id}" id="backup_id">
+                        <param name="backup_id" style="template"
+                            required="true" type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The unique
+                                   identifier for a
+                                backup.</para></wadl:doc>
+                        </param>
+                        <method href="#showBackup"/>
+                        <method href="#deleteBackup"/>
+                        <resource path="restore" id="restore">
+                            <method href="#restoreBackup"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="createBackup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create backup">
+            <para role="shortdesc">Creates a Block Storage backup from
+                a volume.</para>
+        </wadl:doc>
+        <request>
+            <param name="backup" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A <code>backup</code>
+                    object.</para></wadl:doc>
+            </param>
+            <param name="container" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The container name or
+                    null.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup name.</para></wadl:doc>
+            </param>
+            <param name="description" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup description or
+                    null.</para></wadl:doc>
+            </param>
+            <param name="volume_id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the volume that you want to back
+                        up.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_create_request.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <param name="backup" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A <code>backup</code>
+                    object.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the backup.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Links for the backup.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup name.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_create_response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listBackups">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List backups">
+            <para role="shortdesc">Lists backups defined in Block
+                Storage to which the tenant who submits the request
+                has access.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="backups" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A <code>backups</code>
+                    object.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the backup.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Links for the backup.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup name.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_list_simple_response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listBackupsDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List backups (detailed)">
+            <para role="shortdesc">Lists detailed information for
+                backups defined in Block Storage to which the tenant
+                who submits the request has access.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="backups" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A <code>backups</code>
+                    object.</para></wadl:doc>
+            </param>
+            <param name="availability_zone" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The availability zone.</para></wadl:doc>
+            </param>
+            <param name="container" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The container name or
+                    null.</para></wadl:doc>
+            </param>
+            <param name="created_at" style="plain"
+                type="xsd:timestamp" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The date and time when the backup was
+                        created.</para></wadl:doc>
+            </param>
+            <param name="description" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup description or
+                    null.</para></wadl:doc>
+            </param>
+            <param name="fail_reason" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>If the backup failed, the reason for the
+                        failure. Otherwise, null.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the backup.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Links for the backup.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup name.</para></wadl:doc>
+            </param>
+            <param name="object_count" style="plain" type="xsd:int"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The number of objects in the
+                    backup.</para></wadl:doc>
+            </param>
+            <param name="size" style="plain" type="xsd:int"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The size of the backup, in
+                    GB.</para></wadl:doc>
+            </param>
+            <param name="status" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup status, such as
+                    available.</para></wadl:doc>
+            </param>
+            <param name="volume_id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the volume from which the backup
+                        was created.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_list_detail_response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showBackup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show backup details">
+            <para role="shortdesc">Shows details for a specified
+                backup.</para>
+        </wadl:doc>
+        <response status="200">
+            <param name="backup" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>A <code>backup</code>
+                    object.</para></wadl:doc>
+            </param>
+            <param name="availability_zone" style="plain"
+                type="xsd:string" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The availability zone.</para></wadl:doc>
+            </param>
+            <param name="container" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The container name or
+                    null.</para></wadl:doc>
+            </param>
+            <param name="created_at" style="plain"
+                type="xsd:timestamp" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The date and time when the backup was
+                        created.</para></wadl:doc>
+            </param>
+            <param name="description" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup description or
+                    null.</para></wadl:doc>
+            </param>
+            <param name="fail_reason" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>If the backup failed, the reason for the
+                        failure. Otherwise, null.</para></wadl:doc>
+            </param>
+            <param name="id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the backup.</para></wadl:doc>
+            </param>
+            <param name="links" style="plain" type="xsd:dict"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>Links for the backup.</para></wadl:doc>
+            </param>
+            <param name="name" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup name.</para></wadl:doc>
+            </param>
+            <param name="object_count" style="plain" type="xsd:int"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The number of objects in the
+                    backup.</para></wadl:doc>
+            </param>
+            <param name="size" style="plain" type="xsd:int"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The size of the backup, in
+                    GB.</para></wadl:doc>
+            </param>
+            <param name="status" style="plain" type="xsd:string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The backup status, such as
+                    available.</para></wadl:doc>
+            </param>
+            <param name="volume_id" style="plain" type="csapi:uuid"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para>The ID of the volume from which the backup
+                        was created.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_show_response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteBackup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete backup">
+            <para role="shortdesc">Deletes a specified backup.</para>
+        </wadl:doc>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="restoreBackup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Restore backup">
+            <para role="shortdesc">Restores a Block Storage backup to
+                an existing or new Block Storage volume.</para>
+        </wadl:doc>
+        <request>
+            <param name="restore" style="plain" type="string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The <code>restore</code>
+                        action.</para>
+                </wadl:doc>
+            </param>
+            <param name="volume_id" style="plain" type="string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The ID of the volume to which
+                        you want to restore a backup.</para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_restore_request.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <param name="restore" style="plain" type="string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The <code>restore</code>
+                        action.</para>
+                </wadl:doc>
+            </param>
+            <param name="backup_id" style="plain" type="string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The ID of the backup.</para>
+                </wadl:doc>
+            </param>
+            <param name="volume_id" style="plain" type="string"
+                required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>The ID of the volume to which
+                        the backup was restored.</para>
+                </wadl:doc>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/backup_restore_response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
