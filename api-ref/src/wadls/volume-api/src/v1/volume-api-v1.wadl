@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <resources base="https://volume.example.com/"
         xml:id="volume-api-v1.0">
-        <resource id="version" path="//v1">
+        <resource id="versions" path="//">
+            <method href="#listVersionsv1"/>
+        </resource>
+        <resource id="version" type="#VersionDetails" path="//v1">
             <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="csapi:UUID">
@@ -73,6 +76,72 @@
             </resource>
         </resource>
     </resources>
+    <resource_type id="VersionDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Version details">
+            <para>Details for a version.</para>
+        </wadl:doc>
+        <method href="#showVersionDetailsv1"/>
+    </resource_type>
+    <method name="GET" id="listVersionsv1">
+        <wadl:doc xml:lang="EN" title="List API versions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists information about all Block Storage API
+                versions.</para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/cinder-versions-response.json"/>
+                </wadl:doc>
+            </representation>
+            <!-- The following call fails - opened bug #1311243 -->
+            <!-- <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/cinder-versions-response.xml"
+                    />
+                </wadl:doc>
+            </representation>-->
+        </response>
+    </method>
+    <method name="GET" id="showVersionDetailsv1">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show API v1 details">
+            <para role="shortdesc">Shows details for Block Storage API
+                v1.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/versionv1-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <!-- this call fails - opened bug 1311243 -->
+            <!--<representation mediaType="application/xml"
+                element="common:version">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/version-get-resp.xml"/>
+                </wadl:doc>
+                <param name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Location"><para>Full URL
+                            to a service or server.</para></wadl:doc>
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
+            </representation>-->
+        </response>
+    </method>
     <method name="POST" id="createVolume">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create volume">

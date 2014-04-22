@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -23,16 +22,17 @@
         <include href="../v2/xsd/api.xsd"/>
         <include href="../v2/xsd/api-common.xsd"/>
     </grammars>
-
     <!--*******************************************************-->
     <!--             All Resources                             -->
     <!--*******************************************************-->
-
     <resources base="https://glance.example.com/"
         xml:id="os-image-v1.0">
-        <resource id="info" path="//v1">
+        <resource id="versions" path="//">
+            <method href="#listVersions-image-v1"/>
+        </resource>
+        <resource id="version" type="#VersionDetails" path="//v1">
             <resource id="Images" type="#ImageList" path="images">
-                <method href="#createImage"/>
+                <method href="#createImage-v1"/>
                 <resource path="detail" type="#DetailImageList"
                     id="detail"/>
                 <resource path="{image_id}" id="image_id">
@@ -44,12 +44,12 @@
                             stored through the image API. Typically a
                             UUID.</wadl:doc>
                     </param>
-                    <method href="#getImage"/>
-                    <method href="#getImageHeaders"/>
-                    <method href="#updateImage"/>
-                    <method href="#deleteImage"/>
+                    <method href="#getImage-v1"/>
+                    <method href="#getImageHeaders-v1"/>
+                    <method href="#updateImage-v1"/>
+                    <method href="#deleteImage-v1"/>
                     <resource id="members" path="members">
-                        <method href="#replaceMember"/>
+                        <method href="#replaceMember-v1"/>
                         <resource path="{owner_id}" id="owner-id">
                             <param name="owner_id" style="template"
                                 type="xsd:string">
@@ -59,8 +59,8 @@
                                    >Owner ID, which is the tenant
                                    ID.</wadl:doc>
                             </param>
-                            <method href="#addMember"/>
-                            <method href="#removeMember"/>
+                            <method href="#addMember-v1"/>
+                            <method href="#removeMember-v1"/>
                         </resource>
                     </resource>
                 </resource>
@@ -76,27 +76,81 @@
                                 ID.</para>
                         </wadl:doc>
                     </param>
-                    <method href="#getSharedImages"/>
+                    <method href="#getSharedImages-v1"/>
                 </resource>
             </resource>
         </resource>
     </resources>
-
     <!--*******************************************************-->
     <!--               Resource Types                          -->
     <!--*******************************************************-->
-
     <resource_type id="ImageList">
-        <method href="#listImage"/>
+        <method href="#listImage-v1"/>
     </resource_type>
     <resource_type id="DetailImageList">
-        <method href="#listDetailImage"/>
+        <method href="#listDetailImage-v1"/>
+    </resource_type>
+    <resource_type id="VersionDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Version details">
+            <para>Details for a version.</para>
+        </wadl:doc>
+        <method href="#showVersionDetails-image-v1"/>
     </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-
-    <method name="POST" id="createImage">
+    <method name="GET" id="listVersions-image-v1">
+        <wadl:doc xml:lang="EN" title="List API versions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists information about all Image
+                Service API versions.</para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/image-versions-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showVersionDetails-image-v1">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show API v1 details">
+            <para role="shortdesc">Shows details for Image Service API
+                v1.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/versionv1-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>-->
+            <!-- this call fails - opened bug 1311243 -->
+            <!--<representation mediaType="application/xml"
+                element="common:version">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/version-get-resp.xml"/>
+                </wadl:doc>
+                <param name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Location"><para>Full URL
+                            to a service or server.</para></wadl:doc>
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
+            </representation>-->
+        </response>
+    </method>
+    <method name="POST" id="createImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create image">
             <para role="shortdesc">Registers a virtual machine (VM)
@@ -258,7 +312,7 @@
             <representation mediaType="application/json"/>
         </response>
     </method>
-    <method name="PUT" id="updateImage">
+    <method name="PUT" id="updateImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update image">
             <para role="shortdesc">Updates an image, uploads an image
@@ -276,7 +330,7 @@
             <representation mediaType="application/json"/>
         </response>
     </method>
-    <method name="GET" id="getImage">
+    <method name="GET" id="getImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get image details and image binary">
             <para role="shortdesc">Returns the image details as
@@ -294,7 +348,7 @@
             </representation>
         </response>
     </method>
-    <method name="HEAD" id="getImageHeaders">
+    <method name="HEAD" id="getImageHeaders-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get image details as headers">
             <para role="shortdesc">Returns the image details as
@@ -305,14 +359,14 @@
                 element="imageapi:image"/>
         </response>
     </method>
-    <method name="DELETE" id="deleteImage">
+    <method name="DELETE" id="deleteImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete image">
             <para role="shortdesc">Deletes the specified image.</para>
         </wadl:doc>
         <response status="204"/>
     </method>
-    <method name="GET" id="getSharedImages">
+    <method name="GET" id="getSharedImages-v1">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List shared images">
             <para role="shortdesc">Lists the VM images shared with a
@@ -352,7 +406,7 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="listImage">
+    <method name="GET" id="listImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List image">
             <para role="shortdesc">Lists public VM images.</para>
@@ -425,7 +479,7 @@
         </response>
     </method>
 
-    <method name="GET" id="listDetailImage">
+    <method name="GET" id="listDetailImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List image details">
             <para role="shortdesc">Lists details for available
@@ -523,7 +577,7 @@
             <representation mediaType="application/json"/>
         </response>
     </method>
-    <method name="PUT" id="addMember">
+    <method name="PUT" id="addMember-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Add member">
             <para role="shortdesc">Adds a member to an image.</para>
@@ -549,7 +603,7 @@
         </request>
         <response status="204"/>
     </method>
-    <method name="PUT" id="replaceMember">
+    <method name="PUT" id="replaceMember-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Replace member">
             <para role="shortdesc">Replaces a membership list for an
@@ -567,7 +621,7 @@
         </request>
         <response status="204"/>
     </method>
-    <method name="DELETE" id="removeMember">
+    <method name="DELETE" id="removeMember-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete image">
             <para role="shortdesc">Removes a member from an

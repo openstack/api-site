@@ -34,8 +34,11 @@
     <resources base="http://localhost:35357"
         xml:id="identity-admin-v3">
         <!-- FYI: double slash needed in path to get a single slash to display -->
-        <resource id="versions" path="//v3">
-            <method href="#getVersionDetails"/>
+        <resource id="versions" path="//">
+            <method href="#getVersions-identity-v3"/>
+        </resource>
+        <resource id="version" path="//v3">
+            <method href="#showVersionDetails-identity-v3"/>
             <resource id="tokens" path="auth/tokens">
                 <method href="#authenticate"/>
                 <method href="#validateTokens"/>
@@ -436,27 +439,48 @@
             </resource>
         </resource>
     </resources>
-
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-
     <!--Version Operations-->
-
-    <method name="GET" id="getVersionDetails">
+    <method name="GET" id="getVersions-identity-v3">
+        <wadl:doc xml:lang="EN" title="List versions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists information about all Identity
+                API versions.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/identity-versions-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/identity-versions-response.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="GET" id="showVersionDetails-identity-v3">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show version details">
-            <para>Shows details for a specified version of the
-                API.</para></wadl:doc> &commonFaults; &getFaults;
-            <response status="200"> &versionParam; &statusParam;
-            &updatedParam; &media-typesParam; &version-idParam;
-            &version-linksParam; <representation
-                mediaType="application/json">
+            title="Show API version details">
+            <para>Shows details for the Identity API
+            v3.</para></wadl:doc> &commonFaults; &getFaults; <response
+            status="200"> &versionParam; &statusParam; &updatedParam;
+            &media-typesParam; &version-idParam; &version-linksParam;
+                <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/version-resp.json"/>
+                            href="../samples/identity-version-resp.json"
+                        />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -464,7 +488,8 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:sample>
-                        <xsdxt:code href="../samples/version-resp.xml"
+                        <xsdxt:code
+                            href="../samples/identity-version-resp.xml"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
