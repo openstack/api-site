@@ -10,8 +10,8 @@
         a command-line interface.</para>
     <para>For information about the command-line clients, see <link
             xlink:href="http://docs.openstack.org/cli-reference/content/"
-                ><citetitle>OpenStack Command Line
-            Interface Reference</citetitle></link>.</para>
+                ><citetitle>OpenStack Command-Line Interface
+                Reference</citetitle></link>.</para>
     <section xml:id="cli_clients_install">
         <title>Install the clients</title>
         <para>Use <command>pip</command> to install the OpenStack
@@ -19,14 +19,28 @@
             ensures that you get the latest version of the client from
             the <link xlink:href="http://pypi.python.org/pypi">Python
                 Package Index</link>. Also, <command>pip</command>
-            lets you update or remove a package. After you install the
-            clients, you must source an <filename
-                xmlns:raxm="http://docs.rackspace.com/api/metadata"
-                >openrc</filename> file to set required environment
-            variables before you can request OpenStack services
-            through the clients or the APIs. For complete information
-            about the OpenStack clients including how to source the
-                <filename>openrc</filename> file, see <link
+            lets you update or remove a package.</para>
+        <para>You must install each client separately.</para>
+        <para>Run this command to install or update a client
+            package:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install [--upgrade] python-<replaceable>PROJECT</replaceable>client</userinput></screen>
+        <para>Where <replaceable>PROJECT</replaceable> is the project
+            name.</para>
+        <para>For example, to install the <command>nova</command>
+            client, run this command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install python-novaclient</userinput></screen>
+        <para>To update the <command>nova</command> client, run this
+            command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install --upgrade python-novaclient</userinput></screen>
+        <para>To remove the <command>nova</command> client, run this
+            command:</para>
+        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip uninstall python-novaclient</userinput></screen>
+        <para>Before you can issue client commands, you must download
+            and source the <filename>openrc</filename> file to set
+            environment variables.</para>
+        <para>For complete information about the OpenStack clients,
+            including how to source the <filename>openrc</filename>
+            file, see <link
                 xlink:href="http://docs.openstack.org/user-guide/content/"
                 xmlns:svg="http://www.w3.org/2000/svg"
                 xmlns:html="http://www.w3.org/1999/xhtml"
@@ -37,34 +51,16 @@
                 xmlns:html="http://www.w3.org/1999/xhtml"
                     ><citetitle>OpenStack Admin User
                 Guide</citetitle></link>, and <link
-            xlink:href="http://docs.openstack.org/cli-reference/content/"
-                ><citetitle>OpenStack Command Line
-            Interface Reference</citetitle></link>.</para>
-        <para>You must install each client separately.</para>
-        <para>Run the following command to install or update a client
-            package:</para>
-        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install [--upgrade] python-<replaceable>PROJECT</replaceable>client</userinput></screen>
-        <para>Where <replaceable>PROJECT</replaceable> is the project
-            name.</para>
-        <para>For example, to install the nova client, run the
-            following command:</para>
-        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install python-novaclient</userinput></screen>
-        <para>To update the nova client, run the following
-            command:</para>
-        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip install --upgrade python-novaclient</userinput></screen>
-        <para>To remove the nova client, run the following
-            command:</para>
-        <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>sudo pip uninstall python-novaclient</userinput></screen>
-        <para>Before you can issue client commands, you must download
-            and source the <filename>openrc</filename> file to set
-            environment variables.</para>
+                xlink:href="http://docs.openstack.org/cli-reference/content/"
+                    ><citetitle>OpenStack Command-Line Interface
+                    Reference</citetitle></link>.</para>
     </section>
     <section xml:id="list-images">
         <title>Launch an instance</title>
         <para>To launch instances, you must choose a name, an image,
             and a flavor for your instance.</para>
         <para>To list available images, call the Compute API through
-            the nova client, as follows:</para>
+            the <command>nova</command> client, as follows:</para>
         <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova image-list</userinput></screen>
         <screen><?db-font-size 60%?><computeroutput>+--------------------------------------+---------------------------------+--------+--------+
 | ID                                   | Name                            | Status | Server |
@@ -73,7 +69,7 @@
 | 2d96f33d-ff66-4cac-b377-820cdf51204a | cirros-0.3.1-x86_64-uec-kernel  | ACTIVE |        |
 | eda9e5cb-4c8c-4e88-b580-7fac80ad8e78 | cirros-0.3.1-x86_64-uec-ramdisk | ACTIVE |        |
 +--------------------------------------+---------------------------------+--------+--------+</computeroutput></screen>
-        <para>To list flavors, run the following command:</para>
+        <para>To list flavors, run this command:</para>
         <screen><?db-font-size 70%?><prompt>$</prompt> <userinput>nova flavor-list</userinput></screen>
         <screen><?db-font-size 60%?><computeroutput>+----+-----------+-----------+------+-----------+------+-------+-------------+-----------+
 | ID | Name      | Memory_MB | Disk | Ephemeral | Swap | VCPUs | RXTX_Factor | Is_Public |
@@ -165,5 +161,14 @@
 | updated                             | 2013-11-07T17:34:32Z                                           |
 | user_id                             | 3273a50d6cfb4a2ebc75e83cb86e1554                               |
 +-------------------------------------+----------------------------------------------------------------+</computeroutput></screen>
+        <note>
+            <para>For information about the default ports that the
+                OpenStack components use, see <link
+                    xlink:href="http://docs.openstack.org/trunk/config-reference/content/firewalls-default-ports.html">
+                    <citetitle>Appendix A. Firewalls and default
+                        ports</citetitle>
+                </link> in the <citetitle>OpenStack Configuration
+                    Reference</citetitle>.</para>
+        </note>
     </section>
 </section>
