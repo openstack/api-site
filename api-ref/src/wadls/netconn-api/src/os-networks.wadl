@@ -21,7 +21,10 @@
     <!--*******************************************************-->
     <resources base="https://neutron.example.com/"
         xml:id="os-networks-v2.0">
-        <resource id="version" path="//v2.0">
+        <resource id="versions" path="//">
+            <method href="#listVersionsv2-neutron"/>
+        </resource>
+        <resource id="version" type="#VersionDetails" path="//v2.0">
             <resource id="Networks" type="#NetworkList"
                 path="networks">
                 <method href="#createNetwork"/>
@@ -49,9 +52,73 @@
         </wadl:doc>
         <method href="#listNetworks"/>
     </resource_type>
+    <resource_type id="VersionDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Version details">
+            <para>Details for a version.</para>
+        </wadl:doc>
+        <method href="#showVersionDetailsv2-neutron"/>
+    </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
+    <method name="GET" id="listVersionsv2-neutron">
+        <wadl:doc xml:lang="EN" title="List API versions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists information about all
+                Networking API versions.</para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/neutron-versions-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/neutron-versions-response.xml"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showVersionDetailsv2-neutron">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show API v1 details">
+            <para role="shortdesc">Shows details for Networking API
+                v2.0.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/version-v2-neutron-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/version-v2-neutron-get-resp.xml"
+                    />
+                </wadl:doc>
+                <param name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Location"><para>Full URL
+                            to a service or server.</para></wadl:doc>
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
+            </representation>
+        </response>
+    </method>
     <method name="GET" id="listNetworks">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List networks">

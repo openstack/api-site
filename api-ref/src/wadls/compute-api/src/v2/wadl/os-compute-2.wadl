@@ -25,7 +25,10 @@
     <!--*******************************************************-->
     <resources base="https://servers.api.openstack.com"
         xml:id="os-compute-v2">
-        <resource id="version" type="#VersionDetails" path="//v2">
+        <resource id="versions" path="//">
+            <method href="#listVersionsv2"/>
+        </resource>
+        <resource id="version" type="#versionDetailsv2" path="//v2">
             <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template"
                     type="csapi:UUID">
@@ -49,7 +52,7 @@
                                    extension.</para>
                             </wadl:doc>
                         </param>
-                        <method href="#getExtension"/>
+                        <method href="#getExtensionv2"/>
                     </resource>
                 </resource>
                 <resource id="limits" path="limits">
@@ -184,24 +187,22 @@
             </resource>
         </resource>
     </resources>
-
     <!--*******************************************************-->
     <!--               Resource Types                          -->
     <!--*******************************************************-->
-
-    <resource_type id="VersionDetails">
+    <resource_type id="versionDetailsv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Version details">
             <para>Details for a version.</para>
         </wadl:doc>
-        <method href="#versionDetails"/>
+        <method href="#getVersionDetailsv2"/>
     </resource_type>
     <resource_type id="ExtensionList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Detail image list">
             <para>A list of supported extensions.</para>
         </wadl:doc>
-        <method href="#listExtensions"/>
+        <method href="#listExtensionsv2"/>
     </resource_type>
     <resource_type id="DetailServerList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -285,20 +286,41 @@
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-
     <!-- Version -->
-    <method name="GET" id="versionDetails">
+    <method name="GET" id="listVersionsv2">
+        <wadl:doc xml:lang="EN" title="List API versions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists information about all Compute API
+                versions.</para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/compute-versions-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/compute-versions-response.xml"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="GET" id="getVersionDetailsv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get version details">
-            <para role="shortdesc">Gets details about this specific
-                version of the API.</para>
+            title="Show API version details">
+            <para role="shortdesc">Shows details for Compute API v2.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/versions-get-resp.json"/>
+                        href="../api_samples/version-get-resp.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml"
@@ -306,7 +328,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/versions-get-resp.xml"/>
+                        href="../api_samples/version-get-resp.xml"/>
                 </wadl:doc>
                 <param name="location" style="plain" type="xsd:anyURI"
                     required="true"
@@ -314,7 +336,8 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="Location"><para>Full URL
                             to a service or server.</para></wadl:doc>
-                    <link resource_type="#VersionDetails" rel="self"/>
+                    <link resource_type="#versionDetailsv2" rel="self"
+                    />
                 </param>
             </representation>
         </response>
@@ -345,7 +368,7 @@
         </response>
         <!-- Common Faults --> &commonFaults; </method>
     <!-- Extensions -->
-    <method name="GET" id="listExtensions">
+    <method name="GET" id="listExtensionsv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List extensions">
             <para role="shortdesc">Lists available extensions.</para>
@@ -384,7 +407,7 @@
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
-    <method name="GET" id="getExtension">
+    <method name="GET" id="getExtensionv2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Get extension">
             <para role="shortdesc">Gets details about the specified
@@ -414,10 +437,8 @@
             title="Create server">
             <para role="shortdesc">Creates a server.</para>
         </wadl:doc>
-        <request>
-            &serverCreateParameters;
-            <representation mediaType="application/xml"
-                element="csapi:server"> </representation>
+        <request> &serverCreateParameters; <representation
+                mediaType="application/xml" element="csapi:server"> </representation>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">

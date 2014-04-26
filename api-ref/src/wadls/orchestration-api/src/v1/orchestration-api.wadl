@@ -13,6 +13,9 @@
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
     <resources base="https://heat.example.com/"
         xml:id="orchestration-api-v1.0">
+        <resource id="versions" path="//">
+            <method href="#getVersions-heat-v1"/>
+        </resource>
         <resource id="version" path="//v1">
             <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template">
@@ -58,7 +61,8 @@
                             <method href="#stack_delete"/>
                             <resource path="abandon" id="abandon">
                                 <method href="#stack_abandon"/>
-                                <method href="#stack_abandon_preview"/>
+                                <method href="#stack_abandon_preview"
+                                />
                             </resource>
                             <resource path="actions" id="actions">
                                 <method href="#stack_action_suspend"/>
@@ -189,6 +193,22 @@
             </resource>
         </resource>
     </resources>
+    <method name="GET" id="getVersions-heat-v1">
+        <wadl:doc xml:lang="EN" title="List versions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists information about all
+                Orchestration API versions.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/heat-versions-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
     <method name="GET" id="stack_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List stack data">
@@ -339,9 +359,9 @@
             <param name="template_url" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>The URL of the template to instantiate.
-                        This value is ignored if the template is
-                        supplied inline.</para>
+                    <para>The URL of the template to instantiate. This
+                        value is ignored if the template is supplied
+                        inline.</para>
                 </wadl:doc>
             </param>
             <param name="template" style="plain" required="true">
@@ -376,8 +396,8 @@
             <param name="param_value-n" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>User-defined parameter values to pass to
-                        the template.</para>
+                    <para>User-defined parameter values to pass to the
+                        template.</para>
                 </wadl:doc>
             </param>
             <param name="timeout_mins" style="plain" required="true">
@@ -638,8 +658,8 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Abandon stack">
             <para role="shortdesc">Deletes a specified stack but
-            leaves its resources intact, and returns data describing
-            the stack and its resources.</para>
+                leaves its resources intact, and returns data
+                describing the stack and its resources.</para>
         </wadl:doc>
         <response status="204">
             <representation mediaType="application/json">
@@ -654,8 +674,8 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Abandon stack preview">
             <para role="shortdesc">Gets a preview of abandon data,
-            describing the current state of the stack and its
-            resources.</para>
+                describing the current state of the stack and its
+                resources.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -948,7 +968,9 @@
             <param name="config_id" style="plain" required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para>The ID of the software configuration resource that runs when applying to the server.</para>
+                    <para>The ID of the software configuration
+                        resource that runs when applying to the
+                        server.</para>
                 </wadl:doc>
             </param>
             <param name="server_id" style="plain" required="true">
