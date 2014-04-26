@@ -516,19 +516,19 @@
                 include a payload of credentials including the
                 authentication method and, optionally, the
                 authorization scope. The scope includes either a
-                project or a domain. If both project and domain are
-                included, an <code>HTTP 400 Bad Request</code>
-                results, because a token cannot be simultaneously
-                scoped as both a project and a domain.</para>
+                project or domain. If you include both project and
+                domain, an <code>HTTP 400 Bad Request</code> results,
+                because a token cannot be simultaneously scoped as
+                both a project and domain.</para>
             <important>
-                <para>If the optional scope is not included and the
+                <para>If you do not include the optional scope and the
                     authenticating user has a defined default project
-                    (the user's <code>default_project_id</code>
-                    attribute), then that default project is treated
-                    as the preferred authorization scope.</para>
+                    (the <code>default_project_id</code> attribute for
+                    the user), that default project is treated as the
+                    preferred authorization scope.</para>
                 <para>If no default project is defined, the token is
-                    issued without an explicit scope of authorization.
-                </para>
+                    issued without an explicit scope of
+                    authorization.</para>
             </important>
             <para>Provide one of the following sets of credentials to
                 authenticate: User ID and password, user name and
@@ -588,6 +588,7 @@
         </wadl:doc>
         <request> &authRequestParam; &identityRequestParam;
             &methodsRequestParam; &passwordObjectRequestParam;
+            &scopeRequestParam;
             &tokenRequestParam; &userRequestParam; &idRequestParam;
             &user-nameRequestParamOpt; &passwordRequestParam;
                 <representation mediaType="application/json">
@@ -631,6 +632,14 @@
                         />
                     </xsdxt:sample>
                 </wadl:doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        title="Authenticate with user ID, password, and domain ID scope: JSON request">
+                        <xsdxt:sample>
+                            <xsdxt:code
+                                href="../samples/TokenAuthPasswordIDScopeDomainIDRequest.json"
+                            />
+                        </xsdxt:sample>
+                    </wadl:doc>
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     title="Authenticate with user ID, password, and domain ID and project name scope: JSON request">
                     <xsdxt:sample>
@@ -747,7 +756,6 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-
     <method name="HEAD" id="checkTokens">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -780,7 +788,6 @@
         </request>
         <!--There is no response.  As noted above, an HTTP 204 indicates success-->
         <response status="204"> </response> &commonFaults; &getFaults; </method>
-
     <method name="DELETE" id="revokeTokens">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
