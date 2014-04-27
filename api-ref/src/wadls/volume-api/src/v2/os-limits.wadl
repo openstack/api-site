@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/2.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://volume.example.com/"
+        xml:id="os-limits-cinder-v2">
+        <resource id="version-cinder-v2" type="#VersionDetails"
+            path="v2/">
+            <resource id="tenant_id-cinder-v2" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Tenant ID">
+                        <para>The ID for the tenant or project in a
+                            multi-tenancy cloud.</para></wadl:doc>
+                </param>
+                <resource id="limits-for-cinder-v2" path="limits">
+                    <method href="#showAbsoluteLimits"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="showAbsoluteLimits">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show absolute limits">
+            <para role="shortdesc">Shows absolute limits for a
+                tenant.</para>
+        </wadl:doc>
+        <response status="200 203"> &limitsRespParameters;
+                <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Show absolute limits: JSON response">
+                    <xsdxt:code
+                        href="api_samples/limits/limits-show-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Show absolute limits: XML response">
+                    <xsdxt:code
+                        href="api_samples/limits/limits-show-get-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
