@@ -25,6 +25,14 @@
             <method href="#listVersionsv2-neutron"/>
         </resource>
         <resource id="version" type="#VersionDetails" path="//v2.0">
+            <resource id="extensions" path="extensions">
+                <method href="#listExtensions"/>
+                <resource id="extension" path="{alias}">
+                    <param name="alias" style="template"
+                        type="xsd:string"/>
+                    <method href="#getExtension"/>
+                </resource>
+            </resource>
             <resource id="Networks" type="#NetworkList"
                 path="networks">
                 <method href="#createNetwork"/>
@@ -58,6 +66,13 @@
             <para>Details for a version.</para>
         </wadl:doc>
         <method href="#showVersionDetailsv2-neutron"/>
+    </resource_type>
+    <resource_type id="ExtensionList">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Extension List">
+            <para>A list of supported extensions.</para>
+        </wadl:doc>
+        <method href="#listExtensions"/>
     </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
@@ -119,6 +134,69 @@
             </representation>
         </response>
     </method>
+    <!-- Extensions -->
+    <method name="GET" id="listExtensions">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List extensions">
+            <para>Lists available Networking API extensions.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <param name="next" style="plain" type="xsd:anyURI"
+                path="/capi:extensions/atom:link[@rel='next']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">Moves to the next item in the
+                    list.</wadl:doc>
+                <link resource_type="#ExtensionList" rel="next"/>
+            </param>
+            <param name="previous" style="plain" type="xsd:anyURI"
+                path="/capi:extensions/atom:link[@rel='previous']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">Moves to the previous item in the
+                    list.</wadl:doc>
+                <link resource_type="#ExtensionList" rel="previous"/>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="List extensions: JSON response">
+                        <xsdxt:code href="../samples/extensions.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="List extensions: XML response">
+                        <xsdxt:code href="../samples/extensions.xml"/>
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; </method>
+    <method name="GET" id="getExtension">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get extension details">
+            <para>Gets detailed information for a specified
+                extension.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Get extension details: JSON response">
+                        <xsdxt:code href="../samples/extension.json"/>
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Get extension details: XML response">
+                        <xsdxt:code href="../samples/extension.xml"/>
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; </method>
     <method name="GET" id="listNetworks">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List networks">
