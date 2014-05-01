@@ -18,6 +18,24 @@
                         <para>The unique identifier of the tenant or
                             account.</para></wadl:doc>
                 </param>
+                <resource id="extensions" type="#ExtensionList"
+                    path="extensions">
+                    <resource id="extension" path="{alias}">
+                        <param required="true"
+                            xmlns="http://wadl.dev.java.net/2009/02"
+                            name="alias" style="template"
+                            type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>An alias, which is
+                                    a name for a pointer to a resource.
+                                    For example, a named
+                                    extension.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getExtension-cinder-v2"/>
+                    </resource>
+                </resource>
                 <resource id="volumes" path="volumes">
                     <method href="#createVolume"/>
                     <method href="#getVolumesSimple"/>
@@ -83,6 +101,13 @@
         </wadl:doc>
         <method href="#versionDetails"/>
     </resource_type>
+    <resource_type id="ExtensionList">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Detail image list">
+            <para>A list of supported extensions.</para>
+        </wadl:doc>
+        <method href="#listExtensions-cinder-v2"/>
+    </resource_type>
     <!-- versions -->
     <method name="GET" id="listVersions">
         <wadl:doc xml:lang="EN" title="List API versions"
@@ -141,6 +166,31 @@
                     <link resource_type="#VersionDetails" rel="self"/>
                 </param>
             </representation>-->
+        </response>
+    </method>
+    <method name="GET" id="listExtensions-cinder-v2">
+        <wadl:doc xml:lang="EN" title="List API extensions"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Lists Block Storage API
+                extensions.</para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/cinder-extensions-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/cinder-extensions-response.xml"
+                    />
+                </wadl:doc>
+            </representation>
         </response>
     </method>
     <method name="POST" id="createVolume">
