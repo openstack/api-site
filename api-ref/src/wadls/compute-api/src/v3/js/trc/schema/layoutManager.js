@@ -91,7 +91,7 @@
                  break;
 
                  //
-                 // The controler doesn't work **at all** in IE 7
+                 // The controller doesn't work **at all** in IE 7
                  // don't even show it.
                  //
                 case 7:
