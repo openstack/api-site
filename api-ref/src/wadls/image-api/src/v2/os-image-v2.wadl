@@ -9,11 +9,13 @@
 <!--*******************************************************-->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://wadl.dev.java.net/2009/02"
+<application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:imageapi="http://docs.openstack.org/image/api/v2"
     xmlns:csapi="http://docs.openstack.org/image/api/v2">
@@ -32,9 +34,11 @@
             <resource id="Images" type="#ImageList" path="images">
                 <method href="#createImage-v2"/>
                 <resource path="{image_id}" id="image_id">
-                    <param name="image_id" style="template"
-                        type="csapi:uuid">
-                        <wadl:doc xmlns="http://www.w3.org/1999/xhtml"
+                    <param xmlns="http://wadl.dev.java.net/2009/02"
+                        name="image_id" style="template"
+                        type="csapi:uuid" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
                             xml:lang="EN" title="Image ID">Image ID
                             stored through the image API. Typically a
                             UUID.</wadl:doc>
@@ -48,7 +52,9 @@
                     </resource>
                     <resource id="Tags" path="tags">
                         <resource path="{tag}" id="tag">
-                            <param name="tag" style="template"
+                            <param
+                                xmlns="http://wadl.dev.java.net/2009/02"
+                                name="tag" style="template"
                                 type="xsd:string">
                                 <wadl:doc
                                    xmlns="http://www.w3.org/1999/xhtml"
@@ -62,7 +68,9 @@
                         path="members">
                         <method href="#createImageMember-v2"/>
                         <resource path="{member_id}" id="member_id">
-                            <param name="member_id" style="template"
+                            <param
+                                xmlns="http://wadl.dev.java.net/2009/02"
+                                name="member_id" style="template"
                                 type="xsd:string">
                                 <wadl:doc
                                    xmlns="http://www.w3.org/1999/xhtml"
@@ -94,8 +102,8 @@
     <!--*******************************************************-->
     <method name="GET" id="listVersions-image-v2">
         <wadl:doc xml:lang="EN" title="List API versions"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Lists information about all Image
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists information about all Image
                 Service API versions.</para>
         </wadl:doc>
         <response status="200 300">
@@ -118,7 +126,8 @@
                 represents the created image entity.</para>
         </wadl:doc>
         <request>
-            <param name="name" style="plain" type="xsd:string"
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="name" style="plain" type="xsd:string"
                 required="true">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Images name">Name for the
@@ -127,13 +136,14 @@
                     know the names of images owned by
                     others.</wadl:doc>
             </param>
-            <param name="id" style="plain" type="csapi:uuid"
-                required="false">
+            <param xmlns="http://wadl.dev.java.net/2009/02" name="id"
+                style="plain" type="csapi:uuid" required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Image ID">The image
                     ID.</wadl:doc>
             </param>
-            <param name="visibility" style="plain" type="xsd:string"
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="visibility" style="plain" type="xsd:string"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Visibility">
@@ -141,7 +151,8 @@
                         is public.</para>
                 </wadl:doc>
             </param>
-            <param name="tags" style="plain" type="xsd:dict"
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="tags" style="plain" type="xsd:dict"
                 required="false">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Tags">
@@ -157,7 +168,8 @@
             </representation>
         </request>
         <response status="201">
-            <param name="location" style="plain" type="xsd:anyURI"
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="location" style="plain" type="xsd:anyURI"
                 required="true"
                 path="/common:version/atom:link[@rel='self']/@href">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -225,8 +237,8 @@
             title="Get image details">
             <para role="shortdesc">Gets details for a specified image.
                 (Since Image API v2.0.)</para>
-            <para>Response body is a single image
-            entity.</para></wadl:doc>
+            <para>Response body is a single image entity.</para>
+        </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -404,6 +416,15 @@
                             <code>desc</code>.</para>
                 </wadl:doc>
             </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" name="tag"
+                style="query" required="false" type="xsd:string"
+                default="ALL">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>Image tag. For example,
+                            <code>?tag="cirros"</code>.</para>
+                </wadl:doc>
+            </param>
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -527,7 +548,8 @@
                 image member. (Since Image API v2.1.)</para>
         </wadl:doc>
         <request>
-            <param name="member" style="plain" type="xsd:string"
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="member" style="plain" type="xsd:string"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"
@@ -565,7 +587,8 @@
                 API v2.1.)</para>
         </wadl:doc>
         <request>
-            <param name="status" style="plain" type="xsd:string"
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="status" style="plain" type="xsd:string"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"
