@@ -1,9 +1,8 @@
-
-     <!--
+<!--
          A collection of common faults, these are pretty much expected
          in every request.
      -->
-     <!ENTITY commonFaults
+<!ENTITY commonFaults
            '
         <response xmlns="http://wadl.dev.java.net/2009/02">
             <representation mediaType="application/xml" element="imageapi:imageapiFault"/>
@@ -34,74 +33,173 @@
             <representation mediaType="application/json"/>
         </response>
            '>
-      <!--
+ <!--
           Faults on GET
       -->
-     <!ENTITY getFaults
+<!ENTITY getFaults
            '
         <response status="404" xmlns="http://wadl.dev.java.net/2009/02">
             <representation mediaType="application/xml" element="imageapi:itemNotFound"/>
             <representation mediaType="application/json"/>
         </response>
            '>
-      <!--
+ <!--
           Faults on POST/PUT
       -->
-     <!ENTITY postPutFaults
+<!ENTITY postPutFaults
            '
         <response status="415" xmlns="http://wadl.dev.java.net/2009/02">
             <representation mediaType="application/xml" element="imageapi:badMediaType"/>
             <representation mediaType="application/json"/>
         </response>
            '>
-<!ENTITY memberParameters '    
+<!ENTITY imageListParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="limit"
+    style="query" required="false" type="xsd:dateTime">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Use to request a specific page size. Expect a response
+            to a limited request to return between zero and limit
+            items. The typical pattern of limit and marker is to make
+            an initial limited request and then to use the ID of the
+            last image from the response as the marker parameter in a
+            subsequent limited request.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="marker"
+    style="query" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Specifies the ID of the last-seen image. The typical
+            pattern of limit and marker is to make an initial limited
+            request and then to use the ID of the last image from the
+            response as the marker parameter in a subsequent limited
+            request.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="name"
+    style="query" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. Name of the image as a string.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="visibility"
+    style="query" required="false" type="imageapi:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. Image visibility. Valid values are
+                <code>public</code>, <code>private</code>, and
+                <code>shared</code>. Default is <code>public</code>,
+                <code>private</code>, and <code>shared</code> images
+            with <code>accepted</code> member status.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="member_status"
+    style="query" required="false" type="imageapi:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. Only show images with the specified
+            member status. Valid values are <code>accepted</code>,
+                <code>pending</code>, <code>rejected</code>, and
+                <code>all</code>. Default is
+            <code>accepted</code>.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="owner"
+    style="query" required="false" type="imageapi:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. Shows images shared with me by the
+            specified owner, where the owner is indicated by tenant
+            ID.</para>
+    </wadl:doc>
+</param>
 <param xmlns="http://wadl.dev.java.net/2009/02" name="status"
-    style="plain" type="xsd:string" required="true">
+    style="query" required="false" type="xsd:int">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
-        title="status">The status of the image.</wadl:doc>
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. The image status, such as queued,
+            saving, active, killed, deleted, and
+            pending_delete.</para>
+    </wadl:doc>
 </param>
-<param xmlns="http://wadl.dev.java.net/2009/02" name="created_at"
-    style="plain" type="xsd:datetime" required="true">
+<param xmlns="http://wadl.dev.java.net/2009/02" name="size_min"
+    style="query" required="false" type="xsd:string" default="ALL">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-       xml:lang="EN"
-        title="Created at">The date and time when the image member was created.</wadl:doc>
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. Value of the minimum size of the image
+            in bytes.</para>
+    </wadl:doc>
 </param>
-<param xmlns="http://wadl.dev.java.net/2009/02" name="updated_at"
-    style="plain" type="xsd:datetime" required="true">
+<param xmlns="http://wadl.dev.java.net/2009/02" name="size_max"
+    style="query" required="false" type="xsd:string" default="ALL">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xml:lang="EN"
-        title="Updated at">The date and time when the image member was last updated.</wadl:doc>
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Filter parameter. Value of the maximum size of the image
+            in bytes.</para>
+    </wadl:doc>
 </param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_key"
+    style="query" required="false" type="xsd:string" default="ALL">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Sort key. All image attributes can be used as the
+            sort_key, except tags and link attributes. Default is
+                <code>created_at</code>.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_dir"
+    style="query" required="false" type="xsd:string" default="ALL">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Sort direction. Valid values are <code>asc</code>
+            (ascending) and <code>desc</code> (descending). Default is
+                <code>desc</code>.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="tag"
+    style="query" required="false" type="xsd:string" default="ALL">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Image tag. For example,
+            <code>?tag="cirros"</code>.</para>
+    </wadl:doc>
+</param>'>
+<!ENTITY imageIdParameter '
 <param xmlns="http://wadl.dev.java.net/2009/02" name="image_id"
-    style="plain" type="csapi:uuid" required="true">
+    style="template" type="csapi:uuid" required="true">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-       xml:lang="EN"
-        title="Image ID">Image ID stored through the image API.
-        Typically a UUID.</wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" name="member_id"
-    style="plain" type="csapi:uuid" required="true">
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
+        title="Image ID"><para>Image ID stored through the image API.
+            Typically a UUID.</para></wadl:doc>
+</param>' >
+<!ENTITY imageTagParameter ' <param xmlns="http://wadl.dev.java.net/2009/02" name="tag"
+    style="template" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-      xml:lang="EN"
-        title="Member ID">Member ID.
-        Typically a UUID.</wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" name="schema"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
+        title="Tag"><para>Image tag.</para></wadl:doc>
+</param>' >
+<!ENTITY memberIdParameter '<param xmlns="http://wadl.dev.java.net/2009/02" name="member_id"
+    style="template" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
+        title="Members"><para>Image member ID. For example, the tenant
+            ID of the user with whom the image is being
+        shared.</para></wadl:doc>
+</param>' >
+<!ENTITY statusParameter '<param xmlns="http://wadl.dev.java.net/2009/02" name="status"
     style="plain" type="xsd:string" required="true">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xmlns:wadl="http://wadl.dev.java.net/2009/02" 
-    xml:lang="EN"
-        title="Schema">The schema location for the member.</wadl:doc>
-</param>' >     
-            <!-- Useful for describing APIs -->
-
-     <!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
-     <!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
-     <!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
-     <!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
-
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
+        title="Image member status">
+        <para>Status to which this image member should be set. Valid
+            values are <code>pending</code>, <code>accepted</code>,
+            and <code>rejected</code>.</para>
+    </wadl:doc>
+</param>' >
+<!-- Useful for describing APIs -->
+<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
+<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
+<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
+<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
