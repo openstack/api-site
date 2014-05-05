@@ -191,6 +191,11 @@
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The port name.</para></wadl:doc>
      </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="allowed_address_pairs" style="plain" type="xsd:dict">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Allowed address pairs.</para></wadl:doc>
+     </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="admin_state_up" style="plain" type="xsd:bool">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -206,25 +211,15 @@
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The ID of the tenant who owns the network.  Only administrative users can specify a tenant ID other than their own.</para></wadl:doc>
      </param>
-     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-         name="binding:vif_type" style="plain" type="xsd:string">
+      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="extra_dhcp_opts" style="plain" type="xsd:dict">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-             <para>The VIF type.</para></wadl:doc>
+             <para>Extra DHCP options.</para></wadl:doc>
      </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="device_owner" style="plain" type="xsd:string">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The ID of the entity that uses this port. For example, a dhcp agent.</para></wadl:doc>
-     </param>
-     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-         name="binding:capabilities" style="plain" type="xsd:string">
-         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-             <para>The binding capabilities.</para></wadl:doc>
-     </param>
-     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-         name="port_filter" style="plain" type="xsd:bool">
-         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-             <para>The port filter.</para></wadl:doc>
      </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="mac_address" style="plain" type="xsd:string">
@@ -234,22 +229,22 @@
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="fixed_ips" style="plain" type="xsd:dict">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-             <para>IP addresses for the port. Includes the IP address and subnet ID. </para></wadl:doc>
+             <para>IP addresses for the port. Includes the IP address and subnet ID.</para></wadl:doc>
      </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="id" style="plain" type="csapi:uuid">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The ID of the port.</para></wadl:doc>
      </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="security_groups" style="plain" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The IDs of any attached security groups.</para></wadl:doc>
+     </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="device_id" style="plain" type="csapi:uuid">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The ID of the device that uses this port. For example, a virtual server.</para></wadl:doc>
-     </param>
-     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-         name="security_groups" style="plain" type="csapi:uuid">
-         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-             <para>The IDs of any attached security groups.</para></wadl:doc>
      </param>'>
    <!-- Port Create Parameters -->
 <!ENTITY portCreateParameters
@@ -296,13 +291,6 @@
 <!-- Port binding Parameters -->
 <!ENTITY portBindingParameters '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="binding:vif_type" style="plain" type="xsd:string">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-        <para>Read-only. The vif type for the specified
-            port.</para></wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="binding:host_id" style="plain" type="csapi:uuid">
     <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -311,22 +299,30 @@
             hosts.</para></wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="binding:profile" style="plain" type="xsd:dict">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-        <para>A dictionary the enables the application running on the
-            specified host to pass and receive vif port-specific
-            information to the plug-in.</para></wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="binding:capabilities" style="plain" type="xsd:dict">
+    name="binding:vif_details" style="plain" type="xsd:dict">
     <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
         <para>Read-only. A dictionary that enables the application to
             pass information about functions that the Networking API
             provides. To enable or disable port filtering features such as
             security group and anti-MAC/IP spoofing, specify <code>port_filter:
-            True|False</code>.</para></wadl:doc>
+            True</code> or <code>port_filter:
+            False</code>.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="binding:vif_type" style="plain" type="xsd:string">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>Read-only. The vif type for the specified
+            port.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="binding:profile" style="plain" type="xsd:dict">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>A dictionary the enables the application running on the
+            specified host to pass and receive vif port-specific
+            information to the plug-in.</para></wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="binding:vnic_type" style="plain" type="xsd:string">
