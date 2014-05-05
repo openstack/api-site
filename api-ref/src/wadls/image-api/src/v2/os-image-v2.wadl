@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2013 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -34,15 +34,6 @@
             <resource id="Images" type="#ImageList" path="images">
                 <method href="#createImage-v2"/>
                 <resource path="{image_id}" id="image_id">
-                    <param xmlns="http://wadl.dev.java.net/2009/02"
-                        name="image_id" style="template"
-                        type="csapi:uuid" required="true">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN" title="Image ID"><para>Image
-                                ID stored through the image API.
-                                Typically a UUID.</para></wadl:doc>
-                    </param>
                     <method href="#getImage-v2"/>
                     <method href="#updateImage-v2"/>
                     <method href="#deleteImage-v2"/>
@@ -52,16 +43,8 @@
                     </resource>
                     <resource id="Tags" path="tags">
                         <resource path="{tag}" id="tag">
-                            <param
-                                xmlns="http://wadl.dev.java.net/2009/02"
-                                name="tag" style="template"
-                                type="xsd:string">
-                                <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   title="Tag"><para>Image
-                                   tag.</para></wadl:doc>
-                            </param>
-                            <method href="#addImageTag-v2"/>
+                            &tagParameter; <method
+                                href="#addImageTag-v2"/>
                             <method href="#deleteImageTag-v2"/>
                         </resource>
                     </resource>
@@ -69,19 +52,8 @@
                         path="members">
                         <method href="#createImageMember-v2"/>
                         <resource path="{member_id}" id="member_id">
-                            <param
-                                xmlns="http://wadl.dev.java.net/2009/02"
-                                name="member_id" style="template"
-                                type="xsd:string">
-                                <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN" title="Members"
-                                   ><para>Image member ID. For
-                                   example, the tenant ID of the user
-                                   with whom the image is being
-                                   shared.</para></wadl:doc>
-                            </param>
-                            <method href="#getImageMember-v2"/>
+                            &member_idParameter; <method
+                                href="#getImageMember-v2"/>
                             <method href="#deleteImageMember-v2"/>
                             <method href="#updateImageMember-v2"/>
                         </resource>
@@ -114,6 +86,68 @@
                     xml:lang="EN">
                     <xsdxt:code
                         href="samples/image-versions-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <!-- images methods -->
+    <method name="GET" id="listImages-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List images">
+            <para role="shortdesc">Lists public virtual machine (VM)
+                images. (Since Image API v2.0.)</para>
+            <para>Returns a subset of the larger collection of images
+                and a link that you can use to get the next set of
+                images. You should always check for the presence of a
+                    <code>next</code> link and use it as the URI in a
+                subsequent HTTP GET request. You should follow this
+                pattern until a <code>next</code> link is no longer
+                provided. The next link preserves any query parameters
+                that you send in your initial request. You can use the
+                    <code>first</code> link to jump back to the first
+                page of the collection. If you prefer to paginate
+                through images manually, use the <code>limit</code>
+                and <code>marker</code> parameters.</para>
+            <para>The list operation accepts several types of query
+                parameters that let you filter the results of the
+                returned collection.</para>
+            <para>A client can provide direct comparison filters using
+                most image attributes, such as
+                    <code>name=Ubuntu</code>,
+                    <code>visibility=public</code>, and so on. A
+                client cannot filter on tags or anything defined as a
+                    <code>link</code> in the json-schema, such as
+                self, file, or schema.</para>
+            <para>You can use the <code>size_min</code> and
+                    <code>size_max</code> query parameters to perform
+                greater-than and less-than filtering of images based
+                on their <code>size</code> attribute. The size is
+                measured in bytes and refers to the size of an image
+                when it is stored on disk.</para>
+            <para>For example, sending a <code>size_min</code> filter
+                of 1048576 and <code>size_max</code> of 4194304
+                filters the container to include only images that are
+                between 1 and 4 MB.</para>
+            <para>You can sort the results of this operation by using
+                the <code>sort_key</code> and <code>sort_dir</code>
+                parameters. The API uses the natural sorting of
+                whatever image attribute is provided as the
+                    <code>sort_key</code>.</para>
+        </wadl:doc>
+        <request> &imageListReqParameters; </request>
+        <response status="200"> &imagesParameter; &statusParameter;
+            &deleted_atParameter; &nameParameter; &deletedParameter;
+            &container_formatParameter; &created_atParameter;
+            &disk_formatParameter; &updated_atParameter;
+            &min_diskParameter; &protectedParameter; &idParameter;
+            &min_ramParameter; &check_sumParameter; &ownerParameter;
+            &is_publicParameter; &virtual_sizeParameter;
+            &propertiesParameter; <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/image-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -169,8 +203,16 @@
                 </wadl:doc>
             </representation>
         </request>
-        <response status="201">
-            <param xmlns="http://wadl.dev.java.net/2009/02"
+        <response status="201"> &imageParameter; &statusParameter;
+            &deletedParameter; &container_formatParameter;
+            &min_ramParameter; &updated_atParameter; &ownerParameter;
+            &min_diskParameter; &is_publicParameter;
+            &deleted_atParameter; &idParameter; &sizeParameter;
+            &virtual_sizeParameter; &nameParameter;
+            &check_sumParameter; &created_atParameter;
+            &disk_formatParameter; &propertiesParameter;
+            &protectedParameter; <param
+                xmlns="http://wadl.dev.java.net/2009/02"
                 name="location" style="plain" type="xsd:anyURI"
                 required="true"
                 path="/common:version/atom:link[@rel='self']/@href">
@@ -190,6 +232,7 @@
             </representation>
         </response>
     </method>
+    <!-- images/{image_id} methods -->
     <method name="PATCH" id="updateImage-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update image">
@@ -206,16 +249,16 @@
                         (Since Image API v2.2)</para>
                 </listitem>
             </itemizedlist>
-            <para>You can also use the PATCH method to add or remove
+            <para>You can also use the &PATCH; method to add or remove
                 image properties.</para>
-            <para>For information about the PATCH method and the
+            <para>For information about the &PATCH; method and the
                 available media types, see <link
                     xlink:href="http://docs.openstack.org/api/openstack-image-service/2.0/content/appendix-b-http-patch-media-types.html"
                     >Appendix B: HTTP PATCH media types</link> in the
                     <citetitle>OpenStack Image Service API v2
                     Reference</citetitle>.</para>
         </wadl:doc>
-        <request> &imageIdParameter; <representation
+        <request> &image_idParameter; <representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
@@ -233,7 +276,6 @@
             </representation>
         </response>
     </method>
-    <!-- Get Image -->
     <method name="GET" id="getImage-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Get image details">
@@ -241,7 +283,7 @@
                 (Since Image API v2.0.)</para>
             <para>Response body is a single image entity.</para>
         </wadl:doc>
-        <request> &imageIdParameter; </request>
+        <request> &image_idParameter;</request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -251,85 +293,6 @@
                 </wadl:doc>
             </representation>
         </response>
-    </method>
-    <method name="GET" id="listImages-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List images">
-            <para role="shortdesc">Lists public virtual machine (VM)
-                images. (Since Image API v2.0.)</para>
-            <para>Returns a subset of the larger collection of images
-                and a link that you can use to get the next set of
-                images. You should always check for the presence of a
-                    <code>next</code> link and use it as the URI in a
-                subsequent HTTP GET request. You should follow this
-                pattern until a <code>next</code> link is no longer
-                provided. The next link preserves any query parameters
-                that you send in your initial request. You can use the
-                    <code>first</code> link to jump back to the first
-                page of the collection. If you prefer to paginate
-                through images manually, use the <code>limit</code>
-                and <code>marker</code> parameters.</para>
-            <para>The list operation accepts several types of query
-                parameters that let you filter the results of the
-                returned collection.</para>
-            <para>A client can provide direct comparison filters using
-                most image attributes, such as
-                    <code>name=Ubuntu</code>,
-                    <code>visibility=public</code>, and so on. A
-                client cannot filter on tags or anything defined as a
-                    <code>link</code> in the json-schema, such as
-                self, file, or schema.</para>
-            <para>You can use the <code>size_min</code> and
-                    <code>size_max</code> query parameters to perform
-                greater-than and less-than filtering of images based
-                on their <code>size</code> attribute. The size is
-                measured in bytes and refers to the size of an image
-                when it is stored on disk.</para>
-            <para>For example, sending a <code>size_min</code> filter
-                of 1048576 and <code>size_max</code> of 4194304
-                filters the container to include only images that are
-                between 1 and 4 MB.</para>
-            <para>You can sort the results of this operation by using
-                the <code>sort_key</code> and <code>sort_dir</code>
-                parameters. The API uses the natural sorting of
-                whatever image attribute is provided as the
-                    <code>sort_key</code>.</para>
-        </wadl:doc>
-        <request> &imageListParameters; </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-list-response.json"/>
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="listImageMembers-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List image members">
-            <para role="shortdesc">Lists the tenants with whom this
-                image has been shared. (Since Image API v2.1.)</para>
-            <para>If a user with whom this image is shared makes this
-                call, the member list contains only information for
-                that user.</para>
-            <para>If a user with whom this image has not been shared
-                makes this call, the call returns the HTTP 404 status
-                code.</para>
-        </wadl:doc>
-        <request> &imageIdParameter;</request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-members-list-response.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </response>
-        <response status="404"/>
     </method>
     <method name="DELETE" id="deleteImage-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
@@ -344,10 +307,11 @@
                 response is empty and returns the HTTP 204 status
                 code.</para>
         </wadl:doc>
-        <request> &imageIdParameter; </request>
+        <request> &image_idParameter;</request>
         <response status="204"/>
         <response status="403"/>
     </method>
+    <!-- images/{image_id}/file methods -->
     <method name="PUT" id="storeImageFile-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Upload binary image data">
@@ -360,7 +324,7 @@
                 accessible in its entirety by issuing a &GET; request
                 to the same URI.</para>
         </wadl:doc>
-        <request>&imageIdParameter;</request>
+        <request> &image_idParameter;</request>
         <response status="204"/>
     </method>
     <method name="GET" id="getImageFile-v2">
@@ -377,16 +341,17 @@
             <para>If no image data exists, returns the HTTP 204 status
                 code.</para>
         </wadl:doc>
-        <request>&imageIdParameter;</request>
+        <request> &image_idParameter; </request>
         <response status="200 204"/>
     </method>
+    <!-- images/{image_id}/tags/{tag} methods -->
     <method name="PUT" id="addImageTag-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Add image tag">
             <para role="shortdesc">Adds a specified tag to a specified
                 image. (Since Image API v2.0.)</para>
         </wadl:doc>
-        <request> &imageIdParameter; &imageTagParameter; </request>
+        <request> &image_idParameter; &tagParameter;</request>
         <response status="200"/>
     </method>
     <method name="DELETE" id="deleteImageTag-v2">
@@ -395,9 +360,10 @@
             <para role="shortdesc">Deletes a specified tag from a
                 specified image. (Since Image API v2.0.)</para>
         </wadl:doc>
-        <request> &imageIdParameter; &imageTagParameter; </request>
+        <request> &image_idParameter; &tagParameter;</request>
         <response status="204"/>
     </method>
+    <!-- images/{image_id}/members methods -->
     <method name="GET" id="getImageMember-v2">
         <wadl:doc xml:lang="EN" title="Show image member details"
             xmlns="http://docbook.org/ns/docbook">
@@ -405,16 +371,42 @@
             <para>Response body is a single image member entity.
                 (Since Image API 2.2.)</para>
         </wadl:doc>
-        <request>&imageIdParameter; &memberIdParameter;</request>
+        <request> &image_idParameter; &member_idParameter; </request>
         <response status="200">
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="samples/image-member-details-response.json"
                     />
-                </doc>
+                </wadl:doc>
             </representation>
         </response>
+    </method>
+    <method name="GET" id="listImageMembers-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List image members">
+            <para role="shortdesc">Lists the tenants with whom this
+                image has been shared. (Since Image API v2.1.)</para>
+            <para>If a user with whom this image is shared makes this
+                call, the member list contains only information for
+                that user.</para>
+            <para>If a user with whom this image has not been shared
+                makes this call, the call returns the HTTP 404 status
+                code.</para>
+        </wadl:doc>
+        <request> &image_idParameter; </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/image-members-list-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="404"/>
     </method>
     <method name="POST" id="createImageMember-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
@@ -422,8 +414,8 @@
             <para role="shortdesc">Adds a specified tenant ID as an
                 image member. (Since Image API v2.1.)</para>
         </wadl:doc>
-        <request> &imageIdParameter; &memberIdParameter;
-                <representation mediaType="application/json">
+        <request> &image_idParameter; <representation
+                mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
@@ -450,9 +442,8 @@
                 specified member of the specified image. (Since Image
                 API v2.1.)</para>
         </wadl:doc>
-        <request> &imageIdParameter; &memberIdParameter;
-            &statusParameter; <representation
-                mediaType="application/json">
+        <request> &image_idParameter; &member_idParameter;
+                <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
@@ -479,7 +470,7 @@
                 the member list of the specified image. (Since Image
                 API v2.1.)</para>
         </wadl:doc>
-        <request>&imageIdParameter;</request>
+        <request> &image_idParameter; &member_idParameter;</request>
         <response status="204"/>
     </method>
 </application>
