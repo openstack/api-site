@@ -15,7 +15,7 @@ It includes these pages and PDFs:
 
 In addition to these, this repository contains:
 
- * api.openstack.org: ``www``
+ * developer.openstack.org: ``www``
 
 Prerequisites
 =============
