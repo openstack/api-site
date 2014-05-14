@@ -319,10 +319,13 @@
                 Image API v2.0.)</para>
             <para>An image record must exist before a client can store
                 binary image data with it.</para>
-            <para>Content-Type must be 'application/octet-stream.'
-                Complete contents of request body is stored and is
-                accessible in its entirety by issuing a &GET; request
-                to the same URI.</para>
+            <para>Set the <code>Content-Type</code> request header to
+                    <code>application/octet-stream</code>.</para>
+            <para>Example call: <code>curl -i -X PUT -H "X-Auth-Token:
+                    $token" -H "Content-Type:
+                    application/octet-stream" -d
+                    @/home/glance/ubuntu-12.10.qcow2
+                    $image_url/v2/images/{image_id}/file</code></para>
         </wadl:doc>
         <request> &image_idParameter;</request>
         <response status="204"/>
@@ -332,12 +335,17 @@
             title="Download binary image data">
             <para role="shortdesc">Downloads binary image data. (Since
                 Image API v2.0.)</para>
-            <para>Response body contains the raw binary data that
-                represents the actual virtual disk. The Content-Type
-                header is 'application/octet-stream.' The Content-MD5
-                header contains an MD5 checksum of the image data.
-                Clients are encouraged to verify the integrity of the
-                image data they receive by using this checksum.</para>
+            <para>Example call: <code>curl -i -X GET -H "X-Auth-Token:
+                    $token"
+                    $image_url/v2/images/{image_id}/file</code></para>
+            <para>The response body contains the raw binary data that
+                represents the actual virtual disk. The
+                    <code>Content-Type</code> header contains the
+                value <code>application/octet-stream</code>. The
+                    <code>Content-MD5</code> header contains an MD5
+                checksum of the image data. Clients are encouraged to
+                verify the integrity of the image data they receive by
+                using this checksum.</para>
             <para>If no image data exists, returns the HTTP 204 status
                 code.</para>
         </wadl:doc>
