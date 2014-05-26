@@ -37,6 +37,7 @@ function test_manuals {
 }
 
 function test_all {
+    test_manuals 'de' 'api-quick-start'
     test_manuals 'es' 'api-quick-start'
     test_manuals 'fr' 'api-quick-start'
     test_manuals 'ja' 'api-quick-start'
