@@ -22,21 +22,30 @@
     <resources base="https://neutron.example.com/"
         xml:id="os-networks-provider-ext-v2.0">
         <resource id="version" path="//v2.0">
-            <resource id="Networks" path="networks">
-                <method href="#listNetworks"/>
-                <method href="#createNetwork"/>
-                <resource path="{network_id}" id="network_id">
-                    <param name="network_id" style="template"
-                        type="csapi:UUID">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The UUID for the
-                                network of interest to
-                            you.</para></wadl:doc>
-                    </param>
-                    <method href="#showNetwork"/>
-                    <method href="#updateNetwork"/>
-                    <method href="#deleteNetwork"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The ID for the tenant or
+                            account in a multi-tenancy
+                        cloud.</para></wadl:doc>
+                </param>
+                <resource id="Networks" path="networks">
+                    <method href="#listNetworks"/>
+                    <method href="#createNetwork"/>
+                    <resource path="{network_id}" id="network_id">
+                        <param name="network_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The UUID for the
+                                   network of interest to
+                                you.</para></wadl:doc>
+                        </param>
+                        <method href="#showNetwork"/>
+                        <method href="#updateNetwork"/>
+                        <method href="#deleteNetwork"/>
+                    </resource>
                 </resource>
             </resource>
         </resource>
@@ -75,7 +84,8 @@
             title="Create network" xml:lang="EN">
             <para role="shortdesc">Creates a network.</para>
         </wadl:doc>
-        <request> &networkCreateParameters; &networkProviderParameters; <representation
+        <request> &networkCreateParameters;
+            &networkProviderParameters; <representation
                 mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">

@@ -30,7 +30,7 @@
         <resource id="versions" path="//">
             <method href="#listVersions-image-v1"/>
         </resource>
-      <!--  <resource id="extensions" path="extensions">
+        <!--  <resource id="extensions" path="extensions">
             <method href="#listExtensions"/>
             <resource id="extension" path="{alias}">
                 <param name="alias" style="template" type="xsd:string"/>
@@ -38,52 +38,61 @@
             </resource>
         </resource>-->
         <resource id="version" type="#VersionDetails" path="//v1">
-            <resource id="Images" type="#ImageList" path="images">
-                <method href="#createImage-v1"/>
-                <resource path="detail" type="#DetailImageList"
-                    id="detail"/>
-                <resource path="{image_id}" id="image_id">
-                    <param name="image_id" style="template"
-                        type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN" title="Image ID">Image ID
-                            stored through the image API. Typically a
-                            UUID.</wadl:doc>
-                    </param>
-                    <method href="#getImage-v1"/>
-                    <method href="#getImageHeaders-v1"/>
-                    <method href="#updateImage-v1"/>
-                    <method href="#deleteImage-v1"/>
-                    <resource id="members" path="members">
-                        <method href="#replaceMember-v1"/>
-                        <resource path="{owner_id}" id="owner-id">
-                            <param name="owner_id" style="template"
-                                type="xsd:string">
-                                <wadl:doc
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The ID for the tenant or
+                            account in a multi-tenancy
+                        cloud.</para></wadl:doc>
+                </param>
+                <resource id="Images" type="#ImageList" path="images">
+                    <method href="#createImage-v1"/>
+                    <resource path="detail" type="#DetailImageList"
+                        id="detail"/>
+                    <resource path="{image_id}" id="image_id">
+                        <param name="image_id" style="template"
+                            type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Image ID">Image
+                                ID stored through the image API.
+                                Typically a UUID.</wadl:doc>
+                        </param>
+                        <method href="#getImage-v1"/>
+                        <method href="#getImageHeaders-v1"/>
+                        <method href="#updateImage-v1"/>
+                        <method href="#deleteImage-v1"/>
+                        <resource id="members" path="members">
+                            <method href="#replaceMember-v1"/>
+                            <resource path="{owner_id}" id="owner-id">
+                                <param name="owner_id"
+                                   style="template" type="xsd:string">
+                                   <wadl:doc
                                    xmlns="http://www.w3.org/1999/xhtml"
                                    xml:lang="EN" title="Owner ID"
                                    >Owner ID, which is the tenant
                                    ID.</wadl:doc>
-                            </param>
-                            <method href="#addMember-v1"/>
-                            <method href="#removeMember-v1"/>
+                                </param>
+                                <method href="#addMember-v1"/>
+                                <method href="#removeMember-v1"/>
+                            </resource>
                         </resource>
                     </resource>
                 </resource>
-            </resource>
-            <resource id="shared-images" path="shared-images">
-                <resource path="{owner}" id="owner-2">
-                    <param name="owner" style="plain" required="true"
-                        type="csapi:uuid">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN" title="Image ID">
-                            <para>Owner ID. The owner ID is the tenant
-                                ID.</para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#getSharedImages-v1"/>
+                <resource id="shared-images" path="shared-images">
+                    <resource path="{owner}" id="owner-2">
+                        <param name="owner" style="plain"
+                            required="true" type="csapi:uuid">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Image ID">
+                                <para>Owner ID. The owner ID is the
+                                   tenant ID.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getSharedImages-v1"/>
+                    </resource>
                 </resource>
             </resource>
         </resource>
@@ -104,7 +113,7 @@
         </wadl:doc>
         <method href="#showVersionDetails-image-v1"/>
     </resource_type>
-   <!-- <resource_type id="ExtensionList">
+    <!-- <resource_type id="ExtensionList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Extension List">
             <para>A list of supported extensions.</para>
