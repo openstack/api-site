@@ -32,9 +32,10 @@
         </resource>
         <resource id="version" path="//v2">
             <resource id="tenant_id" path="{tenant_id}">
-                <param name="tenant_id" style="template"
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="tenant_id" style="template"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
                         xml:lang="EN"><para>The ID for the tenant or
                             account in a multi-tenancy
                         cloud.</para></wadl:doc>
@@ -143,22 +144,25 @@
                 whatever image attribute is provided as the
                     <code>sort_key</code>.</para>
         </wadl:doc>
-        <request> &imageListReqParameters; </request>
-        <response status="200"> &imagesParameter; &statusParameter;
-            &deleted_atParameter; &nameParameter; &deletedParameter;
-            &container_formatParameter; &created_atParameter;
-            &disk_formatParameter; &updated_atParameter;
-            &min_diskParameter; &protectedParameter; &idParameter;
-            &min_ramParameter; &check_sumParameter; &ownerParameter;
-            &is_publicParameter; &virtual_sizeParameter;
-            &propertiesParameter; <representation
-                mediaType="application/json">
+        <request>
+            <representation mediaType="application/json">
+                &imageListReqParameters; </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="samples/image-list-response.json"/>
-                </wadl:doc>
-            </representation>
+                </wadl:doc> &imagesParameter; &statusParameter;
+                &deleted_atParameter; &nameParameter;
+                &deletedParameter; &container_formatParameter;
+                &created_atParameter; &disk_formatParameter;
+                &updated_atParameter; &min_diskParameter;
+                &protectedParameter; &idParameter; &min_ramParameter;
+                &check_sumParameter; &ownerParameter;
+                &is_publicParameter; &virtual_sizeParameter;
+                &propertiesParameter; </representation>
         </response>
     </method>
     <method name="POST" id="createImage-v2">
@@ -166,78 +170,84 @@
             title="Create image">
             <para role="shortdesc">Creates a virtual machine (VM)
                 image. (Since Image API v2.0.)</para>
-            <para>Created with a Location header that contains the
-                newly-created URI for the image. Response body
-                represents the created image entity.</para>
+            <para>Created with a <code>Location</code> header that
+                contains the newly-created URI for the image. Response
+                body represents the created image entity.</para>
         </wadl:doc>
         <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="name" style="plain" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Images name"><para>Name for
-                        the image. The name of an image is not unique
-                        to a Image Service node. The API cannot expect
-                        users to know the names of images owned by
-                        others.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02" name="id"
-                style="plain" type="csapi:uuid" required="false">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Image ID"><para>The image
-                        ID.</para></wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="visibility" style="plain" type="xsd:string"
-                required="false">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Visibility">
-                    <para>Image visibility. Public or private. Default
-                        is public.</para>
-                </wadl:doc>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02"
-                name="tags" style="plain" type="xsd:dict"
-                required="false">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Tags">
-                    <para>Image tags.</para>
-                </wadl:doc>
-            </param>
             <representation mediaType="application/json"
                 element="image">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="samples/image-create-req.json"/>
                 </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Name for the image. The
+                            name of an image is not unique to a Image
+                            Service node. The API cannot expect users
+                            to know the names of images owned by
+                            others.</para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="id" style="plain" type="csapi:uuid"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The image
+                        ID.</para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="visibility" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>Image visibility. Public or private.
+                            Default is public.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="tags" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>Image tags.</para>
+                    </wadl:doc>
+                </param>
             </representation>
         </request>
-        <response status="201"> &imageParameter; &statusParameter;
-            &deletedParameter; &container_formatParameter;
-            &min_ramParameter; &updated_atParameter; &ownerParameter;
-            &min_diskParameter; &is_publicParameter;
-            &deleted_atParameter; &idParameter; &sizeParameter;
-            &virtual_sizeParameter; &nameParameter;
-            &check_sumParameter; &created_atParameter;
-            &disk_formatParameter; &propertiesParameter;
-            &protectedParameter; <param
-                xmlns="http://wadl.dev.java.net/2009/02"
-                name="location" style="plain" type="xsd:anyURI"
-                required="true"
-                path="/common:version/atom:link[@rel='self']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Image location">
-                    <para>The location for the image identified by a
-                        URI.</para>
-                </wadl:doc>
-                <link resource_type="#createImage" rel="self"/>
-            </param>
+        <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="samples/image-create-response.json"/>
-                </wadl:doc>
+                </wadl:doc> &imageParameter; &statusParameter;
+                &deletedParameter; &container_formatParameter;
+                &min_ramParameter; &updated_atParameter;
+                &ownerParameter; &min_diskParameter;
+                &is_publicParameter; &deleted_atParameter;
+                &idParameter; &sizeParameter; &virtual_sizeParameter;
+                &nameParameter; &check_sumParameter;
+                &created_atParameter; &disk_formatParameter;
+                &propertiesParameter; &protectedParameter; <!--<param
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>The location for the image identified by
+                            a URI.</para>
+                    </wadl:doc>
+                    <link resource_type="#createImage" rel="self"/>
+                </param>-->
             </representation>
         </response>
     </method>
@@ -267,13 +277,12 @@
                     <citetitle>OpenStack Image Service API v2
                     Reference</citetitle>.</para>
         </wadl:doc>
-        <request> &image_idParameter; <representation
-                mediaType="application/json">
+        <request>
+            <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="samples/image-update-req.json"/>
-                </wadl:doc>
-            </representation>
+                </wadl:doc> &image_idParameter; </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -292,7 +301,10 @@
                 (Since Image API v2.0.)</para>
             <para>Response body is a single image entity.</para>
         </wadl:doc>
-        <request> &image_idParameter;</request>
+        <request>
+            <representation mediaType="application/json">
+                &image_idParameter;</representation>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -316,7 +328,10 @@
                 response is empty and returns the HTTP 204 status
                 code.</para>
         </wadl:doc>
-        <request> &image_idParameter;</request>
+        <request>
+            <representation mediaType="application/json">
+                &image_idParameter; </representation>
+        </request>
         <response status="204"/>
         <response status="403"/>
     </method>
@@ -336,7 +351,10 @@
                     @/home/glance/ubuntu-12.10.qcow2
                     $image_url/v2/images/{image_id}/file</code></para>
         </wadl:doc>
-        <request> &image_idParameter;</request>
+        <request>
+            <representation mediaType="application/json">
+                &image_idParameter; </representation>
+        </request>
         <response status="204"/>
     </method>
     <method name="GET" id="getImageFile-v2">
@@ -358,7 +376,10 @@
             <para>If no image data exists, returns the HTTP 204 status
                 code.</para>
         </wadl:doc>
-        <request> &image_idParameter; </request>
+        <request>
+            <representation mediaType="application/json"
+                >&image_idParameter; </representation>
+        </request>
         <response status="200 204"/>
     </method>
     <!-- images/{image_id}/tags/{tag} methods -->
@@ -368,7 +389,10 @@
             <para role="shortdesc">Adds a specified tag to a specified
                 image. (Since Image API v2.0.)</para>
         </wadl:doc>
-        <request> &image_idParameter; &tagParameter;</request>
+        <request>
+            <representation mediaType="application/json"
+                >&image_idParameter; &tagParameter;</representation>
+        </request>
         <response status="204"/>
     </method>
     <method name="DELETE" id="deleteImageTag-v2">
@@ -377,7 +401,10 @@
             <para role="shortdesc">Deletes a specified tag from a
                 specified image. (Since Image API v2.0.)</para>
         </wadl:doc>
-        <request> &image_idParameter; &tagParameter;</request>
+        <request>
+            <representation mediaType="application/json">
+                &image_idParameter; &tagParameter;</representation>
+        </request>
         <response status="204"/>
     </method>
     <!-- images/{image_id}/members methods -->
@@ -388,7 +415,11 @@
             <para>Response body is a single image member entity.
                 (Since Image API 2.2.)</para>
         </wadl:doc>
-        <request> &image_idParameter; &member_idParameter; </request>
+        <request>
+            <representation mediaType="application/json">
+                &image_idParameter; &member_idParameter;
+            </representation>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -412,7 +443,10 @@
                 makes this call, the call returns the HTTP 404 status
                 code.</para>
         </wadl:doc>
-        <request> &image_idParameter; </request>
+        <request>
+            <representation mediaType="application/json"
+                >&image_idParameter; </representation>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -431,15 +465,14 @@
             <para role="shortdesc">Adds a specified tenant ID as an
                 image member. (Since Image API v2.1.)</para>
         </wadl:doc>
-        <request> &image_idParameter; <representation
-                mediaType="application/json">
+        <request>
+            <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="samples/image-member-create-request.json"
                     />
-                </wadl:doc>
-            </representation>
+                </wadl:doc> &image_idParameter; </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -459,14 +492,14 @@
                 specified member of the specified image. (Since Image
                 API v2.1.)</para>
         </wadl:doc>
-        <request> &image_idParameter; &member_idParameter;
-                <representation mediaType="application/json">
+        <request>
+            <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="samples/image-member-update-request.json"
                     />
-                </wadl:doc>
+                </wadl:doc> &image_idParameter; &member_idParameter;
             </representation>
         </request>
         <response status="200">
@@ -487,7 +520,11 @@
                 the member list of the specified image. (Since Image
                 API v2.1.)</para>
         </wadl:doc>
-        <request> &image_idParameter; &member_idParameter;</request>
+        <request>
+            <representation mediaType="application/json">
+                &image_idParameter;
+                &member_idParameter;</representation>
+        </request>
         <response status="204"/>
     </method>
 </application>

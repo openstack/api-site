@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2011-2014 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -18,8 +18,7 @@
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
->
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
     <grammars>
         <include href="../xsd/OS-KSADM.xsd"/>
     </grammars>
@@ -27,7 +26,8 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:35357" xml:id="OS-KSADM-admin-v2.0">
+    <resources base="http://localhost:35357"
+        xml:id="OS-KSADM-admin-v2.0">
         <resource id="version-v2.0" path="//v2.0">
             <param name="X-Auth-Token" style="header"
                 type="xsd:string" required="true">
@@ -118,10 +118,11 @@
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN"><para>The page size.
-                                </para></wadl:doc>
+                               </para></wadl:doc>
                         </param>
                         <method href="#listUsersForTenant"/>
-                        <resource id="userForTenant-v2.0" path="{userId}">
+                        <resource id="userForTenant-v2.0"
+                            path="{userId}">
                             <param name="userId" style="template"
                                 type="xsd:string">
                                 <wadl:doc
@@ -132,10 +133,10 @@
                             <resource id="userRolesForTenant-v2.0"
                                 path="roles">
                                 <resource
-                                    id="tenant-user-role-OS-KSADM-v2.0"
+                                   id="tenant-user-role-OS-KSADM-v2.0"
                                    path="OS-KSADM">
                                    <resource
-                                       id="userSpecificRoleForTenant-v2.0"
+                                   id="userSpecificRoleForTenant-v2.0"
                                    path="{roleId}">
                                    <param name="roleId"
                                    style="template" type="xsd:string">
@@ -203,7 +204,7 @@
                         <wadl:doc
                             xmlns="http://docbook.org/ns/docbook"
                             xml:lang="EN"><para>The page size.
-                            </para></wadl:doc>
+                           </para></wadl:doc>
                     </param>
                     <method href="#listServices"/>
                     <method href="#addService"/>
@@ -575,15 +576,7 @@
             <para role="shortdesc">Lists roles.</para>
         </wadl:doc>
         <response status="200 203">
-            <param name="roles" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Role object.</para></wadl:doc>
-            </param> &roleResponse; <param name="roles_links"
-                style="plain" required="true" type="xsd:dict">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Role links.</para></wadl:doc>
-            </param>
+
             <representation mediaType="application/xml"
                 element="identity:roles">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -597,6 +590,17 @@
                     <xsdxt:code href="../OS-KSADM/samples/roles.json"
                     />
                 </wadl:doc>
+                <param name="roles" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Role
+                        object.</para></wadl:doc>
+                </param> &roleResponse; <param name="roles_links"
+                    style="plain" required="true" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Role
+                        links.</para></wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &getFaults; </method>
 
@@ -621,10 +625,7 @@
             </representation>
         </request>
         <response status="201">
-            <param name="Location" type="xsd:anyURI" style="header">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The location.</wadl:doc>
-            </param>
+
             <representation mediaType="application/xml"
                 element="identity:role">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -637,6 +638,11 @@
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/role.json"/>
                 </wadl:doc>
+                <param name="Location" type="xsd:anyURI"
+                    style="header">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">The location.</wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
     <method name="GET" id="getRoleByName">
@@ -644,11 +650,7 @@
             title="Get role information by name">
             <para role="shortdesc">Gets a role by name.</para>
         </wadl:doc>
-        <response status="200 203"> &roleResponse; <param
-                name="Location" type="xsd:anyURI" style="header">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The location.</wadl:doc>
-            </param>
+        <response status="200 203">
             <representation mediaType="application/xml"
                 element="identity:role">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -660,7 +662,11 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/role.json"/>
-                </wadl:doc>
+                </wadl:doc> &roleResponse; <param name="Location"
+                    type="xsd:anyURI" style="header">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">The location.</wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
 
@@ -670,11 +676,7 @@
             <para role="shortdesc">Gets information for a specified
                 role.</para>
         </wadl:doc>
-        <response status="200 203"> &roleResponse; <param
-                name="Location" type="xsd:anyURI" style="header">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The location.</wadl:doc>
-            </param>
+        <response status="200 203">
             <representation mediaType="application/xml"
                 element="identity:role">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -686,7 +688,11 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="../OS-KSADM/samples/role.json"/>
-                </wadl:doc>
+                </wadl:doc> &roleResponse; <param name="Location"
+                    type="xsd:anyURI" style="header">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">The location.</wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
 
@@ -789,10 +795,6 @@
             </representation>
         </request>
         <response status="201">
-            <param name="Location" type="xsd:anyURI" style="header">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The location.</wadl:doc>
-            </param>
             <representation mediaType="application/xml"
                 element="service">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -807,6 +809,11 @@
                     <xsdxt:code
                         href="../OS-KSADM/samples/service.json"/>
                 </wadl:doc>
+                <param name="Location" type="xsd:anyURI"
+                    style="header">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">The location.</wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
     <method name="DELETE" id="deleteService">

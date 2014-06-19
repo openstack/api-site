@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2011-2013 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2011-2014 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -30,33 +30,77 @@
     <!--*******************************************************-->
 
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:35357" xml:id="OS-KSCATALOG-admin-v2.0">
+    <resources base="http://localhost:35357"
+        xml:id="OS-KSCATALOG-admin-v2.0">
         <resource id="version" path="//v2.0">
             <resource id="tenants" path="tenants">
-                <param name="X-Auth-Token" style="header" type="xsd:string" required="true"><doc>A valid authentication token for an administrative user.</doc></param>
+                <param name="X-Auth-Token" style="header"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>A valid authentication
+                            token for an administrative
+                        user.</para></wadl:doc>
+                </param>
                 <resource id="tenantId" path="{tenantId}">
-                    <param name="tenantId" style="template" type="xsd:string"><doc>The tenant ID.</doc></param>
-                    <resource id="endpoints-OS-KSCATALOG" path="OS-KSCATALOG">
+                    <param name="tenantId" style="template"
+                        type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN"><para>The tenant
+                            ID.</para></wadl:doc>
+                    </param>
+                    <resource id="endpoints-OS-KSCATALOG"
+                        path="OS-KSCATALOG">
                         <resource id="endpoints" path="endpoints">
                             <method href="#listEndpoints"/>
                             <method href="#addEndpoint"/>
-                            <resource id="endpoint" path="{endpointId}">
-                                <param name="endpointId" style="template" type="xsd:string"><doc>The endpoint ID.</doc></param>
+                            <resource id="endpoint"
+                                path="{endpointId}">
+                                <param name="endpointId"
+                                   style="template" type="xsd:string">
+                                   <wadl:doc
+                                   xmlns="http://docbook.org/ns/docbook"
+                                   xml:lang="EN"><para>The endpoint
+                                   ID.</para></wadl:doc>
+                                </param>
                                 <method href="#getEndpoint"/>
                                 <method href="#deleteEndpoint"/>
                             </resource>
                         </resource>
-                     </resource>
+                    </resource>
                 </resource>
             </resource>
-            <resource id="role-service-OS-KSCATALOG" path="OS-KSCATALOG">
-                <resource id="endpointTemplates" path="endpointTemplates">
-                    <param name="X-Auth-Token" style="header" type="xsd:string" required="true"><doc>A valid authentication token for an administrative user.</doc></param>
-                    <param name="serviceId" style="query" required="false" type="xsd:string"><doc>The service ID.</doc></param><method href="#listEndpointTemplates"/>
+            <resource id="role-service-OS-KSCATALOG"
+                path="OS-KSCATALOG">
+                <resource id="endpointTemplates"
+                    path="endpointTemplates">
+                    <param name="X-Auth-Token" style="header"
+                        type="xsd:string" required="true">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN"><para>A valid authentication
+                                token for an administrative
+                                user.</para></wadl:doc>
+                    </param>
+                    <param name="serviceId" style="query"
+                        required="false" type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN"><para>The service
+                            ID.</para></wadl:doc>
+                    </param>
+                    <method href="#listEndpointTemplates"/>
                     <method href="#addEndpointTemplate"/>
-                    <resource id="endpointTemplateId" path="{endpointTemplateId}">
-                       <!-- <param name="X-Auth-Token" style="header" type="xsd:string" required="true"/> -->
-                        <param name="endpointTemplateId" style="template" type="xsd:string"><doc>The endpoint template ID.</doc></param>
+                    <resource id="endpointTemplateId"
+                        path="{endpointTemplateId}">
+                        <!-- <param name="X-Auth-Token" style="header" type="xsd:string" required="true"/> -->
+                        <param name="endpointTemplateId"
+                            style="template" type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The endpoint
+                                   template ID.</para></wadl:doc>
+                        </param>
                         <method href="#getEndpointTemplate"/>
                         <method href="#updateEndpointTemplate"/>
                         <method href="#deleteEndpointTemplate"/>
@@ -73,205 +117,256 @@
     <!-- EndPoint Templates -->
 
     <method name="GET" id="listEndpointTemplates">
-        <doc xml:lang="EN" title="List Endpoint Templates">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists endpoint templates.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List endpoint templates">
+            <para role="shortdesc">Lists endpoint templates.</para>
+        </wadl:doc>
         <response status="200 203">
-            <representation mediaType="application/xml" element="endpointTemplates">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplates.xml"/>
-            </doc>
-         </representation>
+            <representation mediaType="application/xml"
+                element="endpointTemplates">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplates.xml"
+                    />
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplates.json"/>
-            </doc>
-         </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplates.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
 
     <method name="GET" id="getEndpointTemplate">
-        <doc xml:lang="EN" title="Get Endpoint Template">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets endpoint templates.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get endpoint template">
+            <para role="shortdesc">Gets endpoint templates.</para>
+        </wadl:doc>
         <response status="200 203">
-            <representation mediaType="application/xml" element="endpointTemplate">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.xml"/>
-            </doc>
-         </representation>
+            <representation mediaType="application/xml"
+                element="endpointTemplate">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.xml"
+                    />
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.json"/>
-            </doc>
-         </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
 
     <method name="POST" id="addEndpointTemplate">
-        <doc xml:lang="EN" title="Add Endpoint Template">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds endpoint template.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add endpoint template">
+            <para role="shortdesc">Adds endpoint template.</para>
+        </wadl:doc>
         <request>
-            <representation mediaType="application/xml" element="endpointTemplate">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.xml"/>
-            </doc>
-         </representation>
+            <representation mediaType="application/xml"
+                element="endpointTemplate">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.xml"
+                    />
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.json"/>
-            </doc>
-         </representation>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.json"
+                    />
+                </wadl:doc>
+            </representation>
         </request>
         <response status="201">
-            <representation mediaType="application/xml" element="endpointTemplate">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.xml"/>
-            </doc>
-                <param name="Location" type="xsd:anyURI" style="header"/>
+            <representation mediaType="application/xml"
+                element="endpointTemplate">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.xml"
+                    />
+                </wadl:doc>
+                <param name="Location" type="xsd:anyURI"
+                    style="header"/>
             </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.json"/>
-            </doc>
-                <param name="Location" type="xsd:anyURI" style="header"/>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.json"
+                    />
+                </wadl:doc>
+                <param name="Location" type="xsd:anyURI"
+                    style="header"/>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-    </method>
+        </response> &commonFaults; &getFaults; &postPutFaults; </method>
 
     <method name="PUT" id="updateEndpointTemplate">
-        <doc xml:lang="EN" title="Update Endpoint Template">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Updates endpoint template.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update endpoint template">
+            <para role="shortdesc">Updates endpoint template.</para>
+        </wadl:doc>
         <request>
-            <representation mediaType="application/xml" element="endpointTemplate">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.xml"/>
-                </doc>
+            <representation mediaType="application/xml"
+                element="endpointTemplate">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.xml"
+                    />
+                </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.json"/>
-                </doc>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.json"
+                    />
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
-            <representation mediaType="application/xml" element="endpointTemplate">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.xml"/>
-                </doc>
+            <representation mediaType="application/xml"
+                element="endpointTemplate">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.xml"
+                    />
+                </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <doc xml:lang="EN">
-                    <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplate.json"/>
-                </doc>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplate.json"
+                    />
+                </wadl:doc>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-    </method>
+        </response> &commonFaults; &getFaults; &postPutFaults; </method>
 
     <method name="DELETE" id="deleteEndpointTemplate">
-        <doc xml:lang="EN" title="Delete Endpoint Template.">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes an endpoint template.</p>
-        </doc>
-        <response status="204"/>
-        &commonFaults;
-        &getFaults;
-    </method>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete endpoint template.">
+            <para role="shortdesc">Deletes an endpoint
+                template.</para>
+        </wadl:doc>
+        <response status="204"/> &commonFaults; &getFaults; </method>
 
     <method name="POST" id="addEndpoint">
-        <doc xml:lang="EN" title="Add Endpoint">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Adds endpoint to a tenant.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add endpoint">
+            <para role="shortdesc">Adds endpoint to a tenant.</para>
+        </wadl:doc>
         <request>
-            <representation mediaType="application/xml" element="endpointTemplate">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplateWithOnlyId.xml"/>
-            </doc>
-            <param name="endpoint" style="plain" path="/"
-                   type="EndpointTemplateWithOnlyId"/>
-         </representation>
+            <representation mediaType="application/xml"
+                element="endpointTemplate">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplateWithOnlyId.xml"
+                    />
+                </wadl:doc>
+                <param name="endpoint" style="plain" path="/"
+                    type="EndpointTemplateWithOnlyId"/>
+            </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpointTemplateWithOnlyId.json"/>
-            </doc>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpointTemplateWithOnlyId.json"
+                    />
+                </wadl:doc>
             </representation>
         </request>
         <response status="201">
-            <representation mediaType="application/xml" element="identity:endpoint">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpoint.xml"/>
-            </doc>
-                <param name="Location" type="xsd:anyURI" style="header"/>
+            <representation mediaType="application/xml"
+                element="identity:endpoint">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpoint.xml"/>
+                </wadl:doc>
+                <param name="Location" type="xsd:anyURI"
+                    style="header"/>
             </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpoint.json"/>
-            </doc>
-                <param name="Location" type="xsd:anyURI" style="header"/>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpoint.json"/>
+                </wadl:doc>
+                <param name="Location" type="xsd:anyURI"
+                    style="header"/>
             </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-        &postPutFaults;
-    </method>
+        </response> &commonFaults; &getFaults; &postPutFaults; </method>
 
     <method name="GET" id="listEndpoints">
-        <doc xml:lang="EN" title="List Endpoints">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Lists endpoints for a tenant.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List endpoints">
+            <para role="shortdesc">Lists endpoints for a
+                tenant.</para>
+        </wadl:doc>
         <response status="200 203">
-            <representation mediaType="application/xml" element="identity:endpoints">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpoints.xml"/>
-            </doc>
-         </representation>
+            <representation mediaType="application/xml"
+                element="identity:endpoints">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpoints.xml"/>
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpoints.json"/>
-            </doc>
-         </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpoints.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
 
     <method name="GET" id="getEndpoint">
-        <doc xml:lang="EN" title="Get Endpoint">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Gets endpoint for a tenant.</p>
-        </doc>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Get endpoint">
+            <para role="shortdesc">Gets endpoint for a tenant.</para>
+        </wadl:doc>
         <response status="200 203">
-            <representation mediaType="application/xml" element="identity:endpoint">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpoint.xml"/>
-            </doc>
-         </representation>
+            <representation mediaType="application/xml"
+                element="identity:endpoint">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpoint.xml"/>
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/json">
-            <doc xml:lang="EN">
-               <xsdxt:code href="../OS-KSCATALOG/samples/endpoint.json"/>
-            </doc>
-         </representation>
-        </response>
-        &commonFaults;
-        &getFaults;
-    </method>
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../OS-KSCATALOG/samples/endpoint.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
 
     <method name="DELETE" id="deleteEndpoint">
-        <doc xml:lang="EN" title="Delete Endpoint.">
-            <p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Deletes an endpoint from a tenant.</p>
-        </doc>
-        <response status="204"/>
-        &commonFaults;
-        &getFaults;
-    </method>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete endpoint">
+            <para role="shortdesc">Deletes an endpoint from a
+                tenant.</para>
+        </wadl:doc>
+        <response status="204"/> &commonFaults; &getFaults; </method>
 </application>

@@ -11,11 +11,11 @@
 %common;]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:db="http://docbook.org/ns/docbook"
     xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
@@ -33,8 +33,9 @@
                 <param name="tenant_id" style="template"
                     type="csapi:UUID">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The tenant ID in a
-                            multi-tenancy cloud.</para>
+                        xml:lang="EN">
+                        <para>The tenant ID in a multi-tenancy
+                            cloud.</para>
                     </wadl:doc>
                 </param>
                 <resource id="extensions" type="#ExtensionList"
@@ -46,10 +47,10 @@
                             type="xsd:string">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>An alias, which is
-                                   a name for a pointer to a resource.
-                                   For example, a named
-                                   extension.</para>
+                                xml:lang="EN">
+                                <para>An alias, which is a name for a
+                                   pointer to a resource. For example,
+                                   a named extension.</para>
                             </wadl:doc>
                         </param>
                         <method href="#getExtensionv2"/>
@@ -70,8 +71,8 @@
                             type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The UUID for the
-                                   server.</para>
+                                xml:lang="EN">
+                                <para>The UUID for the server.</para>
                             </wadl:doc>
                         </param>
                         <method href="#getServer"/>
@@ -117,7 +118,6 @@
                                    <literal>private</literal>.</para>
                                    </wadl:doc>
                                 </param>
-                                <!--<method href="#getNetworkAddresses"/>-->
                             </resource>
                         </resource>
                         <resource id="action" path="action">
@@ -131,59 +131,62 @@
                         </resource>
                     </resource>
                 </resource>
-            <resource id="Images" type="#ImageList" path="images">
-                <resource id="image_detail" path="detail"
-                    type="#DetailImageList"/>
-                <resource id="image_id" path="{image_id}">
-                    <param name="image_id" style="template"
-                        type="csapi:UUID">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN" title="image_id">
-                            <para>The UUID for the image.</para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#getImage"/>
-                    <method href="#deleteImage"/>
-                    <resource id="image_metadata" path="metadata"
-                        type="#ImageMetadataDetails">
-                        <resource id="imageMetadataKey" path="{key}">
-                            <param
-                                xmlns="http://wadl.dev.java.net/2009/02"
-                                name="key" style="template"
-                                type="csapi:imageMetadataKey">
-                                <wadl:doc
+                <resource id="Images" type="#ImageList" path="images">
+                    <resource id="image_detail" path="detail"
+                        type="#DetailImageList"/>
+                    <resource id="image_id" path="{image_id}">
+                        <param name="image_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="image_id">
+                                <para>The UUID for the image.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getImage"/>
+                        <method href="#deleteImage"/>
+                        <resource id="image_metadata" path="metadata"
+                            type="#ImageMetadataDetails">
+                            <resource id="imageMetadataKey"
+                                path="{key}">
+                                <param
+                                   xmlns="http://wadl.dev.java.net/2009/02"
+                                   name="key" style="template"
+                                   type="csapi:imageMetadataKey">
+                                   <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
                                    xml:lang="EN"
                                    title="Metadata item key">
                                    <para>A string. Maximum length is
                                    255 characters.</para>
-                                </wadl:doc>
-                            </param>
-                            <method href="#getImageMetadataItem"/>
-                            <method href="#setImageMetadataItem"/>
-                            <method href="#deleteImageMetadataItem"/>
+                                   </wadl:doc>
+                                </param>
+                                <method href="#getImageMetadataItem"/>
+                                <method href="#setImageMetadataItem"/>
+                                <method
+                                   href="#deleteImageMetadataItem"/>
+                            </resource>
                         </resource>
                     </resource>
                 </resource>
-            </resource>
-            <resource id="Flavors" type="#FlavorList" path="flavors">
-                <resource id="flavor_detail" path="detail"
-                    type="#DetailFlavorList"/>
-                <resource id="flavor_id" path="{flavor_id}">
-                    <param name="flavor_id" style="template"
-                        type="csapi:UUID">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN" title="flavor_id">
-                            <para>UUID for the specific flavor
-                                (combination of memory, disk size, and
-                                CPUs).</para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#getFlavor"/>
+                <resource id="Flavors" type="#FlavorList"
+                    path="flavors">
+                    <resource id="flavor_detail" path="detail"
+                        type="#DetailFlavorList"/>
+                    <resource id="flavor_id" path="{flavor_id}">
+                        <param name="flavor_id" style="template"
+                            type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="flavor_id">
+                                <para>UUID for the specific flavor
+                                   (combination of memory, disk size,
+                                   and CPUs).</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getFlavor"/>
+                    </resource>
                 </resource>
-            </resource>
             </resource>
         </resource>
     </resources>
@@ -376,20 +379,6 @@
             <para role="shortdesc">Lists available extensions.</para>
         </wadl:doc>
         <response status="200 203">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/common:extensions/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ExtensionList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/common:extensions/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ExtensionList" rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -406,6 +395,21 @@
                         href="../api_samples/all_extensions/extensions-get-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/common:extensions/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ExtensionList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/common:extensions/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ExtensionList"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
@@ -440,8 +444,9 @@
             title="Create server">
             <para role="shortdesc">Creates a server.</para>
         </wadl:doc>
-        <request> &serverCreateParameters; <representation
-                mediaType="application/xml" element="csapi:server"> </representation>
+        <request>
+            <representation mediaType="application/xml"
+                element="csapi:server"> &serverCreateParameters; </representation>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -458,8 +463,8 @@
                 </wadl:doc>
             </representation>
         </request>
-        <response status="202"> &serverCreateParameters; <representation
-                mediaType="application/json">
+        <response status="202">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -472,8 +477,7 @@
                     xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/server-post-resp.xml"/>
-                </wadl:doc>
-            </representation>
+                </wadl:doc> &serverCreateParameters; </representation>
         </response>
         <response status="422">
             <representation mediaType="application/json"/>
@@ -488,31 +492,11 @@
             <para role="shortdesc">Lists IDs, names, and links for all
                 servers.</para>
         </wadl:doc>
-        <request> &serverListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &serverListQueryParameters;</representation>
+        </request>
         <response status="200 203">
-            <param name="servers" style="plain" required="true"
-                type="csapi:ServersWithOnlyIDsNamesLinks"
-                path="/csapi:servers/atom:link[@rel='servers']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>List of servers.</para>
-                </wadl:doc>
-                <link resource_type="#ServerList" rel="servers"/>
-            </param>
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:servers/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:servers/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerList" rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -526,6 +510,29 @@
                     xml:lang="EN"><xsdxt:code
                         href="../api_samples/servers-list-resp.xml"/>
                 </wadl:doc>
+                <param name="servers" style="plain" required="true"
+                    type="csapi:ServersWithOnlyIDsNamesLinks"
+                    path="/csapi:servers/atom:link[@rel='servers']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>List of servers.</para>
+                    </wadl:doc>
+                    <link resource_type="#ServerList" rel="servers"/>
+                </param>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ServerList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ServerList" rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
@@ -535,30 +542,35 @@
             <para role="shortdesc">Lists details for all
                 servers.</para>
         </wadl:doc>
-        <request> &serverListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &serverListQueryParameters;</representation>
+        </request>
         <response status="200 203">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                xml:lang="EN">
-                <para>The following examples show the list server
-                    responses:</para>
-                <xsdxt:code
-                    href="../api_samples/servers-details-resp.xml"/>
-            </wadl:doc>
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:servers/atom:link[@rel='next']/@href">
+            <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#DetailServerList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:servers/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#DetailServerList" rel="previous"
-                />
-            </param>
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/servers-details-resp.xml"
+                    />
+                </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#DetailServerList" rel="next"
+                    />
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#DetailServerList"
+                        rel="previous"/>
+                </param>
+            </representation>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -609,30 +621,6 @@
                 the specified server.</para>
         </wadl:doc>
         <request>
-            <param name="name" style="plain" required="false"
-                type="csapi:ServerForUpdate" path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The name of the server. If you edit the
-                        server name, the server host name does not
-                        change. Also, server names are not guaranteed
-                        to be unique.</para>
-                </wadl:doc>
-            </param>
-            <param name="accessIPv4" style="plain" required="false"
-                type="csapi:ServerForUpdate" path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The IP version 4 address.</para>
-                </wadl:doc>
-            </param>
-            <param name="accessIPv6" style="plain" required="false"
-                type="csapi:ServerForUpdate" path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The IP version 6 address.</para>
-                </wadl:doc>
-            </param>
             <representation mediaType="application/json"
                 element="csapi:server">
                 <wadl:doc xml:lang="EN"
@@ -650,6 +638,32 @@
                     <xsdxt:code
                         href="../api_samples/server-put-req.xml"/>
                 </wadl:doc>
+                <param name="name" style="plain" required="false"
+                    type="csapi:ServerForUpdate" path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The name of the server. If you edit the
+                            server name, the server host name does not
+                            change. Also, server names are not
+                            guaranteed to be unique.</para>
+                    </wadl:doc>
+                </param>
+                <param name="accessIPv4" style="plain"
+                    required="false" type="csapi:ServerForUpdate"
+                    path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The IP version 4 address.</para>
+                    </wadl:doc>
+                </param>
+                <param name="accessIPv6" style="plain"
+                    required="false" type="csapi:ServerForUpdate"
+                    path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The IP version 6 address.</para>
+                    </wadl:doc>
+                </param>
             </representation>
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -715,7 +729,6 @@
         <response status="204"/>
         <!-- Common, GET, inProgress Faults--> &commonFaults;
         &getFaults; &inProgressFault; </method>
-
     <!-- Server Actions -->
     <method name="POST" id="changePassword">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -802,13 +815,6 @@
             </representation>
         </request>
         <response status="202">
-            <param name="Location" style="header" required="true"
-                type="xsd:anyURI">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Location">
-                    <para>Specific URL of the server you want to
-                        rebuild.</para></wadl:doc>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -825,6 +831,13 @@
                         href="../api_samples/server-action-rebuild-resp.xml"
                     />
                 </wadl:doc>
+                <param name="Location" style="header" required="true"
+                    type="xsd:anyURI">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Location">
+                        <para>Specific URL of the server you want to
+                            rebuild.</para></wadl:doc>
+                </param>
             </representation>
         </response>
         <!-- All other faults, build, common, get, post/put, and inProgress -->
@@ -928,30 +941,6 @@
                 body.</para>
         </wadl:doc>
         <request>
-            <param name="name" style="plain" required="true"
-                type="csapi:ServerForCreate" path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="name">
-                    <para>Name of the snapshot.</para>
-                </wadl:doc>
-            </param>
-            <param name="createImage" style="plain" required="true"
-                type="csapi:ServerForCreate" path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="createImage">
-                    <para>A dictionary representation of a creation
-                        for image.</para>
-                </wadl:doc>
-            </param>
-            <param name="metadata" style="plain" required="false"
-                type="csapi:ServerForCreate" path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="metadata">
-                    <para>Metadata key and value pairs. The maximum
-                        size of the metadata key and value is 255
-                        bytes each.</para>
-                </wadl:doc>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -968,11 +957,38 @@
                         href="../api_samples/server-action-createimage.xml"
                     />
                 </wadl:doc>
+                <param name="name" style="plain" required="true"
+                    type="csapi:ServerForCreate" path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="name">
+                        <para>Name of the snapshot.</para>
+                    </wadl:doc>
+                </param>
+                <param name="createImage" style="plain"
+                    required="true" type="csapi:ServerForCreate"
+                    path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="createImage">
+                        <para>A dictionary representation of a
+                            creation for image.</para>
+                    </wadl:doc>
+                </param>
+                <param name="metadata" style="plain" required="false"
+                    type="csapi:ServerForCreate" path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="metadata">
+                        <para>Metadata key and value pairs. The
+                            maximum size of the metadata key and value
+                            is 255 bytes each.</para>
+                    </wadl:doc>
+                </param>
             </representation>
         </request>
         <response status="202">
-            <param name="Location" style="header" required="true"
-                type="xsd:anyURI"/>
+            <representation mediaType="application/xml">
+                <param name="Location" style="header" required="true"
+                    type="xsd:anyURI"/>
+            </representation>
         </response>
         <response status="409">
             <representation mediaType="application/json"/>
@@ -988,8 +1004,8 @@
             title="List addresses">
             <para role="shortdesc">Lists networks and addresses for a
                 specified tenant and server.</para>
-            <para>Specify the tenant ID and server ID in the URI.
-            </para>
+            <para>Specify the tenant ID and server ID in the
+                URI.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
@@ -1040,30 +1056,11 @@
             <para role="shortdesc">Lists IDs, names, and links for
                 available flavors.</para>
         </wadl:doc>
-        <request> &flavorListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &flavorListQueryParameters; </representation>
+        </request>
         <response status="200 203">
-            <param name="flavors" style="plain" required="true"
-                type="csapi:FlavorsWithOnlyIDsNamesLinks"
-                path="/csapi:flavors">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Flavors are known combinations
-                        of memory, disk space, and number of
-                        CPUs.</para></wadl:doc>
-            </param>
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:flavors/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#FlavorList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:flavors/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#FlavorList" rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -1078,6 +1075,28 @@
                     <xsdxt:code
                         href="../api_samples/flavors-list-resp.xml"/>
                 </wadl:doc>
+                <param name="flavors" style="plain" required="true"
+                    type="csapi:FlavorsWithOnlyIDsNamesLinks"
+                    path="/csapi:flavors">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Flavors are known
+                            combinations of memory, disk space, and
+                            number of CPUs.</para></wadl:doc>
+                </param>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:flavors/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#FlavorList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:flavors/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#FlavorList" rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
@@ -1087,23 +1106,11 @@
             <para role="shortdesc">Lists all details for available
                 flavors.</para>
         </wadl:doc>
-        <request> &flavorListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &flavorListQueryParameters; </representation>
+        </request>
         <response status="200 203">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:flavors/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#DetailFlavorList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:flavors/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#DetailFlavorList" rel="previous"
-                />
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -1118,10 +1125,25 @@
                     <xsdxt:code
                         href="../api_samples/flavors-list-resp.xml"/>
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:flavors/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#DetailFlavorList" rel="next"
+                    />
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:flavors/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#DetailFlavorList"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
-
     <method name="GET" id="getFlavor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get flavor details">
@@ -1153,23 +1175,11 @@
             <para role="shortdesc">Lists all details for available
                 images.</para>
         </wadl:doc>
-        <request> &imageListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &imageListQueryParameters; </representation>
+        </request>
         <response status="200 203">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:images/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#DetailImageList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:images/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#DetailImageList" rel="previous"
-                />
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -1186,6 +1196,22 @@
                         href="../api_samples/images-details-get-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:images/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#DetailImageList" rel="next"
+                    />
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:images/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#DetailImageList"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
@@ -1195,29 +1221,11 @@
             <para role="shortdesc">Lists IDs, names, and links for
                 available images.</para>
         </wadl:doc>
-        <request> &imageListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &imageListQueryParameters; </representation>
+        </request>
         <response status="200 203">
-            <param name="images" style="plain" required="true"
-                type="csapi:ImagesWithOnlyIDsNamesLinks"
-                path="/csapi:images">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Image
-                    information.</para></wadl:doc>
-            </param>
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:images/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ImageList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:images/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ImageList" rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -1234,6 +1242,27 @@
                         href="../api_samples/images-list-get-resp.xml"
                     />
                 </wadl:doc>
+                <param name="images" style="plain" required="true"
+                    type="csapi:ImagesWithOnlyIDsNamesLinks"
+                    path="/csapi:images">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Image
+                        information.</para></wadl:doc>
+                </param>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:images/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ImageList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:images/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ImageList" rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>
@@ -1276,22 +1305,6 @@
                 server.</para>
         </wadl:doc>
         <response status="200 203">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -1308,6 +1321,22 @@
                         href="../api_samples/server-metadata-all-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults and GET Faults--> &commonFaults;
@@ -1319,24 +1348,8 @@
             <para role="shortdesc">Shows metadata for a specified
                 image.</para>
         </wadl:doc>
-        <response status="200 203">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="previous"/>
-            </param>
-            <representation mediaType="application/json">
+        <response status="200 203"> <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -1352,6 +1365,22 @@
                         href="../api_samples/image-metadata-get-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults and GET Faults--> &commonFaults;
@@ -1387,24 +1416,8 @@
                 </wadl:doc>
             </representation>
         </request>
-        <response status="200">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="previous"/>
-            </param>
-            <representation mediaType="application/json">
+        <response status="200"> <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -1420,6 +1433,22 @@
                         href="../api_samples/server-metadata-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common, GET, POST/PUT, inProgress Faults-->
@@ -1456,24 +1485,8 @@
                 </wadl:doc>
             </representation>
         </request>
-        <response status="200">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ImageMetadataDetails" rel="next"
-                />
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ImageMetadataDetails"
-                    rel="previous"/>
-            </param>
-            <representation mediaType="application/json">
+        <response status="200"> <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -1489,6 +1502,22 @@
                         href="../api_samples/image-metadata-post-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ImageMetadataDetails"
+                        rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ImageMetadataDetails"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common, GET, POST/PUT, inProgress Faults-->
@@ -1525,24 +1554,8 @@
                 </wadl:doc>
             </representation>
         </request>
-        <response status="200">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ServerMetadataDetails"
-                    rel="previous"/>
-            </param>
-            <representation mediaType="application/json">
+        <response status="200"> <representation
+                mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -1558,6 +1571,22 @@
                         href="../api_samples/server-metadata-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ServerMetadataDetails"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common, GET, POST/PUT, inProgress Faults-->
@@ -1595,22 +1624,6 @@
             </representation>
         </request>
         <response status="200">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ImageMetadataDetails" rel="next"
-                />
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:metadata/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous metadata
-                        item.</para></wadl:doc>
-                <link resource_type="#ImageMetadataDetails"
-                    rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -1627,6 +1640,22 @@
                         href="../api_samples/image-metadata-put-resp.xml"
                     />
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next metadata
+                            item.</para></wadl:doc>
+                    <link resource_type="#ImageMetadataDetails"
+                        rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:metadata/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous
+                            metadata item.</para></wadl:doc>
+                    <link resource_type="#ImageMetadataDetails"
+                        rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common, GET, POST/PUT, inProgress Faults-->
@@ -1735,7 +1764,6 @@
         </response>
         <!-- Common, GET, POST/PUT, inProgress Faults-->
         &commonFaults; &getFaults; &postPutFaults; &inProgressFault; </method>
-
     <method name="PUT" id="setImageMetadataItem">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Create or update image metadata item">

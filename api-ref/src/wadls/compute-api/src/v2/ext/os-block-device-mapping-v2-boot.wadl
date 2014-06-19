@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2013 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -12,8 +12,10 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
@@ -68,75 +70,7 @@
             <para role="shortdesc">Creates a server with a block
                 device mapping.</para>
         </wadl:doc>
-        <request> &serverCreateParameters; <param
-                name="block_device_mapping_v2" style="plain"
-                required="true" type="csapi:blockDeviceMapping"
-                path="/csapi:server">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="block_device_mapping_v2">
-                    <para>block_device_mapping_v2.</para>
-                </wadl:doc>
-            </param>
-            <param name="device_name" style="plain" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>A device name where the volume is attached
-                        in the system at /dev/dev_name. This value is
-                        typically vda.</para>
-                </wadl:doc>
-            </param>
-            <param name="source_type" style="plain" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>Either <code>snap</code> or any other value,
-                        including a blank string. <code>snap</code>
-                        means that the volume was created from a
-                        snapshot.</para>
-                </wadl:doc>
-            </param>
-            <param name="destination_type" style="plain"
-                type="xsd:string" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>Either <code>snap</code> or any other value,
-                        including a blank string. <code>snap</code>
-                        means that the volume was created from a
-                        snapshot.</para>
-                </wadl:doc>
-            </param>
-            <param name="delete_on_termination" style="plain"
-                type="xsd:bool" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>Set to True (or 1) to delete the volume when
-                        the instance is deleted. Set to False (or 0)
-                        to retain the volume when the instance is
-                        deleted.</para>
-                </wadl:doc>
-            </param>
-            <param name="guest_format" style="plain" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>Guest format.</para>
-                </wadl:doc>
-            </param>
-            <param name="uuid" style="plain" type="csapi:uuid"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The device ID.</para>
-                </wadl:doc>
-            </param>
-            <param name="boot_index" style="plain" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The boot index.</para>
-                </wadl:doc>
-            </param>
+        <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -152,11 +86,79 @@
                     <xsdxt:code
                         href="../api_samples/os-block-device-mapping-v2-boot/server-post-req.xml"
                     />
-                </wadl:doc>
+                </wadl:doc> &serverCreateParameters; <param
+                    name="block_device_mapping_v2" style="plain"
+                    required="true" type="csapi:blockDeviceMapping"
+                    path="/csapi:server">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="block_device_mapping_v2">
+                        <para>block_device_mapping_v2.</para>
+                    </wadl:doc>
+                </param>
+                <param name="device_name" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>A device name where the volume is
+                            attached in the system at /dev/dev_name.
+                            This value is typically vda.</para>
+                    </wadl:doc>
+                </param>
+                <param name="source_type" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>Either <code>snap</code> or any other
+                            value, including a blank string.
+                                <code>snap</code> means that the
+                            volume was created from a snapshot.</para>
+                    </wadl:doc>
+                </param>
+                <param name="destination_type" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>Either <code>snap</code> or any other
+                            value, including a blank string.
+                                <code>snap</code> means that the
+                            volume was created from a snapshot.</para>
+                    </wadl:doc>
+                </param>
+                <param name="delete_on_termination" style="plain"
+                    type="xsd:bool" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>Set to True (or 1) to delete the volume
+                            when the instance is deleted. Set to False
+                            (or 0) to retain the volume when the
+                            instance is deleted.</para>
+                    </wadl:doc>
+                </param>
+                <param name="guest_format" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>Guest format.</para>
+                    </wadl:doc>
+                </param>
+                <param name="uuid" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The device ID.</para>
+                    </wadl:doc>
+                </param>
+                <param name="boot_index" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The boot index.</para>
+                    </wadl:doc>
+                </param>
             </representation>
         </request>
-        <response status="202"> &serverCreateParameters; <representation
-                mediaType="application/json">
+        <response status="202">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -171,8 +173,7 @@
                     <xsdxt:code
                         href="../api_samples/os-block-device-mapping-v2-boot/server-post-resp.xml"
                     />
-                </wadl:doc>
-            </representation>
+                </wadl:doc> &serverCreateParameters; </representation>
         </response>
         <response status="422">
             <representation mediaType="application/json"/>
@@ -187,30 +188,11 @@
             <para role="shortdesc">Lists IDs, names, and links for all
                 servers.</para>
         </wadl:doc>
-        <request> &serverListQueryParameters; </request>
+        <request>
+            <representation mediaType="application/xml">
+                &serverListQueryParameters; </representation>
+        </request>
         <response status="200 203">
-            <param name="servers" style="plain" required="true"
-                type="csapi:ServersWithOnlyIDsNamesLinks"
-                path="/csapi:servers/atom:link[@rel='servers']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>List of servers.</para>
-                </wadl:doc>
-                <link resource_type="#ServerList" rel="servers"/>
-            </param>
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/csapi:servers/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the next item in the
-                        list.</para></wadl:doc>
-                <link resource_type="#ServerList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/csapi:servers/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>Moves to the previous item in
-                        the list.</para></wadl:doc>
-                <link resource_type="#ServerList" rel="previous"/>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -224,6 +206,28 @@
                     xml:lang="EN"><xsdxt:code
                         href="../api_samples/servers-list-resp.xml"/>
                 </wadl:doc>
+                <param name="servers" style="plain" required="true"
+                    type="csapi:ServersWithOnlyIDsNamesLinks"
+                    path="/csapi:servers/atom:link[@rel='servers']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>List of servers.</para>
+                    </wadl:doc>
+                    <link resource_type="#ServerList" rel="servers"/>
+                </param>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the next item in
+                            the list.</para></wadl:doc>
+                    <link resource_type="#ServerList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/csapi:servers/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>Moves to the previous item
+                            in the list.</para></wadl:doc>
+                    <link resource_type="#ServerList" rel="previous"/>
+                </param>
             </representation>
         </response>
         <!-- Common Faults --> &commonFaults; </method>

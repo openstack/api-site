@@ -199,11 +199,7 @@
                 of the Identity API.</para>
         </wadl:doc>
         <response status="200 203">
-            <!-- <param name="location" style="plain" type="xsd:anyURI"
-                required="true"
-                path="/capi:version/atom:link[@rel='self']/@href">
-                <link resource_type="#VersionDetails" rel="self"/>
-            </param> -->
+
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample
@@ -220,6 +216,11 @@
                         <xsdxt:code href="../samples/version.xml"/>
                     </xsdxt:sample>
                 </wadl:doc>
+                <param name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/capi:version/atom:link[@rel='self']/@href">
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
             </representation>
         </response> &commonFaults; &getFaults; </method>
     <!-- Extensions -->
@@ -229,20 +230,7 @@
             <para>Lists available extensions.</para>
         </wadl:doc>
         <response status="200 203">
-            <param name="next" style="plain" type="xsd:anyURI"
-                path="/capi:extensions/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">Moves to the next item in the
-                    list.</wadl:doc>
-                <link resource_type="#ExtensionList" rel="next"/>
-            </param>
-            <param name="previous" style="plain" type="xsd:anyURI"
-                path="/capi:extensions/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">Moves to the previous item in the
-                    list.</wadl:doc>
-                <link resource_type="#ExtensionList" rel="previous"/>
-            </param>
+
             <representation mediaType="application/json"
                 element="capi:extensions">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
@@ -252,6 +240,21 @@
                         />
                     </xsdxt:sample>
                 </wadl:doc>
+                <param name="next" style="plain" type="xsd:anyURI"
+                    path="/capi:extensions/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">Moves to the next item in the
+                        list.</wadl:doc>
+                    <link resource_type="#ExtensionList" rel="next"/>
+                </param>
+                <param name="previous" style="plain" type="xsd:anyURI"
+                    path="/capi:extensions/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">Moves to the previous item in
+                        the list.</wadl:doc>
+                    <link resource_type="#ExtensionList"
+                        rel="previous"/>
+                </param>
             </representation>
             <!--  <representation mediaType="application/xml"
                 element="capi:extensions">
@@ -318,67 +321,7 @@
                 are stored.</para>
         </wadl:doc>
         <request>
-            <param name="tenantName" style="plain" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The tenant name. Both the
-                            <code>tenantId</code> and
-                            <code>tenantName</code> attributes are
-                        optional, but should not be specified
-                        together. If both attributes are specified,
-                        the server responds with a <code>400</code>
-                        <code>Bad Request</code>.</para></wadl:doc>
-            </param>
-            <param name="tenantId" style="plain" required="false"
-                type="capi:UUID">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The tenant ID. Both the
-                            <code>tenantId</code> and
-                            <code>tenantName</code> attributes are
-                        optional, but should not be specified
-                        together. If both attributes are specified,
-                        the server responds with a <code>400</code>
-                        <code>Bad Request</code>.</para></wadl:doc>
-            </param>
-            <param name="passwordCredentials" style="plain"
-                required="false" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>passwordCredentials</code>
-                        object. To authenticate, you must provide
-                        either a user ID and password or a
-                        token.</para></wadl:doc>
-            </param>
-            <param name="username" style="plain" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The user name. Required if you include
-                        the <code>passwordCredentials</code> object.
-                        If you do not provide a password credentials,
-                        you must provide a token.</para></wadl:doc>
-            </param>
-            <param name="password" style="plain" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The password of the user. Required if
-                        you include the
-                            <code>passwordCredentials</code> object.
-                        If you do not provide a password credentials,
-                        you must provide a token.</para></wadl:doc>
-            </param>
-            <param name="token" style="plain" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>token</code> object. Required
-                        if you do not provide password
-                        credentials.</para></wadl:doc>
-            </param>
-            <param name="id" style="plain" required="false"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The token ID. This is a required field
-                        in the <code>token</code>
-                    object.</para></wadl:doc>
-            </param>
+
             <representation mediaType="application/json"
                 element="identity:auth">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
@@ -400,6 +343,74 @@
                         />
                     </xsdxt:sample>
                 </wadl:doc>
+                <param name="tenantName" style="plain"
+                    required="false" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The tenant name. Both the
+                                <code>tenantId</code> and
+                                <code>tenantName</code> attributes are
+                            optional, but should not be specified
+                            together. If both attributes are
+                            specified, the server responds with a
+                                <code>400</code>
+                            <code>Bad
+                        Request</code>.</para></wadl:doc>
+                </param>
+                <param name="tenantId" style="plain" required="false"
+                    type="capi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The tenant ID. Both the
+                                <code>tenantId</code> and
+                                <code>tenantName</code> attributes are
+                            optional, but should not be specified
+                            together. If both attributes are
+                            specified, the server responds with a
+                                <code>400</code>
+                            <code>Bad
+                        Request</code>.</para></wadl:doc>
+                </param>
+                <param name="passwordCredentials" style="plain"
+                    required="false" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>passwordCredentials</code>
+                            object. To authenticate, you must provide
+                            either a user ID and password or a
+                            token.</para></wadl:doc>
+                </param>
+                <param name="username" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The user name. Required if you
+                            include the
+                                <code>passwordCredentials</code>
+                            object. If you do not provide a password
+                            credentials, you must provide a
+                            token.</para></wadl:doc>
+                </param>
+                <param name="password" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The password of the user. Required
+                            if you include the
+                                <code>passwordCredentials</code>
+                            object. If you do not provide a password
+                            credentials, you must provide a
+                            token.</para></wadl:doc>
+                </param>
+                <param name="token" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>token</code> object.
+                            Required if you do not provide password
+                            credentials.</para></wadl:doc>
+                </param>
+                <param name="id" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The token ID. This is a required
+                            field in the <code>token</code>
+                            object.</para></wadl:doc>
+                </param>
             </representation>
             <representation mediaType="application/json"
                 element="identity:auth">
@@ -424,114 +435,7 @@
             </representation>
         </request>
         <response status="200 203">
-            <param name="access" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>An <code>access</code>
-                    object.</para></wadl:doc>
-            </param>
-            <param name="token" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>token</code>
-                    object.</para></wadl:doc>
-            </param>
-            <param name="issued_at" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A timestamp that indicates when the
-                        token was issued.</para></wadl:doc>
-            </param>
-            <param name="expires" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A timestamp that indicates when the
-                        token expires.</para></wadl:doc>
-            </param>
-            <param name="id" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The authentication token. In the
-                        example, the token is
-                        <code>my_id</code>.</para></wadl:doc>
-            </param>
-            <param name="tenant" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>tenant</code>
-                    object.</para></wadl:doc>
-            </param>
-            <param name="description" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The description of the tenant. If not
-                        set, this value is
-                    <code>null</code>.</para></wadl:doc>
-            </param>
-            <param name="enabled" style="plain" required="true"
-                type="xsd:boolean">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>Indicates whether the tenant is enabled
-                        or disabled.</para></wadl:doc>
-            </param>
-            <param name="id" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The tenant ID.</para></wadl:doc>
-            </param>
-            <param name="name" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>The tenant name.</para></wadl:doc>
-            </param>
-            <param name="serviceCatalog" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>serviceCatalog</code>
-                        object.</para></wadl:doc>
-            </param>
-            <param name="endpoints" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>One or more <code>endpoints</code>
-                        objects. Each object shows the
-                            <code>adminURL</code>,
-                        <code>region</code>, <code>internalURL</code>,
-                            <code>id</code>, and
-                            <code>publicURL</code> for the
-                        endpoint.</para></wadl:doc>
-            </param>
-            <param name="endpoints_links" style="plain"
-                required="true" type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>Links for the
-                    endpoint.</para></wadl:doc>
-            </param>
-            <param name="type" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>Endpoint type.</para></wadl:doc>
-            </param>
-            <param name="name" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>Endpoint name.</para></wadl:doc>
-            </param>
-            <param name="user" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>user</code> object, which shows
-                        the <code>username</code>,
-                            <code>roles_links</code>, <code>id</code>,
-                            <code>roles</code>, and
-                        <code>name</code>.</para></wadl:doc>
-            </param>
-            <param name="metadata" style="plain" required="true"
-                type="xsd:string">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        ><para>A <code>metadata</code>
-                    object.</para></wadl:doc>
-            </param>
+
             <representation mediaType="application/json"
                 element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
@@ -550,6 +454,115 @@
                         <xsdxt:code href="../samples/auth_admin.xml"/>
                     </xsdxt:sample>
                 </wadl:doc>
+                <param name="access" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>An <code>access</code>
+                            object.</para></wadl:doc>
+                </param>
+                <param name="token" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>token</code>
+                        object.</para></wadl:doc>
+                </param>
+                <param name="issued_at" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A timestamp that indicates when the
+                            token was issued.</para></wadl:doc>
+                </param>
+                <param name="expires" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A timestamp that indicates when the
+                            token expires.</para></wadl:doc>
+                </param>
+                <param name="id" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The authentication token. In the
+                            example, the token is
+                            <code>my_id</code>.</para></wadl:doc>
+                </param>
+                <param name="tenant" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>tenant</code>
+                            object.</para></wadl:doc>
+                </param>
+                <param name="description" style="plain"
+                    required="true" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The description of the tenant. If
+                            not set, this value is
+                            <code>null</code>.</para></wadl:doc>
+                </param>
+                <param name="enabled" style="plain" required="true"
+                    type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>Indicates whether the tenant is
+                            enabled or disabled.</para></wadl:doc>
+                </param>
+                <param name="id" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The tenant ID.</para></wadl:doc>
+                </param>
+                <param name="name" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>The tenant name.</para></wadl:doc>
+                </param>
+                <param name="serviceCatalog" style="plain"
+                    required="true" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>serviceCatalog</code>
+                            object.</para></wadl:doc>
+                </param>
+                <param name="endpoints" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>One or more <code>endpoints</code>
+                            objects. Each object shows the
+                                <code>adminURL</code>,
+                                <code>region</code>,
+                                <code>internalURL</code>,
+                                <code>id</code>, and
+                                <code>publicURL</code> for the
+                            endpoint.</para></wadl:doc>
+                </param>
+                <param name="endpoints_links" style="plain"
+                    required="true" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>Links for the
+                        endpoint.</para></wadl:doc>
+                </param>
+                <param name="type" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>Endpoint type.</para></wadl:doc>
+                </param>
+                <param name="name" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>Endpoint name.</para></wadl:doc>
+                </param>
+                <param name="user" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>user</code> object, which
+                            shows the <code>username</code>,
+                                <code>roles_links</code>,
+                                <code>id</code>, <code>roles</code>,
+                            and <code>name</code>.</para></wadl:doc>
+                </param>
+                <param name="metadata" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            ><para>A <code>metadata</code>
+                            object.</para></wadl:doc>
+                </param>
             </representation>
         </response>
         <response status="403">
@@ -592,7 +605,7 @@
             title="Validate token (admin)">
             <para role="shortdesc">Validates a token and confirms that
                 it belongs to a specified tenant, for performance.
-            </para>
+           </para>
         </wadl:doc>
         <response status="200 203 204"/> &commonFaults; &getFaults; </method>
     <method name="GET" id="listEndpointsForToken">
@@ -727,7 +740,6 @@
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-
         </response> &commonFaults; &getFaults; </method>
     <method name="GET" id="getTenantByName">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -736,11 +748,14 @@
                 specified tenant by name.</para>
         </wadl:doc>
         <request>
-            <param name="name" style="query" type="xsd:string"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">The name of the tenant.</wadl:doc>
-            </param>
+            <representation mediaType="application/xml">
+                <param name="name" style="query" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">The name of the
+                        tenant.</wadl:doc>
+                </param>
+            </representation>
         </request>
         <response status="200 203">
             <representation mediaType="application/json">

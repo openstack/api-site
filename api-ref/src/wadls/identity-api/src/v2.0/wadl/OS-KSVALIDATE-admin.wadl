@@ -10,7 +10,6 @@
 <!ENTITY % common  SYSTEM "common.ent">
     %common;
 ]>
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
     xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0"
@@ -29,7 +28,8 @@
     <!--*******************************************************-->
 
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:35357" xml:id="OS-KSVALIDATE-admin-v2.0">
+    <resources base="http://localhost:35357"
+        xml:id="OS-KSVALIDATE-admin-v2.0">
         <resource id="version" path="//v2.0">
             <resource id="extension" path="OS-KSVALIDATE">
                 <resource id="token" path="token">
@@ -38,14 +38,18 @@
                             type="xsd:string" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">A valid authentication token for an
-                                administrative user.</wadl:doc>
+                                xml:lang="EN"><para>A valid
+                                   authentication token for an
+                                   administrative
+                                user.</para></wadl:doc>
                         </param>
                         <param name="X-Subject-Token" style="header"
                             type="xsd:string" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">A valid authentication token.</wadl:doc>
+                                xml:lang="EN"><para>A valid
+                                   authentication
+                                token.</para></wadl:doc>
                         </param>
                         <param name="belongsTo" style="query"
                             required="false" type="xsd:string">
@@ -71,25 +75,30 @@
                             type="xsd:string" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">A valid authentication token for an
-                                administrative user.</wadl:doc>
+                                xml:lang="EN"><para>A valid
+                                   authentication token for an
+                                   administrative
+                                user.</para></wadl:doc>
                         </param>
                         <param name="X-Subject-Token" style="header"
                             type="xsd:string" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">A valid authentication token.</wadl:doc>
+                                xml:lang="EN"><para>A valid
+                                   authentication
+                                token.</para></wadl:doc>
                         </param>
                         <param name="HP-IDM-serviceId" style="query"
                             type="xsd:string" required="false">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">A comma-separated string of service
-                                IDs. Checks the roles against the
-                                specified service IDs. If a service ID
-                                is not valid or if no roles are
-                                associated with a service ID, a 401
-                                fault is returned.</wadl:doc>
+                                xml:lang="EN"><para>A comma-separated
+                                   string of service IDs. Checks the
+                                   roles against the specified service
+                                   IDs. If a service ID is not valid
+                                   or if no roles are associated with
+                                   a service ID, a 401 fault is
+                                   returned.</para></wadl:doc>
                         </param>
                         <method href="#listEndpointsForToken"/>
                     </resource>
@@ -102,31 +111,30 @@
     <!--               All Methods                             -->
     <!--*******************************************************-->
 
-    <!-- Token Operations -->
+    <!-- token Operations -->
     <method name="GET" id="validateToken">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Validate Token">
-            <para role="shortdesc">
-                Checks that a token is valid and that it belongs to a
-                specified tenant and service IDs. Returns the
-                permissions for a particular client.</para>
-            <para>Behavior is
-                similar to <code>/tokens/{tokenId}</code>. An
-                itemNotFound (<code>404</code>) fault is returned for
-                a token that is not valid.</para>
-            <para>This extension
-                might decrypt <code>X-Subject-Token</code> header and internally
-                call the normal validation for Identity,
-                passing in all headers and query parameters. It should
-                therefore support all existing calls on
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Validate token">
+            <para role="shortdesc">Checks that a token is valid and
+                that it belongs to a specified tenant and service IDs.
+                Returns the permissions for a particular
+                client.</para>
+            <para>Behavior is similar to
+                    <code>/tokens/{tokenId}</code>. An itemNotFound
+                    (<code>404</code>) fault is returned for a token
+                that is not valid.</para>
+            <para>This extension might decrypt
+                    <code>X-Subject-Token</code> header and internally
+                call the normal validation for Identity, passing in
+                all headers and query parameters. It should therefore
+                support all existing calls on
                     <code>/tokens/{tokenId}</code>, including
                 extensions such as HP-IDM.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/xml"
                 element="identity:access">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="../OS-KSVALIDATE/samples/validatetoken.xml"
@@ -134,8 +142,7 @@
                 </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="../OS-KSVALIDATE/samples/validatetoken.json"
@@ -144,35 +151,34 @@
             </representation>
         </response> &commonFaults; &getFaults; </method>
     <method name="HEAD" id="checkToken">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Check Token">
-            <para role="shortdesc">
-                Checks that a token is valid and that it belongs to a
-                specified tenant and service IDs, for performance.</para>
-            <para>Behavior is
-                similar to <code>/tokens/{tokenId}</code>. An
-                itemNotFound (<code>404</code>) fault is returned for
-                a token that is not valid.</para>
-            <para>This extension
-                might decrypt <code>X-Subject-Token</code> header and internally
-                call the normal validation for Identity,
-                passing in all headers and query parameters. It should
-                therefore support all existing calls on
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Check token">
+            <para role="shortdesc">Checks that a token is valid and
+                that it belongs to a specified tenant and service IDs,
+                for performance.</para>
+            <para>Behavior is similar to
+                    <code>/tokens/{tokenId}</code>. An itemNotFound
+                    (<code>404</code>) fault is returned for a token
+                that is not valid.</para>
+            <para>This extension might decrypt
+                    <code>X-Subject-Token</code> header and internally
+                call the normal validation for Identity, passing in
+                all headers and query parameters. It should therefore
+                support all existing calls on
                     <code>/tokens/{tokenId}</code>, including
                 extensions such as HP-IDM.</para>
         </wadl:doc>
         <response status="200 203"/> &commonFaults; &getFaults; </method>
     <method name="GET" id="listEndpointsForToken">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="List Endpoints for a Token">
-            <para>Lists endpoints
-                associated with a specific token.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List endpoints for a token">
+            <para role="shortdesc">Lists endpoints associated with a
+                specific token.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/xml"
                 element="identity:endpoints">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="../OS-KSVALIDATE/samples/endpoints.xml"
@@ -180,8 +186,7 @@
                 </wadl:doc>
             </representation>
             <representation mediaType="application/json">
-                <wadl:doc
-                    xmlns="http://docbook.org/ns/docbook"
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="../OS-KSVALIDATE/samples/endpoints.json"
