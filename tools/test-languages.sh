@@ -41,6 +41,7 @@ function test_all {
     test_manuals 'es' 'api-quick-start'
     test_manuals 'fr' 'api-quick-start'
     test_manuals 'ja' 'api-quick-start'
+    test_manuals 'ko_KR' 'api-quick-start'
 }
 
 
