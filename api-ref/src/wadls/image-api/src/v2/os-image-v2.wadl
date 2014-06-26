@@ -31,41 +31,31 @@
             <method href="#listVersions-image-v2"/>
         </resource>
         <resource id="version" path="//v2">
-            <resource id="tenant_id" path="{tenant_id}">
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="tenant_id" style="template"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>The ID for the tenant or
-                            account in a multi-tenancy
-                        cloud.</para></wadl:doc>
-                </param>
-                <resource id="Images" type="#ImageList" path="images">
-                    <method href="#createImage-v2"/>
-                    <resource path="{image_id}" id="image_id">
-                        <method href="#getImage-v2"/>
-                        <method href="#updateImage-v2"/>
-                        <method href="#deleteImage-v2"/>
-                        <resource id="file" path="file">
-                            <method href="#storeImageFile-v2"/>
-                            <method href="#getImageFile-v2"/>
+            <resource id="Images" type="#ImageList" path="images">
+                <method href="#createImage-v2"/>
+                <resource path="{image_id}" id="image_id">
+                    <method href="#getImage-v2"/>
+                    <method href="#updateImage-v2"/>
+                    <method href="#deleteImage-v2"/>
+                    <resource id="file" path="file">
+                        <method href="#storeImageFile-v2"/>
+                        <method href="#getImageFile-v2"/>
+                    </resource>
+                    <resource id="Tags" path="tags">
+                        <resource path="{tag}" id="tag">
+                            &tagParameter; <method
+                                href="#addImageTag-v2"/>
+                            <method href="#deleteImageTag-v2"/>
                         </resource>
-                        <resource id="Tags" path="tags">
-                            <resource path="{tag}" id="tag">
-                                &tagParameter; <method
-                                   href="#addImageTag-v2"/>
-                                <method href="#deleteImageTag-v2"/>
-                            </resource>
-                        </resource>
-                        <resource id="Members" type="#MemberList"
-                            path="members">
-                            <method href="#createImageMember-v2"/>
-                            <resource path="{member_id}"
-                                id="member_id"> &member_idParameter;
-                                   <method href="#getImageMember-v2"/>
-                                <method href="#deleteImageMember-v2"/>
-                                <method href="#updateImageMember-v2"/>
-                            </resource>
+                    </resource>
+                    <resource id="Members" type="#MemberList"
+                        path="members">
+                        <method href="#createImageMember-v2"/>
+                        <resource path="{member_id}" id="member_id">
+                            &member_idParameter; <method
+                                href="#getImageMember-v2"/>
+                            <method href="#deleteImageMember-v2"/>
+                            <method href="#updateImageMember-v2"/>
                         </resource>
                     </resource>
                 </resource>
@@ -235,7 +225,8 @@
                 &idParameter; &sizeParameter; &virtual_sizeParameter;
                 &nameParameter; &check_sumParameter;
                 &created_atParameter; &disk_formatParameter;
-                &propertiesParameter; &protectedParameter; <!--<param
+                &propertiesParameter; &protectedParameter;
+                <!--<param
                     xmlns="http://wadl.dev.java.net/2009/02"
                     name="location" style="plain" type="xsd:anyURI"
                     required="true"
