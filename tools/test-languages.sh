@@ -60,14 +60,19 @@ function test_fr {
     test_api_quick_start 'fr'
 }
 
+function test_ja {
+    setup_lang 'ja'
+    test_api_quick_start 'ja'
+}
+
 function test_ko_KR {
     setup_lang 'ko_KR'
     test_api_quick_start 'ko_KR'
 }
 
-function test_ja {
-    setup_lang 'ja'
-    test_api_quick_start 'ja'
+function test_zh_CN {
+    setup_lang 'zh_CN'
+    test_api_quick_start 'zh_CN'
 }
 
 function test_language () {
@@ -79,6 +84,7 @@ function test_language () {
 	    test_fr
 	    test_ja
 	    test_ko_KR
+	    test_zh_CN
 	    ;;
         de)
             test_de
@@ -95,6 +101,9 @@ function test_language () {
         ko_KR)
             test_ko_KR
             ;;
+        zh_CN)
+            test_zh_CN
+	    ;;
         *)
             BUILD_FAIL=1
             echo "Language $language not handled"
