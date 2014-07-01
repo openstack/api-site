@@ -4,6 +4,7 @@ function setup_directory {
     SET_LANG=$1
     shift
     for BOOK_DIR in "$@" ; do
+        echo "   $BOOK_DIR"
         openstack-generate-docbook -l $SET_LANG -b $BOOK_DIR -r ./
     done
 }
@@ -18,34 +19,115 @@ function setup_lang {
     cp pom.xml generated/$SET_LANG/pom.xml
 }
 
-function test_manuals {
+function test_api_quick_start {
     SET_LANG=$1
     shift
-    setup_lang $SET_LANG
-    for BOOK in "$@" ; do
-        echo "Building $BOOK for language $SET_LANG..."
-        setup_directory $SET_LANG $BOOK
-        openstack-doc-test --check-build -l $SET_LANG --only-book $BOOK
-        RET=$?
-        if [ "$RET" -eq "0" ] ; then
-            echo "... succeeded"
-        else
-            echo "... failed"
+
+    case "$PURPOSE" in
+        test)
+            setup_directory $SET_LANG 'api-quick-start'
+            openstack-doc-test -v --check-build -l $SET_LANG \
+                --only-book api-quick-start
+            RET=$?
+            ;;
+        publish)
+            setup_directory $SET_LANG 'api-quick-start'
+            openstack-doc-test -v --publish --check-build -l $SET_LANG \
+                --only-book api-quick-start
+            RET=$?
+            ;;
+    esac
+    if [ "$RET" -eq "0" ] ; then
+        echo "... succeeded"
+    else
+        echo "... failed"
+        BUILD_FAIL=1
+    fi
+}
+
+function test_de {
+    setup_lang 'de'
+    test_api_quick_start 'de'
+}
+
+function test_es {
+    setup_lang 'es'
+    test_api_quick_start 'es'
+}
+
+function test_fr {
+    setup_lang 'fr'
+    test_api_quick_start 'fr'
+}
+
+function test_ko_KR {
+    setup_lang 'ko_KR'
+    test_api_quick_start 'ko_KR'
+}
+
+function test_ja {
+    setup_lang 'ja'
+    test_api_quick_start 'ja'
+}
+
+function test_language () {
+
+    case "$language" in
+	all)
+	    test_de
+	    test_es
+	    test_fr
+	    test_ja
+	    test_ko_KR
+	    ;;
+        de)
+            test_de
+            ;;
+        es)
+            test_es
+            ;;
+        fr)
+            test_fr
+            ;;
+        ja)
+            test_ja
+            ;;
+        ko_KR)
+            test_ko_KR
+            ;;
+        *)
             BUILD_FAIL=1
-        fi
-    done
+            echo "Language $language not handled"
+            ;;
+    esac
 }
 
-function test_all {
-    test_manuals 'de' 'api-quick-start'
-    test_manuals 'es' 'api-quick-start'
-    test_manuals 'fr' 'api-quick-start'
-    test_manuals 'ja' 'api-quick-start'
-    test_manuals 'ko_KR' 'api-quick-start'
+function usage () {
+    echo "Call the script as: "
+    echo "$0 PURPOSE LANGUAGE1 LANGUAGE2..."
+    echo "PURPOSE is either 'test', 'publish' or 'publish-install'"
+    echo "LANGUAGE can also be 'all'."
 }
 
-
+if [ "$#" -lt 2 ] ; then
+    usage
+    exit 1
+fi
+if [ "$1" = "test" ] ; then
+   PURPOSE="test"
+elif [ "$1" = "publish" ] ; then
+   PURPOSE="publish"
+else
+    usage
+    exit 1
+fi
+shift
 BUILD_FAIL=0
-test_all
+for language in "$@" ; do
+  echo
+  echo "Building for language $language"
+  echo
+  test_language "$language"
+done
 
 exit $BUILD_FAIL
