@@ -114,7 +114,7 @@ function test_language () {
 function usage () {
     echo "Call the script as: "
     echo "$0 PURPOSE LANGUAGE1 LANGUAGE2..."
-    echo "PURPOSE is either 'test', 'publish' or 'publish-install'"
+    echo "PURPOSE is either 'test', 'publish'."
     echo "LANGUAGE can also be 'all'."
 }
 
