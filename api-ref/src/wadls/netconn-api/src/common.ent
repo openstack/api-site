@@ -817,21 +817,31 @@
             IP.</para>
     </wadl:doc>
 </param>'>
-<!ENTITY vipResponseParams '
+<!ENTITY lbLoadbalancersParam '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="loadbalancers" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>A <code>loadbalancers</code> object.</para>
+    </wadl:doc>
+</param>'>
+<!ENTITY lbLoadbalancerParam '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="loadbalancer" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>A <code>loadbalancer</code> object.</para>
+    </wadl:doc>
+</param>'>
+<!ENTITY lbResponseParams '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="id" style="plain" type="csapi:uuid">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The unique ID for the VIP.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="tenant_id" style="plain" type="csapi:uuid">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>Owner of the VIP. Only an administrative user can specify a tenant ID other than its own.</para>
+        <para>The unique ID for the load balancer.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -839,7 +849,7 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Human readable name for the VIP. Does not have to be unique.</para>
+        <para>Load balancer name.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -847,19 +857,11 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Human readable description for the VIP.</para>
+        <para>Load balancer description.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="subnet_id" style="plain" type="csapi:uuid">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The ID of the subnet on which to allocate the VIP address.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="address" style="plain" type="xsd:ip">
+    name="vip_address" style="plain" type="xsd:ip">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
@@ -867,66 +869,20 @@
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="protocol" style="plain" type="xsd:string">
+    name="vip_subnet_id" style="plain" type="csapi:uuid">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The protocol of the VIP address, which is TCP, HTTP, or HTTPS.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="protocol_port" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The port on which to listen to client traffic that is associated with the VIP address, which is from 0 to 65535.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="pool_id" style="plain" type="csapi:uuid">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The ID of the pool with which the VIP is associated.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="session_persistence" style="plain" type="xsd:dict">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Session persistence parameters for the VIP. Absence of
-            session_persistence attribute means no session persistence
-            mechanism is used. When no session persistence is used,
-            the session_persistence attribute does not appear in the
-            API response, instead of returning null. You can clear
-            session persistence for the VIP by sending null in
-            session_persistence attribute in a VIP update
-            request.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="connection_limit" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The maximum number of connections allowed for the VIP.
-        Value is <code>-1</code> if the limit is not set.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="admin_state_up" style="plain" type="xsd:boolean">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The administrative state of the VIP, which is up (<code>true</code>) or down (<code>false</code>).</para>
+        <para>The ID of the subnet on which to allocate the VIP address.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="status" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The status of the VIP. Indicates whether the VIP is operational.</para>
+        <para>The status of the load balancer. Indicates whether the load balancer is operational.</para>
     </wadl:doc>
-</param>' >
-<!ENTITY vipCreateRequestParams '
+</param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="tenant_id" style="plain" type="csapi:uuid">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -934,13 +890,14 @@
         xml:lang="EN">
         <para>Owner of the VIP. Only an administrative user can specify a tenant ID other than its own.</para>
     </wadl:doc>
-</param>
+</param>' >
+<!ENTITY lbCreateRequestParams '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="name" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Human readable name for the VIP. Does not have to be unique.</para>
+        <para>Load balancer name. Does not have to be unique.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -948,85 +905,32 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Human readable description for the VIP.</para>
+        <para>Load balancer description.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="subnet_id" style="plain" type="csapi:uuid">
+    name="vip_subnet" style="plain" type="csapi:uuid">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
         <para>The ID of the subnet on which to allocate the VIP address.</para>
     </wadl:doc>
 </param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="address" style="plain" type="xsd:ip">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The IP address of the VIP.</para>
-    </wadl:doc>
-</param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="protocol" style="plain" type="xsd:string">
+    name="tenant_id" style="plain" type="csapi:uuid">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The protocol of the VIP address, which is TCP, HTTP, or HTTPS.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="protocol_port" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The port on which to listen to client traffic that is associated with the VIP address, which is from 0 to 65535.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="pool_id" style="plain" type="csapi:uuid">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The ID of the pool with which the VIP is associated.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="session_persistence" style="plain" type="xsd:dict">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Session persistence parameters for the VIP. Absence of
-            session_persistence attribute means no session persistence
-            mechanism is used. When no session persistence is used,
-            the session_persistence attribute does not appear in the
-            API response, instead of returning null. You can clear
-            session persistence for the VIP by sending null in
-            session_persistence attribute in a VIP update
-            request.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="connection_limit" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The maximum number of connections allowed for the VIP.
-        Value is <code>-1</code> if the limit is not set.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="admin_state_up" style="plain" type="xsd:boolean">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The administrative state of the VIP, which is up (<code>true</code>) or down (<code>false</code>).</para>
+        <para>Owner of the load balancer. Only an administrative user can specify a tenant ID other than its own.</para>
     </wadl:doc>
 </param>' >
-<!ENTITY vipUpdateRequestParams '
+<!ENTITY lbUpdateRequestParams '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="name" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Human readable name for the VIP. Does not have to be unique.</para>
+        <para>Load balancer name. Does not have to be unique.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -1034,44 +938,7 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Human readable description for the VIP.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="pool_id" style="plain" type="csapi:uuid">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>The ID of the pool with which the VIP is associated.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="session_persistence" style="plain" type="xsd:dict">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Session persistence parameters for the VIP. Absence of
-            session_persistence attribute means no session persistence
-            mechanism is used. When no session persistence is used,
-            the session_persistence attribute does not appear in the
-            API response, instead of returning null. You can clear
-            session persistence for the VIP by sending null in
-            session_persistence attribute in a VIP update
-            request.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="connection_limit" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The maximum number of connections allowed for the VIP.
-        Value is <code>-1</code> if the limit is not set.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="admin_state_up" style="plain" type="xsd:boolean">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The administrative state of the VIP, which is up (<code>true</code>) or down (<code>false</code>).</para>
+        <para>Load balancer description.</para>
     </wadl:doc>
 </param>' >
 <!-- pools  -->
@@ -1304,6 +1171,77 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
         <para>The administrative state of the pool, which is up (<code>true</code>) or down (<code>false</code>).</para>
+    </wadl:doc>
+</param>' >
+<!ENTITY listenerRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="listener" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>A <code>listener</code> object.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="default_pool_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The ID for the default pool.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The listener name.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The listener description.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the listener. Only an administrative user can specify a tenant ID other than its own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="connection_limit" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The connection limit.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="protocol" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The protocol of the listener, which is TCP, HTTP, or HTTPS.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="protocol_port" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>The port.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="load_balancer_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>The ID of the load balancer.</para>
     </wadl:doc>
 </param>' >
 <!-- health monitors -->
