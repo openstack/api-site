@@ -31,6 +31,7 @@
     </section>
     <section xml:id="network_provider-ext">
         <title>Networks provider extended attributes (networks)</title>
+        <para>List, create, show information for, update, and delete networks.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/netconn-api/src/os-networks-provider-ext.wadl#Networks">
                 <wadl:method href="#listNetworks"/>
@@ -70,6 +71,7 @@
     </section>
     <section xml:id="port_binding-ext">
         <title>Ports binding extended attributes (ports)</title>
+        <para>List, create, show information for, and update ports.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/netconn-api/src/os-ports-binding-ext.wadl#Ports">
                 <wadl:method href="#listPorts"/>
@@ -83,6 +85,8 @@
     </section>
     <section xml:id="security_groups">
         <title>Security groups and rules (security-groups)</title>
+        <para>List, create, show information for, and delete security groups and security group
+            rules.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/netconn-api/src/security-groups.wadl#security_groups">
                 <wadl:method href="#listSecGroups"/>
@@ -136,7 +140,104 @@
             services, such as VMs, on the same or a different network. You can load-balance several
             protocols, such as TCP and HTTP and monitor the health of application services. The
             LBaaS extension supports session persistence.</para>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            href="../wadls/netconn-api/src/os-lbaas-ext.wadl"/>
+        <table rules="all" frame="border">
+            <caption>Load balancer statuses</caption>
+            <col width="25%"/>
+            <col width="50%"/>
+            <col width="25%"/>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Operational</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DEFERRED</td>
+                    <td>An entity was created but is not yet linked to a load balancer.</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>PENDING_CREATE</td>
+                    <td>An entity is being created.</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>PENDING_UPDATE</td>
+                    <td>An entity was updated. It remains in an operational state.</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>PENDING_DELETE</td>
+                    <td>An entity is in the process of being deleted.</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>ACTIVE</td>
+                    <td>An entity is in a normal operational state.</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>INACTIVE</td>
+                    <td>Applies to members that fail health checks.</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>ERROR</td>
+                    <td>Something has gone wrong.</td>
+                    <td>This might be in either an operational or non-operational state.</td>
+                </tr>
+            </tbody>
+        </table>
+        <para>Use this extension to create and manage load balancers, listeners, pools, members, and
+            health monitors.</para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#loadbalancers">
+                <wadl:method href="#createLoadBalancer"/>
+                <wadl:method href="#listLoadBalancers"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#lb_id">
+                <wadl:method href="#showLoadBalancer"/>
+                <wadl:method href="#updateLoadBalancer"/>
+                <wadl:method href="#deleteLoadBalancer"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#Listeners">
+                <wadl:method href="#createListener"/>
+                <wadl:method href="#listListeners"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#listener_id">
+                <wadl:method href="#showListener"/>
+                <wadl:method href="#updateListener"/>
+                <wadl:method href="#deleteListener"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#lb-pools">
+                <wadl:method href="#createPool"/>
+                <wadl:method href="#listPools"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#pool_id">
+                <wadl:method href="#showPool"/>
+                <wadl:method href="#updatePool"/>
+                <wadl:method href="#deletePool"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#lb-members">
+                <wadl:method href="#createMember"/>
+                <wadl:method href="#listMembers"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#member_id">
+                <wadl:method href="#showMember"/>
+                <wadl:method href="#updateMember"/>
+                <wadl:method href="#deleteMember"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#lb-healthmonitors">
+                <wadl:method href="#createHealthMonitor"/>
+                <wadl:method href="#listHealthMonitors"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/netconn-api/src/os-lbaas-ext.wadl#health_monitor_id_hm">
+                <wadl:method href="#showHealthMonitor"/>
+                <wadl:method href="#updateHealthMonitor"/>
+                <wadl:method href="#deleteHealthMonitor"/>
+            </wadl:resource>
+        </wadl:resources>
     </section>
 </chapter>
