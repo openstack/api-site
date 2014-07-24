@@ -87,11 +87,6 @@
                 </resource>
             </resource>
             <resource id="admin-users" path="users">
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="X-Auth-Token" style="header"
-                    type="xsd:string" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">A valid
-                        authentication token for an administrative user.</wadl:doc>
-                </param>
                 <method href="#admin-addUser"/>
                 <resource id="admin-userId" path="{userId}">
                     <param xmlns="http://wadl.dev.java.net/2009/02" name="userId" style="template"
@@ -523,71 +518,150 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-
     <!--User Operations-->
     <method name="POST" id="admin-addUser">
-        <wadl:doc xml:lang="EN" title="Add User" xmlns="http://docbook.org/ns/docbook">
+        <wadl:doc xml:lang="EN" title="Add user" xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Adds a user.</para>
         </wadl:doc>
         <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/user.json"/>
+                </wadl:doc>
+            </representation>
             <representation mediaType="application/xml" element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/userwithoutid.xml"/>
+                    <xsdxt:code href="../samples/user.xml"/>
                 </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="X-Auth-Token" style="header"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">A valid
+                        authentication token for an administrative user.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        ID.</wadl:doc>
+                </param>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
-                    path="/identity:user" type="String">
+                    type="xsd:string" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
                         name.</wadl:doc>
                 </param>
-            </representation>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/userwithoutid.json"/>
-                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="email" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        email.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="enabled" style="plain"
+                    type="xsd:bool" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">Indicates whether
+                        the user is enabled (true) or disabled (false).</wadl:doc>
+                </param>
             </representation>
         </request>
         <response status="201">
-            <representation mediaType="application/xml" element="identity:user">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.xml"/>
-                </wadl:doc>
-            </representation>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/user.json"/>
                 </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/user.xml"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        ID.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        name.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="email" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        email.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="enabled" style="plain"
+                    type="xsd:bool" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">Indicates whether
+                        the user is enabled (true) or disabled (false).</wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &getFaults; &postPutFaults; </method>
     <method name="PUT" id="admin-updateUser">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update User">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update user">
             <para role="shortdesc">Updates a user.</para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml" element="identity:user">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.xml"/>
-                </wadl:doc>
-            </representation>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/user.json"/>
                 </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml" element="identity:user">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/user.xml"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        ID.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        name.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="email" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        email.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="enabled" style="plain"
+                    type="xsd:bool" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">Indicates whether
+                        the user is enabled (true) or disabled (false).</wadl:doc>
+                </param>
             </representation>
         </request>
-        <response status="200">
-            <representation mediaType="application/xml" element="identity:user">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.xml"/>
-                </wadl:doc>
-            </representation>
+        <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/user.json"/>
                 </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/user.xml"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        ID.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        name.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="email" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The user
+                        email.</wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="enabled" style="plain"
+                    type="xsd:bool" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">Indicates whether
+                        the user is enabled (true) or disabled (false).</wadl:doc>
+                </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
     <method name="DELETE" id="admin-deleteUser">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete User">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete user">
             <para role="shortdesc">Deletes a user.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -597,12 +671,6 @@
             <para role="shortdesc">Gets detailed information about a specified user by user
                 name.</para>
         </wadl:doc>
-        <!-- <request>
-            <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="query" type="xsd:string"
-                required="true"><wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN">The user name.</wadl:doc></param>
-        </request> -->
         <response status="200 203">
             <representation mediaType="application/xml" element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
