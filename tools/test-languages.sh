@@ -45,6 +45,11 @@ function test_api_quick_start {
     fi
 }
 
+function test_ca {
+    setup_lang 'ca'
+    test_api_quick_start 'ca'
+}
+
 function test_de {
     setup_lang 'de'
     test_api_quick_start 'de'
@@ -78,14 +83,18 @@ function test_zh_CN {
 function test_language () {
 
     case "$language" in
-	all)
-	    test_de
-	    test_es
-	    test_fr
-	    test_ja
-	    test_ko_KR
-	    test_zh_CN
-	    ;;
+        all)
+            test_ca
+            test_de
+            test_es
+            test_fr
+            test_ja
+            test_ko_KR
+            test_zh_CN
+            ;;
+        ca)
+            test_ca
+            ;;
         de)
             test_de
             ;;
@@ -103,7 +112,7 @@ function test_language () {
             ;;
         zh_CN)
             test_zh_CN
-	    ;;
+            ;;
         *)
             BUILD_FAIL=1
             echo "Language $language not handled"
