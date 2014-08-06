@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:linkend="http://www.w3.org/1999/linkend"
-    xmlns:xref="http://www.w3.org/1999/xref"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    version="5.0-extension RackBook-2.0" xml:id="compute-core-v2"
-    role="api-reference">
+<!DOCTYPE chapter [
+<!ENTITY % common  SYSTEM "../wadls/compute-api/src/v2/common.ent">
+%common;]>
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xref="http://www.w3.org/1999/xref" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    version="5.0-extension RackBook-2.0" xml:id="compute-core-v2" role="api-reference">
     <title>Compute API v2 (CURRENT)</title>
-    <para>Launch virtual machines from images or images stored on
-        persistent volumes. API v1.1 is identical to API v2.</para>
-    <note><para>XML support in requests and responses has been
-        deprecated for the Compute API v2.</para></note>
+    <para>Launch virtual machines from images or images stored on persistent volumes. API v1.1 is
+        identical to API v2.</para>
+    <note>
+        <para>XML support in requests and responses has been deprecated for the Compute API
+            v2.</para>
+    </note>
     <section xml:id="compute_versions">
         <title>API versions</title>
-        <para>List information for all API versions and show details
-            about API v2.</para>
+        <para>List information for all API versions and show details about API v2.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#versions">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#versions">
                 <wadl:method href="#listVersionsv2"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#version">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#version">
                 <wadl:method href="#getVersionDetailsv2"/>
             </wadl:resource>
         </wadl:resources>
@@ -31,43 +29,139 @@
         <title>Limits</title>
         <para>Get rate and absolute limits.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#limits">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#limits">
                 <wadl:method href="#listLimits"/>
             </wadl:resource>
         </wadl:resources>
     </section>
     <section xml:id="compute_extensions">
         <title>Extensions</title>
-        <para>List available Compute API v2 extensions and show
-            details for a specified extension.</para>
+        <para>List available Compute API v2 extensions and show details for a specified
+            extension.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#extensions">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#extensions">
                 <wadl:method href="#listExtensionsv2"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#extension">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#extension">
                 <wadl:method href="#getExtensionv2"/>
             </wadl:resource>
         </wadl:resources>
     </section>
     <section xml:id="compute_servers">
         <title>Servers</title>
-        <para>List, create, get details for, update, and delete
-            servers.</para>
+        <para>List, create, get details for, update, and delete servers.</para>
+        <itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">Passwords</emphasis></para>
+                <para>When you create a server, you can specify a password through the optional <property>adminPass</property>
+                    attribute. The specified password must meet the
+                    complexity requirements set by your OpenStack Compute provider. The server might
+                    enter an <code>ERROR</code> state if the complexity requirements are not met. In
+                    this case, a client might issue a change password action to reset the server
+                    password.</para>
+                <para>If you do not specify a password, a randomly generated password is assigned
+                    and returned in the response object. This password is guaranteed to meet the
+                    security requirements set by the compute provider. For security reasons, the
+                    password is not returned in subsequent &GET; calls.</para>
+            </listitem>
+        </itemizedlist>
+        <itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">Server metadata</emphasis></para>
+                <para>You can specify custom server metadata at server launch time. The maximum size
+                    for each metadata key-value pair is 255 bytes. The maximum number of key-value
+                    pairs that can be supplied per server is determined by the compute provider. You
+                    can query this value through the <code>maxServerMeta</code> absolute
+                    limit.</para>
+            </listitem>
+        </itemizedlist>
+        <itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">Server networks</emphasis></para>
+                <para>You can specify networks to which the server connects at launch time. You can
+                    specify one or more networks. Users can also specify a specific port on the
+                    network or the fixed IP address to assign to the server interface.</para>
+                <note>
+                    <para>You can use both IPv4 and IPv6 addresses as access addresses and you can
+                        assign both addresses simultaneously. You can update access addresses after
+                        you create a server.</para>
+                </note>
+            </listitem>
+        </itemizedlist>
+        <itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">Server personality</emphasis></para>
+                <para>You can customize the personality of a server instance by injecting data into
+                    its file system. For example, you might want to insert ssh keys, set
+                    configuration files, or store data that you want to retrieve from inside the
+                    instance. This feature provides a minimal amount of launch-time personalization.
+                    If you require significant customization, create a custom image.</para>
+                <para>Follow these guidelines when you inject files:</para>
+                <itemizedlist>
+                    <listitem>
+                        <para>The maximum size of the file path data is 255 bytes.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Encode the file contents as a Base64 string. The compute providers
+                            determines the maximum size of the file contents. This value can vary
+                            based on the image that is used to create the server.</para>
+                        <note>
+                            <para>The maximum limit refers to the number of bytes in the decoded
+                                data and not to the number of characters in the encoded data.</para>
+                        </note>
+                    </listitem>
+                    <listitem>
+                        <para>You can inject text files only. You cannot inject binary or ZIP files
+                            into a new build.</para>
+                    </listitem>
+                    <listitem>
+                        <para>The maximum number of file path/content pairs that you can supply is
+                            also determined by the compute provider and is defined by the
+                            maxPersonality absolute limit.</para>
+                    </listitem>
+                    <listitem>
+                        <para>The absolute limit, <code>maxPersonalitySize</code>, is a byte limit
+                            that is guaranteed to apply to all images in the deployment. Providers
+                            can set additional per-image personality limits.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>The file injection might not occur until after the server is built and
+                    booted.</para>
+                <para>During file injection, any existing files that match specified files are
+                    renamed to include the BAK extension appended with a time stamp. For example, if
+                    the <filename>/etc/passwd</filename> file exists, it is backed up as
+                        <filename>/etc/passwd.bak.1246036261.5785</filename>.</para>
+                <para>After file injection, personality files are accessible by only system
+                    administrators. For example, on Linux, all files have root and the root group as
+                    the owner and group owner, respectively, and allow user and group read access
+                    only ( ).</para>
+            </listitem>
+        </itemizedlist>
+        <itemizedlist>
+            <listitem>
+                <para><emphasis role="bold">Server access addresses</emphasis></para>
+                <para>In a hybrid environment, the IP address of a server might not be controlled by
+                    the underlying implementation. Instead, the access IP address might be part of
+                    the dedicated hardware; for example, a router/NAT device. In this case, the
+                    addresses provided by the implementation cannot actually be used to access the
+                    server (from outside the local LAN). Here, a separate <firstterm>access
+                        address</firstterm> might be assigned at creation time to provide access to
+                    the server. This address might not be directly bound to a network interface on
+                    the server and might not necessarily appear when you query the server addresses.
+                    See <xref linkend="compute_server-addresses"/>. Nonetheless, clients that must
+                    access the server directly are encouraged to do so through an access
+                    address.</para>
+            </listitem>
+        </itemizedlist>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Servers">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Servers">
                 <wadl:method href="#listServers"/>
                 <wadl:method href="#createServer"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#server_detail">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#server_detail">
                 <wadl:method href="#listDetailServers"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#server_id">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#server_id">
                 <wadl:method href="#getServer"/>
                 <wadl:method href="#updateServer"/>
                 <wadl:method href="#deleteServer"/>
@@ -76,11 +170,9 @@
     </section>
     <section xml:id="compute_server_metadata">
         <title>Server metadata</title>
-        <para>Show details for, set, update, and delete server
-            metadata or metadata items.</para>
+        <para>Show details for, set, update, and delete server metadata or metadata items.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#server_metadata">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#server_metadata">
                 <wadl:method href="#showServerMetadata"/>
                 <wadl:method href="#createServerMetadata"/>
                 <wadl:method href="#updateServerMetadata"/>
@@ -95,24 +187,18 @@
     </section>
     <section xml:id="compute_server-addresses">
         <title>Server addresses</title>
-        <para>List addresses for a specified server or a specified
-            server and network.</para>
+        <para>List addresses for a specified server or a specified server and network.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#ips"/>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#network_label"
-            />
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#ips"/>
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#network_label"/>
         </wadl:resources>
     </section>
     <section xml:id="compute_server-actions">
         <title>Server actions</title>
-        <para>Perform actions for a specified server, including change
-            administrator password, reboot, rebuild, resize, and
-            create image from server.</para>
+        <para>Perform actions for a specified server, including change administrator password,
+            reboot, rebuild, resize, and create image from server.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#action">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#action">
                 <wadl:method href="#changePassword"/>
                 <wadl:method href="#rebootServer"/>
                 <wadl:method href="#rebuildServer"/>
@@ -125,47 +211,36 @@
     </section>
     <section xml:id="compute_flavors">
         <title>Flavors</title>
-        <para>List available flavors and get details for a specified
-            flavor. A flavor is a hardware configuration for a server.
-            Each flavor is a unique combination of disk space and
-            memory capacity.</para>
+        <para>List available flavors and get details for a specified flavor. A flavor is a hardware
+            configuration for a server. Each flavor is a unique combination of disk space and memory
+            capacity.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Flavors">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Flavors">
                 <wadl:method href="#listFlavors"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#flavor_detail">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#flavor_detail">
                 <wadl:method href="#listDetailFlavors"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#flavor_id">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#flavor_id">
                 <wadl:method href="#getFlavor"/>
             </wadl:resource>
         </wadl:resources>
     </section>
     <section xml:id="compute_images">
         <title>Images</title>
-        <para>List available images, get details for a specified
-            image, and delete an image.</para>
-        <para>Also, set, list, get details for, and delete image
-            metadata.</para>
-        <para>An image is a collection of files that you use to create
-            or rebuild a server. By default, operators provide
-            pre-built operating system images. You can also create
-            custom images: See <xref linkend="compute_server-actions"
-            />.</para>
+        <para>List available images, get details for a specified image, and delete an image.</para>
+        <para>Also, set, list, get details for, and delete image metadata.</para>
+        <para>An image is a collection of files that you use to create or rebuild a server. By
+            default, operators provide pre-built operating system images. You can also create custom
+            images: See <xref linkend="compute_server-actions"/>.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Images">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Images">
                 <wadl:method href="#listImages"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#image_detail">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#image_detail">
                 <wadl:method href="#listDetailImages"/>
             </wadl:resource>
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#image_id">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#image_id">
                 <wadl:method href="#getImage"/>
                 <wadl:method href="#deleteImage"/>
             </wadl:resource>
@@ -173,11 +248,9 @@
     </section>
     <section xml:id="compute_image_metadata">
         <title>Image metadata</title>
-        <para>Show details for, set, update, and delete image metadata
-            or metadata items.</para>
+        <para>Show details for, set, update, and delete image metadata or metadata items.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
-                href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#image_metadata">
+            <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#image_metadata">
                 <wadl:method href="#showImageMetadata"/>
                 <wadl:method href="#createImageMetadata"/>
                 <wadl:method href="#updateImageMetadata"/>
