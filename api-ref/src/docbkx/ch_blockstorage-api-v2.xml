@@ -34,6 +34,68 @@
     </section>
     <section xml:id="volumes-v2">
         <title>Volumes</title>
+        <para>A volume is a detachable block storage device. You can
+            think of it as a USB hard drive. You can attach a volume to
+            one instance at a time.</para>
+        <para>When you create, list, or delete volumes, these status
+            values are possible:</para>
+        <informaltable rules="all">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><para>creating</para></td>
+                    <td><para>The volume is being created.</para></td>
+                </tr>
+                <tr>
+                    <td><para>available</para></td>
+                    <td><para>The volume is ready to be attached to an
+                        instance.</para></td>
+                </tr>
+                <tr>
+                    <td><para>attaching</para></td>
+                    <td><para>The volume is attaching to an
+                        instance.</para></td>
+                </tr>
+                <tr>
+                    <td><para>in-use</para></td>
+                    <td><para>The volume is attached to an
+                        instance.</para></td>
+                </tr>
+                <tr>
+                    <td><para>deleting</para></td>
+                    <td><para>The volume is being deleted.</para></td>
+                </tr>
+                <tr>
+                    <td><para>error</para></td>
+                    <td><para>An error occurred during volume
+                        creation.</para></td>
+                </tr>
+                <tr>
+                    <td><para>error_deleting</para></td>
+                    <td><para>An error occurred during volume
+                        deletion.</para></td>
+                </tr>
+                <tr>
+                    <td><para>backing-up</para></td>
+                    <td><para>The volume is being backed up.</para></td>
+                </tr>
+                <tr>
+                    <td><para>restoring-backup</para></td>
+                    <td><para>A backup is being restored to the
+                        volume.</para></td>
+                </tr>
+                <tr>
+                    <td><para>error_restoring</para></td>
+                    <td><para>An error occurred during backup restoration to a
+                        volume.</para></td>
+                </tr>
+            </tbody>
+        </informaltable>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource
                 href="../wadls/volume-api/src/v2/volume-api-v2.wadl#volumes">
@@ -75,6 +137,47 @@
     </section>
     <section xml:id="snapshots-v2">
         <title>Snapshots</title>
+        <para>A snapshot is a point in time copy of the data that a
+            volume contains.</para>
+        <para>When you create, list, or delete snapshots, these status
+            values are possible:</para>
+        <informaltable rules="all">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <para>creating</para></td>
+                    <td><para>The snapshot is being created.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>available</para></td>
+                    <td><para>The snapshot is ready to be used.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>deleting</para></td>
+                    <td><para>The snapshot is being deleted.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>error</para></td>
+                    <td><para>An error occurred during snapshot
+                        creation.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>error_deleting</para></td>
+                    <td><para>An error occurred during snapshot
+                        deletion.</para></td>
+                </tr>
+            </tbody>
+        </informaltable>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource
                 href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshots">
@@ -144,5 +247,65 @@
         <wadl:resources
             href="../wadls/volume-api/src/v2/os-limits.wadl"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+    </section>
+    <section xml:id="ext-backups">
+        <title>Backups</title>
+        <para>A backup is a full copy of a volume stored in an external
+            service. The service can be configured. The only supported
+            service for now is Object Storage. A backup can subsequently
+            be restored from the external service to either the same
+            volume that the backup was originally taken from, or to a new
+            volume. backup and restore operations can only be carried out
+            on volumes which are in an unattached and available
+            state.</para>
+        <para>When you create, list, or delete backups, these status
+            values are possible:</para>
+        <informaltable rules="all">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <para>creating</para></td>
+                    <td><para>The backup is being created.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>available</para></td>
+                    <td><para>The backup is ready to be restored to a
+                        volume.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>deleting</para></td>
+                    <td><para>The backup is being deleted.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>error</para></td>
+                    <td><para>An error has occurred with the
+                        backup.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>restoring</para></td>
+                    <td><para>The backup is being restored to a
+                        volume.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>error_restoring</para></td>
+                    <td><para>An error occurred during backup restoration to a
+                        volume.</para></td>
+                </tr>
+            </tbody>
+        </informaltable>
+        <para>In the event of an error, more information about the error
+            can be found in the <literal>fail_reason</literal> field for
+            the backup.</para>
     </section>
 </chapter>
