@@ -91,7 +91,8 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"><para>The
                         security group name.</para></wadl:doc>
-            </param> &securityGroupRule; <representation
+            </param>
+            <representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
@@ -163,7 +164,8 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"><para>The
                         security group name.</para></wadl:doc>
-            </param> &securityGroupRule; <representation
+            </param>
+            <representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
@@ -229,7 +231,8 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"><para>The
                         security group name.</para></wadl:doc>
-            </param> &securityGroupRule; <representation
+            </param>
+            <representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
@@ -307,39 +310,6 @@
                 group rule.</para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="api_samples/rules-security-groups-list-get-req-json-http.txt"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="200"> &securityGroupRule; <representation
-                mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="api_samples/rules-security-groups-list-get-resp.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </response>
-        <response status="401"
-            xmlns="http://wadl.dev.java.net/2009/02">
-            <representation mediaType="application/xml"
-                element="secgr:unauthorized"/>
-            <representation mediaType="application/json"/>
-        </response>
-    </method>
-    <method name="POST" id="createSecGroupRule">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Create security group rule">
-            <para role="shortdesc">Creates an OpenStack Networking
-                security group rule.</para>
-        </wadl:doc>
-        <request>
             <param required="true" name="direction" style="plain"
                 type="xsd:string">
                 <wadl:doc xml:lang="EN"
@@ -350,6 +320,13 @@
                     (ingress) traffic for that instance. An egress
                     rule is applied to traffic leaving the
                     instance.</wadl:doc>
+            </param>
+            <param required="true" name="ethertype" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">Must be IPv4 or IPv6,
+                    and addresses represented in CIDR must match the ingress or
+                    egress rules.</wadl:doc>
             </param>
             <param required="true" name="security_group_id"
                 style="plain" type="csapi:uuid">
@@ -408,6 +385,110 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
+                        href="api_samples/rules-security-groups-list-get-req-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> <representation
+                mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="api_samples/rules-security-groups-list-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="401"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/xml"
+                element="secgr:unauthorized"/>
+            <representation mediaType="application/json"/>
+        </response>
+    </method>
+    <method name="POST" id="createSecGroupRule">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create security group rule">
+            <para role="shortdesc">Creates an OpenStack Networking
+                security group rule.</para>
+        </wadl:doc>
+        <request>
+            <param required="true" name="direction" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">Ingress or
+                    egress: The direction in which the security group
+                    rule is applied. For a compute instance, an
+                    ingress security group rule is applied to incoming
+                    (ingress) traffic for that instance. An egress
+                    rule is applied to traffic leaving the
+                    instance.</wadl:doc>
+            </param>
+            <param required="true" name="ethertype" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">Must be IPv4 or IPv6,
+                    and addresses represented in CIDR must match the ingress or
+                    egress rules.</wadl:doc>
+            </param>
+            <param required="true" name="security_group_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The security
+                    group ID to associate with this security group
+                    rule.</wadl:doc>
+            </param>
+            <param required="false" name="port_range_min"
+                style="plain" type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The minimum
+                    port number in the range that is matched by the
+                    security group rule. If the protocol is TCP or
+                    UDP, this value must be less than or equal to the
+                    value of the port_range_max attribute. If the
+                    protocol is ICMP, this value must be an ICMP
+                    type.</wadl:doc>
+            </param>
+            <param required="false" name="port_range_max"
+                style="plain" type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The maximum
+                    port number in the range that is matched by the
+                    security group rule. The port_range_min attribute
+                    constrains the port_range_max attribute. If the
+                    protocol is ICMP, this value must be an ICMP
+                    type.</wadl:doc>
+            </param>
+            <param required="false" name="protocol" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The protocol
+                    that is matched by the security group rule. Valid
+                    values are null, tcp, udp, and icmp.</wadl:doc>
+            </param>
+            <param required="false" name="remote_group_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The remote
+                    group ID to be associated with this security group
+                    rule. You can specify either remote_group_id or
+                    remote_ip_prefix in the request body.</wadl:doc>
+            </param>
+            <param required="false" name="remote_ip_prefix"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The remote
+                    IP prefix to be associated with this security
+                    group rule. You can specify either remote_group_id
+                    or remote_ip_prefix in the request body. This
+                    attribute matches the specified IP prefix as the
+                    source IP address of the IP packet.</wadl:doc>
+            </param>
+        <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
                         href="api_samples/rules-security-groups-create-req.json"
                     />
                 </wadl:doc>
@@ -436,7 +517,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"><para>The
                         security group name.</para></wadl:doc>
-            </param> &securityGroupRule; <representation
+            </param> <representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
@@ -489,7 +570,78 @@
                 </wadl:doc>
             </representation>
         </request>
-        <response status="200"> &securityGroupRule; <representation
+            <response status="200">
+                <param required="true" name="direction" style="plain"
+                    type="xsd:string">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">Ingress or
+                        egress: The direction in which the security group
+                        rule is applied. For a compute instance, an
+                        ingress security group rule is applied to incoming
+                        (ingress) traffic for that instance. An egress
+                        rule is applied to traffic leaving the
+                        instance.</wadl:doc>
+                </param>
+                <param required="true" name="ethertype" style="plain"
+                    type="xsd:string">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">Must be IPv4 or IPv6,
+                        and addresses represented in CIDR must match the ingress or
+                        egress rules.</wadl:doc>
+                </param>
+                <param required="true" name="security_group_id"
+                    style="plain" type="csapi:uuid">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">The security
+                        group ID to associate with this security group
+                        rule.</wadl:doc>
+                </param>
+                <param required="false" name="port_range_min"
+                    style="plain" type="xsd:int">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">The minimum
+                        port number in the range that is matched by the
+                        security group rule. If the protocol is TCP or
+                        UDP, this value must be less than or equal to the
+                        value of the port_range_max attribute. If the
+                        protocol is ICMP, this value must be an ICMP
+                        type.</wadl:doc>
+                </param>
+                <param required="false" name="port_range_max"
+                    style="plain" type="xsd:int">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">The maximum
+                        port number in the range that is matched by the
+                        security group rule. The port_range_min attribute
+                        constrains the port_range_max attribute. If the
+                        protocol is ICMP, this value must be an ICMP
+                        type.</wadl:doc>
+                </param>
+                <param required="false" name="protocol" style="plain"
+                    type="xsd:string">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">The protocol
+                        that is matched by the security group rule. Valid
+                        values are null, tcp, udp, and icmp.</wadl:doc>
+                </param>
+                <param required="false" name="remote_group_id"
+                    style="plain" type="csapi:uuid">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">The remote
+                        group ID to be associated with this security group
+                        rule. You can specify either remote_group_id or
+                        remote_ip_prefix in the request body.</wadl:doc>
+                </param>
+                <param required="false" name="remote_ip_prefix"
+                    style="plain" type="csapi:uuid">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">The remote
+                        IP prefix to be associated with this security
+                        group rule. You can specify either remote_group_id
+                        or remote_ip_prefix in the request body. This
+                        attribute matches the specified IP prefix as the
+                        source IP address of the IP packet.</wadl:doc>
+                </param><representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
@@ -498,7 +650,7 @@
                     />
                 </wadl:doc>
             </representation>
-        </response>
+             </response>
         <response status="401"
             xmlns="http://wadl.dev.java.net/2009/02">
             <representation mediaType="application/xml"
