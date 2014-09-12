@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-image-2.2.wadl               -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:imageapi="http://docs.openstack.org/image/api/v2"
+    xmlns:csapi="http://docs.openstack.org/image/api/v2">
+    <grammars>
+        <include href="xsd/api.xsd"/>
+        <include href="xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://glance.example.com/"
+        xml:id="os-metadef-property-v2">
+        <resource id="v2" path="//v2">
+            <resource id="metadefs" path="metadefs">
+                <resource id="namespaces" path="namespaces">
+                    <resource path="{namespace}" id="namespace">
+                        <resource id="properties" type="#PropertyList"
+                          path="properties">
+                            <method href="#createProperty-v2"/>
+                            <method href="#listProperties-v2"/>
+                            <resource path="{property_name}" id="property_name">
+                                <method href="#getProperty-v2"/>
+                                <method href="#updateProperty-v2"/>
+                                <method href="#deleteProperty-v2"/>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!-- Property methods -->
+    <method name="POST" id="createProperty-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create property">
+            <para role="shortdesc">Creates a property definition within a
+            namespace. Schema is subset of JSON Property definition schema
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json"
+                element="image">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="samples/metadef-property-create-req.json"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Name of the property.
+                        </para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="title" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Property title.
+                        </para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="type" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Property type
+                        </para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="enum" style="plain" type="xsd:enum"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>Enumeration of property values.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="items" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>specifies schema for the items in an
+                         array.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="description" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Property description.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="minimum" style="plain" type="xsd:int"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Minimum allowed numerical value.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="maximum" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Maximum allowed numerical value.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="minLength" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Minimum allowed string length.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="maxLength" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Maximum allowed string length.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="pattern" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>A regular expression (ECMA 262) that
+                         a string value must match.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="minItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Minimum length of an array.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="maxItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Maximum length of an array.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="uniqueItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>whether all the values in the array
+                         must be distinct.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="additionalItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>
+                            If you use <i>tuple-typing</i>, describes extra
+                            items. If the value of <code>items</code> is an
+                            array and the instance is longer than the list of
+                            schemas in <code>items</code>, the schema in this
+                            property describes the additional items.
+                        </para>
+                        <para>
+                            If this value is false, the instance cannot be
+                            longer than the number of schemas listed in
+                            <code>items</code>.
+                        </para>
+                        <para>
+                            A value of true indicates an empty schema, or
+                            anything goes.
+                     </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-property-create-response.json"/>
+                </wadl:doc> &metadefPropertyNameParameter;
+                &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
+                &metadefPropertyEnumParameter; &metadefPropertyItemsParameter;
+                &metadefPropertyDescParameter; &metadefPropertyMinParameter;
+                &metadefPropertyMaxParameter; &metadefPropertyMinLengthParameter;
+                &metadefPropertyMaxLengthParameter; &metadefPropertyPatternParameter;
+                &metadefPropertyMinItemsParameter; &metadefPropertyMaxItemsParameter;
+                &metadefPropertyUniqueItemsParameter;
+                &metadefPropertyAdditionalItemsParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listProperties-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List properties">
+            <para role="shortdesc">Lists property definitions within
+                a namespace.</para>
+            <para>Returns a list of property definitions in a
+                namespace.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespace_idParameter;</representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-property-list-response.json"/>
+                </wadl:doc> &metadefPropertyListParameter;
+                &metadefPropertyNameParameter;
+                &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
+                &metadefPropertyEnumParameter; &metadefPropertyItemsParameter;
+                &metadefPropertyDescParameter; &metadefPropertyMinParameter;
+                &metadefPropertyMaxParameter; &metadefPropertyMinLengthParameter;
+                &metadefPropertyMaxLengthParameter; &metadefPropertyPatternParameter;
+                &metadefPropertyMinItemsParameter; &metadefPropertyMaxItemsParameter;
+                &metadefPropertyUniqueItemsParameter;
+                &metadefPropertyAdditionalItemsParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getProperty-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get property definition">
+            <para role="shortdesc">Gets definition for a specified property.
+                </para>
+            <para>Response body is a single property entity.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespace_idParameter;
+                &metadefPropertyNameIdParameter;
+                </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-property-details-response.json"/>
+                </wadl:doc>
+                &metadefPropertyNameParameter;
+                &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
+                &metadefPropertyEnumParameter; &metadefPropertyItemsParameter;
+                &metadefPropertyDescParameter; &metadefPropertyMinParameter;
+                &metadefPropertyMaxParameter; &metadefPropertyMinLengthParameter;
+                &metadefPropertyMaxLengthParameter; &metadefPropertyPatternParameter;
+                &metadefPropertyMinItemsParameter; &metadefPropertyMaxItemsParameter;
+                &metadefPropertyUniqueItemsParameter;
+                &metadefPropertyAdditionalItemsParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="updateProperty-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update property definition">
+            <para role="shortdesc">Updates a specified property definition.
+                </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json"
+                element="image">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="samples/metadef-property-create-req.json"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Name of the property.
+                        </para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="title" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Property title.
+                        </para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="type" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>Property type
+                        </para></wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="enum" style="plain" type="xsd:enum"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>Enumeration of property values.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="items" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>specifies schema for the items in an
+                         array.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="description" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Property description.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="minimum" style="plain" type="xsd:int"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Minimum allowed numerical value.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="maximum" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Maximum allowed numerical value.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="minLength" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Minimum allowed string length.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="maxLength" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Maximum allowed string length.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="pattern" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>A regular expression (ECMA 262) that
+                         a string value must match.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="minItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Minimum length of an array.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="maxItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>Maximum length of an array.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="uniqueItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>whether all the values in the array
+                         must be distinct.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="additionalItems" style="plain" type="xsd:dict"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                         <para>
+                            If you use <i>tuple-typing</i>, describes extra
+                            items. If the value of <code>items</code> is an
+                            array and the instance is longer than the list of
+                            schemas in <code>items</code>, the schema in this
+                            property describes the additional items.
+                        </para>
+                        <para>
+                            If this value is false, the instance cannot be
+                            longer than the number of schemas listed in
+                            <code>items</code>.
+                        </para>
+                        <para>
+                            A value of true indicates an empty schema, or
+                            anything goes.
+                     </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-property-update-response.json"/>
+                </wadl:doc>
+                 &metadefPropertyNameParameter;
+                &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
+                &metadefPropertyEnumParameter; &metadefPropertyItemsParameter;
+                &metadefPropertyDescParameter; &metadefPropertyMinParameter;
+                &metadefPropertyMaxParameter; &metadefPropertyMinLengthParameter;
+                &metadefPropertyMaxLengthParameter; &metadefPropertyPatternParameter;
+                &metadefPropertyMinItemsParameter; &metadefPropertyMaxItemsParameter;
+                &metadefPropertyUniqueItemsParameter;
+                &metadefPropertyAdditionalItemsParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteProperty-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Remove property definition">
+            <para role="shortdesc">
+                Removes a specified property definition in a specified
+                namespace.
+            </para>
+            <para>
+                To remove a property, first make an update namespace request
+                to set the <code>protected</code> attribute to false (boolean)
+                on the namespace. Then, remove the property. If the operation
+                succeeds, the response returns the HTTP 204 status code.
+            </para>
+            <para>
+                If you try to remove a property in a namespace
+                with the <code>protected</code> attribute set to true
+                (boolean), the operation fails and the response returns the
+                HTTP 403 error code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespace_idParameter;
+                &metadefPropertyNameIdParameter; </representation>
+        </request>
+        <response status="204"/>
+        <response status="403"/>
+    </method>
+</application>

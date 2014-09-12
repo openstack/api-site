@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-image-2.2.wadl               -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:imageapi="http://docs.openstack.org/image/api/v2"
+    xmlns:csapi="http://docs.openstack.org/image/api/v2">
+    <grammars>
+        <include href="xsd/api.xsd"/>
+        <include href="xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://glance.example.com/"
+        xml:id="os-metadef-resourcetype-v2">
+        <resource id="v2" path="//v2">
+            <resource id="metadefs" path="metadefs">
+                <method href="#listResourceTypes-v2"/>
+                <resource id="namespaces" path="namespaces">
+                    <resource path="{namespace}" id="namespace">
+                        <resource id="resource_types" type="#ResourceTypeList"
+                                  path="resource_types">
+                            <param xmlns="http://wadl.dev.java.net/2009/02"
+                                   name="namespace" style="template" type="xsd:string" required="true">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                                xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                                xml:lang="EN">
+                               <para>
+                                    Unique namespace.
+                                </para>
+                            </wadl:doc>
+                            </param>
+                            <method href="#createResourceTypeAssoc-v2"/>
+                            <method href="#listResourceTypeAssocs-v2"/>
+                            <resource path="{name}" id="name">
+                                <param xmlns="http://wadl.dev.java.net/2009/02" name="name"
+                                       style="template" required="true" type="xsd:string">
+                                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                                       <para>Name of the resource type.</para>
+                                    </wadl:doc>
+                                </param>
+                                <method href="#deleteResourceTypeAssoc-v2"/>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!-- Property methods -->
+    <method name="POST" id="createResourceTypeAssoc-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create resource type association">
+            <para role="shortdesc">Creates a resource type association
+                in a namespace.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json"
+                element="image">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-resource-type-assoc-create-req.json"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>Name of the resource type.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="prefix" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>
+                            Prefix for the specified resource type. If you
+                            specify a prefix, you must use this value followed
+                            by a prefix separator such as the colon
+                            (<code>:</code>) character to prefix any
+                            properties in the namespace that you want to apply
+                            to the specified resource type.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="properties_target" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>
+                            Some resource types allow more than one key and
+                            value pair for each instance. For example, the
+                            Image service allows both user and image metadata
+                            on volumes. The <code>properties_target</code>
+                            parameter enables a namespace target to remove the
+                            ambiguity.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-resource-type-assoc-create-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listResourceTypes-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List resource types">
+            <para role="shortdesc">Lists resource types.</para>
+            <para>
+                Lists all possible resource types. You can assign metadata
+                definition namespaces to these resource types. See the
+                metadata definition resource types section.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-resource-type-list-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listResourceTypeAssocs-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List resource type associations">
+            <para role="shortdesc">
+                Lists resource type associations in a specified namespace.
+            </para>
+            <para>
+                The response body lists resource type association entities.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-resource-type-assoc-list-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteResourceTypeAssoc-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Remove resource type association">
+            <para role="shortdesc">
+                Removes a specified resource type association in a specified
+                namespace.
+            </para>
+            <para>
+                To remove an association, first make an update namespace
+                request to set the <code>protected</code> attribute to false
+                (boolean) on the namespace. Then, remove the association. If
+                the operation succeeds, the response returns the HTTP 204
+                status code.
+            </para>
+            <para>
+                If you try to remove resource type associations in a namespace
+                with the <code>protected</code> attribute set to true
+                (boolean), the operation fails and the response returns the
+                HTTP 403 error code.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+        <response status="403"/>
+    </method>
+</application>
