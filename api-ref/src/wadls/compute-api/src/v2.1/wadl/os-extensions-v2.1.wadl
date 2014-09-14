@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-extensions-v2.1.wadl           -->
+<!--*******************************************************-->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-extensions-v2.1">
+        <!--*******************************************************-->
+        <!--             All Resources                             -->
+        <!--*******************************************************-->
+        <resource id="version" type="#VersionDetails" path="//v2.1">
+            <resource id="extensions" type="#ExtensionList"
+                path="extensions">
+                <resource id="extension" path="{alias}">
+                    <param xmlns="http://wadl.dev.java.net/2009/02"
+                        name="alias" style="template"
+                        type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN"><para>An alias, which is a
+                                name for a pointer to a resource. For
+                                example, a named extension.</para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#getExtension"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               Resource Types                          -->
+    <!--*******************************************************-->
+    <resource_type id="VersionDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Version details">
+            <para>Details for a version.</para>
+        </wadl:doc>
+        <method href="#versionDetails"/>
+    </resource_type>
+    <resource_type id="ExtensionList">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Detail image list">
+            <para>A list of supported extensions.</para>
+        </wadl:doc>
+        <method href="#listExtensions"/>
+    </resource_type>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!-- Extensions -->
+    <method name="GET" id="listExtensions">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List extensions">
+            <para role="shortdesc">Lists available extensions.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <param name="next" style="plain" type="xsd:anyURI"
+                path="/common:extensions/atom:link[@rel='next']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Moves to the next metadata
+                        item.</para></wadl:doc>
+                <link resource_type="#ExtensionList" rel="next"/>
+            </param>
+            <param name="previous" style="plain" type="xsd:anyURI"
+                path="/common:extensions/atom:link[@rel='previous']/@href">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"><para>Moves to the previous metadata
+                        item.</para></wadl:doc>
+                <link resource_type="#ExtensionList" rel="previous"/>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/all_extensions/extensionsv2.1-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+         <!--   <representation mediaType="application/xml"
+                element="common:extensions">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/all_extensions/extensionsv2.1-get-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>-->
+        </response>
+    </method>
+    <method name="GET" id="getExtension">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get extension">
+            <para role="shortdesc">Shows details about a specified
+                extension.</para>
+            <para>Extensions introduce features and vendor-specific
+                functionality to the API without requiring a version
+                change.</para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="../api_samples/extensionv2.1.json"
+                    />
+                </wadl:doc>
+            </representation>
+        <!--    <representation mediaType="application/xml"
+                element="common:extension">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="../api_samples/extensionv2.1.xml"
+                    />
+                </wadl:doc>
+            </representation>-->
+        </response>
+    </method>
+</application>
