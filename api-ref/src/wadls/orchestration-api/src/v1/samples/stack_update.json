@@ -1,8 +1,28 @@
 {
-    "template_url": "{template_url}",
-    "parameters": {
-        "param_name-1": "param_value-1",
-        "param_name-2": "param_value-2"
+    "template": {
+        "heat_template_version": "2013-05-23",
+        "description": "Create a simple stack",
+        "parameters": {
+            "flavor": {
+                "default": "m1.tiny",
+                "type": "string"
+            }
+        },
+        "resources": {
+            "hello_world": {
+                "type": "OS::Nova::Server",
+                "properties": {
+                    "key_name": "heat_key",
+                    "flavor": {
+                        "get_param": "flavor"
+                    },
+                    "image": "40be8d1a-3eb9-40de-8abd-43237517384f",
+                    "user_data": "#!/bin/bash -xv\necho \"hello world\" > /root/hello-world.txt\n"
+                }
+            }
+        }
     },
-    "timeout_mins": "{timeout_mins}"
+    "parameters": {
+        "flavor": "m1.small"
+    }
 }
