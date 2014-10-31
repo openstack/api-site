@@ -84,6 +84,37 @@ arguments for parameters defined in the stack template.</para>
 <!ENTITY PARAMETERS_UPDATE_DESC '<para>This parameter supplies updated arguments
 for parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
 
+<!-- Common descriptions for cases where a user supplies a 'parameters' object -->
+<!ENTITY PARAMETERS_COMMON '<para>The value is a JSON object, where each key is
+the name of a parameter <link
+xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-parameters.html">
+defined in the template</link> and the associated value is the argument to use
+for that parameter when instantiating the template. The following code shows the
+general structure of this parameter. In the example, <code>a</code> and
+<code>b</code> would be the names of two parameters defined in the
+template.</para>
+<programlisting language="json">"parameters": {
+  "a": "Value",
+  "b": "3"
+}</programlisting>
+<note><para>While the service accepts JSON numbers for parameters with the type
+<code>number</code> and JSON objects for parameters with the type
+<code>json</code>, all parameter values are converted to their string
+representation for storage in the created Stack. Clients are encouraged to send
+all parameter values using their string representation for consistency between
+requests and responses from the Orchestration service.</para></note>
+<note><para>A value must be provided for each template parameter which does not
+specify a default value. However, this parameter is not allowed to contain JSON
+properties with names that do not match a parameter defined in the
+template.</para></note>'>
+<!ENTITY PARAMETERS_CREATE_DESC '<para>This parameter supplies arguments for
+parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
+<!ENTITY PARAMETERS_PREVIEW_DESC '<para>This parameter supplies preview
+arguments for parameters defined in the stack template.</para>
+&PARAMETERS_COMMON;'>
+<!ENTITY PARAMETERS_UPDATE_DESC '<para>This parameter supplies updated arguments
+for parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
+
 <!-- Common descriptions for cases where a user supplies a 'files' object -->
 <!ENTITY FILES_COMMON '<para>This parameter supplies the contents of files
 referenced in the template or the environment. Stack templates and resource
@@ -573,6 +604,13 @@ template content as part of the request.</para></note>'>
                     </wadl:doc>
                 </param>
                 <param name="parameters" style="plain" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        &PARAMETERS_PREVIEW_DESC;
+                    </wadl:doc>
+                </param>
+                <param name="param_name-n" style="plain"
+                    required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         &PARAMETERS_PREVIEW_DESC;
