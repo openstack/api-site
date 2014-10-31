@@ -52,6 +52,29 @@ are specified, this value overrides any value provided for
 &TEMPLATE_COMMON;'>
 <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
 %common_project;
+
+<!-- Common descriptions for cases where a user supplies a 'files' object -->
+<!ENTITY FILES_COMMON '<para>This parameter supplies the contents of files
+referenced in the template or the environment. Stack templates and resource
+templates may reference files explicitly using the <link
+xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-intrinsic-functions.html#get-file">
+<code>get_file</code> intrinsic function</link>. In addition, the
+<code>environment</code> parameter may contain implicit references to
+files.</para><para>The value is a JSON object, where each key is a relative or
+absolute URI which serves as the name of a file, and the associated value
+provides the contents of the file. The following code shows the general
+structure of this parameter.</para>
+<programlisting language="json">"files": {
+  "fileA.yaml": "Contents of the file",
+  "file:///usr/fileB.template": "Contents of the file",
+  "http://example.com/fileC.template": "Contents of the file"
+}</programlisting><note><para>This parameter may not be used to provide the
+content of the template located at the address specified by
+<code>template_url</code>. Use the <code>template</code> parameter to supply the
+template content as part of the request.</para></note>'>
+<!ENTITY FILES_CREATE_DESC '&FILES_COMMON;'>
+<!ENTITY FILES_PREVIEW_DESC '&FILES_COMMON;'>
+<!ENTITY FILES_UPDATE_DESC '&FILES_COMMON;'>
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
@@ -371,6 +394,42 @@ are specified, this value overrides any value provided for
                         <para>&TEMPLATE_CREATE_DESC;</para>
                     </wadl:doc>
                 </param>
+                <param name="files" style="plain" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        &FILES_CREATE_DESC;
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_create_resp.json"
+                    />
+                </wadl:doc>
+                <param name="stack_name" style="plain" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The name of the stack to create.</para>
+                    </wadl:doc>
+                </param>
+                <param name="template_url" style="plain"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The URL of the template to
+                            instantiate. This value is ignored if the
+                            template is supplied
+                        inline.</para></wadl:doc>
+                </param>
+                <param name="template" style="plain" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>A JSON template to
+                            instantiate. This value takes precedence
+                            over the template URL if both are
+                            supplied.</para></wadl:doc>
+                </param>
                 <param name="environment" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -413,15 +472,6 @@ are specified, this value overrides any value provided for
                             stack. The default is True; a failure does
                             not cause deletions.</para></wadl:doc>
                 </param>
-            </representation>
-        </request>
-        <response status="201">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code href="samples/stack_create_resp.json"
-                    />
-                </wadl:doc>
                 <param name="stack_id" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
@@ -479,13 +529,10 @@ are specified, this value overrides any value provided for
                         <para>A JSON environment for the stack.</para>
                     </wadl:doc>
                 </param>
-                <param name="files" style="plain" required="true">
+                <param name="files" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>A map of file names (Provider resource
-                            templates, as referenced in the
-                            environment) to JSON template
-                            bodies.</para>
+                        &FILES_PREVIEW_DESC;
                     </wadl:doc>
                 </param>
                 <param name="parameters" style="plain" required="true">
@@ -686,12 +733,9 @@ are specified, this value overrides any value provided for
                         xml:lang="EN"><para>A JSON environment for the
                             stack.</para></wadl:doc>
                 </param>
-                <param name="files" style="plain" required="true">
+                <param name="files" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A map of file names
-                            (Provider resource templates, as
-                            referenced in the environment) for JSON
-                            template bodies.</para></wadl:doc>
+                        xml:lang="EN">&FILES_CREATE_DESC;</wadl:doc>
                 </param>
                 <param name="param_name-n" style="plain"
                     required="true">
@@ -863,12 +907,9 @@ are specified, this value overrides any value provided for
                         xml:lang="EN"><para>A JSON environment for the
                             stack.</para></wadl:doc>
                 </param>
-                <param name="files" style="plain" required="true">
+                <param name="files" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A map of file names
-                            (Provider resource templates, as
-                            referenced in the environment) to JSON
-                            template bodies.</para></wadl:doc>
+                        xml:lang="EN">&FILES_UPDATE_DESC;</wadl:doc>
                 </param>
                 <param name="param_name-n" style="plain"
                     required="true">
