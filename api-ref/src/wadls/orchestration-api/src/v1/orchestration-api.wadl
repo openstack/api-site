@@ -68,6 +68,9 @@
                      <method href="#stack_show"/>
                      <method href="#stack_update"/>
                      <method href="#stack_delete"/>
+                     <resource path="preview" id="update_preview">
+                       <method href="#stack_update_preview"/>
+                     </resource>
                      <resource path="abandon" id="abandon">
                         <method href="#stack_abandon"/>
                      </resource>
@@ -1127,6 +1130,85 @@
       &commonFaults;
       &notFound;
       &intServerErr;
+   </method>
+   <method name="POST" id="stack_update_preview">
+       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+           title="Preview stack update">
+           <para role="shortdesc">Preview an update for a specified stack</para>
+       </wadl:doc>
+       <request>
+          <representation mediaType="application/json">
+             <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                xml:lang="EN">
+                <xsdxt:code href="samples/stack_update.json"/>
+             </wadl:doc>
+             &templateUrlParameter;
+             &templateParameter;
+             &environmentParameterOptional;
+             &filesParameter;
+             &tagsParameter;
+             <param xmlns="http://wadl.dev.java.net/2009/02" name="parameters" style="plain" required="false">
+             <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                xml:lang="EN">
+                <para>
+                   This parameter supplies updated arguments for
+                   parameters defined in the stack template.
+                </para>
+                <para>
+                   The value is a JSON object, where each key is the name of a
+                   parameter defined in the template and the associated value
+                   is the argument to use for that parameter when instantiating
+                   the template. The following code shows the general structure
+                   of this parameter. In the example, <code>a</code> and
+                   <code>b</code> are the names of two parameters defined in
+                   the template.
+                   <programlisting language="json">{ ...
+                      "parameters": {
+                      "a": "Value",
+                      "b": "3"
+                      }
+                      ... }
+                   </programlisting>
+                </para>
+                <para>
+                   While the service accepts JSON numbers for parameters with
+                   the type <code>number</code> and JSON objects for parameters
+                   with the type <code>json</code>, all parameter values are
+                   converted to their string representation for storage in the
+                   created Stack. Clients are encouraged to send all parameter
+                   values using their string representation for consistency
+                   between requests and responses from the Orchestration
+                   service.
+                </para>
+                <para>
+                   You must specify a value for each template parameter that
+                   does not have a default value. However, this parameter
+                   cannot contain JSON properties with names that do not match
+                   a parameter that is defined in the template.
+                </para>
+             </wadl:doc>
+             </param>
+             <param xmlns="http://wadl.dev.java.net/2009/02" name="timeout_mins" style="plain"
+                required="false">
+             <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                xml:lang="EN">
+                <para>
+                   The timeout for stack creation in minutes.
+                </para>
+             </wadl:doc>
+             </param>
+          </representation>
+       </request>
+       <response status="200">
+           <representation mediaType="application/json">
+               <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                   xml:lang="EN">
+                   <xsdxt:code href="samples/stack_update_preview_resp.json"/>
+               </wadl:doc>
+           </representation>
+       </response>
    </method>
    <method name="DELETE" id="stack_delete">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
