@@ -73,6 +73,24 @@ be used for future calls to preview and/or create a stack.</para>'>
                             <resource path="abandon" id="abandon">
                                 <method href="#stack_abandon"/>
                             </resource>
+                            <resource path="snapshots" id="snapshots">
+                                <method href="#stack_snapshot"/>
+                                <method href="#stack_list_snapshot"/>
+                            </resource>
+                            <resource path="snapshots" id="snapshots2">
+                                <resource path="{snapshot_id}"
+                                    id="snapshot_id">
+                                    <param name="snapshot_id"
+                                    style="template" required="true">
+                                    <wadl:doc
+                                    xmlns="http://docbook.org/ns/docbook"
+                                    xml:lang="EN"><para>The ID of a
+                                    snapshot.</para></wadl:doc>
+                                    </param>
+                                    <method href="#stack_show_snapshot"/>
+                                    <method href="#stack_delete_snapshot"/>
+                                </resource>
+                            </resource>
                             <resource path="actions" id="actions">
                                 <method href="#stack_action_suspend"/>
                                 <method href="#stack_action_resume"/>
@@ -763,6 +781,67 @@ be used for future calls to preview and/or create a stack.</para>'>
                 </wadl:doc>
             </representation>
         </response>
+    </method>
+    <method name="POST" id="stack_snapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Snapshot stack">
+            <para role="shortdesc">Takes a snapshot of all the resources in the
+                stack.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="name" style="plain"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The (optional) name of the snapshot.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_snapshot.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="stack_list_snapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List snapshots">
+            <para role="shortdesc">List the snapshots of a stack.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_list_snapshot.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="stack_show_snapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show snapshot">
+            <para role="shortdesc">Show the details of a snapshot.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_show_snapshot.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="stack_delete_snapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete snapshot">
+            <para role="shortdesc">Delete a stack snapshot.</para>
+        </wadl:doc>
+        <response status="204"/>
     </method>
     <method name="POST" id="template_validate">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
