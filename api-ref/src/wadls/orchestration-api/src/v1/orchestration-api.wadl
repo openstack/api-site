@@ -7,6 +7,8 @@
 <!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
 <!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
 <!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
+
+<!-- Common descriptions for cases where a user supplies a new stack name -->
 <!ENTITY STACK_NAME_FORMAT 'The value must be unique within a project. The name
 must start with an ASCII letter and can contain ASCII letters, digits,
 underscores, periods, and hyphens. Specifically, the name must match the regular
@@ -18,11 +20,42 @@ unspecified time.</para></note>'>
 <!ENTITY STACK_NAME_PREVIEW_DESC 'A name for the preview stack.
 &STACK_NAME_FORMAT; <para>The stack name provided for the preview operation may
 be used for future calls to preview and/or create a stack.</para>'>
+
+<!-- Common descriptions for cases where a user supplies a template_url -->
+<!ENTITY TEMPLATE_URL_COMMON 'See the description of the <code>template</code>
+property for information about the expected template content located at the URI.
+<note><para>This parameter is only required when the <code>template</code>
+parameter is omitted. The value is ignored if the <code>template</code> property
+is also specified.</para></note>'>
+<!ENTITY TEMPLATE_URL_CREATE_DESC 'A URI to the location containing the stack
+template to instantiate. &TEMPLATE_URL_COMMON;'>
+<!ENTITY TEMPLATE_URL_PREVIEW_DESC 'A URI to the location containing the stack
+template to preview. &TEMPLATE_URL_COMMON;'>
+<!ENTITY TEMPLATE_URL_UPDATE_DESC 'A URI to the location containing the updated
+stack template. &TEMPLATE_URL_COMMON;'>
+
+<!-- Common descriptions for cases where a user supplies a template -->
+<!ENTITY TEMPLATE_COMMON 'This parameter is always provided as a
+<code>string</code> in the JSON request body. The content of the string is an
+Orchestration template, and may be provided in either YAML or JSON syntax.
+Complete details about the syntax of an Orchestration template are provided in
+the <link xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
+Orchestration Template (HOT) specification</link>. <note><para>This parameter is
+only required when the <code>template_url</code> parameter is omitted. If both
+are specified, this value overrides any value provided for
+<code>template_url</code>.</para></note>'>
+<!ENTITY TEMPLATE_CREATE_DESC 'The stack template to instantiate.
+&TEMPLATE_COMMON;'>
+<!ENTITY TEMPLATE_PREVIEW_DESC 'The stack template to preview.
+&TEMPLATE_COMMON;'>
+<!ENTITY TEMPLATE_UPDATE_DESC 'The updated stack template.
+&TEMPLATE_COMMON;'>
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <resources base="https://heat.example.com/"
         xml:id="orchestration-api-v1.0">
         <resource id="versions" path="//">
@@ -333,6 +366,18 @@ be used for future calls to preview and/or create a stack.</para>'>
                         <para>&STACK_NAME_CREATE_DESC;</para>
                     </wadl:doc>
                 </param>
+                <param name="template_url" style="plain" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>&TEMPLATE_URL_CREATE_DESC;</para>
+                    </wadl:doc>
+                </param>
+                <param name="template" style="plain" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>&TEMPLATE_CREATE_DESC;</para>
+                    </wadl:doc>
+                </param>
             </representation>
         </request>
         <response status="201">
@@ -425,21 +470,16 @@ be used for future calls to preview and/or create a stack.</para>'>
                         <para>&STACK_NAME_PREVIEW_DESC;</para>
                     </wadl:doc>
                 </param>
-                <param name="template_url" style="plain"
-                    required="true">
+                <param name="template_url" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The URL of the template to instantiate.
-                            This value is ignored if the template is
-                            supplied inline.</para>
+                        <para>&TEMPLATE_URL_PREVIEW_DESC;</para>
                     </wadl:doc>
                 </param>
-                <param name="template" style="plain" required="true">
+                <param name="template" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>A JSON template to instantiate. This
-                            value takes precedence over the template
-                            URL if both are supplied.</para>
+                        <para>&TEMPLATE_PREVIEW_DESC;</para>
                     </wadl:doc>
                 </param>
                 <param name="environment" style="plain"
@@ -538,20 +578,17 @@ be used for future calls to preview and/or create a stack.</para>'>
                         <para>&STACK_NAME_CREATE_DESC;</para>
                     </wadl:doc>
                 </param>
-                <param name="template_url" style="plain"
-                    required="true">
+                <param name="template_url" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>URL of the template to
-                            instantiate. This value is ignored if the
-                            template is supplied
-                        inline.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>&TEMPLATE_URL_CREATE_DESC;</para>
+                    </wadl:doc>
                 </param>
-                <param name="template" style="plain" required="true">
+                <param name="template" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON template to
-                            instantiate. This value takes precedence
-                            over the template URL if both are
-                            supplied.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>&TEMPLATE_CREATE_DESC;</para>
+                    </wadl:doc>
                 </param>
                 <param name="environment" style="plain"
                     required="true">
@@ -718,20 +755,17 @@ be used for future calls to preview and/or create a stack.</para>'>
                     xml:lang="EN">
                     <xsdxt:code href="samples/stack_update.json"/>
                 </wadl:doc>
-                <param name="template_url" style="plain"
-                    required="true">
+                <param name="template_url" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The URL of the template to
-                            instantiate. This value is ignored if the
-                            template is supplied
-                        inline.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>&TEMPLATE_URL_UPDATE_DESC;</para>
+                    </wadl:doc>
                 </param>
-                <param name="template" style="plain" required="true">
+                <param name="template" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON template to
-                            instantiate. This value takes precedence
-                            over the template URL if both are
-                            supplied.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>&TEMPLATE_UPDATE_DESC;</para>
+                    </wadl:doc>
                 </param>
                 <param name="environment" style="plain"
                     required="true">
