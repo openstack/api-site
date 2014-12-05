@@ -34,7 +34,7 @@ On Fedora 20 and later::
 Build and update API docs
 =========================
 
-For more details about the Gerrit workflow, see `Gerrit Workflow <https://wiki.openstack.org/wiki/GerritWorkflow>`_.
+For more details about the Gerrit workflow, see `Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 To build and updates any of the API documents:
 
@@ -68,7 +68,7 @@ To build and updates any of the API documents:
 
         mvn clean generate-sources
 
-#. To check in your changes, see `Gerrit Workflow <https://wiki.openstack.org/wiki/GerritWorkflow>`_.
+#. To check in your changes, see `Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 - The root of the generated HTML (API site) documentation is::
 
