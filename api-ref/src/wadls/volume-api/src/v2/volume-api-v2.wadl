@@ -211,6 +211,28 @@
             <para>To create a bootable volume, include the image ID
                 and set the <code>bootable</code> flag to
                     <code>true</code> in the request body.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The user must have enough volume storage quota
+                          remaining to create a volume of size requested.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>With correct permissions, you can see the volume status
+                as <code>available</code> through API calls.</para></listitem>
+                <listitem><para>With correct access, you can see the created volume
+                in the storage system that OpenStack Block Storage manages.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If volume status remains <code>creating</code> or
+                shows another error status, the request failed. Ensure you meet the preconditions
+                then investigate the storage backend.</para></listitem>
+                <listitem><para>Volume is not created in the storage system which OpenStack
+                          Block Storage manages.</para></listitem>
+                <listitem><para>The storage node needs enough free storage space to match
+                          the specified size of the volume creation request.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -239,7 +261,8 @@
                         xml:lang="EN">
                         <para>To create a volume from an existing
                             volume, specify the ID of the existing
-                            volume.</para></wadl:doc>
+                            volume. If specified, the volume is created
+                            with same size of the source volume.</para></wadl:doc>
                 </param>
                 <param name="description" style="plain"
                     type="xsd:string" required="false">
@@ -254,7 +277,9 @@
                         xml:lang="EN">
                         <para>To create a volume from an existing
                             snapshot, specify the ID of the existing
-                            volume snapshot.</para></wadl:doc>
+                            volume snapshot. If specified,
+                            the volume is created in same availability
+                            zone and with same size of the snapshot.</para></wadl:doc>
                 </param>
                 <param name="size" style="plain" type="xsd:int"
                     required="true">
@@ -470,6 +495,10 @@
             title="Show volume information">
             <para role="shortdesc">Shows information about a specified
                 volume.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified volume must exist.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/xml">
@@ -545,7 +574,30 @@
     <method name="DELETE" id="deleteVolume">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete volume">
-            <para role="shortdesc">Deletes a specified volume.  Will fail if any snapshots based on the volume exist.</para>
+            <para role="shortdesc">Deletes a specified volume.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>Volume status must be <code>available</code>,
+                <code>in-use</code>, <code>error</code>, or <code>error_restoring</code>.</para></listitem>
+                <listitem><para>You cannot already have a snapshot related to
+                          the specified volume.</para></listitem>
+                <listitem><para>You cannot delete a volume that is in a
+                          migration.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>The volume is deleted in volume index.</para></listitem>
+                <listitem><para>The volume managed by OpenStack Block Storage
+                          is deleted in storage node.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If volume status remains in <code>deleting</code> or
+                becomes <code>error_deleting</code> the request failed. Ensure you meet
+                the preconditions then investigate the storage backend.</para></listitem>
+                <listitem><para>The volume managed by OpenStack Block Storage
+                          is not deleted from the storage system.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <response status="202"/>
     </method>
