@@ -133,6 +133,9 @@
                 parameters. The API uses the natural sorting of
                 whatever image attribute is provided as the
                     <code>sort_key</code>.</para>
+            <para>You can see a list of VM images which status is in
+                <code>active</code>, <code>queued</code>, or
+                <code>saving</code></para>.
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -162,6 +165,16 @@
             <para>Created with a <code>Location</code> header that
                 contains the newly-created URI for the image. Response
                 body represents the created image entity.</para>
+            <para>Synchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>With correct permissions, you can see
+                    the image status as <code>queued</code> through API
+                    calls.</para></listitem>
+                <listitem><para>With correct permissions, you can see
+                    the image status as <code>active</code> through API
+                    calls if you created the image with
+                    <code>Location</code> header.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
@@ -265,6 +278,36 @@
                     >Appendix B: HTTP PATCH media types</link> in the
                     <citetitle>OpenStack Image Service API v2
                     Reference</citetitle>.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>When adding or replacing a new location
+                    to the specified image, you need to set disk_format
+                    and container_format in the image.</para></listitem>
+                <listitem><para>When locations of the specified image
+                    is replaced by replacing operation, the old location
+                    needs to be set in the image on ahead.</para></listitem>
+            </itemizedlist>
+            <para>Synchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>With correct permissions, you can see
+                    the updated values of the image's attributes.
+                    </para></listitem>
+                <listitem><para>With correct permissions, you can see
+                    the image status as <code>active</code> through API calls
+                    after adding a location to the image which had no
+                    location.</para></listitem>
+                <listitem><para>With correct permissions, you can see
+                    the image status as <code>queued</code> through API calls
+                    after removing all locations from the image
+                    </para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If you can not update locations you might
+                    lack some infomation in your requests. Ensure you meet
+                    the preconditions then investigate the your API
+                    requests.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -289,6 +332,10 @@
             <para role="shortdesc">Gets details for a specified image.
                 (Since Image API v2.0.)</para>
             <para>Response body is a single image entity.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified image must exist.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -310,12 +357,33 @@
             <para role="shortdesc">Deletes a specified image. (Since
                 Image API v2.0.)</para>
             <para>You cannot delete images with the 'protected'
-                attribute set to true (boolean); the response returns
-                the HTTP 403 status code.</para>
-            <para>You must first set the 'protected' attribute to
-                false (boolean) and then perform the delete. The
-                response is empty and returns the HTTP 204 status
-                code.</para>
+                attribute set to true (boolean); </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>You can delete an image in all status
+                    except <code>deleted</code>.</para></listitem>
+                <listitem><para>You must first set the 'protected' attribute
+                    to <code>false</code> (boolean) and then perform
+                    the delete.</para></listitem>
+            </itemizedlist>
+            <para>Synchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>The response is empty and returns the
+                    HTTP 204 status code.</para></listitem>
+                <listitem><para>The image is deleted in images index.
+                    </para></listitem>
+                <listitem><para>The binary image data managed by OpenStack
+                    Image Service is deleted from the storage node if the
+                    deleted image stores image data in the node.</para></listitem>
+            </itemizedlist>
+            <para>TroubleShooting</para>
+            <itemizedlist>
+                <listitem><para>The response returns the HTTP 403 status
+                    code when the 'protected' attribute is set to
+                    <code>true</code> even if you have a correct permissions.
+                    Ensure you meet the preconditions then investigate
+                    the attribute.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -330,8 +398,6 @@
             title="Upload binary image data">
             <para role="shortdesc">Uploads binary image data. (Since
                 Image API v2.0.)</para>
-            <para>An image record must exist before a client can store
-                binary image data with it.</para>
             <para>Set the <code>Content-Type</code> request header to
                     <code>application/octet-stream</code>.</para>
             <para>Example call: <code>curl -i -X PUT -H "X-Auth-Token:
@@ -339,6 +405,38 @@
                     application/octet-stream" -d
                     @/home/glance/ubuntu-12.10.qcow2
                     $image_url/v2/images/{image_id}/file</code></para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified image must exist before you
+                    store binary image data.</para></listitem>
+                <listitem><para>You need to set disk_format and container_format
+                    in the image before you store the data.</para></listitem>
+                <listitem><para>You can only store the data into a image which
+                    status is <code>queued</code>.</para></listitem>
+                <listitem><para>The user must have enough image strage quota
+                    remaining to store the data.</para></listitem>
+                <listitem><para>Size of the data must be less than OpenStack
+                    Image Service restricts.</para></listitem>
+            </itemizedlist>
+            <para>Synchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>With correct permissions, you can see the
+                    image status as <code>active</code> via API calls.
+                    </para></listitem>
+                <listitem><para>With correct access, you can see the stored
+                    data in the storage system that OpenStack Image Service
+                    manages.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If you can not store the data you might lack
+                    some infomation in your requests or exceed the quota
+                    you are allowed to use. Ensure you meet the preconditions
+                    then investigate the your API requests.</para></listitem>
+                <listitem><para>The storage backends for storing the data need
+                    enough free storage space to match the size of the data.
+                    </para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -362,8 +460,21 @@
                 checksum of the image data. Clients are encouraged to
                 verify the integrity of the image data they receive by
                 using this checksum.</para>
-            <para>If no image data exists, returns the HTTP 204 status
-                code.</para>
+            <para></para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified images must exist.</para></listitem>
+            </itemizedlist>
+            <para>Synchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>You can download the binary image data
+                    in your machine if the specified image has image
+                    data.</para></listitem>
+                <listitem><para>If image data exists, you receive the
+                    HTTP 200 status code.</para></listitem>
+                <listitem><para>If no image data exists, you receive
+                    the HTTP 204 status code.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
