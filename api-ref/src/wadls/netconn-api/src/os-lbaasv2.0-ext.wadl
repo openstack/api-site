@@ -5,7 +5,7 @@
 <!--                                                       -->
 <!--     You can resolve the entites with xmllint          -->
 <!--                                                       -->
-<!--        xmllint -noent os-lbaas-ext.wadl               -->
+<!--        xmllint -noent os-lbaasv2.0-ext.wadl           -->
 <!--*******************************************************-->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
 %common;]>
@@ -18,19 +18,19 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
     <resources base="https://neutron.example.com/" xml:id="os-lbaas-v2.0">
-        <resource id="version" path="//v2.0">
+        <resource id="version" path="//v2.0/lbaas">
             <resource id="loadbalancers" path="loadbalancers">
-                <method href="#createLoadBalancer"/>
                 <method href="#listLoadBalancers"/>
-                <resource id="lb_id" path="{load_balancer_id}">
+                <method href="#createLoadBalancer"/>
+                <resource id="lb_id" path="{loadbalancer_id}">
                     <method href="#showLoadBalancer"/>
                     <method href="#updateLoadBalancer"/>
                     <method href="#deleteLoadBalancer"/>
                 </resource>
             </resource>
             <resource id="Listeners" path="listeners">
-                <method href="#createListener"/>
                 <method href="#listListeners"/>
+                <method href="#createListener"/>
                 <resource id="listener_id" path="{listener_id}">
                     <method href="#showListener"/>
                     <method href="#updateListener"/>
@@ -38,15 +38,15 @@
                 </resource>
             </resource>
             <resource id="lb-pools" path="pools">
-                <method href="#createPool"/>
                 <method href="#listPools"/>
+                <method href="#createPool"/>
                 <resource id="pool_id" path="{pool_id}">
                     <method href="#showPool"/>
                     <method href="#updatePool"/>
                     <method href="#deletePool"/>
                     <resource id="lb-members" path="members">
-                        <method href="#createMember"/>
                         <method href="#listMembers"/>
+                        <method href="#createMember"/>
                         <resource id="member_id" path="{member_id}">
                             <method href="#showMember"/>
                             <method href="#updateMember"/>
@@ -71,9 +71,160 @@
     <!--               All Methods                             -->
     <!--*******************************************************-->
     <!-- load balancer -->
+    <method name="GET" id="listLoadBalancers">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List load balancers">
+            <para role="shortdesc">Lists load balancers.</para>
+            <para>This operation lists all load
+                balancers that are associated with your tenant account.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. It returns a
+                (potentially empty) list. Each element in the list is
+                a load balancer that can contain the following attributes:</para>
+            <itemizedlist><listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>vip_subnet_id</code></para></listitem>
+                <listitem><para><code>vip_address</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>listeners</code></para></listitem>
+                <listitem><para><code>provisioning_status</code></para></listitem>
+                <listitem><para><code>operating_status</code></para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/loadbalancer-list-resp.json"/>
+                </wadl:doc> &lbLoadbalancersParam; &lbLoadbalancerParam; &lbResponseParams;</representation>
+        </response> &fault401; &fault500; &fault503;</method>
+    <method name="GET" id="showLoadBalancer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show load balancer details">
+            <para role="shortdesc">Shows details for a specified load
+                balancer.</para>
+            <para>This operation returns a load balancer object
+                identified by <code>loadbalancer_id</code>. If the user is not an
+                administrative user and the load balancer object does not belong to
+                her tenant account, she would receive a 403
+                (Forbidden) error.</para>
+            <para>This operation does not require a request
+                body.</para>
+            <para>This operation returns a response body. On success,
+                the returned element is a load balancer that can
+                contain the following attributes:</para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>vip_subnet_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>vip_address</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>listeners</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>provisioning_status</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>operating_status</code>
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>
+                <emphasis role="bold">Example: Show load
+                    balancer details</emphasis>
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/loadbalancer-get-detail-resp.json"/>
+                </wadl:doc> &lbLoadbalancerParam; &lbResponseParams; </representation>
+        </response> &fault401; &fault403; &fault404; &fault413; &fault500; &fault503;</method>
     <method name="POST" id="createLoadBalancer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create load balancer">
             <para role="shortdesc">Creates a load balancer.</para>
+            <para>This operation provisions a new load balancer based
+                on the configuration defined in the request object.
+                After the request is validated and progress has started
+                on the provisioning process, a response object is
+                returned. The object contains a unique identifier
+                and the status of provisioning the load
+                balancer.</para>
+            <para>The <code>provisioning_status</code> of the load balancer in the
+                response can have one of the following values: <code>ACTIVE</code>,
+                <code>PENDING_CREATE</code>, or <code>ERROR</code>.</para>
+            <para>If the status is <code>PENDING_CREATE</code>,
+            the caller can view the progress of the provisioning operation by
+            performing a GET on
+            <code>/lbaas/loadbalancers/loadbalancer_id</code>. When the status
+            of the load balancer changes to <code>ACTIVE</code>, the load
+            balancer was successfully provisioned and is operational for
+            traffic handling.</para>
+           <!--  <para>The caller of this operation must specify these load balancer attributes, at a minimum:</para> -->
+            <para>If the request cannot be fulfilled due to insufficient or
+            invalid data, an HTTP 400 (Bad Request) error response is
+            returned with information about the nature of the failure in
+            the response body. Failures in the validation process are
+            non-recoverable and require the caller to correct the cause of
+            the failure and POST the request again.</para>
+            <para>You can configure all documented features of the load
+            balancer at creation time by specifying the additional
+            elements or attributes in the request.</para>
+            <para>Users with an administrative role can create load balancers on behalf
+            of other tenants by specifying a <code>tenant_id</code> attribute different
+            than their own.</para>
+            <para><emphasis role="bold">Example: Create a load balancer</emphasis></para>
+            <itemizedlist>
+                <listitem><para><code>tenant_id</code>: only required if the caller has an administrative role and wants to create a load balancer for another tenant.</para></listitem>
+                <listitem><para><code>vip_subnet_id</code>: The network on which to allocate the load balancer's vip address. A tenant can only create load balancer vips on networks authorized by policy (e.g. her own networks or shared/provider networks).</para></listitem>
+            </itemizedlist>
+            <para>Some attributes receive default values if not specified in the request:</para>
+            <itemizedlist>
+                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
+                <listitem><para><code>name</code>: The default is an empty string.</para></listitem>
+                <listitem><para><code>description</code>: The default is an empty string.</para></listitem>
+            </itemizedlist>
+            <para>If the request cannot be fulfilled due to insufficient or invalid data, an HTTP 400 (Bad Request) error response is returned with information regarding the nature of the failure in the response body. Failures in the validation process are non-recoverable and require the caller to correct the cause of the failure and POST the request again.</para>
+            <para>You can configure all documented features of the load balancer at creation time by specifying the additional elements or attributes in the request.</para>
+            <para>Users with an administrative role can create load balancers on behalf of other tenants by specifying a <code>tenant_id</code> attribute that is different than their own.</para>
+            <para>A user can supply a <code>vip_address</code> field if she owns the subnet on which the load balancer's VIP will be created. If a <code>vip_address</code> is not specified in the payload, the LBaaS service allocates one from the load balancer VIP's subnet.</para>
+            <para>Example: Create a load balancer</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -81,39 +232,31 @@
                     <xsdxt:code href="api_samples/loadbalancer-post-req.json"/>
                 </wadl:doc>&lbCreateRequestParams; </representation>
         </request>
-        <response status="200">
+        <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/loadbalancer-post-resp.json"/>
                 </wadl:doc> &lbLoadbalancerParam; &lbResponseParams; </representation>
-        </response> &fault400; &fault401;</method>
-    <method name="GET" id="listLoadBalancers">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List load balancers">
-            <para role="shortdesc">Lists all load balancers.</para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="api_samples/loadbalancer-list-resp.json"/>
-                </wadl:doc> &lbLoadbalancersParam; &lbLoadbalancerParam; &lbResponseParams;
-            </representation>
-        </response> &fault401; &fault403; &fault404;</method>
-    <method name="GET" id="showLoadBalancer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show load balancer configuration details">
-            <para role="shortdesc">Shows the details of the configuration for a specified load
-                balancer.</para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="api_samples/loadbalancer-get-detail-resp.json"/>
-                </wadl:doc> &lbLoadbalancerParam; &lbResponseParams; </representation>
-        </response> &fault401; &fault403; &fault404;</method>
+        </response> &fault401; &fault404;&fault409;&fault413;&fault500;&fault503;
+    </method>
     <method name="PUT" id="updateLoadBalancer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update load balancer">
-            <para role="shortdesc">Updates the editable attributes of a specified load
-                balancer.</para>
+            <para role="shortdesc">Updates a specified load balancer.</para>
+            <para>This operation updates the attributes of the specified load
+            balancer. Upon successful validation of the request, the service
+            returns a 202 (Accepted) response code. A caller should check
+            that the load balancer provisioning_status has changed to ACTIVE
+            to confirm that the update has taken effect. If the load balancer
+            <code>provisioning_status</code> is <code>PENDING_UPDATE</code>, the caller can poll
+            the load balancer object by using a GET operation to wait for the
+            changes to be applied.</para>
+            <para>The update operation allows the caller to change one or more of the following load balancer attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+            </itemizedlist>
+            <para>This operation returns the updated load balancer object. The <code>provisioning_status</code> of the load balancer in the response can take one of the following values: <code>ACTIVE</code>, <code>PENDING_UPDATE</code>, or <code>ERROR</code>.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -122,27 +265,44 @@
                 </wadl:doc> &lbLoadbalancerParam; &lbUpdateRequestParams; </representation>
         </request>
         <response status="200"><representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="api_samples/loadbalancer-put-resp.json"/>
-                </wadl:doc> &lbResponseParams; </representation>
-        </response> &fault400; &fault401; &fault403; &fault404;</method>
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                <xsdxt:code href="api_samples/loadbalancer-put-resp.json"/>
+            </wadl:doc> &lbResponseParams; </representation>
+        </response>&fault500; &fault503; &fault400;&fault401; &fault413;</method>
     <method name="DELETE" id="deleteLoadBalancer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete load balancer">
-            <para role="shortdesc">Deletes a load balancer.</para>
-            <para>Upon successful deletion, any listeners that this load balancer still uses are
-                detached but not deleted.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove load balancer">
+            <para role="shortdesc">Removes a specified load balancer.</para>
+            <para>This operation removes the specified load balancer and its associated configuration from the tenant account. Any and all configuration data is immediately purged and cannot be recovered.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation does not return a response body.</para>
+            <para>Example: Delete a load balancer</para>
         </wadl:doc>
-        <response status="204">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="api_samples/loadbalancer-delete-resp.json"/>
-                </wadl:doc>
-            </representation>
-        </response>&fault401; &fault404;&fault409conflict;</method>
+        <response status="204"/>&fault401; &fault404;&fault409conflict;</method>
     <!--Listeners-->
     <method name="POST" id="createListener">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create listener">
             <para role="shortdesc">Creates a listener.</para>
+            <para>This operation provisions a new listener based on the configuration defined in the request object. After the request is validated and progress has started on the provisioning process, a response object is returned. The object contains a unique identifier.</para>
+            <para>The caller of this operation must specify these listener attributes, at a minimum:</para>
+            <itemizedlist>
+                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a listener for another tenant.</para></listitem>
+                <listitem><para><code>loadbalancer_id</code>: The load balancer on which this listener is provisioned. A tenant can only create listeners on load balancers authorized by policy (for example, her own load balancers).</para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>protocol</code>: The protocol the front end listens for. Must be TCP, HTTP, or HTTPS.</para></listitem>
+                <listitem><para><code>protocol_port</code>: The port on which the front end listens. Must be an integer in the range from 1 to 65535.</para></listitem>
+            </itemizedlist>
+            <para>Some attributes receive default values if not specified in the request:</para>
+            <itemizedlist>
+                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
+                <listitem><para><code>name</code>: The default is an empty string.</para></listitem>
+                <listitem><para><code>description</code>: The default is an empty string.</para></listitem>
+                <listitem><para><code>connection_limit</code>: The default is -1, indicating an infinite limit.</para></listitem>
+            </itemizedlist>
+            <para>If the request cannot be fulfilled due to insufficient or invalid data, an HTTP 400 (Bad Request) error response is returned with information regarding the nature of the failure in the response body. Failures in the validation process are non-recoverable and require the caller to correct the cause of the failure and POST the request again.</para>
+            <para>You can configure all documented features of the listener at creation time by specifying the additional elements or attributes in the request.</para>
+            <para>Users with an administrative role can create listeners on behalf of other tenants by specifying a <code>tenant_id</code> attribute different than their own.</para>
+            <para>A listener cannot be updated if the load balancer that it is attempting to be attached to does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Create a listener</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -150,16 +310,31 @@
                     <xsdxt:code href="api_samples/listener-post-req.json"/>
                 </wadl:doc> &listenerRequestParams; </representation>
         </request>
-        <response status="200">
+        <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/listener-post-resp.json"/>
                 </wadl:doc>
             </representation>
-        </response>&fault400; &fault401;</method>
+        </response>&fault404; &fault401;&fault409;&fault413;&fault500;&fault503;</method>
     <method name="GET" id="listListeners">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List listeners">
-            <para role="shortdesc">Lists all listeners.</para>
+            <para role="shortdesc">Lists listeners.</para>
+            <para>This operation lists all listeners associated with your tenant account.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. It returns a (potentially empty) list. Each element in the list is a listener that can contain the following attributes:</para>
+            <itemizedlist><listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>protocol</code></para></listitem>
+                <listitem><para><code>protocol_port</code></para></listitem>
+                <listitem><para><code>connection_limit</code></para></listitem>
+                <listitem><para><code>default_pool_id</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>loadbalancers</code></para></listitem>
+            </itemizedlist>
+            <para>Example: List listeners</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -167,12 +342,26 @@
                     <xsdxt:code href="api_samples/listener-list-resp.json"/>
                 </wadl:doc>
             </representation>
-        </response> &fault401; &fault403; &fault404;</method>
+        </response> &fault401; &fault503; &fault500;</method>
     <method name="GET" id="showListener">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show listener configuration details">
-            <para role="shortdesc">Shows the details of the configuration for a specified
-                listener.</para>
+            title="Show listener details">
+            <para role="shortdesc">Shows details for a specified listener.</para>
+            <para>This operation returns a listener object identified by <code>listener_id</code>. If the user is not an administrative user, and the listener object does not belong to her tenant account, she receives a 403 (Forbidden) error.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. On success, the returned element is a listener that can contain the following attributes:</para>
+            <itemizedlist><listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>protocol</code></para></listitem>
+                <listitem><para><code>protocol_port</code></para></listitem>
+                <listitem><para><code>connection_limit</code></para></listitem>
+                <listitem><para><code>default_pool_id</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>loadbalancers</code></para></listitem>
+            </itemizedlist>
+            <para>Example: Show listener details</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -180,10 +369,28 @@
                     <xsdxt:code href="api_samples/listener-get-detail-resp.json"/>
                 </wadl:doc>
             </representation>
-        </response> &fault401; &fault403; &fault404;</method>
+        </response> &fault401; &fault403; &fault404; &fault409; &fault413; &fault500; &fault503;</method>
     <method name="PUT" id="updateListener">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update listener">
-            <para role="shortdesc">Updates editable attributes of a specified listener.</para>
+            <para role="shortdesc">Updates a specified listener.</para>
+            <para>This operation updates the attributes of a specified listener. Upon successful validation of the request, the service returns a 202 (Accepted) response code.</para>
+            <para>The update operation allows the caller to change one or more of the following listener attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>connection_limit</code></para></listitem>
+            </itemizedlist>
+            <para>Example: Update a listener</para>
+            <para>Note: You cannot update these listener
+            attributes: <code>listener_id</code>, <code>tenant_id</code>,
+            <code>loadbalancer_id</code>, <code>loadbalancers</code>,
+            <code>default_pool_id</code>, <code>protocol</code>, and
+            <code>protocol_port</code>. Attempting to update an imutable attribute results
+            in a 422 (Immutable) fault.</para>
+            <para>Note: You cannot update a listener if the load balancer to
+            which the listener is attached does not have a <code>provisioning_status</code> of
+            <code>ACTIVE</code>.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -196,18 +403,48 @@
                     <xsdxt:code href="api_samples/listener-put-resp.json"/>
                 </wadl:doc>
             </representation>
-        </response> &fault400; &fault401; &fault403; &fault404;</method>
+        </response> &fault500; &fault503; &fault401; &fault400;&fault413;</method>
     <method name="DELETE" id="deleteListener">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete listener">
-            <para role="shortdesc">Deletes an orphaned listener.</para>
-            <para>Returns an error if any load balancers still use this listener. Any pool that this
-                listener still uses are detached but not deleted.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove listener">
+            <para role="shortdesc">Removes a specified listener.</para>
+            <para>This operation removes a specified listener and its associated configuration from the tenant account. Any and all configuration data is immediately purged and is not recoverable.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation does not return a response body.</para>
+            <para>You cannot delete a listener if the load balancer to which it is attached does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Delete a listener</para>
         </wadl:doc>
-        <response status="204"/>&fault401; &fault404;&fault409conflict;</method>
+        <response status="204"/>&fault500; &fault503;&fault401;&fault400;&fault409;&fault413;</method>
+    <!-- pool -->
     <method name="POST" id="createPool">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create load balancer pool">
-            <para role="shortdesc">Creates a load balancer pool.</para>
+            title="Create pool">
+            <para role="shortdesc">Creates a pool.</para>\
+            <para>This operation provisions a new pool based on the configuration defined in the request object. After the request is validated and progress has started on the provisioning process, a response object is returned. The object contains a unique identifier.</para>
+            <para>The caller of this operation must specify these pool attributes, at a minimum:</para>
+            <itemizedlist>
+                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
+                <listitem><para><code>protocol</code>: The protocol this pool and its members listen for. Must be one of TCP, HTTP, or HTTPS</para></listitem>
+                <listitem><para><code>lb_algorithm</code>: The load balancing algorithm to distribute traffic to the pool's members. Must be one of ROUND_ROBIN, LEAST_CONNECTIONS, or SOURCE_IP.</para></listitem>
+                <listitem><para><code>protocol_port</code>: The port on which the front end listens. Must be an integer in the range from 1 to 65535.</para></listitem>
+                <listitem><para><code>listener_id</code>: The listener in which this pool becomes the default pool. There can only be on default pool for a listener.</para></listitem>
+            </itemizedlist>
+            <para>Some attributes receive default values if not specified in the request:</para>
+            <itemizedlist>
+                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
+                <listitem><para><code>name</code>: The default is an empty string.</para></listitem>
+                <listitem><para><code>description</code>: The default is an empty string.</para></listitem>
+                <listitem><para><code>session_persistence</code>: The default is an empty dictionary.</para></listitem>
+            </itemizedlist>
+            <para>If the request cannot be fulfilled due to insufficient or
+            invalid data, an HTTP 400 (Bad Request) error response is returned
+            with information about the nature of the failure in the response
+            body. Failures in the validation process are non-recoverable and require the
+            caller to correct the cause of the failure and POST the request
+            again.</para>
+            <para>Users can configure all documented features at creation time by providing the additional elements or attributes in the request.</para>
+            <para>Users with an administrative role can create pools on behalf of other tenants by specifying a <code>tenant_id</code> attribute that is different than their own.</para>
+            <para>You cannot update a pool if the load balancer to which it is attempting to be attached does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Create a pool</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -220,32 +457,80 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/pool-post-resp.json"/>
                 </wadl:doc> &poolcreateResponseParams; </representation>
-        </response> &fault400; &fault401;</method>
+        </response> &fault401; &fault404;&fault409;&fault413;&fault500;&fault503;</method>
     <method name="GET" id="listPools">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List pools">
-            <para role="shortdesc">Lists all pools.</para>
+            <para role="shortdesc">Lists pools.</para>
+            <para>This operation lists all pools that are associated with your tenant account.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. It returns a (potentially empty) list. Each element in the list is a pool that can contain the following attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>protocol</code></para></listitem>
+                <listitem><para><code>lb_algorithm</code></para></listitem>
+                <listitem><para><code>session_persistence</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>listeners</code></para></listitem>
+                <listitem><para><code>members</code></para></listitem>
+                <listitem><para><code>healthmonitor_id</code></para></listitem>
+            </itemizedlist>
+            <para>Example: List pools</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/pool-list-resp.json"/>
                 </wadl:doc> &poolResponseParams; </representation>
-        </response> &fault401; &fault403; &fault404;</method>
+        </response> &fault401; &fault500; &fault503;</method>
     <method name="GET" id="showPool">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show pool configuration details">
-            <para role="shortdesc">Shows the details of the configuration for a specified
-                pool.</para>
+            title="Show pool details">
+            <para role="shortdesc">Shows details for a specified pool.</para>
+            <para>This operation returns a pool object identified by <code>pool_id</code>. If the user is not an administrative user and the pool object does not belong to her tenant account, she receives a 403 (Forbidden) error.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. On success, the returned element is a pool that can contain the following attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>protocol</code></para></listitem>
+                <listitem><para><code>lb_algorithm</code></para></listitem>
+                <listitem><para><code>session_persistence</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>listeners</code></para></listitem>
+                <listitem><para><code>members</code></para></listitem>
+                <listitem><para><code>healthmonitor_id</code></para></listitem>
+            </itemizedlist>
+            <para>Example: Show pool details</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json"><wadl:doc
                     xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/pool-get-detail-resp.json"/>
                 </wadl:doc> &poolResponseParams; </representation>
-        </response> &fault401; &fault403; &fault404;</method>
+        </response> &fault401; &fault403; &fault404;&fault409;&fault413;&fault500;&fault503;
+    </method>
     <method name="PUT" id="updatePool">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update pool">
-            <para role="shortdesc">Updates editable attributes of a specified pool.</para>
+            <para role="shortdesc">Updates a specified pool.</para>
+            <para>This operation updates the attributes of the specified pool. Upon successful validation of the request, the service returns a 202 (Accepted) response code.</para>
+            <para>The update operation allows the caller to change one or more of the following pool attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>name</code></para></listitem>
+                <listitem><para><code>description</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>lb_algorithm</code></para></listitem>
+                <listitem><para><code>session_persistence</code></para></listitem>
+            </itemizedlist>
+            <para>Note:
+                You cannot update these attributes: pool ID, <code>tenant_id</code>, <code>listener_id</code>, <code>listeners</code>, <code>healthmonitor_id</code>, <code>protocol</code>, and <code>members</code> are immutable attributes. If you try to update any of these attributes, a 422 (Immutable) fault is returned.</para>
+            <para>Note:
+                You cannot update a pool if the load balancer to which it is attached does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Update a pool</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -258,22 +543,48 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/pool-put-resp.json"/>
                 </wadl:doc> &poolResponseParams; </representation>
-        </response> &fault400; &fault401; &fault403; &fault404;</method>
+        </response> &fault500; &fault503; &fault401; &fault400;&fault413;</method>
     <method name="DELETE" id="deletePool">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete pool">
-            <para role="shortdesc">Deletes an orphaned pool.</para>
-            <para>Returns an error if any listeners still use the pool.</para>
-            <para>Upon successful deletion, if the deleted pool used any child primitives, they are
-                detached but not deleted.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove pool">
+            <para role="shortdesc">Removes a specified pool.</para>
+            <para>This operation removes a specified pool and its associated configuration from the tenant account. Any and all configuration data is immediately purged and is not recoverable.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation does not return a response body.</para>
+            <para>You cannot delete a pool if the load balancer to which it is attached does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Delete a pool</para>
         </wadl:doc>
-        <response status="204"/> &fault401; &fault404; &fault409conflict;</method>
+        <response status="204"/>&fault500; &fault503; &fault401; &fault400; &fault409; &fault413;</method>
+    <!-- member -->
     <method name="POST" id="createMember">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create load balancer member">
-            <para role="shortdesc">Creates a load balancer member.</para>
-            <para>Members are individual back-end services that are being load balanced. Typically,
-                these are web application servers. They are represented as a pool, IP address, and
-                Layer 4 port tuple.</para>
+            title="Add member to pool">
+            <para role="shortdesc">Adds a member to a pool.</para>
+            <para>This operation provisions a new member and adds it to a pool
+            based on the configuration defined in the request object. After
+            the request is validated and progress has started on the
+            provisioning process, a response object is returned. The object
+            contains a unique identifier.</para>
+            <para>The caller of this operation must specify the following pool attributes, at a minimum:</para>
+            <itemizedlist>
+                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
+                <listitem><para><code>address</code>: The IP Address of the member to receive traffic from the load balancer.</para></listitem>
+                <listitem><para><code>protocol_port</code> The port that the member is listening to receive traffic.</para></listitem>
+            </itemizedlist>
+            <para>Some attributes receive default values if not specified in the request:</para>
+            <itemizedlist>
+                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
+                <listitem><para><code>weight</code>: The default is 1.</para></listitem>
+            </itemizedlist>
+            <para>If the request cannot be fulfilled due to insufficient or
+            invalid data, an HTTP 400 (Bad Request) error response is returned
+            with information about the nature of the failure in the response
+            body. Failures in the validation process are non-recoverable and
+            require the caller to correct the cause of the failure and POST
+            the request again.</para>
+            <para>You can configure all documented member features at creation time by specifying the additional elements or attributes in the request.</para>
+            <para>Users with an administrative role can create members on behalf of other tenants by specifying a <code>tenant_id</code> attribute that is different than their own.</para>
+            <para>You cannot update a member if the load balancer to which it is attempting to attach does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Add a member to a pool</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -286,31 +597,67 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/Member-post-resp.json"/>
                 </wadl:doc> &membercreateResponseParams; </representation>
-        </response> &fault400; &fault401;</method>
+        </response> &fault401; &fault404;&fault409;&fault413;&fault500;&fault503;</method>
     <method name="GET" id="listMembers">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List pool members">
-            <para role="shortdesc">Lists members in a specified pool.</para>
+            <para role="shortdesc">Lists members of a specified pool.</para>
+            <para>This operation lists all members associated with a pool that is associated with your tenant account. The list of members includes only members that belong to the pool object identified by <code>pool_id</code>.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. It returns a (potentially empty) list. Each element in the list is a member that can contain the following attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>address</code></para></listitem>
+                <listitem><para><code>protocol_port</code></para></listitem>
+                <listitem><para><code>weight</code></para></listitem>
+                <listitem><para><code>subnet_id</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+            </itemizedlist>
+            <para>Example: List pool members</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/member-list-resp.json"/>
                 </wadl:doc> &memberResponseParams; </representation></response> &fault401;
-        &fault403; &fault404;</method>
+        &fault503; &fault500;</method>
     <method name="GET" id="showMember">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show member configuration details">
-            <para role="shortdesc">Shows the details of the configuration for a member.</para>
+            title="Show pool member details">
+            <para role="shortdesc">Shows details for a specified pool member.</para>
+            <para>This operation returns a member object identified by <code>member_id</code> that belongs to a pool object identified by <code>pool_id</code>. If the user is not an administrative user and the pool or member object does not belong to her tenant account, she receives a 403 (Forbidden) error.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. On success, the returned element is a pool that can contain the following attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>address</code></para></listitem>
+                <listitem><para><code>protocol_port</code></para></listitem>
+                <listitem><para><code>weight</code></para></listitem>
+                <listitem><para><code>subnet_id</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+            </itemizedlist>
+            <para>Example: Show pool member details</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/Member-get-detail-resp.json"/>
                 </wadl:doc> &memberResponseParams; </representation>
-        </response>&fault401; &fault403; &fault404;</method>
+        </response>&fault401; &fault403; &fault404;&fault409;&fault413;&fault500;&fault503;
+    </method>
     <method name="PUT" id="updateMember">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update member">
-            <para role="shortdesc">Updates a specified load balancer member.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update pool member">
+            <para role="shortdesc">Updates a specified member of a pool.</para>
+            <para>This operation updates the attributes of the specified pool. Upon successful validation of the request, the service returns a 200 (OK) response code.</para>
+            <para>The update operation allows the caller to change one or more of the following pool attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>weight</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+            </itemizedlist>
+            <para>Note: You cannot update these attributes: The member ID, <code>tenant_id</code>, <code>address</code>, <code>protocol_port</code>, and <code>subnet_id</code>. If you attempt to update any of these attributes, a 422 (Immutable) fault is returned.</para>\
+            <para>Note: You cannot update a member if the attached load balancer does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -323,16 +670,44 @@
                     xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/member-put-resp.json"/>
                 </wadl:doc> &memberResponseParams; </representation>
-        </response> &fault400; &fault401; &fault403; &fault404;</method>
+        </response> &fault500; &fault503; &fault401; &fault400;&fault413;</method>
     <method name="DELETE" id="deleteMember">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete member">
-            <para role="shortdesc">Deletes a specified load balancer member.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove member from pool">
+            <para role="shortdesc">Removes a member from a pool.</para>
+            <para>This operation removes the specified member and its associated configuration from the tenant account. Any and all configuration data is immediately purged and is not recoverable.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation does not return a response body.</para>
+            <para>A member cannot be deleted if the attached load balancer does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Remove a member from a pool</para>
         </wadl:doc>
-        <response status="204"/> &fault401; &fault404; &fault409conflict;</method>
+        <response status="204"/>&fault500; &fault503; &fault401;&fault400;&fault409;&fault413;</method>
+    <!-- health Monitor -->
     <method name="POST" id="createHealthMonitor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create load balancer health monitor">
+            title="Create health monitor">
             <para role="shortdesc">Creates a health monitor.</para>
+            <para>This operation provisions a new health monitor based on the configuration defined in the request object. After the request is validated and progress has started on the provisioning process, a response object is returned. The object contains a unique identifier.</para>
+            <para>The caller of this operation must specify these health monitor attributes, at a minimum:</para>
+            <itemizedlist>
+                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a health monitor for another tenant.</para></listitem>
+                <listitem><para><code>type</code>: The type of health monitor. Must be one of TCP, HTTP, HTTPS</para></listitem>
+                <listitem><para><code>delay</code>: The interval in seconds between health checks.</para></listitem>
+                <listitem><para><code>timeout</code>: The time in seconds that a health check times out.</para></listitem>
+                <listitem><para><code>max_retries</code>: Number of failed health checks before marked as OFFLINE.</para></listitem>
+                <listitem><para><code>pool_id</code>: The pool that this health monitor will monitor.</para></listitem>
+            </itemizedlist>
+            <para>Some attributes will receive default values if not specified in the request and are only useful when health monitor type of HTTP(S) is specified:</para>
+            <itemizedlist>
+                <listitem><para><code>http_method</code>: The default is GET.</para></listitem>
+                <listitem><para><code>url_path</code>: The default is <code>/</code>.</para></listitem>
+                <listitem><para><code>expected_codes</code>: The expected http status codes to get from a successful health check. Default is 200.</para></listitem>
+                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
+            </itemizedlist>
+            <para>If the request cannot be fulfilled due to insufficient or invalid data, an HTTP 400 (Bad Request) error response will be returned with information regarding the nature of the failure in the response body. Failures in the validation process are non-recoverable and require the caller to correct the cause of the failure and POST the request again.</para>
+            <para>You can configure all documented features of the health monitor at creation time by specifying the additional elements or attributes in the request.</para>
+            <para>Users with an administrative role can create health monitors on behalf of other tenants by specifying a tenant_id attribute different than their own.</para>
+            <para>A health monitor cannot be update if the load balancer it is attempting to be attached to is not in an ACTIVE provisioning_status.</para>
+            <para>Example: Create a health monitor</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"><wadl:doc
@@ -345,33 +720,82 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/HealthMonitor-post-resp.json"/>
                 </wadl:doc> &hmResponseParams; </representation>
-        </response> &fault400; &fault401;</method>
+        </response> &fault401; &fault404;&fault409;&fault413;&fault500;&fault503;</method>
     <method name="GET" id="listHealthMonitors">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List health monitors">
-            <para role="shortdesc">Lists all health monitors.</para>
+            <para role="shortdesc">Lists health monitors.</para>
+            <para>This operation lists all health monitors associated with your tenant account.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. It returns a (potentially empty) list, each element in the list is a health monitor that can contain the following attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>type</code></para></listitem>
+                <listitem><para><code>delay</code></para></listitem>
+                <listitem><para><code>timeout</code></para></listitem>
+                <listitem><para><code>max_retries</code></para></listitem>
+                <listitem><para><code>http_method</code></para></listitem>
+                <listitem><para><code>url_path</code></para></listitem>
+                <listitem><para><code>expected_codes</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>pool_id</code></para></listitem>
+                <listitem><para><code> pools</code></para></listitem>
+            </itemizedlist>
+            <para>Example: List health monitors</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/healthmonitor-list-resp.json"/>
                 </wadl:doc> &hmResponseParams; </representation>
-        </response> &fault401; &fault403; &fault404;</method>
+        </response> &fault401; &fault500; &fault503;</method>
     <method name="GET" id="showHealthMonitor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show health monitor configuration details">
-            <para role="shortdesc">Shows the details of the configuration for a specified health
-                monitor.</para>
+            title="Show health monitor details">
+            <para role="shortdesc">Shows details for a specified health monitor.</para>
+            <para>This operation returns a health monitor object identified by healthmonitor_id. If the user is not an admin, and the health monitor object doesn't belong to her tenant account, she would receive a 403 (Forbidden) error.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation returns a response body. On success, the returned element is a health monitor that can contain the following attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>id</code></para></listitem>
+                <listitem><para><code>tenant_id</code></para></listitem>
+                <listitem><para><code>type</code></para></listitem>
+                <listitem><para><code>delay</code></para></listitem>
+                <listitem><para><code>timeout</code></para></listitem>
+                <listitem><para><code>max_retries</code></para></listitem>
+                <listitem><para><code>http_method</code></para></listitem>
+                <listitem><para><code>url_path</code></para></listitem>
+                <listitem><para><code>expected_codes</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem><para><code>pool_id</code></para></listitem>
+                <listitem><para><code> pools</code></para></listitem>
+            </itemizedlist>
+            <para>Example: Show health monitor details</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/HealthMonitor-get-detail-resp.json"/>
-                </wadl:doc> &hmResponseParams; </representation></response> &fault401; &fault403;
-        &fault404;</method>
+                </wadl:doc> &hmResponseParams; </representation>
+        </response> &fault401; &fault403;&fault404;&fault409; &fault413; &fault500;&fault503;
+    </method>
     <method name="PUT" id="updateHealthMonitor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update health monitor">
-            <para role="shortdesc">Updates the editable attributes of a specified health
-                monitor.</para>
+            <para role="shortdesc">Updates a specified health monitor.</para>
+            <para>This operation updates the attributes of the specified health monitor. Upon successful validation of the request, the service will return a 202 (Accepted) response code.</para>
+            <para>The update operation allows the caller to change one or more of the following health monitor attributes:</para>
+            <itemizedlist>
+                <listitem><para><code>delay</code></para></listitem>
+                <listitem><para><code>timeout</code></para></listitem>
+                <listitem><para><code>max_retries</code></para></listitem>
+                <listitem><para><code>http_method</code></para></listitem>
+                <listitem><para><code>url_path</code></para></listitem>
+                <listitem><para><code>expected_codes</code></para></listitem>
+                <listitem><para><code>admin_state_up</code></para></listitem>
+            </itemizedlist>
+            <para>Note:
+                The health monitor's ID, tenant_id, pool_id, and type
+                are immutable attributes and cannot be updated. Supplying an unsupported attribute results in a 422 (Immutable) fault.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -384,11 +808,15 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="api_samples/healthmonitor-put-resp.json"/>
                 </wadl:doc> &hmResponseParams; </representation>
-        </response> &fault400; &fault401; &fault403; &fault404;</method>
+        </response> &fault500; &fault503; &fault401; &fault400;&fault413;</method>
     <method name="DELETE" id="deleteHealthMonitor">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete health monitor">
-            <para role="shortdesc">Deletes an orphaned health monitor.</para>
-            <para>Returns an error if any pools still use the health monitor.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove health monitor">
+            <para role="shortdesc">Removes a specified health monitor.</para>
+            <para>This operation removes the specified health monitor and its associated configuration from the tenant account. Any and all configuration data is immediately purged and is not recoverable.</para>
+            <para>This operation does not require a request body.</para>
+            <para>This operation does not return a response body.</para>
+            <para>You cannot delete a health monitor if the attached load balancer does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>Example: Delete a health monitor</para>
         </wadl:doc>
-        <response status="204"/> &fault401; &fault404; &fault409conflict;</method>
+        <response status="204"/>&fault500; &fault503; &fault401;&fault400;&fault409;&fault413;</method>
 </application>
