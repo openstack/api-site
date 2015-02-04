@@ -256,6 +256,9 @@ are specified, this value overrides any value provided for
                         </resource>
                     </resource>
                 </resource>
+                <resource id="service_list" path="services">
+                    <method href="#service_status_list"/>
+                </resource>
             </resource>
         </resource>
     </resources>
@@ -1608,5 +1611,53 @@ are specified, this value overrides any value provided for
                 deployment.</para>
         </wadl:doc>
         <response status="204"/>
+    </method>
+    <method name="GET" id="service_status_list">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show orchestration engine status">
+            <para role="shortdesc">Shows details for all orchestration engines
+                details.
+            </para>
+            <para>It reports the orchestration engine details like engine_id,
+               topic name, last updated time, health status, hostname.
+               Only displayed for user with admin permissions.
+            </para>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+            <listitem>
+                <para>When you get a <code>503</code> status code, find out
+                   why the heat engines are down, either with the <command>
+                   heat-manage service list</command> command if you have
+                   access or by contacting your cloud provider.
+                </para>
+            </listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/service_list.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="503">
+            <representation mediaType="application/text">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para role="shortdesc">All heat engines are
+                        down.</para>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="403">
+            <representation mediaType="application/text">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <para role="shortdesc">You are not authorized
+                        to complete this action.</para>
+                </wadl:doc>
+            </representation>
+        </response>
     </method>
 </application>
