@@ -825,6 +825,19 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Resize server">
             <para role="shortdesc">Resizes the specified server. Specify the <code>resize</code>
                 action in the request body.</para>
+                <para>A successfully resized server shows a status of
+                <code>VERIFY_RESIZE</code>, a vm_status of <code>RESIZED</code>,
+                and a migration_status of <code>finished</code>. If you set the
+                auto_confirm option of the Compute service to <code>True</code>,
+                the Compute service automatically confirms the resize operation.
+                </para>
+                <para>Preconditions</para>
+                <itemizedlist>
+                  <listitem><para>You can only resize a server when its status is
+                  <code>ACTIVE</code> or <code>SHUTOFF</code>.</para></listitem>
+                <listitem><para>If the specified server is locked, you must have
+                administrator privileges to resize the server.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -845,6 +858,30 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Confirm resized server">
             <para role="shortdesc">Confirms a pending resize action. Specify the
                     <code>confirmResize</code> action in the request body.</para>
+                    <para>After you make this request, you typically must keep
+                    polling the server status to determine whether the request
+                    succeeded. A successfully confirming resize operation shows
+                    a status of <code>ACTIVE</code> or <code>SHUTOFF</code> and
+                    a migration_status of <code>confirmed</code>. You can also
+                    see the resized server in the compute node that OpenStack
+                    Compute manages.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>You can only confirm the resized server where the status
+                is <code>VERIFY_RESIZED</code>, the vm_status is <code>RESIZED</code>,
+                and the migration_status is <code>finished</code> or
+                <code>confirming</code>.</para></listitem>
+                <listitem><para>If the specified server is locked, you must have
+                administrator privileges to confirm the server.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If the specified server status remains
+                <code>RESIZED</code>, the request failed. Ensure you meet the
+                preconditions and run the request again. If the request fails again,
+                investigate the compute backend or ask your cloud provider.
+                </para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -865,6 +902,30 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Revert resized server">
             <para role="shortdesc">Cancels and reverts a pending resize action. Specify the
                     <code>revertResize</code> action in the request body.</para>
+                    <para>After you make this request, you typically must keep
+                    polling the server status to determine whether the request
+                    succeeded. A successfully reverting resize operation shows
+                    a status of <code>ACTIVE</code> or <code>SHUTOFF</code> and
+                    a migration_status of <code>reverted</code>. You can also see
+                    the reverted server in the compute node that OpenStack
+                    Compute manages.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>You can only confirm the resized server where the status
+                is <code>VERIFY_RESIZE</code> and the vm_status is <code>RESIZED</code>.
+                </para></listitem>
+                <listitem><para>If the specified server is locked, you must have
+                administrator privileges to revert the resizing.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If the specified server status remains
+                <code>RESIZED</code>, the request failed. Ensure you meet the
+                preconditions and run the request again. If the request fails again,
+                investigate the compute backend.</para></listitem>
+                <listitem><para>The specified server is not reverted in the compute
+                node that OpenStack Compute manages.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -885,6 +946,40 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create image">
             <para role="shortdesc">Creates a new image. Specify the <code>createImage</code> action
                 in the request body.</para>
+                <para>After you make this request, you typically must keep
+                polling the created image's status to determine whether the
+                request succeeded. A successfully creating image operation
+                shows an image's status of <code>available</code> and the
+                serve's status goes back to the original status. You can
+                also see the new image in the image backend that OpenStack
+                Image Service manages.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+                <listitem><para>You can only create a new image from the server
+                when its status is <code>ACTIVE</code>, <code>SHUTOFF</code>,
+                <code>PAUSED</code>, or <code>SUSPENDED</code>.</para></listitem>
+                <listitem><para>The connection to the Image Service is valid.
+                </para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If the image status remains uploading or shows
+                another error status, the request failed. Ensure you meet the
+                preconditions and run the request again. If the request fails
+                again, investigate the image backend.</para></listitem>
+                <listitem><para>If the server status does not go back to an original
+                server's status, the request failed. Ensure you meet the preconditions,
+                or check if there is another operation that causes race conditions
+                for the server, then run the request again. If the request fails
+                again, investigate the compute backend or ask your cloud provider.
+                </para></listitem>
+                <listitem><para>If the request fails due to an error on OpenStack
+                Compute Service, the image is purged from the image store that
+                OpenStack Image Service manages. Ensure you meet the preconditions
+                and run the request again. If the request fails again, investigate
+                OpenStack Compute Service or ask your cloud provider.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
