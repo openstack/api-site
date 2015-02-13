@@ -39,7 +39,30 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Start server">
             <para role="shortdesc">Starts a stopped server and changes
-                its status to ACTIVE.</para>
+                its status to <code>ACTIVE</code>.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                  <listitem><para>The server status must be <code>SHUTOFF</code>.
+                  </para></listitem>
+                <listitem><para>If the specified server is locked, you
+                must have administrator privileges to start the server.
+                </para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+              <listitem><para>After you successfully start a server,
+                its status changes to <code>ACTIVE</code>. The server appears on the compute
+                node that the Compute service manages.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                  <listitem><para>If the server status does not change
+                  to <code>ACTIVE</code>, the start operation failed. Ensure
+                  that you meet the preconditions and run the request again.
+                  If the request fails again, investigate whether another
+                  operation is running that causes a race condition.
+                  </para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -74,7 +97,23 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Stop server">
             <para role="shortdesc">Stops a running server and changes
-                its status to STOPPED.</para>
+                its status to <code>SHUTOFF</code>.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>ACTIVE</code> or <code>ERROR</code>.
+                  </para></listitem>
+                <listitem><para>If the specified server is locked,
+                you must have administrator privileges to stop
+                the server.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                  <listitem><para>After you successfully stop a server,
+                    its status changes to <code>SHUTOFF</code>. The server instance data appears
+                    only on the compute node that Compute service manages.
+                    </para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
