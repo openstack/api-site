@@ -342,7 +342,7 @@
     <method name="POST" id="createServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create server">
             <para role="shortdesc">Creates a server.</para>
-            <para>This operation asynchronously provisions a new server. The progress of this
+            <para>The progress of this
                 operation depends on several factors including location of the requested image,
                 network i/o, host load, and the selected flavor. The progress of the request can be
                 checked by performing a &GET; on /servers/<parameter>id</parameter>, which will
@@ -354,6 +354,36 @@
                 attributes through subsequent &GET;s on the server.</para>
             <para>You can boot a server from a volume by including block-device-mapping-v2
                 parameters in the create request.</para>
+             <para>Preconditions</para>
+             <itemizedlist>
+                 <listitem><para>The user must have enough server quota remaining
+                 to create the number of servers requested.</para></listitem>
+                 <listitem><para>The connection to the Image Service is
+                 valid.</para></listitem>
+             </itemizedlist>
+             <para>Asynchronous Postconditions</para>
+             <itemizedlist>
+                 <listitem><para>With correct permissions, you can see the server
+                 status as <code>ACTIVE</code> through API calls.</para></listitem>
+                 <listitem><para>With correct access, you can see the created
+                 server in the compute node that OpenStack Compute manages.
+                 </para></listitem>
+             </itemizedlist>
+             <para>Troubleshooting</para>
+             <itemizedlist>
+                 <listitem><para>If the server status remains <code>BUILDING</code>
+                 or shows another error status, the request failed. Ensure you meet
+                 the preconditions then investigate the compute node.
+                 </para></listitem>
+                 <listitem><para>The server is not created in the compute node
+                 which OpenStack Compute manages.</para></listitem>
+                 <listitem><para>The compute node needs enough free resource to
+                 match the specified resource of the server creation request.
+                 </para></listitem>
+                 <listitem><para>Ensure the scheduler selection filter can
+                 fulfill the request with the available compute nodes that
+                 match the filter's selection criteria.</para></listitem>
+             </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml" element="csapi:server">
@@ -573,6 +603,10 @@
     <method name="GET" id="getServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get server details">
             <para role="shortdesc">Gets details for a specified server.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
@@ -590,6 +624,10 @@
     <method name="PUT" id="updateServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update server">
             <para role="shortdesc">Updates the editable attributes of the specified server.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json" element="csapi:server">
@@ -668,6 +706,42 @@
     <method name="DELETE" id="deleteServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete server">
             <para role="shortdesc">Deletes a specified server.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+                <listitem><para>Anyone can delete a server when the server's
+                status is not locked.</para></listitem>
+                <listitem><para>You can delete a server which status is
+                not locked.</para></listitem>
+                <listitem><para>If the specified server is locked, you need to
+                have administrator privileges to delete the server.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>With correct permissions, you can see the
+                specified server status as <code>DELETED</code> through API
+                calls.</para></listitem>
+                <listitem><para>The port attached to the specified server
+                is deleted.</para></listitem>
+                <listitem><para>The server is deleted from the list of
+                servers returned by an API calls.
+                </para></listitem>
+                <listitem><para>The server managed by OpenStack Compute is
+                deleted on the compute node.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If server status remains in <code>deleting</code>
+                or shows another error status, the request failed. Ensure you
+                meet the preconditions then investigate the compute backend.
+                </para></listitem>
+                <listitem><para>The request returns the HTTP 409 status code
+                when the server is locked even if you have a correct permissions.
+                Ensure you meet the preconditions then investigate the server
+                status.</para></listitem>
+                <listitem><para>The server managed by OpenStack Compute is not
+                deleted from the compute node.</para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <response status="204"/>
         <!-- Common, GET, inProgress Faults--> &commonFaults; &getFaults; </method>
