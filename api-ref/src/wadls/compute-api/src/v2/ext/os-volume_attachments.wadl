@@ -90,9 +90,40 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Attach volume">
             <para role="shortdesc">Attaches a volume to the specified
-                server.</para></wadl:doc>
+                server.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>You can attach a volume to a server with an
+                <code>ACTIVE</code>, <code>PAUSED</code>,
+                <code>SHUTOFF</code>, <code>VERIFY_RESIZE</code>, or
+                <code>SOFT_DELETED</code> status.</para></listitem>
+                <listitem><para>You can attach a volume to a server with
+                a status that is not locked.</para></listitem>
+                <listitem><para>You can attach a volume when its status
+                is <code>available</code>.</para></listitem>
+                <listitem><para>You can attach a volume when its volume
+                type supports volume attaching.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>After successfully attaching a volume
+                to a server, the volume's status changes to
+                <code>in-use</code>.</para></listitem>
+                <listitem><para>You can see the attached volume when you
+                log in to the server.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem>
+                    <para>If the volume's status remains in
+                    <code>available</code> state, the request failed. Ensure that you
+                    meet the preconditions and run the request again. If the
+                    request fails again,
+                    investigate the server and the volume status.</para>
+            </listitem>
+            </itemizedlist>
+        </wadl:doc>
         <request>
-
             <representation mediaType="application/xml"
                 element="csapi:attachvolume">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -120,9 +151,11 @@
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Name of the device such as, /dev/vdb.
-                            Skip this parameter or set to null for auto-assign (if
-                            supported).</para></wadl:doc>
+                        <para>Name of the device such as, <code>/dev/vdb</code>.
+                            Omit this parameter or set it to null for auto-assignment, if
+                            supported. If you specify this parameter, the device must not
+                            exist in Guest OS.
+                    .</para></wadl:doc>
                 </param>
                 <param name="volumeAttachment" style="template"
                     type="xsd:string">
@@ -190,7 +223,13 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show volume attachment details">
             <para role="shortdesc">Shows details for the specified
-                volume attachment.</para></wadl:doc>
+                volume attachment.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified volume must be attached
+                to the server.</para></listitem>
+            </itemizedlist>
+        </wadl:doc>
         <request>
             <representation mediaType="application/xml"
                 element="csapi:attachvolume"/>
@@ -222,7 +261,39 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete volume attachment">
             <para role="shortdesc">Deletes the specified volume
-                attachment from a specified server.</para></wadl:doc>
+                attachment from a specified server.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified volume must be attached
+                to the server.</para></listitem>
+                <listitem><para>You can detach a volume when the server's
+                status is <code>ACTIVE</code>, <code>PAUSED</code>,
+                <code>SHUTOFF</code>, <code>VERIFY_RESIZE</code>, or
+                <code>SOFT_DELETED</code>.</para></listitem>
+                <listitem><para>You can detach a volume when its status
+                is <code>in-use</code>.</para></listitem>
+                <listitem><para>You can detach a volume from a server with
+                a status that is not locked.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem><para>After successfully detaching a volume,
+                its status changes to <code>available</code>.
+                </para></listitem>
+                <listitem><para>The detached volume is no longer visible on
+                the server.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem>
+                    <para>If the volume's status remains in
+                    <code>available</code> state, the request failed. Ensure that you
+                    meet the preconditions and run the request again. If the
+                    request fails again, investigate whether another operation is
+                    running that causes a race condition.</para>
+            </listitem>
+            </itemizedlist>
+        </wadl:doc>
         <request>
             <representation mediaType="application/xml"
                 element="csapi:attachvolume"/>
