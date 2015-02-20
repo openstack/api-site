@@ -437,11 +437,11 @@
         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
         <para>The vnic type that is bound to the neutron port.</para>
         <para>In &POST; and &PUT; operations, specify a value of
-                <code>normal</code> (virtual nic), <code>direct</code>
-            (pci passthrough), or <code>macvtap</code> (virtual
-            interface with a tap-like software interface). These
-            values support SR-IOV PCI passthrough networking. The ML2
-            plug-in supports the <code>vnic_type</code>.</para>
+        <code>normal</code> (virtual nic), <code>direct</code> (pci
+        passthrough), or <code>macvtap</code> (virtual interface with a
+        tap-like software interface). These values support SR-IOV PCI
+        passthrough networking. The ML2 plug-in supports the
+        <code>vnic_type</code>.</para>
         <para>In &GET; operations, the
                 <parameter>binding:vnic_type</parameter> extended
             attribute is visible to only port owners and
@@ -472,6 +472,16 @@
              <para>The start and end addresses for the allocation pools.</para></wadl:doc>
      </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="start" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="end" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The end address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
          name="gateway_ip" style="plain" type="xsd:string">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The gateway IP address.</para></wadl:doc>
@@ -496,7 +506,89 @@
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>Set to true if DHCP is enabled and false if DHCP is disabled.</para></wadl:doc>
      </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="dns_nameservers" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>DNS server.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="host_routes" style="plain" type="xsd:list">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A list of host route dictionaries for the subnet.
+             For example, [{destination: 0.0.0.0/0,
+                 nexthop: 123.456.78.9}, {destination: 192.168.0.0/24, nexthop: 192.168.0.1}].</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="destination" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Destination for static route.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="nexthop" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Nexthop for the destination.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="ipv6_ra_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>One of the following values is returned: dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="ipv6_address_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>One of the following values is returned: dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>
        '>
+<!ENTITY subnetListQueryParameters '<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="display_name" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Name of the network.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="network_id" style="query" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the attached network.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="tenant_id" style="query" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the tenant who owns the network.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="gateway_ip" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The gateway IP address.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ip_version" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The IP version, which is 4 or 6.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="cidr" style="query" type="xsd:bool">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The CIDR.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="id" style="query" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the subnet.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="enable_dhcp" style="query" type="xsd:boolean">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>If true, DHCP is enabled and If false, DHCP is disabled.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_ra_mode" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Choose from (constants.IPV6_SLAAC,constants.DHCPV6_STATEFUL,constants.DHCPV6_STATELESS,name=&apos;ipv6_address_modes,null).</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_address_mode" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Choose from (constants.IPV6_SLAAC,constants.DHCPV6_STATEFUL,constants.DHCPV6_STATELESS,name=&apos;ipv6_address_modes,null).</para></wadl:doc>
+     </param>'>
     <!-- Subnet Create Parameters -->
 <!ENTITY subnetCreateParameters '<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
          name="name" style="plain" type="xsd:string">
@@ -517,6 +609,16 @@
          name="allocation_pools" style="plain" type="xsd:dict">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The start and end addresses for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="start" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="end" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The end address for the allocation pools.</para></wadl:doc>
      </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
          name="gateway_ip" style="plain" type="xsd:string">
@@ -547,7 +649,27 @@
          name="host_routes" style="plain" type="xsd:list">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>A list of host route dictionaries for the subnet. For example, [{destination: 0.0.0.0/0, nexthop: 123.456.78.9}, {destination: 192.168.0.0/24, nexthop: 192.168.0.1}].</para></wadl:doc>
-    </param>'>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="destination" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Destination for static route</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="nexthop" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Nexthop for the destination.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_ra_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A valid value is dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_address_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A valid value is dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>'>
 <!ENTITY subnetUpdateParameters '<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
          name="name" style="plain" type="xsd:string">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -569,6 +691,16 @@
              <para>The start and end addresses for the allocation pools.</para></wadl:doc>
      </param>
      <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="start" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="end" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The end address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
          name="gateway_ip" style="plain" type="xsd:string">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>The gateway IP address.</para></wadl:doc>
@@ -582,6 +714,31 @@
          name="enable_dhcp" style="plain" type="xsd:boolean">
          <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
              <para>Set to true if DHCP is enabled and false if DHCP is disabled.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="dns_nameservers" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>DNS server</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_ra_mode" style="plain" type="xsd:boolean">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A valid value is dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="destination" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Destination for static route</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="nexthop" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Nexthop for the destination</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_address_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A valid value is dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
      </param>'>
 <!-- Server List Parameters -->
 <!ENTITY serverListParameters '
@@ -2298,7 +2455,9 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The list of HTTP status codes expected in response from the member to declare it healthy. A valid value is a single value, such as 200, a list, such as 200, 202, or a range, such as 200-204.</para>
+        <para>The list of HTTP status codes expected in response from the
+        member to declare it healthy. A valid value is a single value such as
+        200, a list such as 200, 202, or a range such as 200-204.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -2354,7 +2513,7 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The list of HTTP status codes expected in response from the member to declare it healthy. A valid value is a single value, such as 200, a list, such as 200, 202, or a range, such as 200-204.</para>
+        <para>The list of HTTP status codes expected in response from the member to declare it healthy. A valid value is a single value such as 200, a list such as 200, 202, or a range such as 200-204.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
