@@ -6,7 +6,16 @@
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/v2"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:json="http://json-schema.org/schema#"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
+  <grammars>
+    <include href="grammar/requests/create-volume.json"/>
+    <include href="grammar/requests/update-volume.json"/>
+    <include href="grammar/requests/create-volume-type.json"/>
+    <include href="grammar/requests/create-snapshot.json"/>
+    <include href="grammar/requests/update-snapshot.json"/>
+    <include href="grammar/requests/update-snapshot-metadata.json"/>
+  </grammars>
     <resources base="https://volume.example.com/" xml:id="volume-v2">
         <resource id="versions" path="//">
             <method href="#listVersions"/>
@@ -235,7 +244,7 @@
             </itemizedlist>
         </wadl:doc>
         <request>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json" json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/volume#post">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -531,25 +540,14 @@
                         href="api_samples/volume_update_request.xml"/>
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json"
+                            json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/volumes#put/volume">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/volume_update_request.json"
                     />
                 </wadl:doc>
-                <param name="description" style="query"
-                    type="string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A description of the
-                            volume.</para></wadl:doc>
-                </param>
-                <param name="name" style="query" type="string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The name of the
-                            volume.</para></wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -638,20 +636,12 @@
                     <xsdxt:code href="api_samples/volume_type_create_request.xml"/>
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json" json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/types#post/volume_type">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="api_samples/volume_type_create_request.json"
                     />
                 </wadl:doc>
-                <param name="volume_type" style="plain" required="true"
-                    type="csapi:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>A partial representation of a volume type
-                            used in the creation process.</para>
-                    </wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -841,7 +831,8 @@
                     </wadl:doc>
                 </param>
             </representation>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json"
+                            json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots#post/snapshot">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
@@ -969,25 +960,13 @@
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json" json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots#put/snapshot">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/snapshot_update_request.json"
                     />
                 </wadl:doc>
-                <param name="description" style="query"
-                    type="string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Describes the
-                            snapshot.</para></wadl:doc>
-                </param>
-                <param name="name" style="query" type="string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The name of the
-                            snapshot.</para></wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -1058,31 +1037,13 @@
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json" json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots/metadata#put/metadata">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/snapshot_update_metadata_request.json"
                     />
                 </wadl:doc>
-                <param name="metadata" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>One or more metadata key and value pairs
-                            to set or unset for the snapshot.</para>
-                        <para>To unset a metadata key value, specify
-                            only the key name.</para>
-                        <para>To set a metadata key value, specify the
-                            key and value pair.</para>
-                        <para>The Block Storage server does not
-                            respect case-sensitive key names. For
-                            example, if you specify both <code>"key":
-                                "v1"</code> and <code>"KEY":
-                                "V1"</code>, the server sets and
-                            returns only the <code>KEY</code> key and
-                            value pair.</para></wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
