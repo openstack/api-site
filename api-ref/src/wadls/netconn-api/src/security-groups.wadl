@@ -52,10 +52,10 @@
     <method name="GET" id="listSecGroups">
         <wadl:doc xml:lang="EN" title="List security groups"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists all OpenStack Networking
+            <para role="shortdesc">Lists OpenStack Networking
                 security groups to which the specified tenant has
                 access.</para>
-            <para>The list shows the unique ID for each security group
+            <para>The list shows the unique ID for
                 and the rules that are associated with each security
                 group.</para>
         </wadl:doc>
@@ -342,7 +342,7 @@
                     port number in the range that is matched by the
                     security group rule. If the protocol is TCP or
                     UDP, this value must be less than or equal to the
-                    value of the port_range_max attribute. If the
+                    value of the <option>port_range_max</option> attribute. If the
                     protocol is ICMP, this value must be an ICMP
                     type.</wadl:doc>
             </param>
@@ -352,7 +352,7 @@
                     xmlns="http://docbook.org/ns/docbook">The maximum
                     port number in the range that is matched by the
                     security group rule. The port_range_min attribute
-                    constrains the port_range_max attribute. If the
+                    constrains the <option>port_range_max</option> attribute. If the
                     protocol is ICMP, this value must be an ICMP
                     type.</wadl:doc>
             </param>
@@ -368,16 +368,16 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">The remote
                     group ID to be associated with this security group
-                    rule. You can specify either remote_group_id or
-                    remote_ip_prefix in the request body.</wadl:doc>
+                    rule. You can specify either <option>remote_group_id</option> or
+                    <option>remote_ip_prefix</option> in the request body.</wadl:doc>
             </param>
             <param required="false" name="remote_ip_prefix"
                 style="plain" type="csapi:uuid">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">The remote
                     IP prefix to be associated with this security
-                    group rule. You can specify either remote_group_id
-                    or remote_ip_prefix in the request body. This
+                    group rule. You can specify either <option>remote_group_id</option>
+                    or <option>remote_ip_prefix</option> in the request body. This
                     attribute matches the specified IP prefix as the
                     source IP address of the IP packet.</wadl:doc>
             </param>
@@ -425,7 +425,7 @@
                     rule is applied to traffic leaving the
                     instance.</wadl:doc>
             </param>
-            <param required="true" name="ethertype" style="plain"
+            <param required="false" name="ethertype" style="plain"
                 type="xsd:string">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">Must be IPv4 or IPv6,
@@ -446,7 +446,7 @@
                     port number in the range that is matched by the
                     security group rule. If the protocol is TCP or
                     UDP, this value must be less than or equal to the
-                    value of the port_range_max attribute. If the
+                    value of the <option>port_range_max</option> attribute. If the
                     protocol is ICMP, this value must be an ICMP
                     type.</wadl:doc>
             </param>
@@ -456,7 +456,7 @@
                     xmlns="http://docbook.org/ns/docbook">The maximum
                     port number in the range that is matched by the
                     security group rule. The port_range_min attribute
-                    constrains the port_range_max attribute. If the
+                    constrains the <option>port_range_max</option> attribute. If the
                     protocol is ICMP, this value must be an ICMP
                     type.</wadl:doc>
             </param>
@@ -472,16 +472,16 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">The remote
                     group ID to be associated with this security group
-                    rule. You can specify either remote_group_id or
-                    remote_ip_prefix in the request body.</wadl:doc>
+                    rule. You can specify either <option>remote_group_id</option> or
+                    <option>remote_ip_prefix</option> in the request body.</wadl:doc>
             </param>
             <param required="false" name="remote_ip_prefix"
                 style="plain" type="csapi:uuid">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">The remote
                     IP prefix to be associated with this security
-                    group rule. You can specify either remote_group_id
-                    or remote_ip_prefix in the request body. This
+                    group rule. You can specify either <option>remote_group_id</option>
+                    or <option>remote_ip_prefix</option> in the request body. This
                     attribute matches the specified IP prefix as the
                     source IP address of the IP packet.</wadl:doc>
             </param>
@@ -495,28 +495,95 @@
             </representation>
         </request>
         <response status="201">
-            <param name="security_group" type="xsd:string"
-                required="true">
+            <param name="security_group_rule" style="plain"
+                type="xsd:string" required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook"
-                        ><para>Security group
+                        ><para>Security group rule
                     object.</para></wadl:doc>
             </param>
-            <param name="description" type="xsd:string"
-                required="true">
+            <param required="true" name="direction" style="plain"
+                type="xsd:string">
                 <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook"><para>The
-                        security group description.</para></wadl:doc>
+                    xmlns="http://docbook.org/ns/docbook">Ingress or
+                    egress: The direction in which the security group
+                    rule is applied. For a compute instance, an
+                    ingress security group rule is applied to incoming
+                    (ingress) traffic for that instance. An egress
+                    rule is applied to traffic leaving the
+                    instance.</wadl:doc>
             </param>
-            <param name="id" type="csapi:uuid" required="true">
+            <param required="true" name="id" style="plain"
+                type="csapi:uuid">
                 <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook"><para>The
-                        UUID for the security group.</para></wadl:doc>
+                    xmlns="http://docbook.org/ns/docbook">The security group
+                    rule ID.</wadl:doc>
             </param>
-            <param name="name" type="xsd:string" required="true">
+            <param required="true" name="ethertype" style="plain"
+                type="xsd:string">
                 <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook"><para>The
-                        security group name.</para></wadl:doc>
+                    xmlns="http://docbook.org/ns/docbook">Must be IPv4 or IPv6,
+                    and addresses represented in CIDR must match the ingress or
+                    egress rules.</wadl:doc>
+            </param>
+            <param required="true" name="security_group_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The security
+                    group ID to associate with this security group
+                    rule.</wadl:doc>
+            </param>
+            <param required="true" name="port_range_min"
+                style="plain" type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The minimum
+                    port number in the range that is matched by the
+                    security group rule. If the protocol is TCP or
+                    UDP, this value must be less than or equal to the
+                    value of the <option>port_range_max</option> attribute. If the
+                    protocol is ICMP, this value must be an ICMP
+                    type.</wadl:doc>
+            </param>
+            <param required="true" name="port_range_max"
+                style="plain" type="xsd:int">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The maximum
+                    port number in the range that is matched by the
+                    security group rule. The port_range_min attribute
+                    constrains the <option>port_range_max</option> attribute. If the
+                    protocol is ICMP, this value must be an ICMP
+                    type.</wadl:doc>
+            </param>
+            <param required="true" name="protocol" style="plain"
+                type="xsd:string">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The protocol
+                    that is matched by the security group rule. Valid
+                    values are null, tcp, udp, and icmp.</wadl:doc>
+            </param>
+            <param required="true" name="remote_group_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The remote
+                    group ID to be associated with this security group
+                    rule. You can specify either <option>remote_group_id</option> or
+                    <option>remote_ip_prefix</option> in the request body.</wadl:doc>
+            </param>
+            <param required="true" name="remote_ip_prefix"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The remote
+                    IP prefix to be associated with this security
+                    group rule. You can specify either <option>remote_group_id</option>
+                    or <option>remote_ip_prefix</option> in the request body. This
+                    attribute matches the specified IP prefix as the
+                    source IP address of the IP packet.</wadl:doc>
+            </param>
+            <param required="true" name="tenant_id"
+                style="plain" type="csapi:uuid">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">The tenant
+                    ID.</wadl:doc>
             </param> <representation
                 mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -603,7 +670,7 @@
                         port number in the range that is matched by the
                         security group rule. If the protocol is TCP or
                         UDP, this value must be less than or equal to the
-                        value of the port_range_max attribute. If the
+                        value of the <option>port_range_max</option> attribute. If the
                         protocol is ICMP, this value must be an ICMP
                         type.</wadl:doc>
                 </param>
@@ -613,7 +680,7 @@
                         xmlns="http://docbook.org/ns/docbook">The maximum
                         port number in the range that is matched by the
                         security group rule. The port_range_min attribute
-                        constrains the port_range_max attribute. If the
+                        constrains the <option>port_range_max</option> attribute. If the
                         protocol is ICMP, this value must be an ICMP
                         type.</wadl:doc>
                 </param>
@@ -629,16 +696,16 @@
                     <wadl:doc xml:lang="EN"
                         xmlns="http://docbook.org/ns/docbook">The remote
                         group ID to be associated with this security group
-                        rule. You can specify either remote_group_id or
-                        remote_ip_prefix in the request body.</wadl:doc>
+                        rule. You can specify either <option>remote_group_id</option> or
+                        <option>remote_ip_prefix</option> in the request body.</wadl:doc>
                 </param>
                 <param required="false" name="remote_ip_prefix"
                     style="plain" type="csapi:uuid">
                     <wadl:doc xml:lang="EN"
                         xmlns="http://docbook.org/ns/docbook">The remote
                         IP prefix to be associated with this security
-                        group rule. You can specify either remote_group_id
-                        or remote_ip_prefix in the request body. This
+                        group rule. You can specify either <option>remote_group_id</option>
+                        or <option>remote_ip_prefix</option> in the request body. This
                         attribute matches the specified IP prefix as the
                         source IP address of the IP packet.</wadl:doc>
                 </param><representation
