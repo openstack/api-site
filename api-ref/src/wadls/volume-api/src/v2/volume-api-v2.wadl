@@ -56,6 +56,10 @@
                         <method href="#getVolume"/>
                         <method href="#updateVolume"/>
                         <method href="#deleteVolume"/>
+                        <resource path="action"
+                            id="volume-action">
+                            <method href="#extendVolume"/>
+                        </resource>
                     </resource>
                 </resource>
                 <resource id="types" path="types">
@@ -599,6 +603,44 @@
                           is not deleted from the storage system.</para></listitem>
             </itemizedlist>
         </wadl:doc>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="extendVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Extend volume">
+            <para role="shortdesc">Extends the size of a specified volume to a new size requested in GB.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>Volume status must be <code>available</code>.</para></listitem>
+            </itemizedlist>
+            <itemizedlist>
+                <listitem><para>Sufficient amount of storage must exist to extend the volume.</para></listitem>
+            </itemizedlist>
+            <itemizedlist>
+                <listitem><para>The user quota must have sufficient volume storage.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>An <code>error_extending</code> volume status indicates that the request failed.
+                Ensure that you meet the preconditions and retry the request.
+                If the request fails, investigate the storage backend.</para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/volume_extend_request.json"
+                    />
+                </wadl:doc>
+                <param name="new_size" style="plain"
+                    type="xsd:int" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The new size (in GB) of the volume.</para></wadl:doc>
+                </param>
+            </representation>
+        </request>
         <response status="202"/>
     </method>
     <method name="GET" id="getVolumeTypes">
