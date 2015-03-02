@@ -41,13 +41,44 @@
     <method name="POST" id="shelve">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Shelve server">
-            <para role="shortdesc">Shelves a running server and
-                changes its status to SHELVED_OFFLOADED.</para>
+            <para role="shortdesc">Shelves a running server.</para>
             <para>All associated data and resources are kept; however,
                 anything still in memory is not retained. To restore a
                 shelved instance, use the <code>unshelve</code>
                 action. To remove a shelved instance, use the
                     <code>shelveOffload</code> action.</para>
+              <para>Preconditions</para>
+              <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>ACTIVE</code>, <code>SHUTOFF</code>,
+                  <code>PAUSED</code>, or <code>SUSPENDED</code>.
+                  </para></listitem>
+                  <listitem><para>If the specified server is locked,
+                  you must have administrator privileges to shelve
+                  the server.</para></listitem>
+              </itemizedlist>
+              <para>Asynchronous Postconditions</para>
+              <itemizedlist>
+                  <listitem><para>After successfully shelving a server, its
+                  status changes to <code>SHELVED</code> and the image status
+                  is <code>ACTIVE</code>. The server instance data appears on
+                  the compute node that the Compute service
+                  manages.</para></listitem>
+                  <listitem><para>The Compute service automatically
+                  deletes the instance on compute nodes and changes the
+                  server status to <code>SHELVED_OFFLOADED</code> if the
+                  server is booted from volumes or <code>shelved_offload_time</code> is set
+                  to 0.</para></listitem>
+              </itemizedlist>
+              <para>Troubleshooting</para>
+              <itemizedlist>
+                  <listitem><para>If the server status does not change
+                  to <code>SHELVED</code> or <code>SHELVED_OFFLOADED</code>,
+                  the shelve operation failed. Ensure that you meet the preconditions
+                  and run the request again. If the request fails again,
+                  investigate whether another operation is running that
+                  causes a race condition.</para></listitem>
+              </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -74,9 +105,32 @@
             <para role="shortdesc">Removes an instance from the
                 server.</para>
             <para>Data and resource associations are deleted. If an
-                instance is no longer needed, you can move that
-                instance off the hypervisor to minimize resource
+                instance is no longer needed, you can remove that
+                instance from the hypervisor to minimize resource
                 usage.</para>
+              <para>Preconditions</para>
+              <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>SHELVED</code>.</para></listitem>
+                  <listitem><para>If the specified server is locked,
+                  you must have administrator privileges to shelve-offload the server.</para></listitem>
+              </itemizedlist>
+              <para>Asynchronous Postconditions</para>
+              <itemizedlist>
+                  <listitem><para>After you successfully shelve-offload a
+                  server, the status changes to <code>SHELVED_OFFLOAD</code>.
+                  The server instance data appears on the compute
+                  node.</para></listitem>
+              </itemizedlist>
+              <para>Troubleshooting</para>
+              <itemizedlist>
+                  <listitem><para>If the server status does not change
+                  to <code>SHELVEDED_OFFLOADED</code>, the shelve-offload
+                  operation failed. Ensure that you meet the preconditions
+                  and run the request again. If the request fails again,
+                  investigate whether another operation is running that
+                  causes a race condition.</para></listitem>
+              </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -101,6 +155,32 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Restore shelved server">
             <para role="shortdesc">Restores a shelved server.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>SHELVED</code> or <code>SHELVED_OFFLOADED</code>.
+                  </para></listitem>
+                  <listitem><para>If the specified server is locked,
+                  you must have administrator privileges to unshelve
+                  the server.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                  <listitem><para>After successfully shelving a server, the
+                  status changes to <code>ACTIVE</code>. The server appears on
+                  the compute node.</para></listitem>
+                  <listitem><para>The shelved image is deleted from the
+                  list of images returned by an API call.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                  <listitem><para>If the server status does not change to
+                  <code>ACTIVE</code>, the unshelve operation failed. Ensure
+                  that you meet the preconditions and run the request again.
+                  If the request fails again, investigate whether another
+                  operation is running that causes a race condition.
+                  </para></listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
