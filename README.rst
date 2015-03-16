@@ -60,7 +60,7 @@ To build and updates any of the API documents:
 
    Otherwise, to checkout an existing review::
 
-        git review –d change-number /* where change-number is the change number of the review
+        git review -d change-number /* where change-number is the change number of the review
 
 #. Make your changes.
 
