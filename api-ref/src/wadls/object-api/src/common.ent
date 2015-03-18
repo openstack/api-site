@@ -1,3 +1,4 @@
+<!ENTITY emdash '&#151;'>
 <!ENTITY name '{name}'>
 <!-- Common faults. -->
 <!ENTITY commonFaults '<response xmlns="http://wadl.dev.java.net/2009/02">
@@ -132,7 +133,58 @@
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Sets an ACL that grants read access.</para>
+        <para>
+            Sets a container access control list (ACL) that grants read access.
+            Container ACLs are available on any Object Storage cluster, and are
+            enabled by container rather than by cluster.
+        </para>
+        <para>
+            To set the container read ACL:
+        </para>
+<programlisting language="bash">$ curl -X {PUT|POST} -i -H "X-Auth-Token: TOKEN" -H \
+       "X-Container-Read: ACL" STORAGE_URL/CONTAINER</programlisting>
+        <para>
+            For example:
+        </para>
+<programlisting language="bash">$ curl -X PUT -i \
+       -H "X-Auth-Token: 0101010101" \
+       -H "X-Container-Read: .r:*" \
+       http://swift.example.com/v1/AUTH_bob/read_container</programlisting>
+        <para>
+            In the command, specify the ACL in the <code>X-Container-Read</code>
+            header, as follows:
+        </para>
+        <itemizedlist>
+        <listitem>
+            <para>
+                <code>.r:*</code>&emdash;All referrers.
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <code>.r:example.com,swift.example.com</code>&emdash;Comma-separated list of referrers.
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <code>.rlistings</code>&emdash;Container listing access.
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <code>AUTH_username</code>&emdash;Access to a specified user
+                who authenticates through a legacy or non-Keystone-based
+                authentication system.
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <code>LDAP_</code>&emdash;Access to all users who authenticate
+                through an LDAP-based legacy or non-Keystone-based
+                authentication system.
+            </para>
+        </listitem>
+        </itemizedlist>
     </wadl:doc>
 </param>'>
 <!ENTITY container-sync-key-requestHeader '
