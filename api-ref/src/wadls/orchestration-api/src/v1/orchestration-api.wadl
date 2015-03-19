@@ -2,147 +2,18 @@
 <!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
 <!-- Useful for describing APIs -->
 <!DOCTYPE application[
-<!-- Useful for describing APIs -->
-<!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
-<!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
-<!ENTITY POST   '<command xmlns="http://docbook.org/ns/docbook">POST</command>'>
-<!ENTITY DELETE '<command xmlns="http://docbook.org/ns/docbook">DELETE</command>'>
-
-<!-- Common descriptions for cases where a user supplies a new stack name -->
-<!ENTITY STACK_NAME_FORMAT 'The value must be unique within a project. The name
-must start with an ASCII letter and can contain ASCII letters, digits,
-underscores, periods, and hyphens. Specifically, the name must match the regular
-expression <code>^[a-zA-Z][a-zA-Z0-9_.-]*$</code>.'>
-<!ENTITY STACK_NAME_CREATE_DESC 'A name for the new stack. &STACK_NAME_FORMAT;
-<note><para>Deleting or abandoning a stack may not make the stack name available
-for reuse, or the ability to reuse a stack name could be delayed for an
-unspecified time.</para></note>'>
-<!ENTITY STACK_NAME_PREVIEW_DESC 'A name for the preview stack.
-&STACK_NAME_FORMAT; <para>The stack name provided for the preview operation may
-be used for future calls to preview and/or create a stack.</para>'>
-
-<!-- Common descriptions for cases where a user supplies a template_url -->
-<!ENTITY TEMPLATE_URL_COMMON 'See the description of the <code>template</code>
-property for information about the expected template content located at the URI.
-<note><para>This parameter is only required when the <code>template</code>
-parameter is omitted. The value is ignored if the <code>template</code> property
-is also specified.</para></note>'>
-<!ENTITY TEMPLATE_URL_CREATE_DESC 'A URI to the location containing the stack
-template to instantiate. &TEMPLATE_URL_COMMON;'>
-<!ENTITY TEMPLATE_URL_PREVIEW_DESC 'A URI to the location containing the stack
-template to preview. &TEMPLATE_URL_COMMON;'>
-<!ENTITY TEMPLATE_URL_UPDATE_DESC 'A URI to the location containing the updated
-stack template. &TEMPLATE_URL_COMMON;'>
-
-<!-- Common descriptions for cases where a user supplies a template -->
-<!ENTITY TEMPLATE_COMMON 'This parameter is always provided as a
-<code>string</code> in the JSON request body. The content of the string is an
-Orchestration template, and may be provided in either YAML or JSON syntax.
-Complete details about the syntax of an Orchestration template are provided in
-the <link xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
-Orchestration Template (HOT) specification</link>. <note><para>This parameter is
-only required when the <code>template_url</code> parameter is omitted. If both
-are specified, this value overrides any value provided for
-<code>template_url</code>.</para></note>'>
-<!ENTITY TEMPLATE_CREATE_DESC 'The stack template to instantiate.
-&TEMPLATE_COMMON;'>
-<!ENTITY TEMPLATE_PREVIEW_DESC 'The stack template to preview.
-&TEMPLATE_COMMON;'>
-<!ENTITY TEMPLATE_UPDATE_DESC 'The updated stack template.
-&TEMPLATE_COMMON;'>
-<!ENTITY % common_project  SYSTEM "../../../common_project.ent">
-%common_project;
-
-<!-- Common descriptions for cases where a user supplies a 'parameters' object -->
-<!ENTITY PARAMETERS_COMMON '<para>The value is a JSON object, where each key is
-the name of a parameter <link
-xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-parameters.html">
-defined in the template</link> and the associated value is the argument to use
-for that parameter when instantiating the template. The following code shows the
-general structure of this parameter. In the example, <code>a</code> and
-<code>b</code> would be the names of two parameters defined in the
-template.</para>
-<programlisting language="json">"parameters": {
-  "a": "Value",
-  "b": "3"
-}</programlisting>
-<note><para>While the service accepts JSON numbers for parameters with the type
-<code>number</code> and JSON objects for parameters with the type
-<code>json</code>, all parameter values are converted to their string
-representation for storage in the created Stack. Clients are encouraged to send
-all parameter values using their string representation for consistency between
-requests and responses from the Orchestration service.</para></note>
-<note><para>A value must be provided for each template parameter which does not
-specify a default value. However, this parameter is not allowed to contain JSON
-properties with names that do not match a parameter defined in the
-template.</para></note>'>
-<!ENTITY PARAMETERS_CREATE_DESC '<para>This parameter supplies arguments for
-parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
-<!ENTITY PARAMETERS_PREVIEW_DESC '<para>This parameter supplies preview
-arguments for parameters defined in the stack template.</para>
-&PARAMETERS_COMMON;'>
-<!ENTITY PARAMETERS_UPDATE_DESC '<para>This parameter supplies updated arguments
-for parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
-
-<!-- Common descriptions for cases where a user supplies a 'parameters' object -->
-<!ENTITY PARAMETERS_COMMON '<para>The value is a JSON object, where each key is
-the name of a parameter <link
-xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-parameters.html">
-defined in the template</link> and the associated value is the argument to use
-for that parameter when instantiating the template. The following code shows the
-general structure of this parameter. In the example, <code>a</code> and
-<code>b</code> would be the names of two parameters defined in the
-template.</para>
-<programlisting language="json">"parameters": {
-  "a": "Value",
-  "b": "3"
-}</programlisting>
-<note><para>While the service accepts JSON numbers for parameters with the type
-<code>number</code> and JSON objects for parameters with the type
-<code>json</code>, all parameter values are converted to their string
-representation for storage in the created Stack. Clients are encouraged to send
-all parameter values using their string representation for consistency between
-requests and responses from the Orchestration service.</para></note>
-<note><para>A value must be provided for each template parameter which does not
-specify a default value. However, this parameter is not allowed to contain JSON
-properties with names that do not match a parameter defined in the
-template.</para></note>'>
-<!ENTITY PARAMETERS_CREATE_DESC '<para>This parameter supplies arguments for
-parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
-<!ENTITY PARAMETERS_PREVIEW_DESC '<para>This parameter supplies preview
-arguments for parameters defined in the stack template.</para>
-&PARAMETERS_COMMON;'>
-<!ENTITY PARAMETERS_UPDATE_DESC '<para>This parameter supplies updated arguments
-for parameters defined in the stack template.</para> &PARAMETERS_COMMON;'>
-
-<!-- Common descriptions for cases where a user supplies a 'files' object -->
-<!ENTITY FILES_COMMON '<para>This parameter supplies the contents of files
-referenced in the template or the environment. Stack templates and resource
-templates may reference files explicitly using the <link
-xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-intrinsic-functions.html#get-file">
-<code>get_file</code> intrinsic function</link>. In addition, the
-<code>environment</code> parameter may contain implicit references to
-files.</para><para>The value is a JSON object, where each key is a relative or
-absolute URI which serves as the name of a file, and the associated value
-provides the contents of the file. The following code shows the general
-structure of this parameter.</para>
-<programlisting language="json">"files": {
-  "fileA.yaml": "Contents of the file",
-  "file:///usr/fileB.template": "Contents of the file",
-  "http://example.com/fileC.template": "Contents of the file"
-}</programlisting><note><para>This parameter may not be used to provide the
-content of the template located at the address specified by
-<code>template_url</code>. Use the <code>template</code> parameter to supply the
-template content as part of the request.</para></note>'>
-<!ENTITY FILES_CREATE_DESC '&FILES_COMMON;'>
-<!ENTITY FILES_PREVIEW_DESC '&FILES_COMMON;'>
-<!ENTITY FILES_UPDATE_DESC '&FILES_COMMON;'>
+  <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+  <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
+             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:wadl="http://wadl.dev.java.net/2009/02"
+             xmlns:xlink="http://www.w3.org/1999/xlink"
+             xmlns:db="http://docbook.org/ns/docbook"
+             xmlns:common="http://docs.openstack.org/common/api/v1.0">
     <resources base="https://heat.example.com/"
         xml:id="orchestration-api-v1.0">
         <resource id="versions" path="//">
@@ -153,8 +24,9 @@ template content as part of the request.</para></note>'>
                 <param name="tenant_id" style="template">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The unique identifier of the tenant or
-                            account.</para>
+                        <para>
+                          The unique identifier of the tenant or account.
+                        </para>
                     </wadl:doc>
                 </param>
                 <resource id="stacks" path="stacks">
@@ -169,8 +41,11 @@ template content as part of the request.</para></note>'>
                             required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The name of a
-                                   stack.</para></wadl:doc>
+                                xml:lang="EN">
+                              <para>
+                                The name of a stack.
+                              </para>
+                            </wadl:doc>
                         </param>
                         <method href="#stack_find"/>
                         <resource path="resources" id="resources">
@@ -182,11 +57,13 @@ template content as part of the request.</para></note>'>
                         <resource path="{stack_id}" id="stack_id">
                             <param name="stack_id" style="template"
                                 required="true">
-                                <wadl:doc
+                              <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The unique
-                                   identifier for a
-                                   stack.</para></wadl:doc>
+                                   xml:lang="EN">
+                                <para>
+                                  The unique identifier for a stack.
+                                </para>
+                              </wadl:doc>
                             </param>
                             <method href="#stack_show"/>
                             <method href="#stack_update"/>
@@ -205,8 +82,11 @@ template content as part of the request.</para></note>'>
                                     style="template" required="true">
                                     <wadl:doc
                                     xmlns="http://docbook.org/ns/docbook"
-                                    xml:lang="EN"><para>The ID of a
-                                    snapshot.</para></wadl:doc>
+                                    xml:lang="EN">
+                                      <para>
+                                        The ID of a snapshot.
+                                      </para>
+                                    </wadl:doc>
                                     </param>
                                     <method href="#stack_show_snapshot"/>
                                     <method href="#stack_restore_snapshot"/>
@@ -216,6 +96,8 @@ template content as part of the request.</para></note>'>
                             <resource path="actions" id="actions">
                                 <method href="#stack_action_suspend"/>
                                 <method href="#stack_action_resume"/>
+                                <method href="#stack_action_cancel-update"/>
+                                <method href="#stack_action_check"/>
                             </resource>
                             <resource path="events" id="events2">
                                 <method href="#stack_event_list"/>
@@ -228,9 +110,11 @@ template content as part of the request.</para></note>'>
                                    style="template" required="true">
                                    <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The name of a
-                                   resource in the
-                                   stack.</para></wadl:doc>
+                                   xml:lang="EN">
+                                   <para>
+                                     The name of a resource in the stack.
+                                   </para>
+                                   </wadl:doc>
                                    </param>
                                    <method href="#resource_show"/>
                                    <resource id="events4"
@@ -254,10 +138,12 @@ template content as part of the request.</para></note>'>
                                    style="template" required="true">
                                    <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The unique
-                                   identifier of an event related to
-                                   the resource in the
-                                   stack.</para></wadl:doc>
+                                   xml:lang="EN">
+                                   <para>
+                                    The unique identifier of an event related
+                                    to the resource in the stack.
+                                   </para>
+                                   </wadl:doc>
                                    </param>
                                    <method href="#event_show"/>
                                    </resource>
@@ -281,8 +167,9 @@ template content as part of the request.</para></note>'>
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
-                                <para>The name of a resource
-                                   type.</para>
+                                <para>
+                                  The name of a resource type.
+                                </para>
                             </wadl:doc>
                         </param>
                         <method href="#resource_type_get"/>
@@ -303,8 +190,11 @@ template content as part of the request.</para></note>'>
                             required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The ID of the
-                                   configuration.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                  The ID of the configuration.
+                                 </para>
+                               </wadl:doc>
                         </param>
                         <method href="#software_config_show"/>
                         <method href="#software_config_delete"/>
@@ -320,8 +210,11 @@ template content as part of the request.</para></note>'>
                             required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The ID of the
-                                   deployment.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                  The ID of the deployment.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <method href="#software_deployment_show"/>
                         <method href="#software_deployment_update"/>
@@ -333,10 +226,12 @@ template content as part of the request.</para></note>'>
                                 required="true">
                                 <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The ID of the
-                                   server for which to fetch
-                                   configuration
-                                   metadata.</para></wadl:doc>
+                                   xml:lang="EN">
+                                   <para>
+                                    The ID of the server for which to fetch
+                                    configuration metadata.
+                                   </para>
+                                </wadl:doc>
                             </param>
                             <method
                                 href="#software_deployment_metadata"/>
@@ -351,9 +246,10 @@ template content as part of the request.</para></note>'>
     </resources>
     <method name="GET" id="getVersions-heat-v1">
         <wadl:doc xml:lang="EN" title="List versions"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Lists information about all
-                Orchestration API versions.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists information about all Orchestration API versions.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -366,56 +262,56 @@ template content as part of the request.</para></note>'>
         </response>
     </method>
     <method name="GET" id="stack_list">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List stack data">
-            <para role="shortdesc">Lists active stacks.</para>
+        <wadl:doc xml:lang="EN" title="List stack data"
+        xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+              Lists active stacks.
+            </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
+            <representation mediaType="application/json">
                 <param name="status" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the stack list by the specified
-                            status. You can use this filter multiple
-                            times to filter by multiple
-                            statuses.</para>
+                        <para>
+                          Filters the stack list by a specified status.
+                          You can use this filter multiple times to filter
+                          by multiple statuses.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="name" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the stack list by the specified
-                            name.</para>
+                        <para>
+                          Filters the stack list by a specified name.
+                        </para>
                     </wadl:doc>
                 </param>
                 &limitMarkerReqParameter;
                 <param name="show_deleted" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Specifies whether to include deleted stacks in the
-                            stack list. Set to False by default, so that deleted
-                            stacks are not shown in the results of the GET
-                            request unless you set this value to True.</para>
+                        <para>
+                          Specifies whether to include deleted stacks in the
+                          stack list. Set to False by default, so that deleted
+                          stacks are not shown in the results of the &GET;
+                          request unless you set this value to True.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="sort_keys" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Sorts the stack list by one of these
-                            attributes: <code>name</code>,
-                                <code>status</code>,
-                                <code>created_at</code>, or
-                                <code>updated_at</code>.</para>
+                      <para>
+                          Sorts the stack list by the
+                          <code>name</code>, <code>status</code>,
+                          <code>created_at</code>, or
+                          <code>updated_at</code> key.
+                      </para>
                     </wadl:doc>
                 </param>
-                <param name="sort_dir" style="query" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The sort direction of the stack list.
-                            Either <code>asc</code> (ascending) or
-                                <code>desc</code> (descending).</para>
-                    </wadl:doc>
-                </param>
+                &sortDirection;
             </representation>
         </request>
         <response status="200">
@@ -430,7 +326,9 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="stack_create">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create stack">
-            <para role="shortdesc">Creates a stack.</para>
+            <para role="shortdesc">
+              Creates a stack.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -441,33 +339,70 @@ template content as part of the request.</para></note>'>
                 <param name="stack_name" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&STACK_NAME_CREATE_DESC;</para>
+                        <para>
+                          A name for the new stack.
+                        </para>
+                        <para>
+                          The value must be unique within a project. The name
+                          must start with an ASCII letter and can contain
+                          ASCII letters, digits, underscores, periods, and
+                          hyphens. Specifically, the name must match the
+                          <code>^[a-zA-Z][a-zA-Z0-9_.-]*$</code> regular
+                          expression.
+                        </para>
+                        <para>
+                          When you delete or abandon a stack, its name might
+                          not be available for reuse for an unspecified period
+                          of time.
+                      </para>
                     </wadl:doc>
                 </param>
                 <param name="template_url" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&TEMPLATE_URL_CREATE_DESC;</para>
+                        <para>
+                          A URI to the location containing the stack template
+                          to instantiate.
+                        </para>
+                        <para>
+                          See the description of the <code>template</code>
+                          property for information about the expected template
+                          content located at the URI.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template</code> parameter is omitted. The
+                          value is ignored if the <code>template</code>
+                          property is also specified.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="template" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&TEMPLATE_CREATE_DESC;</para>
+                        <para>
+                          The stack template to instantiate.
+                        </para>
+                        <para>
+                          This parameter is always provided as a
+                          <code>string</code> in the JSON request body. The
+                          content of the string is an Orchestration template,
+                          and may be provided in either YAML or JSON syntax.
+                          Complete details about the syntax of an
+                          Orchestration template are provided in the <link
+                          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
+                          Orchestration Template (HOT) specification</link>.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template_url</code> parameter is omitted. If
+                          both are specified, this value overrides any value
+                          provided for <code>template_url</code>.
+                      </para>
                     </wadl:doc>
                 </param>
-                <param name="files" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        &FILES_CREATE_DESC;
-                    </wadl:doc>
-                </param>
-                <param name="parameters" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        &PARAMETERS_CREATE_DESC;
-                    </wadl:doc>
-                </param>
+                &filesParameter;
+                &parametersParameter;
             </representation>
         </request>
         <response status="201">
@@ -480,93 +415,128 @@ template content as part of the request.</para></note>'>
                 <param name="stack_name" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The name of the stack to create.</para>
+                        <para>
+                          The name of the stack to create.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="template_url" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The URL of the template to
-                            instantiate. This value is ignored if the
-                            template is supplied
-                        inline.</para></wadl:doc>
+                        xml:lang="EN">
+                      <para>
+                        The URL of the template to instantiate. This value
+                        is ignored if the template is supplied inline.
+                      </para>
+                    </wadl:doc>
                 </param>
                 <param name="template" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON template to
-                            instantiate. This value takes precedence
-                            over the template URL if both are
-                            supplied.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          A JSON template to instantiate. This value takes
+                          precedence over the template URL if both are
+                          supplied.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="environment" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON environment for the
-                            stack.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          A JSON environment for the stack.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="files" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A map of file names
-                            (Provider resource templates, as
-                            referenced in the environment) to JSON
-                            template bodies.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          A map of file names (Provider resource templates,
+                          as referenced in the environment) to JSON
+                          template bodies.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="param_name-n" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>User-defined parameter
-                            names to pass to the
-                        template.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          User-defined parameter names to pass to the
+                          template.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="param_value-n" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>User-defined parameter
-                            values to pass to the
-                        template.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          User-defined parameter values to pass to the
+                          template.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="timeout_mins" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The timeout for stack
-                            creation in minutes.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          The timeout for stack creation in minutes.
+                        </para>
+                      </wadl:doc>
                 </param>
                 <param name="disable_rollback" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Controls whether a failure
-                            during stack creation causes deletion of
-                            all previously-created resources in that
-                            stack. The default is True; a failure does
-                            not cause deletions.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          Controls whether a failure during stack creation
+                          causes deletion of all previously-created
+                          resources in that stack. The default is True; a
+                          failure does not cause deletions.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="stack_id" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The system-assigned id for the stack.</para>
+                        <para>
+                          The system-assigned ID for the stack.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="links" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A list of URLs for the stack.</para>
+                        xml:lang="EN">
+                        <para>
+                          A list of URLs for the stack.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="rel" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A reference to the stack's
-                            parent. Is 'self' if no parent.</para>
+                        xml:lang="EN">
+                        <para>
+                          A reference to the stack's parent. If no parent,
+                          reference is <code>self</code>.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
         </response>
     </method>
     <method name="POST" id="stack_preview">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Preview stack">
-            <para role="shortdesc">Previews a stack.</para>
-        </wadl:doc>
-        <request>
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+          title="Preview stack">
+          <para role="shortdesc">
+            Previews a stack.
+          </para>
+      </wadl:doc>
+         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -575,215 +545,206 @@ template content as part of the request.</para></note>'>
                 <param name="stack_name" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&STACK_NAME_PREVIEW_DESC;</para>
+                        <para>
+                          A name for the new stack.
+                        </para>
+                        <para>
+                          The value must be unique within a project. The
+                          name must start with an ASCII letter and can contain
+                          ASCII letters, digits, underscores, periods, and
+                          hyphens. Specifically, the name must match the
+                          <code>^[a-zA-Z][a-zA-Z0-9_.-]*$</code> regular
+                          expression.
+                        </para>
+                        <para>
+                          When you delete or abandon a stack, its name might
+                          not be available for reuse for an unspecified period
+                          of time.
+                      </para>
                     </wadl:doc>
                 </param>
                 <param name="template_url" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&TEMPLATE_URL_PREVIEW_DESC;</para>
+                        <para>
+                          A URI to the location containing the stack template
+                          to instantiate.
+                        </para>
+                        <para>
+                          See the description of the <code>template</code>
+                          property for information about the expected template
+                          content located at the URI.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template</code> parameter is omitted. The
+                          value is ignored if the <code>template</code>
+                          property is also specified.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="template" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&TEMPLATE_PREVIEW_DESC;</para>
-                    </wadl:doc>
-                </param>
-                <param name="environment" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>A JSON environment for the stack.</para>
-                    </wadl:doc>
-                </param>
-                <param name="files" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        &FILES_PREVIEW_DESC;
-                    </wadl:doc>
-                </param>
-                <param name="parameters" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        &PARAMETERS_PREVIEW_DESC;
-                    </wadl:doc>
-                </param>
-                <param name="param_name-n" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        &PARAMETERS_PREVIEW_DESC;
-                    </wadl:doc>
-                </param>
-                <param name="param_name-n" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>User-defined parameter names to pass to
-                            the template.</para>
-                    </wadl:doc>
-                </param>
-                <param name="timeout_mins" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The timeout for stack creation in
-                            minutes. During a stack preview, this
-                            value is only used as part of stack
-                            validation.</para>
-                    </wadl:doc>
-                </param>
-                <param name="disable_rollback" style="plain"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
                         <para>
-                            Controls whether a failure during stack
-                            creation causes deletion of all
-                            previously-created resources in that
-                            stack.
-                            This value is not used during a stack
-                            preview and only exists for symmetry with
-                            stack create.
+                          The stack template to instantiate.
+                        </para>
+                        <para>
+                          This parameter is always provided as a
+                          <code>string</code> in the JSON request body. The
+                          content of the string is an Orchestration template,
+                          and may be provided in either YAML or JSON syntax.
+                          Complete details about the syntax of an
+                          Orchestration template are provided in the <link
+                          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
+                          Orchestration Template (HOT) specification</link>.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template_url</code> parameter is omitted. If
+                          both are specified, this value overrides any value
+                          provided for <code>template_url</code>.
                         </para>
                     </wadl:doc>
                 </param>
+                &filesParameter;
+                &parametersParameter;
             </representation>
         </request>
         <response status="200">
-            <param name="parent" style="plain" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        The stack ID of the parent stack, if this is
-                        a nested stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="id" style="plain" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        The stack ID.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="stack_name" style="plain" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        The name of the stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="description" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        A description of the stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="template_description" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        A description of the template that defines
-                        the stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="timeout_mins" style="plain" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        Timelines for stack creation.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="disable_rollback" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        Defines whether the Orchestration service
-                        has to rollback the stack in case of a
-                        failure during creation. Set to true
-                        if you want to require rollback.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="capabilities" style="plain" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        List of stack capabilities for stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="notification_topics" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        List of notification topics for stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="updated_time" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        Time of last stack update in the following
-                        format: YYYY-MM-DDThh:mm:ssTZD, where
-                        TZD - time zone designator.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="stack_owner" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        Stack owner name.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="parameters" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        List of parameters defined for the stack.
-                    </para>
-                </wadl:doc>
-            </param>
-            <param name="resources" style="plain"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>
-                        List of stack resources.
-                    </para>
-                </wadl:doc>
-            </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code href="samples/stack_preview.json"/>
                 </wadl:doc>
+                <param name="parent" style="plain" required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          The stack ID of the parent stack, if this is
+                          a nested stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="id" style="plain" required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          The stack ID.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="stack_name" style="plain" required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          The name of the stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="description" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          A description of the stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="template_description" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          A description of the template that defines the
+                          stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="timeout_mins" style="plain" required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          Timelines for stack creation.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="disable_rollback" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          Defines whether the Orchestration service has to
+                          rollback the stack in case of a failure during
+                          creation. Set to true if you want to require
+                          rollback.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="capabilities" style="plain" required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          List of stack capabilities for stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="notification_topics" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          List of notification topics for stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="updated_time" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          Time of last stack update in the following format:
+                          <code>YYYY-MM-DDThh:mm:ssTZD</code>, where
+                          <code>TZD</code> is the time zone designator.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="stack_owner" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          Stack owner name.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="parameters" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          List of parameters defined for the stack.
+                      </para>
+                  </wadl:doc>
+              </param>
+              <param name="resources" style="plain"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                          List of stack resources.
+                      </para>
+                  </wadl:doc>
+              </param>
             </representation>
         </response>
     </method>
     <method name="POST" id="stack_adopt">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Adopt stack">
-            <para role="shortdesc">Creates a stack from existing
-                resources.</para>
+            <para role="shortdesc">
+              Creates a stack from existing resources.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -794,73 +755,129 @@ template content as part of the request.</para></note>'>
                 <param name="stack_name" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&STACK_NAME_CREATE_DESC;</para>
+                        <para>
+                          A name for the new stack.
+                        </para>
+                        <para>
+                          The value must be unique within a project. The name
+                          must start with an ASCII letter and can contain
+                          ASCII letters, digits, underscores, periods, and
+                          hyphens. Specifically, the name must match the
+                          <code>^[a-zA-Z][a-zA-Z0-9_.-]*$</code> regular
+                          expression.
+                      </para>
+                      <para>
+                          When you delete or abandon a stack, its
+                          name might not be available for reuse for an
+                          unspecified period of time.
+                      </para>
                     </wadl:doc>
                 </param>
                 <param name="template_url" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&TEMPLATE_URL_CREATE_DESC;</para>
+                        <para>
+                          A URI to the location containing the stack template
+                          to instantiate.
+                        </para>
+                        <para>
+                          See the description of the <code>template</code>
+                          property for information about the expected template
+                          content located at the URI.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template</code> parameter is omitted. The value
+                          is ignored if the <code>template</code> property is
+                          also specified.
+                      </para>
                     </wadl:doc>
                 </param>
                 <param name="template" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>&TEMPLATE_CREATE_DESC;</para>
+                        <para>
+                          The stack template to instantiate.
+                        </para>
+                        <para>
+                          This parameter is always provided as a
+                          <code>string</code> in the JSON request body. The
+                          content of the string is an Orchestration template, and may
+                          be provided in either YAML or JSON syntax. Complete details about the syntax
+                          of an Orchestration template are provided in the <link
+                          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
+                          Orchestration Template (HOT) specification</link>.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template_url</code> parameter is omitted. If
+                          both are specified, this value overrides any value
+                          provided for <code>template_url</code>.
+                      </para>
                     </wadl:doc>
                 </param>
                 <param name="environment" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON environment for the
-                            stack.</para></wadl:doc>
-                </param>
-                <param name="files" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">&FILES_CREATE_DESC;</wadl:doc>
-                </param>
-                <param name="parameters" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        &PARAMETERS_CREATE_DESC;
+                        <para>
+                          A JSON environment for the stack.
+                        </para>
                     </wadl:doc>
                 </param>
+                &filesParameter;
+                &parametersParameter;
                 <param name="param_name-n" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>User-defined parameter
-                            names to pass to the
-                        template.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          User-defined parameter names to pass to the
+                          template.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="param_value-n" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>User-defined parameter
-                            values to pass to the
-                        template.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          User-defined parameter values to pass to the
+                          template.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="timeout_mins" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The timeout for stack
-                            creation in minutes.</para></wadl:doc>
+                        xml:lang="EN">
+                      <para>
+                        The timeout for stack creation in minutes.
+                      </para>
+                    </wadl:doc>
                 </param>
                 <param name="adopt_stack_data" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Existing resources data to
-                            adopt a stack. Data returned by abandon
-                            stack could be provided as
-                            adopt_stack_data.</para></wadl:doc>
+                        xml:lang="EN">
+                      <para>
+                        Existing resources data to adopt a stack. Data
+                        returned by abandon stack could be provided as
+                        <code>adopt_stack_data</code>.
+                      </para>
+                    </wadl:doc>
                 </param>
                 <param name="disable_rollback" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Enables or disables
-                            deletion of all stack resources when a
-                            stack creation fails. Default is True; all
-                            resources are not deleted when stack
-                            creation fails.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          Enables or disables deletion of all stack
+                          resources when a stack creation fails. Default is
+                          True; all resources are not deleted when stack
+                          creation fails.
+                        </para>
+                    </wadl:doc>
                 </param>
             </representation>
         </request>
@@ -876,7 +893,9 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="stack_action_suspend">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Suspend stack">
-            <para role="shortdesc">Suspends a stack.</para>
+            <para role="shortdesc">
+              Suspends a stack.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -886,19 +905,26 @@ template content as part of the request.</para></note>'>
                         href="samples/stack_action_suspend.json"/>
                 </wadl:doc>
                 <param name="suspend" style="plain" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Specify the
-                                <code>suspend</code> action in the
-                            request body.</para></wadl:doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                          Specify the <code>suspend</code> action in the
+                          request body.
+                        </para>
+                    </wadl:doc>
                 </param>
             </representation>
         </request>
-        <response status="201"/>
+        <response status="201">
+            <representation mediaType="application/json">
+            </representation>
+        </response>
     </method>
     <method name="POST" id="stack_action_resume">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Resume stack">
-            <para role="shortdesc">Resumes a suspended stack.</para>
+            <para role="shortdesc">
+              Resumes a suspended stack.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -908,28 +934,94 @@ template content as part of the request.</para></note>'>
                         href="samples/stack_action_resume.json"/>
                 </wadl:doc>
                 <param name="resume" style="plain" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Specify the
-                                <code>resume</code> action in the
-                            request body.</para></wadl:doc>
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                          Specify the <code>resume</code> action in the
+                          request body.
+                        </para>
+                    </wadl:doc>
                 </param>
             </representation>
         </request>
-        <response status="201"/>
+        <response status="201">
+            <representation mediaType="application/json">
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="stack_action_cancel-update">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Cancel stack update">
+            <para role="shortdesc">
+              Cancels a currently running update of a stack.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/stack_action_cancel-update.json"/>
+                </wadl:doc>
+                <param name="cancel-update" style="plain" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                          Specify the <code>cancel-update</code> action in the
+                          request body.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="stack_action_check">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Check stack resources">
+            <para role="shortdesc">
+              Checks whether the resources are in expected states for the
+              specified stack.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/stack_action_check.json"/>
+                </wadl:doc>
+                <param name="check" style="plain" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                          Specify the <code>check</code> action in the
+                          request body.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+            </representation>
+        </response>
     </method>
     <method name="GET" id="stack_find">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Find stack">
-            <para role="shortdesc">Finds the canonical URL for a
-                specified stack.</para>
-            <para>Also works with verbs other than &GET;, so you can
-                perform &PUT; and &DELETE; operations on a current
-                stack. Set your client to follow redirects. Note that
-                when redirecting, the request method should not
-                change, as defined in RFC2626. However, in many
-                clients the default behavior is to change the method
-                to &GET; when you receive a 302 because this behavior
-                is ubiquitous in web browsers.</para>
+            <para role="shortdesc">
+              Finds the canonical URL for a specified stack.
+            </para>
+            <para>
+              Also works with verbs other than &GET;, so you can perform &PUT;
+              and &DELETE; operations on a current stack. Set your client to
+              follow redirects. Note that when redirecting, the request method
+              should not change, as defined in RFC2626. However, in many
+              clients the default behavior is to change the method to &GET;
+              when you receive a 302 because this behavior is ubiquitous in
+              web browsers.
+            </para>
         </wadl:doc>
         <response status="302">
             <representation mediaType="application/json">
@@ -943,8 +1035,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="stack_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show stack details">
-            <para role="shortdesc">Shows details for a specified
-                stack.</para>
+            <para role="shortdesc">
+              Shows details for a specified stack.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -958,8 +1051,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="stack_template">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get stack template">
-            <para role="shortdesc">Gets a template for a specified
-                stack.</para>
+            <para role="shortdesc">
+              Gets a template for a specified stack.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -968,8 +1062,10 @@ template content as part of the request.</para></note>'>
     </method>
     <method name="PUT" id="stack_update">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Update stack">
-            <para role="shortdesc">Updates a specified stack.</para>
+           title="Update stack">
+            <para role="shortdesc">
+              Updates a specified stack.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -978,53 +1074,135 @@ template content as part of the request.</para></note>'>
                     <xsdxt:code href="samples/stack_update.json"/>
                 </wadl:doc>
                 <param name="template_url" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>&TEMPLATE_URL_UPDATE_DESC;</para>
-                    </wadl:doc>
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                        <para>
+                          A URI to the location containing the updated
+                          stack template.
+                        </para>
+                        <para>
+                          See the description of the <code>template</code>
+                          property for information about the expected template
+                          content located at the URI.
+                        </para>
+                        <para>
+                          This parameter is only required when the
+                          <code>template</code> parameter is omitted. The
+                          value is ignored if the <code>template</code>
+                          property is also specified.
+                        </para>
+                  </wadl:doc>
                 </param>
                 <param name="template" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>&TEMPLATE_UPDATE_DESC;</para>
-                    </wadl:doc>
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                        The updated stack template.
+                      </para>
+                      <para>
+                        This parameter is always provided as a
+                        <code>string</code> in the JSON request body. The
+                        content of the string is an Orchestration template,
+                        and may be provided in either YAML or JSON syntax.
+                        Complete details about the syntax of an Orchestration
+                        template are provided in the <link
+                        xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
+                        Orchestration Template (HOT) specification</link>.
+                      </para>
+                      <para>
+                        This parameter is only required when the
+                        <code>template_url</code> parameter is omitted. If
+                        both are specified, this value overrides any value
+                        provided for <code>template_url</code>.
+                    </para>
+                  </wadl:doc>
                 </param>
                 <param name="environment" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON environment for the
-                            stack.</para></wadl:doc>
+                      required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                      xml:lang="EN">
+                      <para>
+                        A JSON environment for the stack.
+                      </para>
+                  </wadl:doc>
                 </param>
-                <param name="files" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">&FILES_UPDATE_DESC;</wadl:doc>
-                </param>
+                &filesParameter;
                 <param name="parameters" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        &PARAMETERS_UPDATE_DESC;
-                    </wadl:doc>
-                </param>
-                <param name="param_name-n" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>User-defined parameter
-                            names to pass to the
-                        template.</para></wadl:doc>
-                </param>
-                <param name="param_value-n" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>User-defined parameter
-                            values to pass to the
-                        template.</para></wadl:doc>
-                </param>
-                <param name="timeout_mins" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The timeout for stack
-                            creation in minutes.</para></wadl:doc>
-                </param>
+                      <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                          xml:lang="EN">
+                          <para>
+                            This parameter supplies updated arguments for
+                            parameters defined in the stack template.
+                          </para>
+                          <para>
+
+                            The value is a JSON object, where each key is the
+                            name of a parameter <link
+                            xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-parameters.html">defined
+                            in the template</link> and the associated value is
+                            the argument to use for that parameter when
+                            instantiating the template. The following code
+                            shows the general structure of this parameter. In
+                            the example, <code>a</code> and <code>b</code>
+                            would be the names of two parameters defined in
+                            the template.
+                            <programlisting language="json">{ ...
+    "parameters":{
+        "a":"Value",
+        "b":"3"
+    }
+... }</programlisting>
+                          </para>
+                          <para>
+                            While the service accepts JSON numbers for
+                            parameters with the type <code>number</code> and
+                            JSON objects for parameters with the type
+                            <code>json</code>, all parameter values are
+                            converted to their string representation for
+                            storage in the created Stack. Clients are
+                            encouraged to send all parameter values using
+                            their string representation for consistency
+                            between requests and responses from the
+                            Orchestration service.
+                          </para>
+                          <para>
+                            A value must be provided for each template
+                            parameter which does not specify a default value.
+                            However, this parameter is not allowed to contain
+                            JSON properties with names that do not match a
+                            parameter defined in the template.
+                          </para>
+                      </wadl:doc>
+                  </param>
+                  <param name="param_name-n" style="plain"
+                      required="true">
+                      <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                          xml:lang="EN">
+                          <para>
+                            User-defined parameter names to pass to the
+                            template.
+                          </para>
+                      </wadl:doc>
+                  </param>
+                  <param name="param_value-n" style="plain"
+                      required="true">
+                      <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                          xml:lang="EN">
+                          <para>
+                            User-defined parameter values to pass to the
+                            template.
+                          </para>
+                      </wadl:doc>
+                  </param>
+                  <param name="timeout_mins" style="plain"
+                      required="true">
+                      <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                          xml:lang="EN">
+                          <para>
+                            The timeout for stack creation in minutes.
+                          </para>
+                      </wadl:doc>
+                  </param>
             </representation>
         </request>
         <response status="202"/>
@@ -1032,16 +1210,19 @@ template content as part of the request.</para></note>'>
     <method name="DELETE" id="stack_delete">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete stack">
-            <para role="shortdesc">Deletes a specified stack and any snapshots of that stack.</para>
+            <para role="shortdesc">
+              Deletes a specified stack and any snapshots of that stack.
+            </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="DELETE" id="stack_abandon">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Abandon stack">
-            <para role="shortdesc">Deletes a specified stack but
-                leaves its resources intact, and returns data
-                describing the stack and its resources.</para>
+            <para role="shortdesc">
+              Deletes a specified stack but leaves its resources intact, and
+              returns data describing the stack and its resources.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1055,16 +1236,24 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="stack_snapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Snapshot stack">
-            <para role="shortdesc">Takes a snapshot of all the resources in the
-                stack. All snapshots are deleted upon deletion of the stack.</para>
+            <para role="shortdesc">
+              Takes a snapshot of all the resources in the stack. All
+              snapshots are deleted upon deletion of the stack.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
+              <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/stack_snapshot_req.json"/>
+                </wadl:doc>
                 <param name="name" style="plain"
-                    required="true">
+                    required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The (optional) name of the snapshot.</para>
+                        <para>
+                          The name of the snapshot.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -1081,7 +1270,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="stack_list_snapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List snapshots">
-            <para role="shortdesc">List the snapshots of a stack.</para>
+            <para role="shortdesc">
+              Lists the stack snapshots.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1095,7 +1286,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="stack_show_snapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show snapshot">
-            <para role="shortdesc">Show the details of a snapshot.</para>
+            <para role="shortdesc">
+              Shows details for a specified snapshot.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1109,24 +1302,28 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="stack_restore_snapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Restore snapshot">
-            <para role="shortdesc">Restore a stack snapshot. Only active stacks
-                can be restored from a snapshot. Deleted stacks must be
-                recreated.</para>
+            <para role="shortdesc">
+              Restores a stack snapshot. Only active stacks can be restored
+              from a snapshot. Deleted stacks must be recreated.
+            </para>
         </wadl:doc>
         <response status="202"/>
     </method>
     <method name="DELETE" id="stack_delete_snapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete snapshot">
-            <para role="shortdesc">Delete a stack snapshot.</para>
+            <para role="shortdesc">
+              Deletes a stack snapshot.
+            </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="POST" id="template_validate">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Validate template">
-            <para role="shortdesc">Validates a specified
-                template.</para>
+            <para role="shortdesc">
+              Validates a specified template.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1138,17 +1335,22 @@ template content as part of the request.</para></note>'>
                 <param name="template_url" style="plain"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The URL of the template to
-                            instantiate. This value is ignored if the
-                            template is supplied
-                        inline.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          The URL of the template to instantiate. This value
+                          is ignored if the template is supplied inline.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="template" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A JSON template to
-                            instantiate. This value takes precedence
-                            over the template URL if both are
-                            supplied.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                          A JSON template to instantiate. This value takes
+                          precedence over the template URL if both are
+                          supplied.
+                        </para>
+                    </wadl:doc>
                 </param>
             </representation>
         </request>
@@ -1161,24 +1363,29 @@ template content as part of the request.</para></note>'>
                 <param name="Description" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The description given in the template.</para>
+                        <para>
+                          The description given in the template.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="Parameters" style="plain" type="object"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>An object with all the input parameters
-                            defined in the template, indexed by parameter
-                            name.</para>
+                        <para>
+                          An object with all the input parameters defined in
+                          the template, indexed by parameter name.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="ParameterGroups" style="plain" type="list"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>A list of parameter groups, each containing
-                            a list of parameter names.</para>
+                        <para>
+                          A list of parameter groups, each containing a list
+                          of parameter names.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -1187,8 +1394,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="resource_type_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List resource types">
-            <para role="shortdesc">Lists the supported template
-                resource types.</para>
+            <para role="shortdesc">
+              Lists the supported template resource types.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1198,8 +1406,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="resource_type_get">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show resource schema">
-            <para role="shortdesc">Shows the interface schema for a
-                specified resource type.</para>
+            <para role="shortdesc">
+              Shows the interface schema for a specified resource type.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1213,8 +1422,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="resource_type_template">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show resource template">
-            <para role="shortdesc">Shows the template representation
-                for a specified resource type.</para>
+            <para role="shortdesc">
+              Shows the template representation for a specified resource type.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1224,23 +1434,27 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="stack_resources_find">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Find stack resources">
-            <para role="shortdesc">Finds the canonical URL for the
-                resource list of a specified stack.</para>
+            <para role="shortdesc">
+              Finds the canonical URL for the resource list of a specified
+              stack.
+            </para>
         </wadl:doc>
         <response status="302"/>
     </method>
     <method name="GET" id="resource_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List resources">
-            <para role="shortdesc">Lists resources in a stack.</para>
+            <para role="shortdesc">
+              Lists resources in a stack.
+            </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
+            <representation mediaType="application/json">
                 <param name="nested_depth" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                            Also includes resources from nested stacks up to
+                            Includes resources from nested stacks up to
                             <code>nested_depth</code> levels of recursion.
                         </para>
                     </wadl:doc>
@@ -1255,8 +1469,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="resource_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show resource data">
-            <para role="shortdesc">Shows data for a specified
-                resource.</para>
+            <para role="shortdesc">
+              Shows data for a specified resource.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1266,8 +1481,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="resource_metadata">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show resource metadata">
-            <para role="shortdesc">Shows metadata for a specified
-                resource.</para>
+            <para role="shortdesc">
+              Shows metadata for a specified resource.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1281,93 +1497,89 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="resource_signal">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Send a signal to a resource">
-            <para role="shortdesc">Sends a signal to a specified
-                resource.</para>
-            <para>Some resources cannot receive signals.
-            If you send them a signal, they return a 400 error response code.
-            The contents of the POST request body depends on the resource to
-            which you send a signal.</para>
+            <para role="shortdesc">
+              Sends a signal to a specified resource.
+            </para>
+            <para>
+              Some resources cannot receive signals. If you send them a
+              signal, they return a 400 error response code. The contents of
+              the &POST; request body depends on the resource to which you
+              send a signal.
+          </para>
         </wadl:doc>
         <response status="200"/>
     </method>
     <method name="GET" id="stack_events_find">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Find stack events">
-            <para role="shortdesc">Finds the canonical URL for the
-                event list of a specified stack.</para>
+            <para role="shortdesc">
+              Finds the canonical URL for the event list of a specified
+              stack.
+            </para>
         </wadl:doc>
         <response status="302"/>
     </method>
     <method name="GET" id="stack_event_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List stack events">
-            <para role="shortdesc">Lists events for a specified
-                stack.</para>
+            <para role="shortdesc">
+              Lists events for a specified stack.
+            </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
+            <representation mediaType="application/json">
                 <param name="resource_action" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_action. You can use this filter multiple
-                            times to filter by multiple
-                            resource actions:
-                            <code>CREATE</code>, <code>DELETE</code>,
-                            <code>UPDATE</code>, <code>ROLLBACK</code>,
-                            <code>SUSPEND</code>, <code>RESUME</code> or
-                            <code>ADOPT</code>.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource action. You can use this filter multiple
+                          times to filter by multiple resource actions:
+                          <code>CREATE</code>, <code>DELETE</code>,
+                          <code>UPDATE</code>, <code>ROLLBACK</code>,
+                          <code>SUSPEND</code>, <code>RESUME</code>, or
+                          <code>ADOPT</code>.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="resource_status" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_status. You can use this filter multiple
-                            times to filter by multiple
-                            resource statuses:
-                            <code>IN_PROGRESS</code>, <code>COMPLETE</code> or
-                            <code>FAILED</code>.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource status. You can use this filter multiple
+                          times to filter by multiple resource statuses:
+                          <code>IN_PROGRESS</code>, <code>COMPLETE</code>, or
+                          <code>FAILED</code>.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="resource_name" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_name. You can use this filter multiple
-                            times to filter by multiple
-                            resource names.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource name. You can use this filter multiple
+                          times to filter by multiple resource names.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="resource_type" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_type. You can use this filter multiple
-                            times to filter by multiple
-                            resource types:
-                            <code>OS::Nova::Server</code>,
-                            <code>OS::Cinder::Volume</code>,
-                            <code>OS::Neutron::Port</code>, and so on.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource type. You can use this filter multiple
+                          times to filter by multiple resource types:
+                          <code>OS::Nova::Server</code>,
+                          <code>OS::Cinder::Volume</code>,
+                          <code>OS::Neutron::Port</code>, and so on.
+                        </para>
                     </wadl:doc>
                 </param>
                 &limitMarkerReqParameter;
-                <param name="sort_keys" style="query" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Sorts the event list by:
-                            <code>resource_type</code> or
-                            <code>created_at</code>.</para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The sort direction of the event list.
-                            Which is <code>asc</code> (ascending) or
-                                <code>desc</code> (descending).</para>
-                    </wadl:doc>
-                </param>
+                &sortKeys;
+                &sortDirection;
             </representation>
         </request>
         <response status="200">
@@ -1382,73 +1594,64 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="resource_event_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List resource events">
-            <para role="shortdesc">Lists events for a specified stack
-                resource.</para>
+            <para role="shortdesc">
+              Lists events for a specified stack resource.
+            </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
+            <representation mediaType="application/json">
                 <param name="resource_action" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_action. You can use this filter multiple
-                            times to filter by multiple
-                            resource actions:
-                            <code>CREATE</code>, <code>DELETE</code>,
-                            <code>UPDATE</code>, <code>ROLLBACK</code>,
-                            <code>SUSPEND</code>, <code>RESUME</code> or
-                            <code>ADOPT</code>.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource action. You can use this filter multiple
+                          times to filter by multiple resource actions:
+                          <code>CREATE</code>, <code>DELETE</code>,
+                          <code>UPDATE</code>, <code>ROLLBACK</code>,
+                          <code>SUSPEND</code>, <code>RESUME</code>, or
+                          <code>ADOPT</code>.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="resource_status" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_status. You can use this filter multiple
-                            times to filter by multiple
-                            resource statuses:
-                            <code>IN_PROGRESS</code>, <code>COMPLETE</code> or
-                            <code>FAILED</code>.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource status. You can use this filter multiple
+                          times to filter by multiple resource statuses:
+                          <code>IN_PROGRESS</code>, <code>COMPLETE</code>, or
+                          <code>FAILED</code>.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="resource_name" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_name. You can use this filter multiple
-                            times to filter by multiple
-                            resource names.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource name. You can use this filter multiple
+                          times to filter by multiple resource names.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="resource_type" style="query" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filters the event list by the specified
-                            resource_type. You can use this filter multiple
-                            times to filter by multiple
-                            resource types:
-                            <code>OS::Nova::Server</code>,
-                            <code>OS::Cinder::Volume</code>,
-                            <code>OS::Neutron::Port</code>, and so on.</para>
+                        <para>
+                          Filters the event list by a specified
+                          resource type. You can use this filter multiple
+                          times to filter by multiple resource types:
+                          <code>OS::Nova::Server</code>,
+                          <code>OS::Cinder::Volume</code>,
+                          <code>OS::Neutron::Port</code>, and so on.
+                        </para>
                     </wadl:doc>
                 </param>
                 &limitMarkerReqParameter;
-                <param name="sort_keys" style="query" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Sorts the event list by:
-                            <code>resource_type</code> or
-                            <code>created_at</code>.</para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The sort direction of the event list.
-                            Which is <code>asc</code> (ascending) or
-                                <code>desc</code> (descending).</para>
-                    </wadl:doc>
-                </param>
+                &sortKeys;
+                &sortDirection;
             </representation>
         </request>
         <response status="200">
@@ -1463,8 +1666,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="event_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show event details">
-            <para role="shortdesc">Shows details for a specified
-                event.</para>
+            <para role="shortdesc">
+              Shows details for a specified event.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1474,8 +1678,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="build_info_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show build information">
-            <para role="shortdesc">Shows build information for a heat
-                deployment.</para>
+            <para role="shortdesc">
+              Shows build information for a heat deployment.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1489,8 +1694,9 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="software_config_create">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create configuration">
-            <para role="shortdesc">Creates a software
-                configuration.</para>
+            <para role="shortdesc">
+              Creates a software configuration.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1502,50 +1708,57 @@ template content as part of the request.</para></note>'>
                 <param name="config" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Configuration script or manifest that
-                            defines which configuration is
-                            performed.</para>
+                        <para>
+                          Configuration script or manifest that defines which
+                          configuration is performed.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="group" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Namespace that groups this software
-                            configuration by when it is delivered to a
-                            server. This setting might imply which
-                            configuration tool performs the
-                            configuration.</para>
+                        <para>
+                          Namespace that groups this software configuration by
+                          when it is delivered to a server. This setting might
+                          simply define which configuration tool performs the
+                          configuration.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="name" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The name of the configuration to
-                            create.</para>
+                        <para>
+                          The name of the configuration to create.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="inputs" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Schema that represents the inputs that
-                            this software configuration
-                            expects.</para>
+                        <para>
+                          Schema that represents the inputs that this software
+                          configuration expects.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="outputs" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Schema that represents the outputs that
-                            this software configuration
-                            produces.</para>
+                        <para>
+                          Schema that represents the outputs that this
+                          software configuration produces.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="options" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Map containing options specific to the
-                            configuration management tool used by this
-                            resource.</para>
+                        <para>
+                          Map containing options specific to the
+                          configuration management tool used by this
+                          resource.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -1563,8 +1776,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="software_config_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show configuration details">
-            <para role="shortdesc">Shows details for a software
-                configuration.</para>
+            <para role="shortdesc">
+              Shows details for a software configuration.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1578,16 +1792,18 @@ template content as part of the request.</para></note>'>
     <method name="DELETE" id="software_config_delete">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete config">
-            <para role="shortdesc">Deletes a software
-                configuration.</para>
+            <para role="shortdesc">
+              Deletes a software configuration.
+            </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="GET" id="software_deployment_index">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List deployments">
-            <para role="shortdesc">Lists all available software
-                deployments.</para>
+            <para role="shortdesc">
+              Lists all available software deployments.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1601,11 +1817,14 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="software_deployment_metadata">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show server configuration metadata">
-            <para role="shortdesc">Shows the deployment configuration
-                metadata for a specified server.</para>
-            <para>Use the <code>group</code> property to specify the
-                configuration hook to which the pass the metadata
-                item.</para>
+            <para role="shortdesc">
+              Shows the deployment configuration metadata for a specified
+              server.
+            </para>
+            <para>
+              Use the <code>group</code> property to specify the
+              configuration hook to which the pass the metadata item.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1620,8 +1839,9 @@ template content as part of the request.</para></note>'>
     <method name="POST" id="software_deployment_create">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create deployment">
-            <para role="shortdesc">Creates a software
-                deployment.</para>
+            <para role="shortdesc">
+              Creates a software deployment.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1633,49 +1853,58 @@ template content as part of the request.</para></note>'>
                 <param name="config_id" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The ID of the software configuration
-                            resource that runs when applying to the
-                            server.</para>
+                        <para>
+                          The ID of the software configuration resource that
+                          runs when applying to the server.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="server_id" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The ID of the compute server to which
-                            the configuration applies.</para>
+                        <para>
+                          The ID of the compute server to which the
+                          configuration applies.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="action" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The current stack action that triggers
-                            this deployment resource.</para>
+                        <para>
+                          The current stack action that triggers this
+                          deployment resource.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="stack_user_project_id" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Authentication project ID which can also
-                            perform operations on this
-                            deployment.</para>
+                        <para>
+                          Authentication project ID which can also perform
+                          operations on this deployment.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="status" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Current status of the deployment,
-                            expected to be one of IN_PROGRESS,
-                            COMPLETE or FAILED.</para>
+                        <para>
+                          Current status of the deployment. Value can be
+                          <code>IN_PROGRESS</code>, <code>COMPLETE</code>, or
+                          <code>FAILED</code>.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="status_reason" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Reason for the last status change, which
-                            will be an error description for status
-                            FAILED.</para>
+                         <para>
+                          Error description for the last status change, which
+                          is <code>FAILED</code> status.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -1693,8 +1922,9 @@ template content as part of the request.</para></note>'>
     <method name="GET" id="software_deployment_show">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show deployment details">
-            <para role="shortdesc">Shows details for a specified
-                software deployment.</para>
+            <para role="shortdesc">
+              Shows details for a specified software deployment.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1708,8 +1938,9 @@ template content as part of the request.</para></note>'>
     <method name="PUT" id="software_deployment_update">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update deployment">
-            <para role="shortdesc">Updates a specified software
-                deployment.</para>
+            <para role="shortdesc">
+              Updates a specified software deployment.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1721,45 +1952,53 @@ template content as part of the request.</para></note>'>
                 <param name="config_id" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>ID of the software configuration
-                            resource to run when applying to the
-                            server. This ID might not be the same
-                            configuration ID with which the deployment
-                            was created because ephemeral
-                            configurations are created throughout the
-                            life cycle of the deployment.</para>
+                        <para>
+                          ID of the software configuration resource to run
+                          when applying to the server. This ID might not be
+                          the same configuration ID with which the
+                          deployment was created because ephemeral
+                          configurations are created throughout the life
+                          cycle of the deployment.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="action" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Current stack action this deployment
-                            resource is being triggered in.</para>
+                        <para>
+                          Current stack action in which this deployment
+                          resource is being triggered.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="status" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Current status of the deployment,
-                            expected to be one of IN_PROGRESS,
-                            COMPLETE or FAILED.</para>
+                        <para>
+                          Current status of the deployment:
+                          <code>IN_PROGRESS</code>, <code>COMPLETE</code>,
+                          or <code>FAILED</code>.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="status_reason" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Reason for the last status change, which
-                            will be an error description for status
-                            FAILED.</para>
+                        <para>
+                          Error description for the last status change, which
+                          is <code>FAILED</code> status.
+                        </para>
                     </wadl:doc>
                 </param>
                 <param name="output_values" style="plain"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Map of output values for the deployment,
-                            as signalled from the server.</para>
+                        <para>
+                          Map of output values for the deployment, as
+                          signalled from the server.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -1777,28 +2016,31 @@ template content as part of the request.</para></note>'>
     <method name="DELETE" id="software_deployment_delete">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete deployment">
-            <para role="shortdesc">Deletes a specified software
-                deployment.</para>
+            <para role="shortdesc">
+              Deletes a specified software deployment.
+            </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="GET" id="service_status_list">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show orchestration engine status">
-            <para role="shortdesc">Shows details for all orchestration engines
-                details.
+            <para role="shortdesc">
+              Shows details for all orchestration engines.
             </para>
-            <para>It reports the orchestration engine details like engine_id,
-               topic name, last updated time, health status, hostname.
-               Only displayed for user with admin permissions.
+            <para>
+              Reports the orchestration engine details like <code>engine_id</code>,
+              topic name, last updated time, health status, and host name. Only
+              displayed for user with administrative permissions.
             </para>
             <para>Troubleshooting</para>
             <itemizedlist>
             <listitem>
-                <para>When you get a <code>503</code> status code, find out
-                   why the heat engines are down, either with the <command>
-                   heat-manage service list</command> command if you have
-                   access or by contacting your cloud provider.
+                <para>
+                  When you get a <code>503</code> status code, run the
+                  <command>heat-manage service list</command> command or
+                  contact your cloud provider to find out why the heat engines
+                  are down.
                 </para>
             </listitem>
             </itemizedlist>
@@ -1815,8 +2057,9 @@ template content as part of the request.</para></note>'>
             <representation mediaType="application/text">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para role="shortdesc">All heat engines are
-                        down.</para>
+                    <para role="shortdesc">
+                      All heat engines are down.
+                    </para>
                 </wadl:doc>
             </representation>
         </response>
@@ -1824,8 +2067,9 @@ template content as part of the request.</para></note>'>
             <representation mediaType="application/text">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <para role="shortdesc">You are not authorized
-                        to complete this action.</para>
+                    <para role="shortdesc">
+                      You are not authorized to complete this action.
+                    </para>
                 </wadl:doc>
             </representation>
         </response>
