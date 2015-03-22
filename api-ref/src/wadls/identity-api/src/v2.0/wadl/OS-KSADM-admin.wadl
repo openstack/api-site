@@ -13,6 +13,7 @@
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
+
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
@@ -59,7 +60,6 @@
                                 xml:lang="EN"><para>The service
                                    ID.</para></wadl:doc>
                         </param>
-                        &limitMarkerReqParameter;
                         <method href="#listUserRoles"/>
                         <resource id="user-roles-OS-KSADM-v2.0"
                             path="OS-KSADM">
@@ -93,7 +93,6 @@
                     <method href="#updateTenant"/>
                     <method href="#deleteTenant"/>
                     <resource id="usersForTenant-v2.0" path="users">
-                        &limitMarkerReqParameter;
                         <method href="#listUsersForTenant"/>
                         <resource id="userForTenant-v2.0"
                             path="{userId}">
@@ -165,7 +164,6 @@
                     </resource>
                 </resource>
                 <resource id="services-v2.0" path="services">
-                    &limitMarkerReqParameter;
                     <method href="#listServices"/>
                     <method href="#addService"/>
                     <resource id="serviceName-v2.0">
@@ -201,8 +199,8 @@
     <!-- Tenant Operations -->
     <method name="POST" id="addTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Tenant">
-            <para role="shortdesc"> Creates a tenant.</para>
+            title="Add tenant">
+            <para role="shortdesc">Creates a tenant.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml"
@@ -242,7 +240,7 @@
         </response> &commonFaults; &postPutFaults; </method>
     <method name="POST" id="updateTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Update Tenant">
+            title="Update tenant">
             <para role="shortdesc"> Updates a tenant.</para>
         </wadl:doc>
         <request>
@@ -281,16 +279,19 @@
         </response> &commonFaults; &getFaults; &postPutFaults; </method>
     <method name="DELETE" id="deleteTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete Tenant">
+            title="Delete tenant">
             <para role="shortdesc"> Deletes a tenant.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
     <method name="GET" id="listUsersForTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Users for a Tenant">
+            title="List users for a tenant">
             <para role="shortdesc">Lists all users for a
                 tenant.</para>
         </wadl:doc>
+        <request>
+            &limitMarkerReqParameter;
+        </request>
         <response status="200 203">
             <representation mediaType="application/xml"
                 element="identity:users">
@@ -309,7 +310,7 @@
         </response> &commonFaults; &getFaults; </method>
     <method name="PUT" id="addRolesToUserOnTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Roles to User on Tenant">
+            title="Add roles to user on tenant">
             <para role="shortdesc">Adds a specified role to a user for
                 a tenant.</para>
         </wadl:doc>
@@ -317,7 +318,7 @@
         &getFaults; </method>
     <method name="DELETE" id="deleteRoleFromUserOnTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete Roles from User on Tenant">
+            title="Delete roles from user on tenant">
             <para role="shortdesc">Deletes a specified role from a
                 user on a tenant.</para>
         </wadl:doc>
@@ -325,9 +326,12 @@
     <!-- User Operations -->
     <method name="GET" id="listUsers">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Users">
+            title="List users">
             <para role="shortdesc">Lists users.</para>
         </wadl:doc>
+        <request>
+            &limitMarkerReqParameter;
+        </request>
         <response status="200 203">
             <representation mediaType="application/xml"
                 element="identity:userss">
@@ -345,7 +349,7 @@
             </representation>
         </response> &commonFaults; &getFaults; </method>
     <method name="POST" id="addUser">
-        <wadl:doc xml:lang="EN" title="Add User"
+        <wadl:doc xml:lang="EN" title="Add user"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Adds a user.</para>
         </wadl:doc>
@@ -389,7 +393,7 @@
         </response> &commonFaults; &getFaults; &postPutFaults; </method>
     <method name="PUT" id="updateUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Update User">
+            title="Update user">
             <para role="shortdesc">Updates a user.</para>
         </wadl:doc>
         <request>
@@ -424,12 +428,12 @@
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
     <method name="DELETE" id="deleteUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete User">
+            title="Delete user">
             <para role="shortdesc">Deletes a user.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
     <method name="PUT" id="setUserEnabled">
-        <wadl:doc xml:lang="EN" title="Enable User"
+        <wadl:doc xml:lang="EN" title="Enable user"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Enables a specified user.</para>
             <table rules="all">
@@ -494,6 +498,9 @@
             <para role="shortdesc">Lists global roles for a specified
                 user.</para>
         </wadl:doc>
+        <request>
+            &limitMarkerReqParameter;
+        </request>
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -524,7 +531,7 @@
 
     <method name="DELETE" id="deleteUserRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete Global Role from User">
+            title="Delete global role from user">
             <para role="shortdesc">Deletes a specific global role from
                 a user.</para>
         </wadl:doc>
@@ -532,11 +539,13 @@
     <!-- Roles -->
     <method name="GET" id="listRoles">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Roles">
+            title="List roles">
             <para role="shortdesc">Lists roles.</para>
         </wadl:doc>
+        <request>
+            &limitMarkerReqParameter;
+        </request>
         <response status="200 203">
-
             <representation mediaType="application/xml"
                 element="identity:roles">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -566,7 +575,7 @@
 
     <method name="POST" id="addRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Role">
+            title="Add role">
             <para role="shortdesc">Adds a role.</para>
         </wadl:doc>
         <request>
@@ -658,7 +667,7 @@
 
     <method name="DELETE" id="deleteRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete Role">
+            title="Delete role">
             <para role="shortdesc">Deletes a role.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -666,10 +675,12 @@
     <!-- Service Operations -->
     <method name="GET" id="listServices">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List Services">
+            title="List services">
             <para role="shortdesc">Lists services.</para>
         </wadl:doc>
-
+        <request>
+            &limitMarkerReqParameter;
+        </request>
         <response status="200 203">
             <representation mediaType="application/xml"
                 element="services">
@@ -689,7 +700,7 @@
         </response> &commonFaults; &getFaults; </method>
     <method name="GET" id="getServiceByName">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Service by Name">
+            title="Get service by name">
             <para role="shortdesc">Gets a service by name.</para>
         </wadl:doc>
 
@@ -712,7 +723,7 @@
         </response> &commonFaults; &getFaults; </method>
     <method name="GET" id="getService">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get Service">
+            title="Get service">
             <para role="shortdesc">Gets a service.</para>
         </wadl:doc>
         <response status="200 203">
@@ -734,7 +745,7 @@
         </response> &commonFaults; &getFaults; </method>
     <method name="POST" id="addService">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add Service">
+            title="Add service">
             <para role="shortdesc">Adds a service.</para>
         </wadl:doc>
         <request>
@@ -778,7 +789,7 @@
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
     <method name="DELETE" id="deleteService">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete Service">
+            title="Delete service">
             <para role="shortdesc">Deletes a service.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
