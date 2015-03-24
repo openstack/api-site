@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/csapi/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-extended-networks-v2">
+        <resource id="version" type="#VersionDetails" path="//v2">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The unique identifier of the tenant or account.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <method href="#CreateNetwork"/>
+                <resource id="os-extended-networks" path="os-extended-networks">
+                    <method href="#ListNetworks"/>
+                    <resource path="{id}" id="id">
+                        <param name="id" style="template"
+                            required="true" type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>
+                                    The unique identifier associated
+                                    with the network.
+                               </para>
+                           </wadl:doc>
+                        </param>
+                        <method href="#GetNetwork"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="ListNetworks">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List networks">
+            <para role="shortdesc">
+                Lists networks that are available to the tenant. The
+                information in the network list includes extended network
+                attributes.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-extended-networks/networks-list-resp.json"
+                    />
+                </wadl:doc>
+                &NetworkParameters;
+                &NetworkExtendedAttrs;
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="CreateNetwork">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create network">
+            <para role="shortdesc">Creates a network with extended attributes.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-extended-networks/network-create-req.json"
+                    />
+                </wadl:doc>
+                &createNetworkParameters;
+                &createNetworkExtendedAttrs;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-extended-networks/network-create-resp.json"
+                    />
+                </wadl:doc>
+                &NetworkParameters;
+                &NetworkExtendedAttrs;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="GetNetwork">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show network information">
+            <para role="shortdesc">
+                Shows information including extended attributes for a
+                specified network.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-extended-networks/network-show-resp.json"
+                    />
+                </wadl:doc>
+                &NetworkParameters;
+                &NetworkExtendedAttrs;
+            </representation>
+        </response>
+    </method>
+</application>
