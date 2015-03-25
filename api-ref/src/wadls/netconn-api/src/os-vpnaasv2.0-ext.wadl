@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-vpnaasv2.0-ext.wadl          -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/" xml:id="os-vpnaas-v2.0">
+        <resource id="version" path="//v2.0/vpn">
+            <resource id="VPNServices" path="vpnservices">
+                <method href="#listVPNServices"/>
+                <method href="#createVPNService"/>
+                <resource path="{service_id}" id="service_id">
+                    <param name="service_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="VPN service ID">The
+                            UUID for the VPN service.</wadl:doc>
+                    </param>
+                    <method href="#showVPNService"/>
+                    <method href="#updateVPNService"/>
+                    <method href="#deleteVPNService"/>
+                </resource>
+            </resource>
+            <resource id="IKEPolicies" path="ikepolicies">
+                <method href="#listIKEPolicies"/>
+                <method href="#createIKEPolicy"/>
+                <resource path="{ikepolicy_id}" id="ikepolicy_id">
+                    <param name="ikepolicy_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="IKE policy ID">The
+                            UUID for the IKE policy.</wadl:doc>
+                    </param>
+                    <method href="#showIKEPolicy"/>
+                    <method href="#updateIKEPolicy"/>
+                    <method href="#deleteIKEPolicy"/>
+                </resource>
+            </resource>
+            <resource id="IPSecPolicies" path="ipsecpolicies">
+                <method href="#listIPSecPolicies"/>
+                <method href="#createIPSecPolicy"/>
+                <resource path="{ipsecpolicy_id}" id="ipsecpolicy_id">
+                    <param name="ipsecpolicy_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="IPSec policy ID">The
+                            UUID for the IPSec policy.</wadl:doc>
+                    </param>
+                    <method href="#showIPSecPolicy"/>
+                    <method href="#updateIPSecPolicy"/>
+                    <method href="#deleteIPSecPolicy"/>
+                </resource>
+            </resource>
+            <resource id="IPSecSiteConnections" path="ipsecsiteconnections">
+                <method href="#listIPSecSiteConnections"/>
+                <method href="#createIPSecSiteConnection"/>
+                <resource path="{connection_id}" id="connection_id">
+                    <param name="connection_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="IPSec connection ID">The
+                            UUID for the IPSec site-to-site connection.</wadl:doc>
+                    </param>
+                    <method href="#showIPSecSiteConnection"/>
+                    <method href="#updateIPSecSiteConnection"/>
+                    <method href="#deleteIPSecSiteConnection"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!-- VPN service -->
+    <method name="GET" id="listVPNServices">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List VPN services">
+            <para role="shortdesc">Lists VPN services.</para>
+            <para>This operation lists all VPN services. The list might be empty.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpnservice-list-res.json"/>
+                </wadl:doc> &svcListResponseParams; &svcResponseParams;</representation>
+        </response> &fault401; &fault403;</method>
+    <method name="GET" id="showVPNService">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show VPN service details">
+            <para role="shortdesc">Shows details for a specified VPN service.</para>
+            <para>Shows the details for a specified VPN service. If the user is not an
+                administrative user and the VPN service object does not belong to
+                the user's tenant account, a 403 (Forbidden) error is returned.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpnservice-show-res.json"/>
+                </wadl:doc> &svcResponseParams; </representation>
+        </response> &fault401; &fault403; &fault404;
+    </method>
+    <method name="POST" id="createVPNService">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create VPN service">
+            <para role="shortdesc">Creates a VPN service.</para>
+            <para>Creates a VPN service object. The service is associated with
+                  a router and a local (private) subnet. After the service is created, it can
+                  contain multiple VPN connections.</para>
+            <para>Example:</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpnservice-create-req.json"/>
+                </wadl:doc>&svcRequestParams; &svcCreateRequestParams; </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpnservice-create-res.json"/>
+                </wadl:doc> &svcResponseParams; </representation>
+        </response> &fault400; &fault401;
+    </method>
+    <method name="PUT" id="updateVPNService">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update VPN service">
+            <para role="shortdesc">Updates a specified VPN service.</para>
+            <para>This operation updates the attributes of a specified VPN
+            service. To update a service, the service status cannot be a <code>PENDING_*</code> status.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpnservice-update-req.json"/>
+                </wadl:doc> &svcRequestParams; </representation>
+        </request>
+        <response status="200"><representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                <xsdxt:code href="api_samples/vpn/vpnservice-update-res.json"/>
+            </wadl:doc> &svcResponseParams; </representation>
+        </response>&fault400; &fault401; &fault404;</method>
+    <method name="DELETE" id="deleteVPNService">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove VPN service">
+            <para role="shortdesc">Removes a specified VPN service.</para>
+            <para>This operation removes a specified VPN service. If the service has
+            connections, the request is rejected.</para>
+        </wadl:doc>
+        <response status="204"/>&fault401; &fault404; &fault409conflict;</method>
+    <!--IKEPolicies-->
+    <method name="POST" id="createIKEPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create IKE policy">
+            <para role="shortdesc">Creates an IKE policy.</para>
+            <para>The IKE policy is used for phases one and two negotiation of the VPN
+            connection. You can specify both the authentication and encryption algorithms for connections.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ikepolicy-create-req.json"/>
+                </wadl:doc> &ikeRequestParams; &ikeCreateRequestParams; </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ikepolicy-create-res.json"/>
+                </wadl:doc> &ikeResponseParams; </representation>
+        </response>&fault400; &fault401;</method>
+    <method name="GET" id="listIKEPolicies">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List IKE policies">
+            <para role="shortdesc">Lists IKE policies.</para>
+            <para>This operation lists all IKE policies.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ikepolicy-list-res.json"/>
+                </wadl:doc> &ikeListResponseParams; &ikeResponseParams; </representation>
+        </response> &fault401; &fault403;</method>
+    <method name="GET" id="showIKEPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show IKE policies">
+            <para role="shortdesc">Shows details for a specified IKE policy.</para>
+            <para>Shows the details for a specified IKE policy.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ikepolicy-show-res.json"/>
+                </wadl:doc> &ikeResponseParams; </representation>
+        </response> &fault401; &fault403; &fault404;</method>
+    <method name="PUT" id="updateIKEPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update IKE policy">
+            <para role="shortdesc">Updates policy settings in a specified IKE policy.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ikepolicy-update-req.json"/>
+                </wadl:doc> &ikeRequestParams; </representation>
+        </request>
+        <response status="200"><representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ikepolicy-update-res.json"/>
+                </wadl:doc> &ikeResponseParams; </representation>
+        </response> &fault400; &fault401; &fault404;</method>
+    <method name="DELETE" id="deleteIKEPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove IKE policy">
+            <para role="shortdesc">Removes a specified IKE policy.</para>
+            <para>Removes the IKE policy specified in the request.</para>
+        </wadl:doc>
+        <response status="204"/>&fault401; &fault404; &fault409;</method>
+    <!-- IPSec policy -->
+    <method name="POST" id="createIPSecPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create IPSec policy">
+            <para role="shortdesc">Creates an IPSec policy.</para>
+            <para>The IP security policy specifies the authentication and
+                encryption algorithms and encapsulation mode to use for
+                the established VPN connection.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsecpolicy-create-req.json"/>
+                </wadl:doc> &ipsecRequestParams; &ipsecCreateRequestParams; </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsecpolicy-create-res.json"/>
+                </wadl:doc> &ipsecResponseParams; </representation>
+        </response>&fault400; &fault401;</method>
+    <method name="GET" id="listIPSecPolicies">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List IPSec policies">
+            <para role="shortdesc">Lists IPSec policies.</para>
+            <para>This operation lists all IPSec policies.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsecpolicy-list-res.json"/>
+                </wadl:doc> &ipsecListResponseParams; &ipsecResponseParams; </representation>
+        </response> &fault401; &fault403;</method>
+    <method name="GET" id="showIPSecPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show IPSec Policies">
+            <para role="shortdesc">Shows details for a specified IPSec policy.</para>
+            <para>Shows the details for a specified IPSec policy.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsecpolicy-show-res.json"/>
+                </wadl:doc> &ipsecResponseParams; </representation>
+        </response> &fault401; &fault403; &fault404;</method>
+    <method name="PUT" id="updateIPSecPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update IPSec policy">
+            <para role="shortdesc">Updates policy settings in a specified IPSec policy.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsecpolicy-update-req.json"/>
+                </wadl:doc> &ipsecRequestParams; </representation>
+        </request>
+        <response status="200"><representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsecpolicy-update-res.json"/>
+                </wadl:doc> &ipsecResponseParams; </representation>
+        </response> &fault400; &fault401; &fault404;</method>
+    <method name="DELETE" id="deleteIPSecPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove IPSec policy">
+            <para role="shortdesc">Removes a specified IPSec policy.</para>
+            <para>Removes the IPSec policy specified in the request.</para>
+        </wadl:doc>
+        <response status="204"/>&fault401; &fault404; &fault409;</method>
+    <!-- IPSec site-to-site connection -->
+    <method name="POST" id="createIPSecSiteConnection">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create IPSec connection">
+            <para role="shortdesc">Creates an IPSec connection.</para>
+            <para>Creates a site-to-site IPSec connection for a service.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsec-site-connection-create-req.json"/>
+                </wadl:doc> &connRequestParams; &connCreateRequestParams; </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsec-site-connection-create-res.json"/>
+                </wadl:doc> &connResponseParams; </representation>
+        </response>&fault400; &fault401;</method>
+    <method name="GET" id="listIPSecSiteConnections">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List IPSec connections">
+            <para role="shortdesc">Lists IPSec connections.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsec-site-connection-list-res.json"/>
+                </wadl:doc> &connListResponseParams; &connResponseParams; </representation>
+        </response> &fault401; &fault403;</method>
+    <method name="GET" id="showIPSecSiteConnection">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show IPSec connection">
+            <para role="shortdesc">Shows details for a specified IPSec connection.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsec-site-connection-show-res.json"/>
+                </wadl:doc> &connResponseParams; </representation>
+        </response> &fault401; &fault403; &fault404;</method>
+    <method name="PUT" id="updateIPSecSiteConnection">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update IPSec connection">
+            <para role="shortdesc">Updates connection settings for a specified IPSec connection.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsec-site-connection-update-req.json"/>
+                </wadl:doc> &connRequestParams; </representation>
+        </request>
+        <response status="200"><representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/ipsec-site-connection-update-res.json"/>
+                </wadl:doc> &connResponseParams; </representation>
+        </response> &fault400; &fault401; &fault404;</method>
+    <method name="DELETE" id="deleteIPSecSiteConnection">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove IPSec connection">
+            <para role="shortdesc">Removes a specified IPSec connection.</para>
+            <para>Removes the IPSec connection specified in the request.</para>
+        </wadl:doc>
+        <response status="204"/>&fault401; &fault404; &fault409;</method>
+</application>
