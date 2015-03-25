@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent node-group-template.wadl        -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="cluster-templates-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="capi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The unique identifier of the tenant or account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="cluster-templates" path="cluster-templates">
+                    <method href="#cluster-templates-list"/>
+                    <method href="#cluster-templates-create"/>
+                    <resource id="cluster_template_id" path="{cluster_template_id}">
+                        <param name="cluster_template_id" style="template" type="capi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The unique identifier of the cluster template.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#cluster-templates-show"/>
+                        <method href="#cluster-templates-update"/>
+                        <method href="#cluster-templates-delete"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--             Cluster templates actions           -->
+    <!--******************************************************-->
+    <method name="GET" id="cluster-templates-list">
+        <wadl:doc xml:lang="EN" title="List available cluster templates"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists available cluster
+                templates.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/cluster-templates/list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="cluster-templates-create">
+        <wadl:doc xml:lang="EN" title="Create cluster templates"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Creates a cluster template.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Create cluster template: JSON request">
+                    <xsdxt:code
+                        href="../samples/cluster-templates/create-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/cluster-templates/create-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="cluster-templates-show">
+        <wadl:doc xml:lang="EN" title="Show cluster template"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows the cluster template.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/cluster-templates/list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="cluster-templates-update">
+        <wadl:doc xml:lang="EN" title="Update cluster templates"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Updates the cluster template.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Updates the cluster template: JSON request">
+                    <xsdxt:code
+                        href="../samples/cluster-templates/update-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/cluster-templates/update-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="cluster-templates-delete">
+        <wadl:doc xml:lang="EN" title="Delete cluster template"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Deletes the cluster template.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+</application>
