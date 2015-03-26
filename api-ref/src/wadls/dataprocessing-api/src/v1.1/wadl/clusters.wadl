@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent cluster.wadl        -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="clusters-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="csapi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The unique identifier of the tenant or account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="clusters" path="clusters">
+                    <method href="#clusters-list"/>
+                    <method href="#clusters-create"/>
+                    <resource id="cluster_id"
+                        path="{cluster_id}">
+                        <param name="cluster_id" style="template" type="csapi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The ID of the cluster</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#clusters-get"/>
+                        <method href="#clusters-delete"/>
+                        <method href="#clusters-scale"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--             OS Cluster actions           -->
+    <!--******************************************************-->
+    <method name="GET" id="clusters-list">
+        <wadl:doc xml:lang="EN" title="List available clusters"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists available clusters.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/clusters/clusters-list.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="clusters-get">
+        <wadl:doc xml:lang="EN" title="Show details of a cluster"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows cluster by ID.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/clusters/clusters-get.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="clusters-create">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create cluster">
+            <para role="shortdesc">Creates a cluster.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Create cluster: JSON request">
+                    <xsdxt:code
+                        href="../samples/clusters/clusters-create-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/clusters/clusters-create-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="clusters-delete">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete a cluster">
+            <para role="shortdesc">Deletes a cluster.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="POST" id="clusters-scale">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Scale cluster">
+            <para role="shortdesc">Scale a cluster.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Scale cluster : JSON request">
+                    <xsdxt:code
+                        href="../samples/clusters/clusters-scale-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/clusters/clusters-scale-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
