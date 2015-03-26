@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="image-registry-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="csapi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The unique identifier of the tenant or account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="images" path="images">
+                    <method href="#imageslist"/>
+                    <resource id="imageId" path="{image_id}">
+                        <param name="image_id" style="template" type="csapi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The unique identifier of the image.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#imageInfo"/>
+            <method href="#imageReg"/>
+            <method href="#imageUnreg"/>
+                        <resource id="imageTag" path="tag">
+                            <method href="#addTags"/>
+                        </resource>
+            <resource id="imageUntag" path="untag">
+                            <method href="#removeTags"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--      Image Registry            -->
+    <!--*******************************************************-->
+    <method name="GET" id="imageslist">
+        <wadl:doc xml:lang="EN" title="List Images"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists all images registered in Image Registry.</para>
+        </wadl:doc>
+    <request>
+        <param name="tags" style="plain" type="csapi:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        Lists images only with specific tag.
+                        Can be used multiple times.
+                    </para>
+                </wadl:doc>
+            </param>
+    </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/images-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="imageInfo">
+        <wadl:doc xml:lang="EN" title="Show image information"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows information about specified Image.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/images-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="imageReg">
+        <wadl:doc xml:lang="EN" title="Register Image"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Registers specified Image in Image Registry.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/images-set-req.json"
+                    />
+                </wadl:doc>
+                <param name="username" style="plain" type="csapi:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>Username to login into an instance’s OS for
+                        remote operations execution.</para>
+                    </wadl:doc>
+                </param>
+                <param name="description" style="plain" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>Description of the image.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/images-set-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="imageUnreg">
+        <wadl:doc xml:lang="EN" title="Unregister Image"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Removes specified Image from Image Registry.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="POST" id="addTags">
+        <wadl:doc xml:lang="EN" title="Add tags"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Adds tags to specified Image.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/image-tags-add-req.json"
+                    />
+                </wadl:doc>
+                <param name="tags" style="plain" type="csapi:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>List of tags to be added.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/image-tags-add-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="removeTags">
+        <wadl:doc xml:lang="EN" title="Remove tags"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Removes tags for specified Image.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/image-tags-delete-req.json"
+                    />
+                </wadl:doc>
+                <param name="tags" style="plain" type="csapi:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>List of tags to be added.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/image-registry/image-tags-add-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
