@@ -7,7 +7,7 @@
     xmlns:common="http://docs.openstack.org/common/api/v1.0"
     xmlns:csapi="http://docs.openstack.org/compute/api/v2">
     <resources base="https://servers.api.openstack.com"
-        xml:id="data-sources-v1.1">
+        xml:id="jobs-v1.1">
         <resource id="v1.1" path="//v1.1">
             <resource id="tenant_id" path="{tenant_id}">
                 <param name="tenant_id" style="template" type="csapi:UUID">
@@ -15,76 +15,71 @@
                         <para>The unique identifier of the tenant or account.</para>
                     </wadl:doc>
                 </param>
-                <resource id="data-sources" path="data-sources">
-                    <method href="#dataSourcesList"/>
-                    <method href="#dataSourcesCreate"/>
-                    <resource id="dataSourceId" path="{data_source_id}">
-                        <param name="data_source_id" style="template" type="csapi:UUID">
+                <resource id="jobs" path="jobs">
+                    <method href="#jobsList"/>
+                    <method href="#jobCreate"/>
+                    <resource id="jobId" path="{job_id}">
+                        <param name="job_id" style="template" type="csapi:UUID">
                             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                                <para>The unique identifier of the data source.</para>
+                                <para>The unique identifier of the job.</para>
                             </wadl:doc>
                         </param>
-                        <method href="#dataSourceInfo"/>
-                        <method href="#dataSourceDelete"/>
+                        <method href="#jobInfo"/>
+                        <method href="#jobDelete"/>
+                        <resource id="execute" path="execute">
+                            <method href="#jobExecute"/>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
     <!-- *******************************************************-->
-    <!--      data sources            -->
+    <!--      jobs            -->
     <!--*******************************************************-->
-    <method name="GET" id="dataSourcesList">
-        <wadl:doc xml:lang="EN" title="List data sources"
+    <method name="GET" id="jobsList">
+        <wadl:doc xml:lang="EN" title="List jobs"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists all data sources.</para>
+            <para role="shortdesc">Lists all jobs.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/data-sources/data-sources-list-resp.json"
+                        href="../samples/jobs/job-list-resp.json"
                     />
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="GET" id="dataSourceInfo">
-        <wadl:doc xml:lang="EN" title="Show data source details"
+    <method name="GET" id="jobInfo">
+        <wadl:doc xml:lang="EN" title="Show job details"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Shows details for a specified data source.</para>
+            <para role="shortdesc">Shows details for a specified job.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/data-sources/data-sources-get-resp.json"
+                        href="../samples/jobs/job-get-resp.json"
                     />
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="POST" id="dataSourcesCreate">
-        <wadl:doc xml:lang="EN" title="Create data source"
+    <method name="POST" id="jobCreate">
+        <wadl:doc xml:lang="EN" title="Create job"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Creates a data source.</para>
+            <para role="shortdesc">Creates a job object.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/data-sources/data-source-register-swift-req.json"
-                    />
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/data-sources/data-source-register-hdfs-req.json"
+                        href="../samples/jobs/job-create-req.json"
                     />
                 </wadl:doc>
             </representation>
@@ -94,25 +89,43 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/data-sources/data-source-register-swift-resp.json"
-                    />
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/data-sources/data-source-register-hdfs-resp.json"
+                        href="../samples/jobs/job-create-resp.json"
                     />
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="DELETE" id="dataSourceDelete">
-        <wadl:doc xml:lang="EN" title="Delete data source"
+    <method name="DELETE" id="jobDelete">
+        <wadl:doc xml:lang="EN" title="Remove job"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Deletes a specified data source.</para>
+            <para role="shortdesc">Removes a specified job.</para>
         </wadl:doc>
         <response status="204"/>
+    </method>
+    <method name="POST" id="jobExecute">
+        <wadl:doc xml:lang="EN" title="Run job"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Runs a specified job.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/jobs/job-execute-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/jobs/job-execute-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
     </method>
 </application>
