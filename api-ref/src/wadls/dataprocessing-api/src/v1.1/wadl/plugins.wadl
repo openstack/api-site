@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="plugins-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="csapi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The unique identifier of the tenant or account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="plugins" path="plugins">
+                    <method href="#pluginslist"/>
+                    <resource id="pluginSimple" path="{plugin_name}">
+                        <param name="plugin_name" style="template" type="csapi:string">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>Name of the plugin.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#pluginsget"/>
+                        <resource id="pluginDetailed" path="{version}">
+                            <param name="version" style="template" type="csapi:string">
+                                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                    <para>Version of the plugin.</para>
+                                </wadl:doc>
+                            </param>
+                            <method href="#pluginsgetversion"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--      Plugins            -->
+    <!--*******************************************************-->
+    <method name="GET" id="pluginslist">
+        <wadl:doc xml:lang="EN" title="List plugins"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists all registered plugins.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/plugins/plugins-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="pluginsget">
+        <wadl:doc xml:lang="EN" title="Show short plugin information"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows short information about specified
+            plugin.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/plugins/plugins-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="pluginsgetversion">
+        <wadl:doc xml:lang="EN" title="Show detailed plugin information"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows detailed information about specified
+            plugin.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/plugins/plugins-get-version-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
