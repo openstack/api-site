@@ -3302,6 +3302,932 @@
                     attribute matches the specified IP prefix as the
                     source IP address of the IP packet.</wadl:doc>
             </param>' >
+<!ENTITY svcListResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="vpnservices" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>VPN service objects.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY svcResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="router_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>ID of the router into which the VPN service is
+              inserted.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="status" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Indicates whether IPSec VPN service is
+              currently operational. Possible values
+              are ACTIVE, DOWN, BUILD, ERROR,
+              PENDING_CREATE, PENDING_UPDATE, and
+              PENDING_DELETE.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the VPN service. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="admin_state_up" style="plain" type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>The administrative state of the VPN service, which is up (<code>true</code>) or down (<code>false</code>). If
+              down, the port does not forward
+              packets.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="subnet_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The subnet on which the tenant wants the VPN
+              service.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the VPN service. Only administrative users can
+              specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The unique ID for the VPN service.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the VPN
+              service.</para>
+    </wadl:doc>
+</param>' >
+<!ENTITY svcCreateRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the VPN service. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="subnet_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The subnet on which the tenant wants the VPN
+              service.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="router_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Router ID to which the VPN service is
+              inserted.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY svcRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the VPN service. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the VPN
+              service.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="admin_state_up" style="plain" type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>The administrative state of the VPN service, which is up (<code>true</code>) or down (<code>false</code>). If
+              down, connections on service are not active.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ikeCreateRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the IKE policy. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ikeRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the IKE policy. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the IKE policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="auth_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Authentication hash algorithm: sha1(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="encryption_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Encryption algorithm: 3des, aes-128(default), aes-192, aes-256, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="phase1_negotiation_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IKE mode: main(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="pfs" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Perfect Forward Secrecy: Group2, Group5(default), Group14, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="ike_version" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IKE version: v1(default) or v2.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="lifetime" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Security Association lifetime. Either units or value
+              may be omitted.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="units" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Units for lifetime of the security association: seconds(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="value" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Lifetime value, as a positive integer. (default=3600 seconds)</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ikeListResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ikepolicies" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IKE policy objects.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ikeResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The unique ID for the IKE policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the VPN service. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the IKE policy. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the IKE policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="auth_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Authentication hash algorithm: sha1(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="encryption_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Encryption algorithm: 3des, aes-128(default), aes-192, aes-256, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="phase1_negotiation_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IKE mode: main(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="pfs" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Perfect Forward Secrecy: Group2, Group5(default), Group14, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ike_version" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IKE version: v1(default) or v2.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="lifetime" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Security Association lifetime. Either units or value
+              may be omitted.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="units" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Units for lifetime of the security association: seconds(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="value" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Lifetime value, as a positive integer. (default=3600 seconds)</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ipsecCreateRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the IPSec policy. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ipsecRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the IPSec policy. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the IPSec policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="transform_protocol" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Transform protocol: ESP(default), AH, or AH-ESP.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="encapsulation_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Encapsulation mode: tunnel(default), or transport.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="auth_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Authentication algorithm: sha1(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="encryption_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Encryption algorithm: 3des, aes-128(default), aes-192, aes-256, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="pfs" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Perfect Forward Secrecy: group2, group5(default), group14, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="lifetime" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Security Association lifetime. Either units or value
+              may be omitted.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="units" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Units for lifetime of the security association: seconds(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="value" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Lifetime value, as a positive integer. (default=3600 seconds)</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ipsecListResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ipsecpolicies" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IPSec policy objects.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY ipsecResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The unique ID for the IPSec policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the VPN service. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the IPSec policy. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the IPSec policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="transform_protocol" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Transform protocol: ESP(default), AH, or AH-ESP.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="encapsulation_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Encapsulation mode: tunnel(default), or transport.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="auth_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Authentication algorithm: sha1(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="encryption_algorithm" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Encryption algorithm: 3des, aes-128(default), aes-192, aes-256, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="pfs" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Perfect Forward Secrecy: group2, group5(default), group14, etc.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="lifetime" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Security Association lifetime. Either units or value
+              may be omitted.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="units" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Units for lifetime of the security association: seconds(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="value" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Lifetime value, as a positive integer. (default=3600 seconds)</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY connCreateRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the IPSec connection. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="route_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Route mode: static(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="auth_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Authentication mode: psk(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="status" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Indicates whether the IPSec connection is
+              currently operational. Possible values
+              include: ACTIVE, DOWN, BUILD, ERROR,
+              PENDING_CREATE, PENDING_UPDATE, or
+              PENDING_DELETE.</para>
+    </wadl:doc>
+</param><param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ikepolicy_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique identifier of IKE policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ipsecpolicy_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique identifier of IPSec policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="vpnservice_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique identifier of VPN service.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY connRequestParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the IPSec connection. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the IPSec connection.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="peer_address" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Peer gateway public IPv4/IPv6 address or FQDN.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="peer_id" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Peer router identity for authentication. Can
+              be IPv4/IPv6 address, e-mail address, key id,
+              or FQDN. Typically is same as <code>peer_address</code>.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="peer_cidrs" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique list of valid peer private CIDRs in the form
+              &lt;net_address&gt;/&lt;prefix&gt;.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="mtu" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Maximum Transmission Unit to address fragmentation.
+              Minimum is 68 for IPv4, and 1280 for IPv6.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="psk" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Pre Shared Key: any string</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="initiator" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Whether this VPN can only respond to
+              connections, response-only, or can initiate
+              as well, bi-directional(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="admin_state_up" style="plain" type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+          The administrative state of the IPSec connection, which is up
+          (<code>true</code>) or down (<code>false</code>). If down, the
+          connection does not forward packets.
+        </para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="dpd" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Dictionary with Dead Peer Detection protocol controls.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="action" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>DPD action: clear, hold(default), restart, disabled, or restart-by-peer.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="interval" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>DPD interval in seconds. Positive integer(default=30).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="timeout" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>DPD timeout in seconds. Positive integer that must be greater than
+              DPD <code>interval</code>(default=120).</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY connListResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ipsec_site_connections" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>IPSec site-to-site connection objects.</para>
+    </wadl:doc>
+</param>
+' >
+<!ENTITY connResponseParams '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The unique ID for the IPSec connection.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Owner of the IPSec connection. Only administrative users can specify a tenant ID other than their
+              own.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="name" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable name for the IPSec connection. Does
+              not have to be unique.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="description" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Human-readable description for the IPSec connection.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="peer_address" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Peer gateway public IPv4/IPv6 address or FQDN.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="peer_id" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Peer router identity for authentication. Can
+              be IPv4/IPv6 address, e-mail address, key id,
+              or FQDN. Typically is same as <code>peer_address</code>.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="peer_cidrs" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique list of valid peer private CIDRs in the form
+              &lt;net_address&gt;/&lt;prefix&gt;.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="route_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Route mode: static(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="mtu" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Maximum Transmission Unit to address fragmentation.
+              Minimum is 68 for IPv4, and 1280 for IPv6.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="auth_mode" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Authentication mode: psk(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="psk" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Pre Shared Key: any string</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="initiator" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Whether this VPN can only respond to
+              connections, response-only, or can initiate
+              as well, bi-directional(default).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="admin_state_up" style="plain" type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+          The administrative state of the IPSec connection, which is up
+          (<code>true</code>) or down (<code>false</code>). If down, the
+          connection does not forward packets.
+        </para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="status" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>Indicates whether the IPSec connection is
+              currently operational. Possible values
+              include: ACTIVE, DOWN, BUILD, ERROR,
+              PENDING_CREATE, PENDING_UPDATE, or
+              PENDING_DELETE.</para>
+    </wadl:doc>
+</param><param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ikepolicy_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique identifier of IKE policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="ipsecpolicy_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique identifier of IPSec policy.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="vpnservice_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Unique identifier of VPN service.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="dpd" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>Dictionary with Dead Peer Detection protocol controls.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="action" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>DPD action: clear, hold(default), restart, disabled, or restart-by-peer.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="interval" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>DPD interval in seconds. Positive integer(default=30).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="timeout" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>DPD timeout in seconds. Positive integer that must be greater than
+              DPD <code>interval</code>(default=120).</para>
+    </wadl:doc>
+</param>
+' >
 <!-- Useful for describing APIs -->
 <!ENTITY GET    '<command xmlns="http://docbook.org/ns/docbook">GET</command>'>
 <!ENTITY PUT    '<command xmlns="http://docbook.org/ns/docbook">PUT</command>'>
