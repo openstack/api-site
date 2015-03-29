@@ -5,7 +5,6 @@
 <chapter xmlns="http://docbook.org/ns/docbook"
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:linkend="http://www.w3.org/1999/linkend"
     xmlns:xref="http://www.w3.org/1999/xref"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     version="5.0-extension RackBook-2.0" xml:id="compute-v2"
@@ -17,6 +16,10 @@
         <para>XML support in requests and responses has been deprecated for the Compute API
             v2.</para>
     </note>
+    <note><para>
+        The Compute API returns the <code>403 forbidden</code> error code if
+        you exceed your allotted quota for the operation.
+    </para></note>
     <section xml:id="compute_versions">
         <title>API versions</title>
         <para>List information for all API versions and show details about API v2.</para>
@@ -57,12 +60,16 @@
         <itemizedlist>
             <listitem>
                 <para><emphasis role="bold">Passwords</emphasis></para>
-                <para>When you create a server, you can specify a password through the optional <property>adminPass</property>
-                    attribute. The specified password must meet the
-                    complexity requirements set by your OpenStack Compute provider. The server might
-                    enter an <code>ERROR</code> state if the complexity requirements are not met. In
-                    this case, a client might issue a change password action to reset the server
-                    password.</para>
+                <para>
+                    When you create a server, you can specify a password
+                    through the optional <property>adminPass</property>
+                    attribute. The specified password must meet the complexity
+                    requirements set by your OpenStack Compute provider. The
+                    server might enter an <code>ERROR</code> state if the
+                    complexity requirements are not met. In this case, a
+                    client might issue a change password action to reset the
+                    server password.
+                </para>
                 <para>If you do not specify a password, a randomly generated password is assigned
                     and returned in the response object. This password is guaranteed to meet the
                     security requirements set by the compute provider. For security reasons, the
@@ -133,8 +140,8 @@
                     booted.</para>
                 <para>During file injection, any existing files that match specified files are
                     renamed to include the BAK extension appended with a time stamp. For example, if
-                    the <filename>/etc/passwd</filename> file exists, it is backed up as
-                        <filename>/etc/passwd.bak.1246036261.5785</filename>.</para>
+                    the <code>/etc/passwd</code> file exists, it is backed up as
+                        <code>/etc/passwd.bak.1246036261.5785</code>.</para>
                 <para>After file injection, personality files are accessible by only system
                     administrators. For example, on Linux, all files have root and the root group as
                     the owner and group owner, respectively, and allow user and group read access
@@ -144,17 +151,22 @@
         <itemizedlist>
             <listitem>
                 <para><emphasis role="bold">Server access addresses</emphasis></para>
-                <para>In a hybrid environment, the IP address of a server might not be controlled by
-                    the underlying implementation. Instead, the access IP address might be part of
-                    the dedicated hardware; for example, a router/NAT device. In this case, the
-                    addresses provided by the implementation cannot actually be used to access the
-                    server (from outside the local LAN). Here, a separate <firstterm>access
-                        address</firstterm> might be assigned at creation time to provide access to
-                    the server. This address might not be directly bound to a network interface on
-                    the server and might not necessarily appear when you query the server addresses.
-                    See <xref linkend="compute_server-addresses"/>. Nonetheless, clients that must
-                    access the server directly are encouraged to do so through an access
-                    address.</para>
+                <para>
+                    In a hybrid environment, the underlying implementation
+                    might not control the IP address of a server. Instead, the
+                    access IP address might be part of the dedicated hardware;
+                    for example, a router/NAT device. In this case, the
+                    addresses provided by the implementation cannot actually
+                    be used to access the server (from outside the local LAN).
+                    Here, a separate <firstterm>access address</firstterm>
+                    might be assigned at creation time to provide access to
+                    the server. This address might not be directly bound to a
+                    network interface on the server and might not necessarily
+                    appear when you query the server addresses. See Compute
+                    server address. Nonetheless, clients that must access the
+                    server directly are encouraged to do so through an access
+                    address.
+                </para>
             </listitem>
         </itemizedlist>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
@@ -236,7 +248,7 @@
         <para>Also, set, list, get details for, and delete image metadata.</para>
         <para>An image is a collection of files that you use to create or rebuild a server. By
             default, operators provide pre-built operating system images. You can also create custom
-            images: See <xref linkend="compute_server-actions"/>.</para>
+            images: See Computer server actions.</para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/compute-api/src/v2/wadl/os-compute-2.wadl#Images">
                 <wadl:method href="#listImages"/>
