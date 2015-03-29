@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent node-group-template.wadl        -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="cluster-templates-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="csapi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The unique identifier of the tenant or account.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <resource id="job-executions" path="job-executions">
+                    <method href="#job-executions-list"/>
+                    <resource id="job_execution_id" path="{job_execution_id}">
+                        <param name="job_execution_id" style="template" type="csapi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The unique identifier of the job execution.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#job-executions-show"/>
+                        <method href="#job-executions-delete"/>
+                        <resource id="refresh-status" path="refresh-status">
+                            <method href="#job-executions-refresh"/>
+                        </resource>
+                        <resource id="cancel" path="cancel">
+                            <method href="#job-executions-cancel"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--             Job executions actions                     -->
+    <!--********************************************************-->
+    <method name="GET" id="job-executions-list">
+        <wadl:doc xml:lang="EN" title="List available job executions"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Provides list of available job executions.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-executions/list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="job-executions-show">
+        <wadl:doc xml:lang="EN" title="Show job execution"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows the job execution with specified id.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-executions/job-ex-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="job-executions-refresh">
+        <wadl:doc xml:lang="EN" title="Refresh job execution status"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                This operation refreshes the status of the specified
+                Job Execution and shows its information.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-executions/job-ex-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="job-executions-cancel">
+        <wadl:doc xml:lang="EN" title="Cancel job execution"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                This operation cancels specified Job Execution.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-executions/cancel-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="job-executions-delete">
+        <wadl:doc xml:lang="EN" title="Delete job execution"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                This operation deletes specified Job Execution.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+</application>
