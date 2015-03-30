@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent job-binary-internals.wadl       -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="job-binary-internals-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="capi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The unique identifier of the tenant or account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="job-binary-internals" path="job-binary-internals">
+                    <method href="#job-binary-internals-list"/>
+                    <resource id="job-binary-internals-name-create" path="{name}">
+                        <param name="name" style="template" type="xsd:string">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The name of the job binary
+                                    internal.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#job-binary-internals-create"/>
+                    </resource>
+                    <resource id="job-binary-internals-id" path="{job_binary_internals_id}">
+                        <param name="job_binary_internals_id" style="template" type="capi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The ID of the job binary internal.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#job-binary-internals-show"/>
+                        <method href="#job-binary-internals-delete"/>
+                        <resource id="job-binary-internals-id-data" path="data">
+                          <method href="#job-binary-internals-data"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--             Job binary internals actions               -->
+    <!-- *******************************************************-->
+    <method name="GET" id="job-binary-internals-list">
+        <wadl:doc xml:lang="EN" title="List job binary internals"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lists the available job binary
+                internals.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-binary-internals/list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="job-binary-internals-create">
+        <wadl:doc xml:lang="EN" title="Create job binary internal"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Creates a job binary internal.</para>
+            <para>
+                Job binary internals are objects that represent data
+                processing applications and libraries that are stored in the
+                internal database.
+            </para>
+            <para>
+                Specify the file contents (raw data or script text) in the
+                request body. Specify the file name in the URI.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json"/>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-binary-internals/create-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="job-binary-internals-show">
+        <wadl:doc xml:lang="EN" title="Show job binary internal details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows details for a specified
+              job binary internal.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/job-binary-internals/show-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="job-binary-internals-delete">
+        <wadl:doc xml:lang="EN" title="Delete job binary internal"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Deletes a specified job binary
+                internal.</para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="GET" id="job-binary-internals-data">
+        <wadl:doc xml:lang="EN" title="Get job binary internal data"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Gets data for a specified job
+              binary internal.</para>
+            <para>The response body shows the job binary raw data and
+              the response headers show the data length.</para>
+            <para>Example response:</para>
+            <para><programlisting>HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 161
+Content-Type: text/html; charset=utf-8
+Date: Sat, 28 Mar 2015 02:21:13 GMT
+
+A = load '$INPUT' using PigStorage(':') as (fruit: chararray);
+B = foreach A generate com.hadoopbook.pig.Trim(fruit);
+store B into '$OUTPUT' USING PigStorage(); </programlisting></para>
+        </wadl:doc>
+        <response status="200">
+            <param name="Content-Length" style="header" type="xsd:string"
+                required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The length of the returned data in bytes.</para>
+                    </wadl:doc>
+                </param>
+                <!-- the following element is present to suppress the output
+                     about this method not returning a body -->
+                 <representation/>
+        </response>
+    </method>
+</application>
