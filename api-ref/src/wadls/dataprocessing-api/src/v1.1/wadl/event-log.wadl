@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent node-group-template.wadl        -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="cluster-templates-v1.1">
+        <resource id="v1.1" path="//v1.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template" type="capi:UUID">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The unique identifier of the tenant or account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="clusters" path="clusters">
+                    <resource id="cluster_id" path="{cluster_id}?show_progress=True">
+                        <param name="cluster_id" style="template" type="capi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The unique identifier of the cluster.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#cluster-show-progress"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--             Event log actions                          -->
+    <!--********************************************************-->
+    <method name="GET" id="cluster-show-progress">
+        <wadl:doc xml:lang="EN" title="Show cluster with provisioning progress"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows cluster with provisioning progress information.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/event-log/cluster-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
