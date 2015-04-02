@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
 <!-- Useful for describing APIs -->
 <!DOCTYPE application[
   <!ENTITY % common  SYSTEM "common.ent">
@@ -25,7 +25,8 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                          The unique identifier of the tenant or account.
+                          The ID of the tenant, which is also known as an account
+                          or project.
                         </para>
                     </wadl:doc>
                 </param>
@@ -61,7 +62,7 @@
                                    xmlns="http://docbook.org/ns/docbook"
                                    xml:lang="EN">
                                 <para>
-                                  The unique identifier for a stack.
+                                  The stack ID.
                                 </para>
                               </wadl:doc>
                             </param>
@@ -84,7 +85,7 @@
                                     xmlns="http://docbook.org/ns/docbook"
                                     xml:lang="EN">
                                       <para>
-                                        The ID of a snapshot.
+                                        The snapshot ID.
                                       </para>
                                     </wadl:doc>
                                     </param>
@@ -152,7 +153,7 @@
                                    xmlns="http://docbook.org/ns/docbook"
                                    xml:lang="EN">
                                    <para>
-                                    The unique identifier of an event related
+                                    The ID of an event related
                                     to the resource in the stack.
                                    </para>
                                    </wadl:doc>
@@ -204,7 +205,7 @@
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
                                 <para>
-                                  The ID of the configuration.
+                                  The configuration ID.
                                  </para>
                                </wadl:doc>
                         </param>
@@ -224,7 +225,7 @@
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
                                 <para>
-                                  The ID of the deployment.
+                                  The deployment ID.
                                 </para>
                             </wadl:doc>
                         </param>
@@ -260,7 +261,7 @@
         <wadl:doc xml:lang="EN" title="List versions"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Lists information about all Orchestration API versions.
+                Lists all Orchestration API versions.
             </para>
         </wadl:doc>
         <response status="200">
@@ -306,9 +307,10 @@
                         xml:lang="EN">
                         <para>
                           Specifies whether to include deleted stacks in the
-                          stack list. Set to False by default, so that deleted
-                          stacks are not shown in the results of the &GET;
-                          request unless you set this value to True.
+                          list. To include deleted stacks in the list,
+                          set to <code>True</code>. Default is
+                          <code>False</code>, which excludes deleted stacks
+                          from the list.
                         </para>
                     </wadl:doc>
                 </param>
@@ -316,9 +318,8 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                       <para>
-                          Sorts the stack list by the
-                          <code>name</code>, <code>status</code>,
-                          <code>created_at</code>, or
+                          Sorts the stack list by <code>name</code>,
+                          <code>status</code>, <code>created_at</code>, or
                           <code>updated_at</code> key.
                       </para>
                     </wadl:doc>
@@ -369,50 +370,8 @@
                       </para>
                     </wadl:doc>
                 </param>
-                <param name="template_url" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          A URI to the location containing the stack template
-                          to instantiate.
-                        </para>
-                        <para>
-                          See the description of the <code>template</code>
-                          property for information about the expected template
-                          content located at the URI.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template</code> parameter is omitted. The
-                          value is ignored if the <code>template</code>
-                          property is also specified.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="template" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          The stack template to instantiate.
-                        </para>
-                        <para>
-                          This parameter is always provided as a
-                          <code>string</code> in the JSON request body. The
-                          content of the string is an Orchestration template,
-                          and may be provided in either YAML or JSON syntax.
-                          Complete details about the syntax of an
-                          Orchestration template are provided in the <link
-                          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
-                          Orchestration Template (HOT) specification</link>.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template_url</code> parameter is omitted. If
-                          both are specified, this value overrides any value
-                          provided for <code>template_url</code>.
-                      </para>
-                    </wadl:doc>
-                </param>
+                &templateUrlParameter;
+                &templateParameter;
                 &filesParameter;
                 &parametersParameter;
             </representation>
@@ -437,8 +396,7 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                       <para>
-                        The URL of the template to instantiate. This value
-                        is ignored if the template is supplied inline.
+                        The URL of the template.
                       </para>
                     </wadl:doc>
                 </param>
@@ -446,21 +404,11 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                          A JSON template to instantiate. This value takes
-                          precedence over the template URL if both are
-                          supplied.
+                          A JSON template.
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="environment" style="plain"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          A JSON environment for the stack.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &environmentParameterOptional;
                 <param name="files" style="plain" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
@@ -575,50 +523,8 @@
                       </para>
                     </wadl:doc>
                 </param>
-                <param name="template_url" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          A URI to the location containing the stack template
-                          to instantiate.
-                        </para>
-                        <para>
-                          See the description of the <code>template</code>
-                          property for information about the expected template
-                          content located at the URI.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template</code> parameter is omitted. The
-                          value is ignored if the <code>template</code>
-                          property is also specified.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="template" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          The stack template to instantiate.
-                        </para>
-                        <para>
-                          This parameter is always provided as a
-                          <code>string</code> in the JSON request body. The
-                          content of the string is an Orchestration template,
-                          and may be provided in either YAML or JSON syntax.
-                          Complete details about the syntax of an
-                          Orchestration template are provided in the <link
-                          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
-                          Orchestration Template (HOT) specification</link>.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template_url</code> parameter is omitted. If
-                          both are specified, this value overrides any value
-                          provided for <code>template_url</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &templateUrlParameter;
+                &templateParameter;
                 &filesParameter;
                 &parametersParameter;
             </representation>
@@ -785,58 +691,9 @@
                       </para>
                     </wadl:doc>
                 </param>
-                <param name="template_url" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          A URI to the location containing the stack template
-                          to instantiate.
-                        </para>
-                        <para>
-                          See the description of the <code>template</code>
-                          property for information about the expected template
-                          content located at the URI.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template</code> parameter is omitted. The value
-                          is ignored if the <code>template</code> property is
-                          also specified.
-                      </para>
-                    </wadl:doc>
-                </param>
-                <param name="template" style="plain" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          The stack template to instantiate.
-                        </para>
-                        <para>
-                          This parameter is always provided as a
-                          <code>string</code> in the JSON request body. The
-                          content of the string is an Orchestration template, and may
-                          be provided in either YAML or JSON syntax. Complete details about the syntax
-                          of an Orchestration template are provided in the <link
-                          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
-                          Orchestration Template (HOT) specification</link>.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template_url</code> parameter is omitted. If
-                          both are specified, this value overrides any value
-                          provided for <code>template_url</code>.
-                      </para>
-                    </wadl:doc>
-                </param>
-                <param name="environment" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          A JSON environment for the stack.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &templateUrlParameter;
+                &templateParameter;
+                &environmentParameter;
                 &filesParameter;
                 &parametersParameter;
                 <param name="param_name-n" style="plain"
@@ -1085,59 +942,9 @@
                     xml:lang="EN">
                     <xsdxt:code href="samples/stack_update.json"/>
                 </wadl:doc>
-                <param name="template_url" style="plain" required="false">
-                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                      xml:lang="EN">
-                        <para>
-                          A URI to the location containing the updated
-                          stack template.
-                        </para>
-                        <para>
-                          See the description of the <code>template</code>
-                          property for information about the expected template
-                          content located at the URI.
-                        </para>
-                        <para>
-                          This parameter is only required when the
-                          <code>template</code> parameter is omitted. The
-                          value is ignored if the <code>template</code>
-                          property is also specified.
-                        </para>
-                  </wadl:doc>
-                </param>
-                <param name="template" style="plain" required="false">
-                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                      xml:lang="EN">
-                      <para>
-                        The updated stack template.
-                      </para>
-                      <para>
-                        This parameter is always provided as a
-                        <code>string</code> in the JSON request body. The
-                        content of the string is an Orchestration template,
-                        and may be provided in either YAML or JSON syntax.
-                        Complete details about the syntax of an Orchestration
-                        template are provided in the <link
-                        xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
-                        Orchestration Template (HOT) specification</link>.
-                      </para>
-                      <para>
-                        This parameter is only required when the
-                        <code>template_url</code> parameter is omitted. If
-                        both are specified, this value overrides any value
-                        provided for <code>template_url</code>.
-                    </para>
-                  </wadl:doc>
-                </param>
-                <param name="environment" style="plain"
-                      required="true">
-                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                      xml:lang="EN">
-                      <para>
-                        A JSON environment for the stack.
-                      </para>
-                  </wadl:doc>
-                </param>
+                &templateUrlParameter;
+                &templateParameter;
+                &environmentParameter;
                 &filesParameter;
                 <param name="parameters" style="plain" required="false">
                       <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -1344,27 +1151,10 @@
                     <xsdxt:code href="samples/template_validate_req.json"
                     />
                 </wadl:doc>
-                <param name="template_url" style="plain"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          The URL of the template to instantiate. This value
-                          is ignored if the template is supplied inline.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="template" style="plain" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                          A JSON template to instantiate. This value takes
-                          precedence over the template URL if both are
-                          supplied.
-                        </para>
-                    </wadl:doc>
-                </param>
             </representation>
+            &templateUrlParameter;
+            &templateParameter;
+            &environmentParameterOptional;
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -1372,11 +1162,12 @@
                     xml:lang="EN">
                     <xsdxt:code href="samples/template_validate_resp.json"/>
                 </wadl:doc>
-                <param name="Description" style="plain" required="true">
+            </representation>
+            <param name="Description" style="plain" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                          The description given in the template.
+                          The description specified in the template.
                         </para>
                     </wadl:doc>
                 </param>
@@ -1385,8 +1176,8 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                          An object with all the input parameters defined in
-                          the template, indexed by parameter name.
+                          An object that defines all input parameters that are
+                          defined in the template. Indexed by parameter name.
                         </para>
                     </wadl:doc>
                 </param>
@@ -1395,12 +1186,11 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                          A list of parameter groups, each containing a list
-                          of parameter names.
+                          A list of parameter groups. Each group contains a
+                          list of parameter names.
                         </para>
                     </wadl:doc>
                 </param>
-            </representation>
         </response>
     </method>
     <method name="GET" id="resource_type_list">
@@ -1513,10 +1303,12 @@
               Sends a signal to a specified resource.
             </para>
             <para>
+              The contents of the request body depends on the resource to
+              which you send a signal.
+            </para>
+            <para>
               Some resources cannot receive signals. If you send them a
-              signal, they return a 400 error response code. The contents of
-              the &POST; request body depends on the resource to which you
-              send a signal.
+              signal, they return a 400 error code.
           </para>
         </wadl:doc>
         <response status="200"/>
@@ -2038,12 +1830,11 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show orchestration engine status">
             <para role="shortdesc">
-              Shows details for all orchestration engines.
+              Enables administrative users to view details for all orchestration engines.
             </para>
             <para>
-              Reports the orchestration engine details like <code>engine_id</code>,
-              topic name, last updated time, health status, and host name. Only
-              displayed for user with administrative permissions.
+              Orchestration engine details include <code>engine_id</code>,
+              topic name, last updated time, health status, and host name.
             </para>
             <para>Troubleshooting</para>
             <itemizedlist>
