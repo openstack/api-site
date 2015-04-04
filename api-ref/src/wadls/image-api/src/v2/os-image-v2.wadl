@@ -139,7 +139,7 @@
                     <code>sort_key</code>.</para>
             <para>You can see a list of VM images which status is in
                 <code>active</code>, <code>queued</code>, or
-                <code>saving</code></para>.
+                <code>saving</code>.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -247,7 +247,7 @@
                 </wadl:doc> &statusParameter; &container_formatParameter;
                 &min_ramParameter; &updated_atParameter;
                 &ownerParameter; &min_diskParameter;
-                &tagParameter; &visibilityParameter;
+                &tagsParameter; &visibilityParameter;
                 &idParameter; &sizeParameter; &virtual_sizeParameter;
                 &nameParameter; &checksumParameter;
                 &created_atParameter; &disk_formatParameter;
@@ -298,11 +298,11 @@
             <para>Preconditions</para>
             <itemizedlist>
                 <listitem><para>When adding or replacing a new location
-                    to the specified image, you need to set disk_format
-                    and container_format in the image.</para></listitem>
+                    to the specified image, you must set the <code>disk_format</code>
+                    and <code>container_format</code> parameters in the image.</para></listitem>
                 <listitem><para>When locations of the specified image
                     is replaced by replacing operation, the old location
-                    needs to be set in the image on ahead.</para></listitem>
+                    must be set in the image on ahead.</para></listitem>
             </itemizedlist>
             <para>Synchronous Postconditions</para>
             <itemizedlist>
@@ -313,17 +313,20 @@
                     the image status as <code>active</code> through API calls
                     after adding a location to the image which had no
                     location.</para></listitem>
-                <listitem><para>With correct permissions, you can see
-                    the image status as <code>queued</code> through API calls
-                    after removing all locations from the image
-                    </para></listitem>
+                <listitem><para>
+                    With correct permissions, you can see the image status as
+                    <code>queued</code> through API calls after removing all
+                    locations from the image.
+                </para></listitem>
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                <listitem><para>If you can not update locations you might
-                    lack some infomation in your requests. Ensure you meet
-                    the preconditions then investigate the your API
-                    requests.</para></listitem>
+                <listitem><para>
+                    If you cannot update locations, your request might lack
+                    some information. Ensure that you meet the preconditions
+                    and run the request again. If the request fails again,
+                    review your API request.
+                </para></listitem>
             </itemizedlist>
         </wadl:doc>
         <request>
@@ -395,7 +398,7 @@
             <para role="shortdesc">Deletes a specified image. (Since
                 Image API v2.0.)</para>
             <para>You cannot delete images with the 'protected'
-                attribute set to true (boolean); </para>
+                attribute set to true (boolean).</para>
             <para>Preconditions</para>
             <itemizedlist>
                 <listitem><para>You can delete an image in all status
@@ -416,11 +419,13 @@
             </itemizedlist>
             <para>TroubleShooting</para>
             <itemizedlist>
-                <listitem><para>The response returns the HTTP 403 status
-                    code when the <code>protected</code> attribute is set to
-                    <code>true</code> even if you have a correct permissions.
-                    Ensure you meet the preconditions then investigate
-                    the attribute.</para></listitem>
+                <listitem><para>
+                    The response returns the HTTP 403 status code when the
+                    <code>protected</code> attribute is set to
+                    <code>true</code> even if you have correct permissions.
+                    Ensure that you meet the preconditions and run the request
+                    again. If the request fails again, review your API request.
+                </para></listitem>
             </itemizedlist>
         </wadl:doc>
         <request>
@@ -447,7 +452,7 @@
             <itemizedlist>
                 <listitem><para>The specified image must exist before you
                     store binary image data.</para></listitem>
-                <listitem><para>You need to set disk_format and container_format
+                <listitem><para>You must set disk_format and container_format
                     in the image before you store the data.</para></listitem>
                 <listitem><para>You can only store the data into a image which
                     status is <code>queued</code>.</para></listitem>
@@ -459,7 +464,7 @@
             <para>Synchronous Postconditions</para>
             <itemizedlist>
                 <listitem><para>With correct permissions, you can see the
-                    image status as <code>active</code> via API calls.
+                    image status as <code>active</code> through API calls.
                     </para></listitem>
                 <listitem><para>With correct access, you can see the stored
                     data in the storage system that OpenStack Image Service
@@ -467,11 +472,13 @@
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                <listitem><para>If you can not store the data you might lack
-                    some infomation in your requests or exceed the quota
-                    you are allowed to use. Ensure you meet the preconditions
-                    then investigate the your API requests.</para></listitem>
-                <listitem><para>The storage backends for storing the data need
+                <listitem><para>
+                    If you cannot store the data, your request might lack
+                    information or you exceeded your allotted quota. Ensure that you meet the
+                    preconditions and run the request again. If the request fails again, review
+                    your API request.
+             </para></listitem>
+                <listitem><para>The storage back ends for storing the data must have
                     enough free storage space to match the size of the data.
                     </para></listitem>
             </itemizedlist>
@@ -556,7 +563,7 @@
             <itemizedlist>
                 <listitem><para>The specified image must exist.
                 </para></listitem>
-                <listitem><para>You need to be the owner or a member of
+                <listitem><para>You must be the owner or a member of
                     the specified image.</para></listitem>
             </itemizedlist>
         </wadl:doc>
@@ -590,7 +597,7 @@
             <itemizedlist>
                 <listitem><para>The specified image must exist.
                 </para></listitem>
-                <listitem><para>You need to be the owner or a member of
+                <listitem><para>You must be the owner or a member of
                     the specified image.</para></listitem>
             </itemizedlist>
         </wadl:doc>
@@ -631,7 +638,7 @@
                 <listitem><para>You can only add a new member to an
                 image which 'visibility' attribute is <code>private</code>.
                 </para></listitem>
-                <listitem><para>You need to be the owner of the specified
+                <listitem><para>You must be the owner of the specified
                 image.</para></listitem>
             </itemizedlist>
             <para>Synchronous Postconditions</para>
@@ -642,16 +649,18 @@
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                <listitem><para>Even if you have correct permissions,
-                if the <code>visibility</code> attribute is set to
-                <code>public</code>, the request returns the HTTP 403
-                status code. Ensure you meet the preconditions then
-                investigate the attribute.</para></listitem>
-                <listitem><para>If the member in the request is
-                already a member for the image, the service returns
-                the HTTP 409 Conflict error code in case you
-                meant a different member. Double-check the member
-                to ensure you want it to be a member of the image.
+                <listitem><para>
+                    Even if you have correct permissions, if the
+                    <code>visibility</code> attribute is set to <code>public</code>, the request
+                    returns the HTTP 403 error code. Ensure that you meet the preconditions
+                    and run the request again. If the request fails again,
+                    review your API request.
+                </para></listitem>
+                <listitem><para>
+                    If the specified member is already a member for the image,
+                    the service returns the HTTP 409 Conflict error code. In
+                    case you meant a different member, double-check that you
+                    specified the correct member.
                 </para></listitem>
             </itemizedlist>
         </wadl:doc>
@@ -696,15 +705,14 @@
             <itemizedlist>
                 <listitem><para>The specified images must exist.
                 </para></listitem>
-                <listitem><para>You need to be a member of the
+                <listitem><para>You must be a member of the
                 specified image.</para></listitem>
             </itemizedlist>
             <para>Synchronous Postconditions</para>
             <itemizedlist>
                 <listitem><para>If you update the member status to
-                <code>accepted</code>, and have the correct permissions,
-                you will see the image in responses of List Images API
-                call.</para></listitem>
+                <code>accepted</code> and have the correct permissions,
+                you see the image in list images responses.</para></listitem>
                 <listitem><para>With correct permissions, you can see
                 the updated member status of the image through API
                 calls.</para></listitem>
@@ -750,7 +758,7 @@
             <itemizedlist>
                 <listitem><para>The specified image must exist.
                 </para></listitem>
-                <listitem><para>You need to be the owner of the specified
+                <listitem><para>You must be the owner of the specified
                 image.</para></listitem>
             </itemizedlist>
             <para>Synchronous Postconditions</para>
@@ -760,11 +768,12 @@
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                <listitem><para>Even if you have correct permissions,
-                it you are not the owner of the specified image,
-                the request returns the HTTP 403 status code.
-                Ensure you meet the preconditions then investigate
-                the attribute.
+                <listitem><para>
+                    Even if you have correct permissions, if you are not the
+                    owner of the specified image, the request returns the HTTP
+                    403 error code. Ensure that you meet the preconditions
+                    and run the request again. If the request fails again,
+                    review your API request.
                 </para></listitem>
             </itemizedlist>
         </wadl:doc>
