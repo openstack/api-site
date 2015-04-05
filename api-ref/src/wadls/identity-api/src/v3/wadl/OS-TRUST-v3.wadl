@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- (C) 2011-2014 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!-- Import Common XML Entities                            -->
+<!--                                                       -->
+<!-- You can resolve the entities with xmllint              -->
+<!--                                                       -->
+<!-- xmllint -noent OS-TRUST-v3.wadl                       -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+<!ENTITY % common SYSTEM "common.ent">
+%common;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:identity="http://docs.openstack.org/identity/api/v3"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3 ../xsd/api.xsd
+    http://docs.openstack.org/common/api/v1.0 ../xsd/api-common.xsd
+    http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
+    ">
+    <grammars>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <!-- We should use SSL in production -->
+    <resources base="http://localhost:5000" xml:id="OS-TRUST-v3">
+        <!-- FYI: double slash needed in path to get a single slash to display -->
+        <resource id="v3" path="//v3">
+            <resource id="os-trust" path="OS-TRUST">
+                <resource id="trust" path="trust">
+                    <method href="#createTrust"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!--Consumers Operations-->
+    <method name="POST" id="createTrust">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create trust">
+            <para role="shortdesc">Creates a
+                trust.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/OS-TRUST/trust-POST-req.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="trust" style="plain" type="xsd:string"
+                required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>A trust object.</para>
+                    </wadl:doc>
+                </param>
+                <param name="expires_at" style="plain"
+                type="xsd:dict" required="false">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The ISO 8601 date time when a trust
+                            expires. If the Identity API does not
+                            include this attribute or the attribute is
+                            null, the trust lasts
+                        indefinitely.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="impersonation" style="plain" type="xsd:boolean"
+                    required="false">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The impersonation flag. Default is false.</para>
+                    </wadl:doc>
+                </param>
+                <param name="project_id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The ID of the project.</para>
+                    </wadl:doc>
+                </param>
+                <param name="remaining_uses" style="plain" type="xsd:boolean" required="false">
+                     <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>Remaining uses flag. Default is null.</para>
+                    </wadl:doc>
+                </param>
+                        <param name="roles" style="plain" type="xsd:dict"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>A roles object.</para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The role name.</para>
+                    </wadl:doc>
+                </param>
+                <param name="trustee_user_id" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The trustee user ID.</para>
+                    </wadl:doc>
+                </param>
+                <param name="trustor_user_id" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The trustor user ID.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/OS-TRUST/trust-POST-resp.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="trust" style="plain" type="xsd:string"
+                required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>A trust object.</para>
+                    </wadl:doc>
+                </param>
+                <param name="expires_at" style="plain"
+                type="xsd:dict" required="false">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The ISO 8601 date time when a trust
+                            expires. If you omit this attribute, the trust lasts
+                        indefinitely.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The ID of the trust.</para>
+                    </wadl:doc>
+                </param>
+                <param name="impersonation" style="plain" type="xsd:boolean"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The impersonation flag.</para>
+                    </wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:dict"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>Trust links.</para>
+                    </wadl:doc>
+                </param>
+                <param name="project_id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The ID of the project.</para>
+                    </wadl:doc>
+                </param>
+                <param name="remaining_uses" style="plain" type="xsd:boolean" required="true">
+                     <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>Remaining uses flag.</para>
+                    </wadl:doc>
+                </param>
+                <param name="roles" style="plain" type="xsd:dict"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>A roles object. Includes <code>id</code>, <code>name</code>, and <code>links</code> for any roles.</para>
+                    </wadl:doc>
+                </param>
+                <param name="roles_links" style="plain" type="xsd:dict"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>A roles links object. Includes <code>next</code>, <code>previous</code>, and <code>self</code> links for roles.</para>
+                    </wadl:doc>
+                </param>
+                <param name="trustee_user_id" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The trustee user ID.</para>
+                    </wadl:doc>
+                </param>
+                <param name="trustor_user_id" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>The trustor user ID.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response> &commonFaults;</method>
+</application>
