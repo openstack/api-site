@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entites with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-fwaasv2.0-ext.wadl          -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/" xml:id="os-fwaas-v2.0">
+        <resource id="version" path="//v2.0/fw">
+            <resource id="Firewalls" path="firewalls">
+                <method href="#listFirewalls"/>
+                <method href="#createFirewall"/>
+                <resource path="{firewall_id}" id="firewall_id">
+                    <param name="firewall_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Firewall ID">The
+                            UUID for the firewall.</wadl:doc>
+                    </param>
+                    <method href="#showFirewall"/>
+                    <method href="#updateFirewall"/>
+                    <method href="#deleteFirewall"/>
+                </resource>
+            </resource>
+           <!--  <resource id="FirewallPolicies" path="firewallpolicies">
+                <method href="#listFirewallPolicies"/>
+                <method href="#createFirewallPolicy"/>
+                <resource path="{firewall_policy_id}" id="firewallpolicy_id">
+                    <param name="firewall_policy_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Firewall policy ID">The
+                            UUID for the firewall policy.</wadl:doc>
+                    </param>
+                    <method href="#showFirewallPolicy"/>
+                    <method href="#updateFirewallPolicy"/>
+                    <method href="#deleteFirewallPolicy"/>
+                </resource>
+            </resource>
+            <resource id="FirewallRules" path="firewallrules">
+                <method href="#listFirewallRules"/>
+                <method href="#createFirewallRule"/>
+                <resource path="{firewall_rule_id}" id="firewall_rule_id">
+                    <param name="firewall_rule_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Firewall rule ID">The
+                            UUID for the firewall rule.</wadl:doc>
+                    </param>
+                    <method href="#showFirewallRule"/>
+                    <method href="#updateFirewallRule"/>
+                    <method href="#deleteFirewallRule"/>
+                </resource>
+            </resource> -->
+        </resource>
+    </resources>
+
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!-- Firewall  -->
+    <method name="GET" id="listFirewalls">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List firewalls">
+            <para role="shortdesc">List firewalls.</para>
+            <para>Lists all firewalls. The list might be empty.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewalls-list-res.json"/>
+                </wadl:doc>
+                &FWResponseParams;
+            </representation>
+        </response> &fault401; &fault403;
+    </method>
+    <method name="GET" id="showFirewall">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show firewall details">
+            <para role="shortdesc">Shows details for a specified firewall.</para>
+            <para>
+                Shows the details for a specified firewall. If the user is not
+                an administrative user and the firewall object does not belong
+                to the user's tenant account, a 403 (Forbidden) error is
+                returned.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewall-show-res.json"/>
+                </wadl:doc>
+                &FWResponseParams;
+            </representation>
+        </response> &fault401; &fault403; &fault404;
+    </method>
+    <method name="POST" id="createFirewall">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create firewall">
+            <para role="shortdesc">Creates a firewall.</para>
+            <para>
+                Creates a firewall object. The firewall must be associated
+                with a firewall policy.
+            </para>
+            <para>Example:</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewall-create-req.json"/>
+                </wadl:doc>
+                &FWRequestParams;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewall-create-res.json"/>
+                </wadl:doc>
+                &FWResponseParams;
+            </representation>
+        </response>
+        &fault400;
+        &fault401;
+    </method>
+    <method name="PUT" id="updateFirewall">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update firewall">
+            <para role="shortdesc">Updates a specified firewall.</para>
+            <para>
+                Updates the attributes for a specified firewall. To update a
+                service, the service status cannot be a <code>PENDING_*</code>
+                status.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewall-update-req.json"/>
+                </wadl:doc>
+                &FWUpdateParams;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewall-update-res.json"/>
+                </wadl:doc>
+                &FWResponseParams;
+            </representation>
+        </response>
+        &fault400;
+        &fault401;
+        &fault404;
+    </method>
+    <method name="DELETE" id="deleteFirewall">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove firewall">
+            <para role="shortdesc">Removes a specified firewall.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/firewall/firewall-delete-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="204"/>
+        &fault401;
+        &fault404;
+        &fault409conflict;
+    </method>
+</application>
