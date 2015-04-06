@@ -109,10 +109,9 @@ Accept: application/json</programlisting>
                 control which fields are returned in the response
                 body. Additionally, you can filter results by using
                 query string parameters. For information, see <link
-                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
-                    >Filtering and Column Selection</link> in the
-                    <citetitle>OpenStack Networking API v2.0
-                    Reference</citetitle>.</para>
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/
+                    networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and Column Selection</link>.</para>
         </wadl:doc>
         <response status="200"> &statusParameter;
             &external-gateway-infoParameter; &nameParameter;
@@ -190,10 +189,9 @@ Accept: application/json</programlisting>
             <para>Use the <code>fields</code> query parameter to
                 control which fields are returned in the response
                 body. For information, see <link
-                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
-                    >Filtering and Column Selection</link> in the
-                    <citetitle>OpenStack Networking API v2.0
-                    Reference</citetitle>.</para>
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/
+                    networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and Column Selection</link>.</para>
         </wadl:doc>
         <response status="200"> &routersParameter; &statusParameter;
             &external-gateway-infoParameter; &nameParameter;
@@ -406,25 +404,28 @@ Accept: application/json</programlisting>
     <method name="GET" id="listFloatingIps">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List floating IPs">
-            <para role="shortdesc">Lists floating IPs that are
-                accessible to the tenant who submits the
-                request.</para>
-            <para>Default policy settings return only those floating
-                IPs that are owned by the tenant who submits the
-                request, unless an admin user submits the
-                request.</para>
+            <para role="shortdesc">
+                Lists floating IPs that are accessible to the tenant who
+                submits the request.
+            </para>
+            <para>
+                Default policy settings return only those floating IPs that
+                are owned by the tenant who submits the request, unless an
+                admin user submits the request.
+            </para>
             <para>This example request lists floating IPs in JSON
                 format:</para>
             <programlisting>GET /v2.0/floatingips
 Accept: application/json</programlisting>
-            <para>Use the <code>fields</code> query parameter to
-                control which fields are returned in the response
-                body. Additionally, you can filter results by using
-                query string parameters. For information, see <link
-                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
-                    >Filtering and Column Selection</link> in the
-                    <citetitle>OpenStack Networking API v2.0
-                    Reference</citetitle>.</para>
+            <para>
+                Use the <code>fields</code> query parameter to control which
+                fields are returned in the response body. Additionally, you
+                can filter results by using query string parameters. For
+                information, see <link
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/
+                    networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and Column Selection</link>.
+            </para>
         </wadl:doc>
         <response status="200"> &floating-ipsParameter;
             &router-idParameter; &tenant-idParameter; &floating-network-idParameter;
@@ -445,48 +446,96 @@ Accept: application/json</programlisting>
     <method name="POST" id="createFloatingIp">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create floating IP">
-            <para role="shortdesc">Creates a floating IP, and, if you
-                specify port information, associates the floating IP
-                with an internal port.</para>
-            <para>If you do not specify port information in the
-                request, you can issue an &PUT; request.</para>
-            <para>You can create floating IPs on external networks
-                only. If you specify a network that is not external,
-                such as <code>router:external=False</code>, the
-                operation returns a <code>400</code> error.</para>
-            <para>If you do not specify a floating IP address in the
-                request, the operation automatically allocates an
-                address for the floating IP. If the requested floating
-                IP address does not fall in the subnet range for the
-                external network, the operation returns a
-                    <code>400</code> error. If the requested floating
-                IP address is already in use, the operation returns a
-                    <code>409</code> error code.</para>
-            <para>You can associate the floating IP with an internal
-                port by using the port ID attribute in the request
-                body. If you specify a port ID that is not valid, the
-                operation returns a <code>404</code> error
-                code.</para>
-            <para>You must configure an IP address with the internal
-                OpenStack Networking port associated with the floating
-                IP or the operation returns a <code>400</code> error
-                code. Because an OpenStack Networking port might be
-                associated with multiple IP addresses, you can use the
-                    <code>fixed_ip_address</code> attribute in the
-                request body to associate a particular IP address with
-                the floating IP.</para>
-            <para>By default, this operation associates the floating
-                IP with a single IP address that is configured on a
-                port. Therefore, if a port has multiple IP addresses,
-                you must specify the <code>fixed_ip_address</code>
-                attribute.</para>
-            <para>If you specify an IP address that is not valid in
-                the <code>fixed_ip_address</code> attribute, the
-                operation returns a <code>400</code> error code. If
-                the internal OpenStack Networking port and specified
-                IP address are already associated with another
-                floating IP, the operation returns a <code>409</code>
-                error code.</para>
+            <para role="shortdesc">
+                Creates a floating IP, and, if you specify port information,
+                associates the floating IP with an internal port.
+            </para>
+            <para>
+                To associate the floating IP with an internal port, specify
+                the port ID attribute in the request body. If you do not
+                specify a port ID in the request, you can issue a &PUT;
+                request instead of a &POST; request.
+            </para>
+            <para>
+                Default policy settings enable only administrative users to
+                set floating IP addresses and some non-administrative users
+                might require a floating IP address. If you do not specify a
+                floating IP address in the request, the API automatically
+                allocates one.
+            </para>
+            <para>
+                By default, this operation associates the floating IP address
+                with a single fixed IP address that is configured on an
+                OpenStack Networking port. If a port has multiple IP
+                addresses, you must specify the <code>fixed_ip_address</code>
+                attribute in the request body to associate a specific fixed IP
+                address with the floating IP address.
+            </para>
+            <para>
+                You can create floating IPs on external networks only.
+            </para>
+            <para>
+                You must configure an IP address with the internal OpenStack
+                Networking port that is associated with the floating IP
+                address.
+            </para>
+            <para>Error codes:</para>
+            <itemizedlist>
+               <listitem>
+                  <para>
+                    <code>400</code> The operation returns this error code for
+                    one of these reasons:
+                </para>
+                  <itemizedlist>
+                     <listitem>
+                        <para>The specified network is not external, such as
+                           <code>router:external=False</code>.
+                        </para>
+                     </listitem>
+                     <listitem>
+                        <para>The specified internal OpenStack
+                           Networking port is not associated with the floating IP
+                           address.
+                        </para>
+                     </listitem>
+                     <listitem>
+                        <para>
+                           The requested floating IP address does not fall in the
+                           subnet range for the external network.
+                        </para>
+                     </listitem>
+                     <listitem>
+                        <para>
+                           The specified fixed IP address is not valid.
+                        </para>
+                     </listitem>
+                  </itemizedlist>
+               </listitem>
+               <listitem>
+                  <para><code>404</code> The specified port ID is not valid.
+                  </para>
+               </listitem>
+               <listitem>
+                  <para>
+                    <code>409</code> The operation returns this error code for
+                    one of these reasons:
+                </para>
+                  <itemizedlist>
+                     <listitem>
+                        <para>
+                           The requested floating IP address is already in use.
+                        </para>
+                     </listitem>
+                     <listitem>
+                        <para>
+                           The internal OpenStack Networking port and
+                           specified fixed IP address are already associated
+                           with another floating IP.
+                        </para>
+                     </listitem>
+                  </itemizedlist>
+               </listitem>
+            </itemizedlist>
         </wadl:doc>
         <request> &floating-ipParameter; &tenant-idParameter;
             &floating-network-idParameter; &fixed-ip-addressParameter;
@@ -528,10 +577,9 @@ Accept: application/json</programlisting>
             <para>Use the <code>fields</code> query parameter to
                 control which fields are returned in the response
                 body. For information, see <link
-                    xlink:href="http://docs.openstack.org/api/openstack-network/2.0/content/filtering.html"
-                    >Filtering and Column Selection</link> in the
-                    <citetitle>OpenStack Networking API v2.0
-                    Reference</citetitle>.</para>
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/
+                    networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and Column Selection</link>.</para>
             <para>This example request shows details for a floating IP
                 in JSON format. This example also filters the result
                 by the <code>fixed_ip_address</code> and
