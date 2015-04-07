@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-server-shelve-v2.1">
+        <resource id="v2.1 " path="//v2.1">
+            <resource id="servers" path="servers">
+               <!--  <resource id="detail" path="detail">
+                    <method href="#returnserveruser"/>
+                </resource> -->
+                <resource id="server_id" path="{server_id}">
+                    <method href="#shelve"/>
+                    <method href="#unshelve"/>
+                    <method href="#shelve-offload"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="shelve">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Shelve server">
+            <para role="shortdesc">Shelves a running server.</para>
+            <para>
+              All associated data and resources are kept but anything still in
+              memory is not retained. To restore a shelved instance, use the
+              <code>unshelve</code> action. To remove a shelved instance, use
+              the <code>shelveOffload</code> action.
+            </para>
+            <para>
+              Policy defaults enable only users with the administrative
+              role or the owner of the server to perform this operation.
+              Change these permissions through the
+              <code>policy.json</code> file.
+            </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem>
+                  <para>
+                    The server status must be <code>ACTIVE</code>,
+                    <code>SHUTOFF</code>, <code>PAUSED</code>, or
+                    <code>SUSPENDED</code>.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    If the specified server is locked, you must have
+                    administrator privileges to shelve the server.
+                  </para>
+                </listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem>
+                  <para>
+                    After you successfully shelve a server, its status changes
+                    to <code>SHELVED</code> and the image status is
+                    <code>ACTIVE</code>. The server instance data appears on
+                    the compute node that the Compute service manages.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    If you boot the server from volumes or set the
+                    <code>shelved_offload_time</code> option to 0, the Compute
+                    service automatically deletes the instance on compute
+                    nodes and changes the server status to
+                    <code>SHELVED_OFFLOADED</code>.
+                  </para>
+                </listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem>
+                  <para>
+                    If the server status does not change to
+                    <code>SHELVED</code> or <code>SHELVED_OFFLOADED</code>,
+                    the shelve operation failed. Ensure that you meet the
+                    preconditions and run the request again. If the request
+                    fails again, investigate whether another operation is
+                    running that causes a race condition.
+                  </para>
+                </listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-shelve.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve server: XML request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-shelve.xml"
+                    />
+                </wadl:doc> &shelveAction; </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="shelve-offload">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Remove shelved instance">
+            <para role="shortdesc">Removes an instance from the
+                server.</para>
+            <para>Data and resource associations are deleted. If an
+                instance is no longer needed, you can remove that
+                instance from the hypervisor to minimize resource
+                usage.</para>
+            <para>
+                Policy defaults enable only users with the administrative
+                role or the owner of the server to perform this
+                operation. Change these permissions through the
+                <code>policy.json</code> file.
+              </para>
+              <para>Preconditions</para>
+              <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>SHELVED</code>.</para></listitem>
+                  <listitem><para>
+                    If the specified server is locked, you must have
+                    administrator privileges to shelve-offload the server.
+                </para></listitem>
+              </itemizedlist>
+              <para>Asynchronous Postconditions</para>
+              <itemizedlist>
+                  <listitem><para>After you successfully shelve-offload a
+                  server, its status changes to <code>SHELVED_OFFLOAD</code>.
+                  The server instance data appears on the compute
+                  node.</para></listitem>
+              </itemizedlist>
+              <para>Troubleshooting</para>
+              <itemizedlist>
+                  <listitem><para>If the server status does not change
+                  to <code>SHELVEDED_OFFLOADED</code>, the shelve-offload
+                  operation failed. Ensure that you meet the preconditions
+                  and run the request again. If the request fails again,
+                  investigate whether another operation is running that
+                  causes a race condition.</para></listitem>
+              </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-shelve-offload.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Shelve server: XML request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-shelve-offload.xml"
+                    />
+                </wadl:doc> &shelveOffloadAction; </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="unshelve">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Restore shelved server">
+            <para role="shortdesc">Restores a shelved server.</para>
+            <para>
+                Policy defaults enable only users with the administrative
+                role or the owner of the server to perform this
+                operation. Change these permissions through the
+                <code>policy.json</code> file.
+              </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>SHELVED</code> or <code>SHELVED_OFFLOADED</code>.
+                  </para></listitem>
+                  <listitem><para>If the specified server is locked,
+                  you must have administrator privileges to unshelve
+                  the server.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                  <listitem><para>After you successfully shelve a server, its
+                  status changes to <code>ACTIVE</code>. The server appears on
+                  the compute node.</para></listitem>
+                  <listitem><para>The shelved image is deleted from the
+                  list of images returned by an API call.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                  <listitem><para>If the server status does not change to
+                  <code>ACTIVE</code>, the unshelve operation failed. Ensure
+                  that you meet the preconditions and run the request again.
+                  If the request fails again, investigate whether another
+                  operation is running that causes a race condition.
+                  </para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN"
+                    title="Unshelve server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-unshelve.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Unshelve server: XML request">
+                    <xsdxt:code
+                        href="../api_samples/os-shelve/os-unshelve.xml"
+                    />
+                </wadl:doc> &unshelveAction; </representation>
+        </request>
+        <response status="202"/>
+    </method>
+</application>
