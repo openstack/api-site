@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-floating-ip-dns-v2.1">
+        <resource id="v2.1" path="//v2.1">
+          <resource id="os-floating-ip-dns"
+                path="os-floating-ip-dns">
+                <method href="#ListDomains"/>
+                <resource path="{domain}" id="domain">
+                    <param name="domain" style="template"
+                        required="true" type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN">
+                            <para>
+                                Registered DNS domain published by the DNS
+                                drivers.
+                            </para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#CreateDomain"/>
+                    <method href="#DeleteDomain"/>
+                    <resource id="entries" path="entries">
+                        <resource path="{name}" id="name">
+                            <param name="name" style="template"
+                               required="true" type="xsd:string">
+                               <wadl:doc
+                               xmlns="http://docbook.org/ns/docbook"
+                               xml:lang="EN">
+                                   <para>
+                                        DNS entry name assigned under a domain.
+                                   </para>
+                                </wadl:doc>
+                            </param>
+                            <method href="#CreateEntry"/>
+                            <method href="#FindUniqueEntry"/>
+                            <method href="#DeleteEntry"/>
+                        </resource>
+                        <resource path="{ip}" id="ip">
+                            <method href="#FindEntriesbyIP"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="ListDomains">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List DNS domains">
+            <para role="shortdesc">Lists registered DNS domains
+                published by the DNS drivers.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-list-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="CreateDomain">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create or update DNS domain">
+            <para role="shortdesc">Creates or updates a DNS
+                domain.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-req.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="DeleteDomain">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete DNS domain">
+            <para role="shortdesc">Deletes a DNS domain and all
+                associated host entries.</para>
+        </wadl:doc>
+        <response status="200"/>
+    </method>
+    <method name="PUT" id="CreateEntry">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create or update DNS entry">
+            <para role="shortdesc">Creates or updates a DNS
+                entry.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-entry-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-entry-req.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-entry-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-create-or-update-entry-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="FindUniqueEntry">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Find unique DNS entry">
+            <para role="shortdesc">Finds a unique DNS entry for a
+                specified domain and name.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-entry-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-entry-get-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="FindEntriesbyIP">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List DNS entries">
+            <para role="shortdesc">Lists DNS entries for a specified
+                domain and IP.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-entry-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ip-dns/floating-ip-dns-entry-list-resp.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="DeleteEntry">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete DNS entry">
+            <para role="shortdesc">Deletes a specified DNS
+                entry.</para>
+        </wadl:doc>
+        <response status="200"/>
+    </method>
+</application>
