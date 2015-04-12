@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-server-metadata-v2.1">
+        <resource id="v2.1" path="//v2.1">
+            <resource id="servers" path="servers">
+               <resource id="server_metadata" path="metadata" type="#ServerMetadataDetails">
+                    <method href="#showServerMetadata"/>
+                    <method href="#createServerMetadata"/>
+                    <method href="#updateServerMetadata"/>
+                    <resource id="ServerMetadataKey" path="{key}">
+                        <method href="#getServerMetadataItem"/>
+                        <method href="#setServerMetadataItem"/>
+                        <method href="#deleteServerMetadataItem"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="showServerMetadata">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="Show server metadata">
+            <para role="shortdesc">
+                Shows metadata for a specified server.
+            </para>
+            <para>
+              Policy defaults enable only users with the administrative role
+              or the owner of the server to perform this operation. Change
+              these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-all-resp.json"/>
+                </wadl:doc> &x-compute-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="updateServerMetadata">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update server metadata items">
+            <para role="shortdesc">
+                Updates metadata items by key for a specified server.
+            </para>
+            <para>
+                Replaces items that match the specified keys and does not
+                modify items not specified in the request.
+            </para>
+            <para>
+                An overLimit (<errorcode>413</errorcode>) fault might be
+                thrown if the operation causes the quota for metadata items to
+                be exceeded.
+            </para>
+            <para>
+              Policy defaults enable only users with the administrative role
+              or the owner of the server to perform this operation. Change
+              these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="createServerMetadata">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create or replace server metadata items">
+            <para role="shortdesc">
+                Creates or replaces metadata items for a specified server.
+            </para>
+            <para>
+                All existing metadata items are removed and completely
+                replaced by the metadata items in the request.
+            </para>
+            <para>
+                If the number of metadata items exceeds the quota for metadata
+                items, an overLimit (<errorcode>413</errorcode>) fault
+                might be thrown.
+            </para>
+            <para>
+              Policy defaults enable only users with the administrative role
+              or the owner of the server to perform this operation. Change
+              these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getServerMetadataItem">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show server metadata item details">
+            <para role="shortdesc">
+                Shows details for a metadata item by key for a specified
+                server.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="200 203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-resp.json"/>
+                </wadl:doc> &x-compute-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="setServerMetadataItem">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create or update server metadata item">
+            <para role="shortdesc">
+                Sets a metadata item by key for a specified server.
+            </para>
+            <para>
+                An overLimit (<errorcode>413</errorcode>) fault might be
+                thrown if the operation causes the quota for metadata items to
+                be exceeded.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-req.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/server-metadata/server-metadata-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteServerMetadataItem">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete server metadata item">
+            <para role="shortdesc">
+                Deletes a metadata item by key for a specified server.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+</application>
