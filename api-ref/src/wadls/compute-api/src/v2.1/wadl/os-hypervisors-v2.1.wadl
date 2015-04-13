@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
 %common;]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -14,13 +14,39 @@
                 <resource id="statistics" path="statistics">
                     <method href="#showhypervisorstatistics"/>
                 </resource>
+                <resource id="search" path="search">
+                    <param name="query" style="query"
+                        type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN"><para>Filters the search
+                                results by the specified
+                                   <code>?query={filter}</code> query
+                                parameter.</para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#searchhypervisors"/>
+                </resource>
+                <resource id="os-pci" path="os-pci">
+                    <method href="#listPCIs"/>
+                    <resource id="detail" path="detail">
+                        <method href="#listhypervisor-pci-details"/>
+                    </resource>
+                    <resource id="hypervisor_id2" path="{hypervisor_id}">
+                        <method href="#showhypervisor-pci"/>
+                    </resource>
+                </resource>
                 <resource id="hypervisor_id" path="{hypervisor_id}">
                     <method href="#showhypervisordetails"/>
-                    <resource id="uptime" path="uptime">
-                        <method href="#showhypervisoruptime"/>
-                    </resource>
                     <resource id="servers" path="servers">
                         <method href="#listservers"/>
+                        <resource id="server_id" path="{server_id}">
+                            <method href="#showserver">
+                            </method>
+                        </resource>
+                    </resource>
+                    <resource id="uptime" path="uptime">
+                        <method href="#showhypervisoruptime"/>
                     </resource>
                 </resource>
             </resource>
@@ -57,7 +83,25 @@
                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/os-hypervisors/hypervisors-servers-resp.json"
+                        href="../api_samples/os-pci/servers-detail-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showserver">
+        <wadl:doc xml:lang="EN" title="Show server details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows server details for a specified
+                hypervisor.</para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/server-get-resp.json"
                     />
                 </wadl:doc> &x-openstack-request-idHeader;
             </representation>
@@ -112,6 +156,61 @@
                     xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-uptime-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listhypervisor-pci-details">
+        <wadl:doc xml:lang="EN" title="List hypervisors with PCI details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists hypervisors with payment card industry (PCI) details.
+            </para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/hypervisors-pci-detail-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listPCIs">
+        <wadl:doc xml:lang="EN" title="List PCIs"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists PCIs.
+            </para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/pci-index-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+     <method name="GET" id="showhypervisor-pci">
+        <wadl:doc xml:lang="EN" title="Show PCI details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows PCI details for a specified hypervisor.</para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/pci-show-resp.json"
                     />
                 </wadl:doc> &x-openstack-request-idHeader;
             </representation>
