@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-fping-v2.1">
+        <resource id="v2.1" path="//v2.1">
+             <resource id="os-fping" path="os-fping">
+                <method href="#list-fping"/>
+                    <resource path="{id}" id="id">
+                        <method href="#show-fping"/>
+                   </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="list-fping">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Ping instances">
+            <para role="shortdesc">
+                Run the fping utility to ping all or specified instances and
+                report which ones are alive.
+            </para>
+            <para>
+                Specify the <code>all_tenants=1</code> query parameter to ping
+                instances for all tenants. For example:
+            </para>
+            <programlisting language="json">GET /os-fping?all_tenants=1</programlisting>
+            <para>
+                Specify the <code>include</code> and <code>exclude</code>
+                query parameters to filter the results. For example:
+            </para>
+            <programlisting language="json">GET /os-fping?all_tenants=1&amp;include=uuid1,uuid2&amp;exclude=uuid3,uuid4</programlisting>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="all_tenants" style="query" required="false" type="xsd:int">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <para>
+                        Specify the <code>all_tenants=1</code> query parameter
+                        to ping instances for all tenants.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="include" style="query" required="false" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <para>
+                        Specify <code>include=uuid[,uuid...]</code> to include
+                        the specified instances in the results.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+                name="exclude" style="query" required="false" type="xsd:string">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <para>
+                        Specify <code>exclude=uuid[,uuid...]</code> to exclude
+                        the specified instances from the results.
+                    </para>
+                </wadl:doc>
+            </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-fping/fping-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="show-fping">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Ping an instance">
+            <para role="shortdesc">
+                Run the fping utility to ping a specified instance and report
+                whether it is alive.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-fping/fping-get-details-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
