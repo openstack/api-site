@@ -10,22 +10,21 @@
     <resources base="https://servers.api.openstack.com"
         xml:id="os-admin-actions-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="server_id_action"
-                path="servers/{server_id}/action">
-                <resource id="server_id" path="{server_id}">
-                    <resource id="action" path="action">
-                        <method href="#backupserver"/>
-                        <method href="#adminservernetwork"/>
-                        <method href="#livemigrate"/>
-                        <method href="#lockserver"/>
-                        <method href="#migrateserver"/>
-                        <method href="#pauseserver"/>
-                        <method href="#resetnetwork"/>
-                        <method href="#resumeserver"/>
-                        <method href="#suspendserver"/>
-                        <method href="#unlockserver"/>
-                        <method href="#unpauseserver"/>
-                    </resource>
+            <resource id="server_id" path="{server_id}">
+                <resource id="action" path="action">
+                    <method href="#adminpassword"/>
+                    <method href="#backupserver"/>
+                    <method href="#adminservernetwork"/>
+                    <method href="#livemigrate"/>
+                    <method href="#lockserver"/>
+                    <method href="#migrateserver"/>
+                    <method href="#pauseserver"/>
+                    <method href="#resetnetwork"/>
+                    <method href="#resetserver"/>
+                    <method href="#resumeserver"/>
+                    <method href="#suspendserver"/>
+                    <method href="#unlockserver"/>
+                    <method href="#unpauseserver"/>
                 </resource>
             </resource>
         </resource>
@@ -33,10 +32,14 @@
     <!-- *******************************************************-->
     <!--             Admin Actions                    -->
     <!--*******************************************************-->
-    <method name="POST" id="backupserver">
-        <wadl:doc xml:lang="EN" title="Back up server"
+    <method name="POST" id="adminpassword">
+        <wadl:doc xml:lang="EN" title="Change admin password"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Backs up a server instance.</para>
+            <para role="shortdesc">Changes the admin password.</para>
+            <para>
+                Specify the <code>changePassword</code> action in
+                the request body.
+            </para>
             <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
@@ -48,7 +51,33 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-backup-server.json"
+                        href="../api_samples/os-admin-password/admin-password-change-password.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="backupserver">
+        <wadl:doc xml:lang="EN" title="Back up server"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Backs up a server instance.</para>
+            <para>
+                Specify the <code>createBackup</code> action in
+                the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-create-backup/create-backup-req.json"
                     />
                 </wadl:doc>
             </representation>
@@ -60,6 +89,10 @@
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Injects network information into a
                 server.</para>
+            <para>
+                Specify the <code>injectNetworkInfo</code> action in
+                the request body.
+            </para>
              <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
@@ -84,27 +117,9 @@
             <para role="shortdesc">Live-migrates a server to a new
                 host without rebooting.</para>
             <para>
-                Policy defaults enable only users with the administrative role
-                or the owner of the server to perform this operation. Change
-                these permissions through the <code>policy.json</code> file.
+                Specify the <code>os-migrateLive</code> action in
+                the request body.
             </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-live-migrate.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="202"/>
-    </method>
-    <method name="POST" id="lockserver">
-        <wadl:doc xml:lang="EN" title="Lock server"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lock a server instance.</para>
             <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
@@ -116,7 +131,33 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-lock-server.json"
+                        href="../api_samples/os-migrate-server/live-migrate-server.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="lockserver">
+        <wadl:doc xml:lang="EN" title="Lock server"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Lock a server instance.</para>
+            <para>
+                Specify the <code>lock</code> action in
+                the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-lock-server/lock-server.json"
                     />
                 </wadl:doc>
             </representation>
@@ -129,6 +170,10 @@
             <para role="shortdesc">Migrates a server to a host. The
                 scheduler chooses the host.</para>
             <para>
+                Specify the <code>migrate</code> action in
+                the request body.
+            </para>
+            <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
                 these permissions through the <code>policy.json</code> file.
@@ -139,7 +184,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-migrate.json"
+                        href="../api_samples/os-migrate-server/migrate-server.json"
                     />
                 </wadl:doc>
             </representation>
@@ -152,6 +197,10 @@
             <para role="shortdesc">Pauses a server. Changes its status
                 to PAUSED.</para>
             <para>
+                Specify the <code>pause</code> action in
+                the request body.
+            </para>
+            <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
                 these permissions through the <code>policy.json</code> file.
@@ -162,7 +211,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-pause.json"
+                        href="../api_samples/os-pause-server/pause-server.json"
                     />
                 </wadl:doc>
             </representation>
@@ -174,6 +223,10 @@
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Resets networking on a
                 server.</para>
+            <para>
+                Specify the <code>resetNetwork</code> action in
+                the request body.
+            </para>
              <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
@@ -198,6 +251,10 @@
             <para role="shortdesc">Resets the state of a server to a
                 specified state.</para>
             <para>
+                Specify the <code>os-resetState</code> action and the
+                <code>state</code> in the request body.
+            </para>
+            <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
                 these permissions through the <code>policy.json</code> file.
@@ -221,6 +278,10 @@
             <para role="shortdesc">Resumes a SUSPENDED server and
                 changes its status to ACTIVE.</para>
             <para>
+                Specify the <code>resume</code> action in
+                the request body.
+            </para>
+            <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
                 these permissions through the <code>policy.json</code> file.
@@ -231,7 +292,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-resume.json"
+                        href="../api_samples/os-suspend-server/server-resume.json"
                     />
                 </wadl:doc>
             </representation>
@@ -244,27 +305,9 @@
             <para role="shortdesc">Suspends a server and changes its
                 status to SUSPENDED.</para>
             <para>
-                Policy defaults enable only users with the administrative role
-                or the owner of the server to perform this operation. Change
-                these permissions through the <code>policy.json</code> file.
+                Specify the <code>suspend</code> action in
+                the request body.
             </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-suspend.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="202"/>
-    </method>
-    <method name="POST" id="unlockserver">
-        <wadl:doc xml:lang="EN" title="Unlock server"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Unlocks a server instance.</para>
             <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
@@ -276,7 +319,33 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-unlock-server.json"
+                        href="../api_samples/os-suspend-server/server-suspend.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="unlockserver">
+        <wadl:doc xml:lang="EN" title="Unlock server"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Unlocks a server instance.</para>
+            <para>
+                Specify the <code>unlock</code> action in
+                the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Change
+                these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-lock-server/unlock-server.json"
                     />
                 </wadl:doc>
             </representation>
@@ -288,6 +357,10 @@
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Unpauses a PAUSED server and
                 changes its status to ACTIVE.</para>
+            <para>
+                Specify the <code>unpause</code> action in
+                the request body.
+            </para>
              <para>
                 Policy defaults enable only users with the administrative role
                 or the owner of the server to perform this operation. Change
@@ -299,7 +372,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-admin-actions/admin-actions-unpause.json"
+                        href="../api_samples/os-pause-server/unpause-server.json"
                     />
                 </wadl:doc>
             </representation>
