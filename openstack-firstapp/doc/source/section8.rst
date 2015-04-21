@@ -51,10 +51,10 @@ Phoenix Servers
 ---------------
 
 Application developers and operators who employ
-`Phoenix Servers <http://martinfowler.com/bliki/PhoenixServer.html>`_ 
+`Phoenix Servers <http://martinfowler.com/bliki/PhoenixServer.html>`_
 have built systems that start from a known baseline (sometimes just a specific
 version of an operating system) and have built tooling that will automatically
-build, install, and configure a system with no manual intervention. 
+build, install, and configure a system with no manual intervention.
 
 Phoenix Servers, named for the mythological bird that would live its life,
 be consumed by fire, then rise from the ashes to live again, make it possible
@@ -95,7 +95,7 @@ For example, do you:
 * make packaged releases that update infrequently?
 * big-bang test in a development environment and deploy only after major changes?
 
-One of the latest trends in deploying scalable cloud applications is 
+One of the latest trends in deploying scalable cloud applications is
 `continuous integration <http://en.wikipedia.org/wiki/Continuous_integration>`_ /
 `continuous deployment <http://en.wikipedia.org/wiki/Continuous_delivery>`_ (CI/CD).
 Working in a CI/CD fashion means
@@ -114,6 +114,4 @@ needed to ensure that 'gold' images do not fall behind on security updates.
 
 Fail Fast
 ---------
-
-
 

@@ -10,8 +10,8 @@ Section Four: Making it Durable
 
 .. todo:: Large object support in Swift http://docs.openstack.org/developer/swift/overview_large_objects.html
 
-This section introduces object storage. 
-`OpenStack Object Storage <http://www.openstack.org/software/openstack-storage/>`_ 
+This section introduces object storage.
+`OpenStack Object Storage <http://www.openstack.org/software/openstack-storage/>`_
 (code-named Swift) is open source software for creating redundant, scalable data storage
 using clusters of standardized servers to store petabytes of accessible data.
 It is a long-term storage system for large amounts of static data that can be
@@ -20,12 +20,12 @@ like more traditional storage.
 
 There are a two key concepts to understand in the Object Storage API. The Object
 Storage API is organized around two types of entities:
-    
+
 * Objects
 * Containers
 
-Similar to the Unix programming model, an Object is a "bag of bytes" that contains data, 
-such as documents and images. Containers are used to group objects. 
+Similar to the Unix programming model, an Object is a "bag of bytes" that contains data,
+such as documents and images. Containers are used to group objects.
 You can make many objects inside a container, and have many containers inside your account.
 
 If you think about how you traditionally make what you store durable, very quickly you should come
@@ -47,7 +47,7 @@ generates. This is not scalable or durable, for a number of reasons.
 
 Because the local filesystem is ephemeral storage, if the instance is terminated, the fractal
 images will be lost along with the instance. Block based storage, which we'll discuss in :doc:`/section5`,
-avoids that problem, but like local filesystems, it 
+avoids that problem, but like local filesystems, it
 requires administration to ensure that it does not fill up, and immediate attention if disks fail.
 
 The Object Storage service manages many of these tasks that normally would require the application owner
@@ -71,14 +71,14 @@ First, let's learn how to connect to the Object Storage Endpoint:
     .. warning:: This section has not yet been completed for the jclouds SDK
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-1
         :end-before: step-2
 
 
     .. warning::
-        
+
         Libcloud 0.16 and 0.17 are afflicted with a bug that means authentication to
         a swift endpoint can fail with `a Python exception <https://issues.apache.org/jira/browse/LIBCLOUD-635>`_.
         If you encounter this, you can upgrade your libcloud version, or apply a simple
@@ -104,7 +104,7 @@ To begin to store objects, we must first make a container.
 Call yours :code:`fractals`:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-2
         :end-before: step-3
@@ -119,22 +119,22 @@ You should now be able to see this container appear in a listing of
 all containers in your account:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-3
         :end-before: step-4
-         
+
     You should see output such as:
 
     .. code-block:: python
-    
+
         [<Container: name=fractals, provider=OpenStack Swift>]
 
 The next logical step is to upload an object. Find a photo of a goat
 online, name it :code:`goat.jpg` and upload it to your container :code:`fractals`:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-4
         :end-before: step-5
@@ -143,30 +143,30 @@ List objects in your container :code:`fractals` to see if the upload was success
 the file to verify the md5sum is the same:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-5
         :end-before: step-6
-         
+
     ::
-    
+
        [<Object: name=an amazing goat, size=191874, hash=439884df9c1c15c59d2cf43008180048, provider=OpenStack Swift ...>]
-       
-   
+
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-6
         :end-before: step-7
-         
+
     ::
-    
+
         <Object: name=an amazing goat, size=954465, hash=7513986d3aeb22659079d1bf3dc2468b, provider=OpenStack Swift ...>
-    
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-7
         :end-before: step-8
-    
+
     ::
-        
+
         7513986d3aeb22659079d1bf3dc2468b
 
 
@@ -174,7 +174,7 @@ the file to verify the md5sum is the same:
 Finally, let's clean up by deleting our test object:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-8
         :end-before: step-9
@@ -186,7 +186,7 @@ Finally, let's clean up by deleting our test object:
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-9
         :end-before: step-10
-         
+
     ::
 
         []
@@ -199,7 +199,7 @@ So let's now use the knowledge from above to backup the images of the Fractals a
 Use the :code:`fractals`' container from above to put the images in:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-10
         :end-before: step-11
@@ -207,11 +207,11 @@ Use the :code:`fractals`' container from above to put the images in:
 Next, we backup all of our existing fractals from the database to our swift container. A simple for loop takes care of that:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-11
         :end-before: step-12
-        
+
     ::
 
         <Object: name=025fd8a0-6abe-4ffa-9686-bcbf853b71dc, size=61597, hash=b7a8a26e3c0ce9f80a1bf4f64792cd0c, provider=OpenStack Swift ...>
@@ -239,7 +239,7 @@ Ensure that you have removed all objects from the container before running this,
 it will fail:
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-12
         :end-before: step-13
@@ -258,7 +258,7 @@ This is more efficient, especially for larger files.
 
 
 .. only:: libcloud
-   
+
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-13
         :end-before: step-14

@@ -21,14 +21,14 @@ In section 2, we talked about various aspects of the application architecture, s
 as building in a modular fashion, creating an API, and so on.  Now you'll see why
 those are so important. By creating a modular application with decoupled services,
 it is possible to identify components that cause application performance bottlenecks
-and scale them out.  
+and scale them out.
 
 Just as importantly, you can also remove resources when they are no longer necessary.
-It is very difficult to overstate the cost savings that this feature can bring, as 
+It is very difficult to overstate the cost savings that this feature can bring, as
 compared to traditional infrastructure.
 
 Of course, just having access to additional resources is only part of the battle;
-while it's certainly possible to manually add or destroy resources, you'll get more 
+while it's certainly possible to manually add or destroy resources, you'll get more
 value -- and more responsiveness -- if the application simply requests new resources
 automatically when it needs them.
 
@@ -37,7 +37,7 @@ and highlights some of the choices we've made that facilitate scalability in
 the app's architecture.
 
 We'll progressively ramp up to use up to about 6 instances, so ensure
-that your cloud account has appropriate quota to handle that many. 
+that your cloud account has appropriate quota to handle that many.
 
 In the previous section, we used two virtual machines - one 'control' service and one 'worker'.
 In our application, the speed at which fractals can be generated depends on the number of workers.
@@ -194,7 +194,7 @@ to distribute tasks. Instead, we'll need to introduce some kind of load balancin
 to share incoming requests between the different API services.
 
 One simple way might be to give half of our friends one address and half the other, but that's certainly
-not a sustainable solution.  Instead, we can do that automatically using a  `DNS round robin <http://en.wikipedia.org/wiki/Round-robin_DNS>`_. 
+not a sustainable solution.  Instead, we can do that automatically using a  `DNS round robin <http://en.wikipedia.org/wiki/Round-robin_DNS>`_.
 However, OpenStack networking can provide Load Balancing as a Service, which we'll explain in :doc:`/section7`.
 
 .. todo:: Add a note that we demonstrate this by using the first API instance for the workers and the second API instance for the load simulation.
@@ -321,7 +321,7 @@ You should now be fairly confident about starting new instance, and about segreg
 As mentioned in :doc:`/section2` the generated fractals images will be saved on the local filesystem of the API service instances. Because we now have multiple API
 instances up and running the generated fractal images will be spreaded accross multiple API services, stored on local instance filesystems. This ends in a lot of
 :code:`IOError: [Errno 2] No such file or directory` exceptions when trying to download a fractal image from an API service instance not holding the fractal
-image on its local filesystem. 
+image on its local filesystem.
 
 From here, you should go to :doc:`/section4` to learn how to use Object Storage to solve this problem in a elegant way. Alternately, you may jump to any of these sections:
 
@@ -335,14 +335,10 @@ Full example code
 -----------------
 
 Here's every code snippet into a single file, in case you want to run it all in one, or
-you are so experienced you don't need instruction ;) If you are going to use this, 
+you are so experienced you don't need instruction ;) If you are going to use this,
 don't forget to set your authentication information and the flavor and image ID.
 
 .. only:: libcloud
 
     .. literalinclude:: ../../samples/libcloud/section3.py
        :language: python
-
-
-
-
