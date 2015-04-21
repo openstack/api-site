@@ -33,11 +33,11 @@ database, webserver, file storage, and worker components.
 .. only:: node
 
     .. warning:: Pkgcloud supports the OpenStack Networking API, but this section has not been completed
-    
+
 .. only:: openstacksdk
 
     .. warning:: This section has not yet been completed for the OpenStack SDK
-    
+
 .. only:: phpopencloud
 
     .. warning:: PHP-OpenCloud supports the OpenStack Networking API, but this section has not been completed
@@ -56,34 +56,34 @@ http://docs.openstack.org/cli-reference/content/cli_openrc.html
 
 Ensure you have an openrc.sh file, source it and then check your neutron client works:
 ::
-    
+
     $ cat openrc.sh
     export OS_USERNAME=your_auth_username
     export OS_PASSWORD=your_auth_password
     export OS_TENANT_NAME=your_project_name
     export OS_AUTH_URL=http://controller:5000/v2.0
     export OS_REGION_NAME=your_region_name
-    
+
     $ source openrc.sh
-    
+
     $ neutron --version
     2.3.11
 
 Networking Segmentation
 -----------------------
 
-In traditional datacenters, multiple network segments are 
+In traditional datacenters, multiple network segments are
 dedicated to specific types of network traffic.
 
 The fractal application we are building contains three types of network traffic:
 
 * public-facing wev traffic
 * API traffic
-* internal worker traffic 
+* internal worker traffic
 
-For performance reasons, it makes sense to have a network for each tier, 
-so that traffic from one tier does not "crowd out" other types of traffic 
-and cause the application to fail. In addition, having separate networks makes 
+For performance reasons, it makes sense to have a network for each tier,
+so that traffic from one tier does not "crowd out" other types of traffic
+and cause the application to fail. In addition, having separate networks makes
 controlling access to parts of the application easier to manage, improving the overall
 security of the application.
 
@@ -109,15 +109,15 @@ Prior to this section, the network layout for the Fractal application would be s
             }
         }
 
-In this network layout, we are assuming that the OpenStack cloud in which 
-you have been building your application has a public 
-network and tenant router that was already created in advance, either by the 
-administrators of the cloud you are running the Fractal application on, 
+In this network layout, we are assuming that the OpenStack cloud in which
+you have been building your application has a public
+network and tenant router that was already created in advance, either by the
+administrators of the cloud you are running the Fractal application on,
 or by you, following the instructions in the appendix.
 
-Many of the network concepts that are discussed in this section are 
+Many of the network concepts that are discussed in this section are
 already present in the diagram above. A tenant router provides
-routing and external access for the worker nodes, and floating IP addresses 
+routing and external access for the worker nodes, and floating IP addresses
 are already associated with each node in the Fractal application cluster
 to facilitate external access.
 
@@ -134,7 +134,7 @@ will be accessible by fractal aficionados worldwide, by allocating floating IPs 
                     address = "203.0.113.0/24"
                     tenant_router [ address = "203.0.113.60"];
             }
-            
+
             network webserver_network{
                     address = "10.0.2.0/24"
                     tenant_router [ address = "10.0.2.1"];
@@ -159,7 +159,7 @@ will be accessible by fractal aficionados worldwide, by allocating floating IPs 
 Introduction to Tenant Networking
 ---------------------------------
 
-With the OpenStack Networking API, the workflow for creating a network topology that separates the public-facing 
+With the OpenStack Networking API, the workflow for creating a network topology that separates the public-facing
 Fractals app API from the worker backend is as follows:
 
 * Create a network for the web server nodes.
@@ -177,8 +177,8 @@ Fractals app API from the worker backend is as follows:
 Creating Networks
 -----------------
 
-We assume that the public network, with the subnet that floating IPs can be allocated from, was provisioned 
-for you by your cloud operator. This is due to the nature of L3 routing, where the IP address range that 
+We assume that the public network, with the subnet that floating IPs can be allocated from, was provisioned
+for you by your cloud operator. This is due to the nature of L3 routing, where the IP address range that
 is used for floating IPs is configured in other parts of the operator's network, so that traffic is properly routed.
 
 .. todo:: Rework the console outputs in these sections to be more comprehensive, based on the outline above
@@ -350,7 +350,7 @@ by your cloud administrator.
     | status              | DOWN                                 |
     | tenant_id           | 0cb06b70ef67424b8add447415449722     |
     +---------------------+--------------------------------------+
-    
+
     $ neutron floatingip-create public
     Created a new floatingip:
     +---------------------+--------------------------------------+
@@ -375,10 +375,10 @@ Next we'll need to enable OpenStack to route traffic appropriately.
 Creating the SNAT gateway
 -------------------------
 
-Because we are using cloud-init and other tools to deploy and bootstrap the application, 
-the Fractal app worker instances require Source Network Address Translation (SNAT). 
+Because we are using cloud-init and other tools to deploy and bootstrap the application,
+the Fractal app worker instances require Source Network Address Translation (SNAT).
 If the Fractal app worker nodes were deployed from a "golden image"
-that had all the software components already installed, there would be no need to create a 
+that had all the software components already installed, there would be no need to create a
 Neutron router to provide SNAT functionality.
 
 .. todo :: nickchase doesn't understand the above paragraph.  Why wouldn't it be required?
@@ -397,7 +397,7 @@ Neutron router to provide SNAT functionality.
         | routes                |                                      |
         | status                | ACTIVE                               |
         | tenant_id             | f77bf3369741408e89d8f6fe090d29d2     |
-        +-----------------------+--------------------------------------+ 
+        +-----------------------+--------------------------------------+
 
 After creating the router, you need to set up the gateway for the router. For outbound access
 we will set the router's gateway as the public network.
@@ -488,8 +488,8 @@ Ensure you use appropriate flavor and image values for your cloud - see :doc:`se
 Load Balancing
 --------------
 
-After separating the Fractal worker nodes into their own network, 
-the next logical step is to move the Fractal API service onto a load balancer, 
+After separating the Fractal worker nodes into their own network,
+the next logical step is to move the Fractal API service onto a load balancer,
 so that multiple API workers can handle requests. By using a load balancer, the API
 service can be scaled out in a similar fashion to the worker nodes.
 
@@ -502,7 +502,7 @@ Neutron LbaaS API
 
 The OpenStack Networking API provides support for creating loadbalancers, which can be used to
 scale the Fractal app web service. In the following example, we create two compute instances via the Compute
-API, then instantiate a loadbalancer that will use a virtual IP (VIP) for accessing the web service offered by 
+API, then instantiate a loadbalancer that will use a virtual IP (VIP) for accessing the web service offered by
 the two compute nodes. The end result will be the following network topology:
 
 .. nwdiag::
@@ -528,7 +528,7 @@ libcloud support added 0.14: https://developer.rackspace.com/blog/libcloud-0-dot
 Let's start by looking at what's already in place.
 
 ::
-    
+
     $ neutron net-list
     +--------------------------------------+-------------------+-----------------------------------------------------+
     | id                                   | name              | subnets                                             |
@@ -574,7 +574,7 @@ Now let's go ahead and create 2 instances.
     +--------------------------------------+-----------------------------------------------------------------+
 
 Confirm that they were added:
-    
+
 ::
 
     $ nova list
@@ -586,7 +586,7 @@ Confirm that they were added:
     +--------------------------------------+--------+--------+------------+-------------+------------------+
 
 Now let's look at what ports are available:
-    
+
 ::
 
     $ neutron port-list
@@ -632,8 +632,8 @@ Next create additional floating IPs by specifying the fixed IP addresses they sh
     | tenant_id           | 0cb06b70ef67424b8add447415449722     |
     +---------------------+--------------------------------------+
 
-All right, now you're ready to go ahead and create members for the load balancer pool, referencing the floating IPs: 
-    
+All right, now you're ready to go ahead and create members for the load balancer pool, referencing the floating IPs:
+
 ::
 
     $ neutron lb-member-create --address 203.0.113.21 --protocol-port 80 mypool
@@ -669,7 +669,7 @@ All right, now you're ready to go ahead and create members for the load balancer
     +--------------------+--------------------------------------+
 
 You should be able to see them in the member list:
-    
+
 ::
 
     $ neutron lb-member-list
@@ -707,7 +707,7 @@ so that client requests are routed to another active member.
     Associated health monitor 663345e6-2853-43b2-9ccb-a623d5912345
 
 Now create a virtual IP that will be used to direct traffic between the various members of the pool:
-    
+
 ::
 
     $ neutron lb-vip-create --name myvip --protocol-port 80 --protocol HTTP --subnet-id 47fd3ff1-ead6-4d23-9ce6-2e66a3dae425 mypool
@@ -733,7 +733,7 @@ Now create a virtual IP that will be used to direct traffic between the various 
     +---------------------+--------------------------------------+
 
 And confirm it's in place:
-    
+
 ::
 
     $ neutron lb-vip-list
@@ -761,7 +761,7 @@ nature of the application itself.
                     tenant_router [ address = "203.0.113.60"];
                     loadbalancer [ address = "203.0.113.63" ];
             }
-            
+
             network webserver_network{
                     address = "10.0.2.0/24"
                     tenant_router [ address = "10.0.2.1"];
@@ -793,5 +793,3 @@ refer to the volume documentation of your SDK, or try a different step in the tu
 
 * :doc:`/section8` - for advice for developers new to operations
 * :doc:`/section9` - to see all the crazy things we think ordinary folks won't want to do ;)
-
-

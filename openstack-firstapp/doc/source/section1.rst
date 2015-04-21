@@ -23,7 +23,7 @@ Deploying applications in a cloud environment can be very different from the
 traditional siloed approachyou see in traditional IT, so in addition to learning
 to deploy applications on OpenStack, you will also learn some best practices for
 cloud application development.  Overall, this guide covers the following:
-    
+
 * :doc:`/section1` - The most basic cloud application -- creating and destroying virtual resources
 * :doc:`/section2` - The architecture of a sample cloud-based application
 * :doc:`/section3` - The importance of message queues
@@ -64,11 +64,11 @@ anyone with a programming background.
 
 If you're a developer for an alternate toolkit and would like to see this book
 support it, great!  Please feel free to submit alternate code snippets, or to
-contact any of the authors or members of the Documentation team to coordinate. 
+contact any of the authors or members of the Documentation team to coordinate.
 
 Although this guide (initially) covers only Libcloud, you actually have several
 choices when it comes to building an application for an OpenStack cloud.
-These choices include: 
+These choices include:
 
 ============= ============= ================================================================= ====================================================
 Language      Name          Description                                                       URL
@@ -99,7 +99,7 @@ You should have a project (tenant) with a quota of at least
 openSUSE-based distributions, so you'll need to be creating instances using one
 of these operating systems.
 
-Interact with the cloud itself, you will also need to have 
+Interact with the cloud itself, you will also need to have
 
 .. only:: dotnet
 
@@ -151,15 +151,15 @@ OpenStack Dashboard. To download this file, log into the Horizon dashboard and
 click Project->Access & Security->API Access->Download OpenStack RC file.
 If you choose this route, be aware that the "auth URL" doesn't include the path.
 In other words, if your openrc.sh file shows:
-    
+
 .. code-block:: bash
 
         export OS_AUTH_URL=http://controller:5000/v2.0
-    
+
 the actual auth URL will be
 
 .. code-block:: python
-    
+
         http://controller:5000
 
 
@@ -188,7 +188,7 @@ libcloud.
         :end-before: step-2
 
 .. only:: openstacksdk
-   
+
     .. code-block:: python
 
       from openstack import connection
@@ -237,7 +237,7 @@ running some API calls:
     You should see a result something like:
 
     .. code-block:: python
-    
+
         <NodeImage: id=2cccbea0-cea9-4f86-a3ed-065c652adda5, name=ubuntu-14.04, driver=OpenStack  ...>
         <NodeImage: id=f2a8dadc-7c7b-498f-996a-b5272c715e55, name=cirros-0.3.3-x86_64, driver=OpenStack  ...>
 
@@ -254,11 +254,11 @@ You can also get information on the various flavors:
     .. literalinclude:: ../../samples/libcloud/section1.py
         :start-after: step-3
         :end-before: step-4
-         
+
     This code should produce output something like:
-        
+
     .. code-block:: python
-    
+
         <OpenStackNodeSize: id=1, name=m1.tiny, ram=512, disk=1, bandwidth=None, price=0.0, driver=OpenStack, vcpus=1,  ...>
         <OpenStackNodeSize: id=2, name=m1.small, ram=2048, disk=20, bandwidth=None, price=0.0, driver=OpenStack, vcpus=1,  ...>
         <OpenStackNodeSize: id=3, name=m1.medium, ram=4096, disk=40, bandwidth=None, price=0.0, driver=OpenStack, vcpus=2,  ...>
@@ -301,7 +301,7 @@ image you have chosen to work with in the previous section:
         :end-before: step-5
 
     You should see output something like this:
-        
+
     .. code-block:: python
 
          <NodeImage: id=2cccbea0-cea9-4f86-a3ed-065c652adda5, name=ubuntu-14.04, driver=OpenStack  ...>
@@ -322,11 +322,11 @@ Next tell the script what flavor you want to use:
         :end-before: step-6
 
     You should see output something like this:
-        
+
     .. code-block:: python
 
         <OpenStackNodeSize: id=3, name=m1.medium, ram=4096, disk=40, bandwidth=None, price=0.0, driver=OpenStack, vcpus=2,  ...>
-        
+
 Now you're ready to actually launch the instance.
 
 Booting an instance
@@ -342,8 +342,8 @@ Now that you have selected an image and flavor, use it to create an instance.
        this is the case if you see an error stating 'Exception: 400 Bad Request
        Multiple possible networks found, use a Network ID to be more specific.'
        See :doc:`/appendix` for details.
-       
-Start by creating the instance. 
+
+Start by creating the instance.
 
 .. note:: An instance may be called a 'node' or 'server' by your SDK.
 
@@ -360,7 +360,7 @@ Start by creating the instance.
         :end-before: step-7
 
     You should see output something like:
-        
+
     .. code-block:: python
 
        <Node: uuid=1242d56cac5bcd4c110c60d57ccdbff086515133, name=testing, state=PENDING, public_ips=[], private_ips=[], provider=OpenStack ...>
@@ -427,7 +427,7 @@ cloud resources.
     .. literalinclude:: ../../samples/libcloud/section1.py
         :start-after: step-8
         :end-before: step-9
-       
+
 
 If you then list the instances again, you'll see that the instance no longer appears.
 
@@ -608,7 +608,7 @@ Full example code
 -----------------
 
 Here's every code snippet into a single file, in case you want to run it all in one, or
-you are so experienced you don't need instruction ;) If you are going to use this, 
+you are so experienced you don't need instruction ;) If you are going to use this,
 don't forget to set your authentication information and the flavor and image ID.
 
 .. only:: libcloud

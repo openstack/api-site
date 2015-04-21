@@ -37,7 +37,7 @@ Use conf.d and etc.d.
 
 In earlier sections, the Fractal Application uses an install script, with parameters passed in from the metadata API,
 in order to bootstrap the cluster. `Etcd <https://github.com/coreos/etcd>`_ is a "a distributed, consistent key value store for shared configuration and service discovery"
-that can be used for storing configuration. Updated versions of the Fractal worker 
+that can be used for storing configuration. Updated versions of the Fractal worker
 component could be writted to connect to Etcd, or use `Confd <https://github.com/kelseyhightower/confd>`_ which will
 poll for changes from Etcd and write changes to a configuration file on the local filesystem, which the Fractal worker
 could use for configuration.

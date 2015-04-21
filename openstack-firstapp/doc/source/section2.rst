@@ -32,11 +32,11 @@ referenced in the previous section.
 .. only:: node
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK
-    
+
 .. only:: openstacksdk
 
     .. warning:: This section has not yet been completed for the OpenStack SDK
-    
+
 .. only:: phpopencloud
 
     .. warning:: This section has not yet been completed for the PHP-OpenCloud SDK
@@ -72,7 +72,7 @@ Fault Tolerance
 
 In cloud programming, there's a well-known analogy known as "cattle vs pets". If you haven't heard it before, it goes
 like this:
-    
+
 When you're dealing with pets, you name them and care for them and if they get sick, you nurse them back to health.
 Nursing pets back to health can be difficult and very time consuming. When you're dealing with cattle, you attach a
 numbered tag to their ear and if they get sick you put them down and move on.
@@ -82,12 +82,12 @@ servers, cared for by operations staff dedicated to keeping them healthy. If som
 servers, the staff's job was to do whatever it took to make it right again and save the server and the application.
 
 In cloud programming, it's very different. Rather than large, expensive servers, you're dealing with virtual
-machines that are literally disposable; if something goes wrong, you shut it down and spin up a new one. There's 
+machines that are literally disposable; if something goes wrong, you shut it down and spin up a new one. There's
 still operations staff, but rather than nursing individual servers back to health, their job is to monitor the
 health of the overall system.
 
 There are definite advantages to this architecture.  It's easy to get a "new" server, without any of the issues
-that inevitably arise when a server has been up and running for months, or even years. 
+that inevitably arise when a server has been up and running for months, or even years.
 
 As with classical infrastructure, failures of the underpinning cloud infrastructure (hardware, networks, and software) are unavoidable. When you're
 designing for the cloud, it's crucial that your application is designed for an environment where failures
@@ -99,7 +99,7 @@ Fault tolerance is essential to the cloud-based application.
 Automation
 ~~~~~~~~~~
 
-If an application is meant to automatically scale up and down to meet demand, it is not feasible have any manual 
+If an application is meant to automatically scale up and down to meet demand, it is not feasible have any manual
 steps in the process of deploying any component of the application.
 Automation also decreases the time to recovery for your application in the event of component failures, increasing
 fault tolerance and resilience.
@@ -127,7 +127,7 @@ services. The Fractal app uses a so-called
 `work queue <https://www.rabbitmq.com/tutorials/tutorial-two-python.html>`_ (or task queue) to distribute
 tasks to the worker servies.
 
-Message queues work in a way similar to a queue (or a line, for those of us on the other side of the ocean) in a bank being 
+Message queues work in a way similar to a queue (or a line, for those of us on the other side of the ocean) in a bank being
 served by multiple clerks. The message queue in our application
 provides a feed of work requests that can be taken one-at-a-time by worker services,
 whether there is a single worker service or hundreds of them.
@@ -155,7 +155,7 @@ way of accessing the API to view the created fractal images, and a simple comman
     :figclass: align-center
 
 
-There are also multiple storage backends (to store the generated fractal images) and a database 
+There are also multiple storage backends (to store the generated fractal images) and a database
 component (to store the state of tasks), but we'll talk about those in :doc:`/section4` and :doc:`/section5` respectively.
 
 How the Fractals app interacts with OpenStack
@@ -172,7 +172,7 @@ The Magic Revisited
 -------------------
 
 So what exactly was that request doing at the end of the previous section?
-Let's look at it again. (Note that in this subsection, we're just explaining what 
+Let's look at it again. (Note that in this subsection, we're just explaining what
 you've already done in the previous section; you don't need to execute these commands again.)
 
 .. only:: libcloud
@@ -206,7 +206,7 @@ for some guidance on which username you should use when SSHing.  If you still ha
         :end-before: step-3
 
 
-Once the instance is created, cloud-init downloads and executes a script called :code:`install.sh`. 
+Once the instance is created, cloud-init downloads and executes a script called :code:`install.sh`.
 This script installs the Fractals app. Cloud-init is capable
 of consuming a number of different types of data, not just bash scripts.
 You can even provide multiple types of data. You can find further information about
@@ -290,8 +290,8 @@ the address of the instance's internal network interface address. Your cloud pro
 
 To use a Floating IP, you must first allocate an IP to your project, then associate it to your instance's network interface.
 
-.. note:: 
-    
+.. note::
+
     Allocating a Floating IP address to an instance does not change the IP address of the instance,
     it causes OpenStack to establish the network translation rules to allow an *additional* IP address.
 
@@ -326,7 +326,7 @@ Now that you have an unused floating IP address allocated to your project, attac
     .. literalinclude:: ../../samples/libcloud/section2.py
         :start-after: step-10
         :end-before: step-11
-        
+
 That brings us to where we ended up at the end of :doc:`/section1`.  But where do we go from here?
 
 Splitting services across multiple instances
@@ -354,7 +354,7 @@ Parameter  Description            Values
 .. todo:: https://bugs.launchpad.net/openstack-manuals/+bug/1439918
 
 .. only:: libcloud
-   
+
 
     .. literalinclude:: ../../samples/libcloud/section2.py
         :start-after: step-11
@@ -373,7 +373,7 @@ Next, start a second instance, which will be the worker instance:
     .. literalinclude:: ../../samples/libcloud/section2.py
         :start-after: step-12
         :end-before: step-13
-        
+
 Notice that you've added this instance to the worker_group, so it can access the controller.
 
 As you can see from the parameters passed to the installation script, you are specifying that this is the worker instance, but you're also passing the address of the API instance and the message
@@ -410,7 +410,7 @@ Now you can SSH into the instance:
 
 .. note:: Replace :code:`IP_WORKER_1` with the IP address of the worker instance and USERNAME to the appropriate username.
 
-Once you've logged in, check to see whether the worker service process is running as expected. 
+Once you've logged in, check to see whether the worker service process is running as expected.
 You can find the logs of the worker service in the directory :code:`/var/log/supervisor/`.
 
 ::
@@ -428,7 +428,7 @@ Now log into the controller instance, :code:`app-controller`, also with SSH, usi
 
 .. note:: Replace :code:`IP_CONTROLLER` with the IP address of the controller instance and USERNAME to the appropriate username.
 
-Check to see whether the API service process is running like expected. You can find the logs for the API service 
+Check to see whether the API service process is running like expected. You can find the logs for the API service
 in the directory :code:`/var/log/supervisor/`.
 
 ::
@@ -436,7 +436,7 @@ in the directory :code:`/var/log/supervisor/`.
     controller # ps ax | grep faafo-api
     17209 ?        Sl     0:19 /usr/bin/python /usr/local/bin/faafo-api
 
-Now call the Fractal app's command line interface (:code:`faafo`) to request a few new fractals. 
+Now call the Fractal app's command line interface (:code:`faafo`) to request a few new fractals.
 The following command will request a few fractals with random parameters:
 
 ::
@@ -448,7 +448,7 @@ Watch :code:`top` on the worker instance. Right after calling :code:`faafo` the 
 
 ::
 
-      PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                                                                                                                    
+      PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
     17210 root      20   0  157216  39312   5716 R 98.8  3.9  12:02.15 faafo-worker
 
 To show the details of a specific fractal use the subcommand :code:`show` of the Faafo CLI.
@@ -475,7 +475,7 @@ There are more commands available; find out more details about them with :code:`
 
 .. note:: The application stores the generated fractal images directly in the database used by the API service instance.
           Storing image files in database is not good practice. We're doing it here as an example only as an easy
-          way to allow multiple instances to have access to the data. For best practice, we recommend storing 
+          way to allow multiple instances to have access to the data. For best practice, we recommend storing
           objects in Object Storage, which is covered in :doc:`section4`.
 
 Next Steps
@@ -484,7 +484,7 @@ Next Steps
 You should now have a basic understanding of the architecture of cloud-based applications.  In addition,
 you now have had practice starting new instances, automatically configuring them at boot, and
 even modularizing an application so that you may use multiple instances to run it. These are the basic
-steps for requesting and using compute resources in order to run your application on an OpenStack cloud. 
+steps for requesting and using compute resources in order to run your application on an OpenStack cloud.
 
 From here, you should go to :doc:`/section3` to learn how to scale the application further. Alternately, you may
 jump to any of these sections:
@@ -500,7 +500,7 @@ Full example code
 -----------------
 
 Here's every code snippet into a single file, in case you want to run it all in one, or
-you are so experienced you don't need instruction ;) If you are going to use this, 
+you are so experienced you don't need instruction ;) If you are going to use this,
 don't forget to set your authentication information and the flavor and image ID.
 
 .. only:: libcloud

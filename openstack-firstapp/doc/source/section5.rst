@@ -6,7 +6,7 @@ Section Five: Block Storage
            going to do.)
 
 By default, data in OpenStack instances is stored on 'ephemeral' disks. These stay with the instance throughout its lifetime, but when the
-instance is terminated, that storage disappears -- along with all the data stored on it. Ephemeral storage is allocated to a 
+instance is terminated, that storage disappears -- along with all the data stored on it. Ephemeral storage is allocated to a
 single instance and cannot be moved to another instance.
 
 In this section, we will introduce block storage. Block storage (sometimes referred to as volume storage) provides you
@@ -20,7 +20,7 @@ configured the images to be stored in Object Storage in the previous section, wi
 where in Object Storage they are, and the parameters that were used to create them.
 
 Advanced users should consider how to remove the database from the architecture altogether and replace it
-with metadata in the Object Storage (then contribute these steps to :doc:`section9`). Others should read 
+with metadata in the Object Storage (then contribute these steps to :doc:`section9`). Others should read
 on to learn about how to work with block storage and move the Fractal app database server to use it.
 
 Basics
@@ -45,11 +45,11 @@ but first - let's cover the basics, such as creating and attaching a block stora
 .. only:: node
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK
-    
+
 .. only:: openstacksdk
 
     .. warning:: This section has not yet been completed for the OpenStack SDK
-    
+
 .. only:: phpopencloud
 
     .. warning:: This section has not yet been completed for the PHP-OpenCloud SDK
@@ -82,14 +82,14 @@ As always, connect to the API endpoint:
 To try it out, make a 1GB volume called :test'.
 
 .. only:: libcloud
-   
+
     .. code-block:: python
-    
+
         volume = connection.create_volume(1, 'test')
         print(volume)
-         
+
     ::
-    
+
         <StorageVolume id=755ab026-b5f2-4f53-b34a-6d082fb36689 size=1 driver=OpenStack>
 
 .. note:: The parameter :code:`size` is in GigaBytes.
@@ -97,14 +97,14 @@ To try it out, make a 1GB volume called :test'.
 List all volumes to see if it was successful:
 
 .. only:: libcloud
-   
+
     .. code-block:: python
-    
+
         volumes = connection.list_volumes()
         print(volumes)
-         
+
     ::
-    
+
         [<StorageVolume id=755ab026-b5f2-4f53-b34a-6d082fb36689 size=1 driver=OpenStack>]
 
 Now that you have created a storage volume, let's attach it to an already running instance.
@@ -120,9 +120,9 @@ We will also need a new security group to allow access to the database server
 (for mysql, port 3306) from the network:
 
 .. only:: libcloud
-   
+
     .. code-block:: python
-    
+
        db_group = connection.ex_create_security_group('database', 'for database service')
        connection.ex_create_security_group_rule(db_group, 'TCP', 3306, 3306)
        instance = connection.create_node(name='app-database',
@@ -135,9 +135,9 @@ Using the unique identifier (UUID) for the volume, make a new volume object, the
 use the server object from the previous snippet and attach the volume to it at :code:`/dev/vdb`:
 
 .. only:: libcloud
-   
+
     .. code-block:: python
-    
+
         volume = connection.ex_get_volume('755ab026-b5f2-4f53-b34a-6d082fb36689')
         connection.attach_volume(instance, volume, '/dev/vdb')
 
@@ -192,17 +192,17 @@ You can detach the volume and re-attach it elsewhere, or destroy the volume with
 To detach and destroy a volume:
 
 .. only:: libcloud
-   
+
     .. code-block:: python
-    
+
         connection.detach_volume(volume)
-        
+
     ::
-    
+
         True
-    
+
     .. code-block:: python
-    
+
         connection.destroy_volume(volume)
 
 .. note:: :code:`detach_volume` and :code:`destroy_volume` take a volume object, not a name.
@@ -210,14 +210,14 @@ To detach and destroy a volume:
 There are also many other useful features, such as the ability to create snapshots of volumes (handy for backups):
 
 .. only:: libcloud
-   
+
     .. code-block:: python
-    
+
 *      snapshot_name = 'test_backup_1'
         connnection.create_volume_snapshot('test', name='test backup 1')
-    
+
     .. todo:: Do we need a note here to mention that 'test' is the volume name and not the volume object?
-    
+
     You can find information about these calls and more in the `libcloud documentation <http://ci.apache.org/projects/libcloud/docs/compute/drivers/openstack.html>`_.
 
 
@@ -242,16 +242,16 @@ http://docs.openstack.org/cli-reference/content/cli_openrc.html
 
 Ensure you have an openrc.sh file, source it and then check your trove client works:
 ::
-    
+
     $ cat openrc.sh
     export OS_USERNAME=your_auth_username
     export OS_PASSWORD=your_auth_password
     export OS_TENANT_NAME=your_project_name
     export OS_AUTH_URL=http://controller:5000/v2.0
     export OS_REGION_NAME=your_region_name
-    
+
     $ source openrc.sh
-    
+
     $ trove --version
     1.0.9
 
@@ -271,5 +271,3 @@ refer to the volume documentation of your SDK, or try a different step in the tu
 * :doc:`/section6` - to automatically orchestrate the application
 * :doc:`/section7` - to learn about more complex networking
 * :doc:`/section8` - for advice for developers new to operations
-
-
