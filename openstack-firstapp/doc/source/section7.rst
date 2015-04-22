@@ -1,8 +1,9 @@
-=========================
-Section Seven: Networking
-=========================
+==========
+Networking
+==========
 
-.. todo:: Latter part of the chapter (LBaaS) needs to use Fractals app entities for the examples.
+.. todo:: Latter part of the chapter (LBaaS) needs to use Fractals app
+          entities for the examples.
 
 Prior to this chapter, all of the nodes that comprise the fractal application
 were attached to the same network.
@@ -20,30 +21,38 @@ database, webserver, file storage, and worker components.
 
 .. only:: fog
 
-    .. warning:: fog `supports <http://www.rubydoc.info/gems/fog/1.8.0/Fog/Network/OpenStack>`_ the OpenStack Networking API, but this section has not yet been completed.
+    .. warning:: fog `supports
+                 <http://www.rubydoc.info/gems/fog/1.8.0/Fog/Network/OpenStack>`_
+                 the OpenStack Networking API, but this section has
+                 not yet been completed.
 
 .. only:: jclouds
 
-    .. warning:: jClouds supports the OpenStack Networking API, but section has not yet been completed. Please see `this <https://gist.github.com/everett-toews/8701756>`_ in the meantime.
+    .. warning:: jClouds supports the OpenStack Networking API, but
+                 section has not yet been completed. Please see `this
+                 <https://gist.github.com/everett-toews/8701756>`_ in
+                 the meantime.
 
 .. only:: libcloud
 
-    .. warning:: Libcloud does not support the OpenStack Networking API
+    .. warning:: Libcloud does not support the OpenStack Networking API.
 
 .. only:: node
 
-    .. warning:: Pkgcloud supports the OpenStack Networking API, but this section has not been completed
+    .. warning:: Pkgcloud supports the OpenStack Networking API, but
+                 this section has not been completed.
 
 .. only:: openstacksdk
 
-    .. warning:: This section has not yet been completed for the OpenStack SDK
+    .. warning:: This section has not yet been completed for the OpenStack SDK.
 
 .. only:: phpopencloud
 
-    .. warning:: PHP-OpenCloud supports the OpenStack Networking API, but this section has not been completed
+    .. warning:: PHP-OpenCloud supports the OpenStack Networking API,
+                 but this section has not been completed.
 
 Working with the CLI
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 As SDKs don't currently support the OpenStack Networking API this section uses
 the commandline.
@@ -51,11 +60,12 @@ the commandline.
 Install the 'neutron' commandline client by following this guide:
 http://docs.openstack.org/cli-reference/content/install_clients.html
 
-Then set up the necessary variables for your cloud in an 'openrc' file using this guide:
+Then set up the necessary variables for your cloud in an 'openrc' file
+using this guide:
 http://docs.openstack.org/cli-reference/content/cli_openrc.html
 
-Ensure you have an openrc.sh file, source it and then check your neutron client works:
-::
+Ensure you have an openrc.sh file, source it and then check your
+neutron client works: ::
 
     $ cat openrc.sh
     export OS_USERNAME=your_auth_username
@@ -69,25 +79,27 @@ Ensure you have an openrc.sh file, source it and then check your neutron client 
     $ neutron --version
     2.3.11
 
-Networking Segmentation
------------------------
+Networking segmentation
+~~~~~~~~~~~~~~~~~~~~~~~
 
 In traditional datacenters, multiple network segments are
 dedicated to specific types of network traffic.
 
-The fractal application we are building contains three types of network traffic:
+The fractal application we are building contains three types of
+network traffic:
 
 * public-facing wev traffic
 * API traffic
 * internal worker traffic
 
-For performance reasons, it makes sense to have a network for each tier,
-so that traffic from one tier does not "crowd out" other types of traffic
-and cause the application to fail. In addition, having separate networks makes
-controlling access to parts of the application easier to manage, improving the overall
-security of the application.
+For performance reasons, it makes sense to have a network for each
+tier, so that traffic from one tier does not "crowd out" other types
+of traffic and cause the application to fail. In addition, having
+separate networks makes controlling access to parts of the application
+easier to manage, improving the overall security of the application.
 
-Prior to this section, the network layout for the Fractal application would be similar to the following diagram:
+Prior to this section, the network layout for the Fractal application
+would be similar to the following diagram:
 
 .. nwdiag::
 
@@ -121,10 +133,13 @@ routing and external access for the worker nodes, and floating IP addresses
 are already associated with each node in the Fractal application cluster
 to facilitate external access.
 
-At the end of this section, we will be making some slight changes to the networking topology
-by using the OpenStack Networking API to create a new network to which the worker nodes will attach
-(10.0.1.0/24). We will use the API network (10.0.3.0/24) to attach the Fractal API servers. Webserver instances have their own network (10.0.2.0/24), and
-will be accessible by fractal aficionados worldwide, by allocating floating IPs from the public network.
+At the end of this section, we will be making some slight changes to
+the networking topology by using the OpenStack Networking API to
+create a new network to which the worker nodes will attach
+(10.0.1.0/24). We will use the API network (10.0.3.0/24) to attach the
+Fractal API servers. Webserver instances have their own network
+(10.0.2.0/24), and will be accessible by fractal aficionados
+worldwide, by allocating floating IPs from the public network.
 
 .. nwdiag::
 
@@ -156,34 +171,42 @@ will be accessible by fractal aficionados worldwide, by allocating floating IPs 
             }
         }
 
-Introduction to Tenant Networking
----------------------------------
+Introduction to tenant networking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-With the OpenStack Networking API, the workflow for creating a network topology that separates the public-facing
-Fractals app API from the worker backend is as follows:
+With the OpenStack Networking API, the workflow for creating a network
+topology that separates the public-facing Fractals app API from the
+worker back end is as follows:
 
 * Create a network for the web server nodes.
 
 * Create a network for the worker nodes. This is the private data network.
 
-* Create a subnet for the private data network to use for addressing. In other words, when worker instances are created, their IP addresses will come from this subnet.
+* Create a subnet for the private data network to use for
+  addressing. In other words, when worker instances are created, their
+  IP addresses will come from this subnet.
 
-* Create a subnet for the web server network to use for addressing. In other words, when web server instances are created, their IP addresses will come from this subnet.
+* Create a subnet for the web server network to use for addressing. In
+  other words, when web server instances are created, their IP
+  addresses will come from this subnet.
 
 * Create a router for the private data network.
 
 * Allocate floating ips and assign them to the web server nodes.
 
-Creating Networks
------------------
+Creating networks
+~~~~~~~~~~~~~~~~~
 
-We assume that the public network, with the subnet that floating IPs can be allocated from, was provisioned
-for you by your cloud operator. This is due to the nature of L3 routing, where the IP address range that
-is used for floating IPs is configured in other parts of the operator's network, so that traffic is properly routed.
+We assume that the public network, with the subnet that floating IPs
+can be allocated from, was provisioned for you by your cloud
+operator. This is due to the nature of L3 routing, where the IP
+address range that is used for floating IPs is configured in other
+parts of the operator's network, so that traffic is properly routed.
 
-.. todo:: Rework the console outputs in these sections to be more comprehensive, based on the outline above
+.. todo:: Rework the console outputs in these sections to be more
+          comprehensive, based on the outline above.
 
-Next, create a private data network, worker_network:
+Next, create a private data network, `worker_network`:
 
 ::
 
@@ -202,11 +225,11 @@ Next, create a private data network, worker_network:
         | tenant_id       | f77bf3369741408e89d8f6fe090d29d2     |
         +-----------------+--------------------------------------+
 
-Now let's just confirm that we have both the worker network, and a public
-network by getting a list of all networks in the cloud. The public network
-doesn't have to be named public - it could be 'external', 'net04_ext' or
-something else - the important thing is it exists and can be used to reach
-the internet.
+Now let's just confirm that we have both the worker network, and a
+public network by getting a list of all networks in the cloud. The
+public network doesn't have to be named public - it could be
+'external', 'net04_ext' or something else - the important thing is it
+exists and can be used to reach the internet.
 
 ::
 
@@ -218,7 +241,8 @@ the internet.
         | 953224c6-c510-45c5-8a29-37deffd3d78e | worker_network   |                                                  |
         +--------------------------------------+------------------+--------------------------------------------------+
 
-Next create the subnet from which addresses will be allocated for instances on the worker network:
+Next create the subnet from which addresses will be allocated for
+instances on the worker network:
 
 ::
 
@@ -262,7 +286,7 @@ Now create a network for the webservers ...
     | tenant_id       | 0cb06b70ef67424b8add447415449722     |
     +-----------------+--------------------------------------+
 
-... and a subnet from which they can pull IP addresses:
+and a subnet from which they can pull IP addresses:
 
 ::
 
@@ -330,9 +354,10 @@ Finally, create the subnet for the API network:
     | tenant_id         | 0cb06b70ef67424b8add447415449722           |
     +-------------------+--------------------------------------------+
 
-Now that you've got the networks created, go ahead and create two Floating IPs, for web servers.
-Ensure that you replace 'public' with the name of the public/external network set up
-by your cloud administrator.
+Now that you've got the networks created, go ahead and create two
+Floating IPs, for web servers. Ensure that you replace 'public' with
+the name of the public/external network set up by your cloud
+administrator.
 
 ::
 
@@ -373,15 +398,17 @@ by your cloud administrator.
 Next we'll need to enable OpenStack to route traffic appropriately.
 
 Creating the SNAT gateway
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because we are using cloud-init and other tools to deploy and bootstrap the application,
-the Fractal app worker instances require Source Network Address Translation (SNAT).
-If the Fractal app worker nodes were deployed from a "golden image"
-that had all the software components already installed, there would be no need to create a
-Neutron router to provide SNAT functionality.
+Because we are using cloud-init and other tools to deploy and
+bootstrap the application, the Fractal app worker instances require
+Source Network Address Translation (SNAT). If the Fractal app worker
+nodes were deployed from a "golden image" that had all the software
+components already installed, there would be no need to create a
+neutron router to provide SNAT functionality.
 
-.. todo :: nickchase doesn't understand the above paragraph.  Why wouldn't it be required?
+.. todo:: nickchase doesn't understand the above paragraph. Why
+          wouldn't it be required?
 
 ::
 
@@ -399,8 +426,9 @@ Neutron router to provide SNAT functionality.
         | tenant_id             | f77bf3369741408e89d8f6fe090d29d2     |
         +-----------------------+--------------------------------------+
 
-After creating the router, you need to set up the gateway for the router. For outbound access
-we will set the router's gateway as the public network.
+After creating the router, you need to set up the gateway for the
+router. For outbound access we will set the router's gateway as the
+public network.
 
 ::
 
@@ -422,7 +450,8 @@ we will set the router's gateway as the public network.
             +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
-The final, most important step is to create an interface on the worker network and attach it to the router you just created.
+The final, most important step is to create an interface on the worker
+network and attach it to the router you just created.
 
 ::
 
@@ -440,16 +469,19 @@ The final, most important step is to create an interface on the worker network a
         | 953224c6-c510-45c5-8a29-37deffd3d78e | worker_network | a0e2ebe4-5d4e-46b3-82b5-4179d778e615 10.0.1.0/24 |
         +--------------------------------------+----------------+--------------------------------------------------+
 
-.. todo:
+.. todo::
     Wire up the tenant router to the api_network and webserver_network
 
 Booting a worker
-~~~~~~~~~~~~~~~~
+----------------
 
-Now that you've prepared the networking infrastructure, you can go ahead and boot an instance on it.
-Ensure you use appropriate flavor and image values for your cloud - see :doc:`section1` if you've not already.
+Now that you've prepared the networking infrastructure, you can go
+ahead and boot an instance on it. Ensure you use appropriate flavor
+and image values for your cloud - see :doc:`section1` if you've not
+already.
 
-.. todo:: Show how to create an instance in libcloud using the network we just created. - libcloud does not yet support this.
+.. todo:: Show how to create an instance in libcloud using the network
+          we just created. - libcloud does not yet support this.
 
 ::
 
@@ -485,25 +517,31 @@ Ensure you use appropriate flavor and image values for your cloud - see :doc:`se
         | user_id                              | a61292a5691d4c6c831b7a8f07921261                                |
         +--------------------------------------+-----------------------------------------------------------------+
 
-Load Balancing
---------------
+Load balancing
+~~~~~~~~~~~~~~
 
-After separating the Fractal worker nodes into their own network,
-the next logical step is to move the Fractal API service onto a load balancer,
-so that multiple API workers can handle requests. By using a load balancer, the API
-service can be scaled out in a similar fashion to the worker nodes.
+After separating the Fractal worker nodes into their own network, the
+next logical step is to move the Fractal API service onto a load
+balancer, so that multiple API workers can handle requests. By using a
+load balancer, the API service can be scaled out in a similar fashion
+to the worker nodes.
 
 Neutron LbaaS API
-~~~~~~~~~~~~~~~~~
+-----------------
 
-.. note:: This section is based on the Neutron LBaaS API version 1.0 http://docs.openstack.org/admin-guide-cloud/content/lbaas_workflow.html
+.. note:: This section is based on the Neutron LBaaS API version 1.0
+          http://docs.openstack.org/admin-guide-cloud/content/lbaas_workflow.html
 
-.. todo:: libcloud support added 0.14: https://developer.rackspace.com/blog/libcloud-0-dot-14-released/ - this section needs rewriting to use the libcloud API
+.. todo:: libcloud support added 0.14:
+          https://developer.rackspace.com/blog/libcloud-0-dot-14-released/ -
+          this section needs rewriting to use the libcloud API
 
-The OpenStack Networking API provides support for creating loadbalancers, which can be used to
-scale the Fractal app web service. In the following example, we create two compute instances via the Compute
-API, then instantiate a loadbalancer that will use a virtual IP (VIP) for accessing the web service offered by
-the two compute nodes. The end result will be the following network topology:
+The OpenStack Networking API provides support for creating
+loadbalancers, which can be used to scale the Fractal app web
+service. In the following example, we create two compute instances via
+the Compute API, then instantiate a loadbalancer that will use a
+virtual IP (VIP) for accessing the web service offered by the two
+compute nodes. The end result will be the following network topology:
 
 .. nwdiag::
 
@@ -523,7 +561,8 @@ the two compute nodes. The end result will be the following network topology:
             }
          }
 
-libcloud support added 0.14: https://developer.rackspace.com/blog/libcloud-0-dot-14-released/
+libcloud support added 0.14:
+https://developer.rackspace.com/blog/libcloud-0-dot-14-released/
 
 Let's start by looking at what's already in place.
 
@@ -599,7 +638,8 @@ Now let's look at what ports are available:
     | 7451d01f-bc3b-46a6-9ae3-af260d678a63 |      | fa:16:3e:c6:d4:9c | {"subnet_id": "3eada497-36dd-485b-9ba4-90c5e3340a53", "ip_address": "10.0.2.3"} |
     +--------------------------------------+------+-------------------+---------------------------------------------------------------------------------+
 
-Next create additional floating IPs by specifying the fixed IP addresses they should point to and the ports they should use:
+Next create additional floating IPs by specifying the fixed IP
+addresses they should point to and the ports they should use:
 
 ::
 
@@ -632,7 +672,8 @@ Next create additional floating IPs by specifying the fixed IP addresses they sh
     | tenant_id           | 0cb06b70ef67424b8add447415449722     |
     +---------------------+--------------------------------------+
 
-All right, now you're ready to go ahead and create members for the load balancer pool, referencing the floating IPs:
+All right, now you're ready to go ahead and create members for the
+load balancer pool, referencing the floating IPs:
 
 ::
 
@@ -680,9 +721,10 @@ You should be able to see them in the member list:
     | f3ba0605-4926-4498-b86d-51002892e93a | 203.0.113.22 |            80 |      1 | True           | ACTIVE |
     +--------------------------------------+--------------+---------------+--------+----------------+--------+
 
-Now let's create a healthmonitor that will ensure that members of the loadbalancer pool are active and able
-to respond to requests. If a member in the pool dies or is unresponsive, the member is removed from the pool
-so that client requests are routed to another active member.
+Now let's create a healthmonitor that will ensure that members of the
+loadbalancer pool are active and able to respond to requests. If a
+member in the pool dies or is unresponsive, the member is removed from
+the pool so that client requests are routed to another active member.
 
 ::
 
@@ -706,7 +748,8 @@ so that client requests are routed to another active member.
     $ neutron lb-healthmonitor-associate 663345e6-2853-43b2-9ccb-a623d5912345 mypool
     Associated health monitor 663345e6-2853-43b2-9ccb-a623d5912345
 
-Now create a virtual IP that will be used to direct traffic between the various members of the pool:
+Now create a virtual IP that will be used to direct traffic between
+the various members of the pool:
 
 ::
 
@@ -745,11 +788,11 @@ And confirm it's in place:
 
 Now let's look at the big picture.
 
-Final Result
-------------
+Final result
+~~~~~~~~~~~~
 
-With the addition of the loadbalancer, the Fractal app's networking topology now reflects the modular
-nature of the application itself.
+With the addition of the loadbalancer, the Fractal app's networking
+topology now reflects the modular nature of the application itself.
 
 
 .. nwdiag::
@@ -784,12 +827,14 @@ nature of the application itself.
         }
 
 
-Next Steps
-----------
+Next steps
+~~~~~~~~~~
 
-You should now be fairly confident working with Network API.
-There are several calls we did not cover. To see these and more,
-refer to the volume documentation of your SDK, or try a different step in the tutorial, including:
+You should now be fairly confident working with Network API. There
+are several calls we did not cover. To see these and more, refer to
+the volume documentation of your SDK, or try a different step in the
+tutorial, including:
 
-* :doc:`/section8` - for advice for developers new to operations
-* :doc:`/section9` - to see all the crazy things we think ordinary folks won't want to do ;)
+* :doc:`/section8`: for advice for developers new to operations
+* :doc:`/section9`: to see all the crazy things we think ordinary
+  folks won't want to do ;)
