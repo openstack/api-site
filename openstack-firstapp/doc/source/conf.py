@@ -37,7 +37,6 @@ extensions = [
     'sphinxcontrib.nwdiag',
     'sphinx.ext.graphviz',
     'sphinx.ext.todo'
-#    'oslosphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
