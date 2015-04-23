@@ -320,47 +320,89 @@
     <method name="POST" id="createServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create server">
             <para role="shortdesc">Creates a server.</para>
-            <para>The progress of this
-                operation depends on factors including location of the requested image,
-                network i/o, host load, and the selected flavor. The progress of the request can be
-                checked by performing a &GET; on /servers/<parameter>id</parameter>, which
-                returns a progress attribute (0-100% completion). The full URL to the newly created
-                server is returned through the <code>Location</code> header and is available as a
-                    <code>self</code> and <code>bookmark</code> link in the server representation.</para>
-            <para>Note that when you create a server, only the server ID, its links, and the admin
-                password are guaranteed to be returned in the response. You can retrieve additional
-                attributes through subsequent &GET;s on the server.</para>
-            <para>You can boot a server from a volume by including <code>block-device-mapping-v2</code>
-                parameters in the create request.</para>
+            <para>
+                The progress of this operation depends on the location of the
+                requested image, network I/O, host load, selected flavor, and
+                other factors.
+            </para>
+            <para>
+                Issue a &GET; <code>/servers/{id}</code> request to check the
+                progress of the request, which returns a progress attribute
+                with a from 0 to 100% complete value. The
+                <code>Location</code> header returns the full URL to the newly
+                created server and is available as a <code>self</code> and
+                <code>bookmark</code> link in the server representation.
+            </para>
+            <note>
+                <para>
+                    When you create a server, only the server ID, its links,
+                    and the admin password are guaranteed to be returned in
+                    the response. You can get additional attributes through
+                    subsequent &GET; requests on the server.
+                </para>
+            </note>
+            <para>
+                Include the <code>block-device-mapping-v2</code> parameters
+                in the create request to boot a server from a volume.
+            </para>
              <para>Preconditions</para>
              <itemizedlist>
-                 <listitem><para>The user must have enough server quota remaining
-                 to create the number of servers requested.</para></listitem>
-                 <listitem><para>The connection to the Image service is
-                 valid.</para></listitem>
+                 <listitem>
+                    <para>
+                        The user must have sufficient server quota to create
+                        the number of servers requested.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The connection to the Image service is valid.
+                    </para>
+                </listitem>
              </itemizedlist>
              <para>Asynchronous Postconditions</para>
              <itemizedlist>
-                 <listitem><para>With correct permissions, you can see the server
-                 status as <code>ACTIVE</code> through API calls.</para></listitem>
-                 <listitem><para>With correct access, you can see the created
-                 server in the compute node that OpenStack Compute manages.
-                 </para></listitem>
+                 <listitem>
+                    <para>
+                        With correct permissions, you can see the server
+                        status as <code>ACTIVE</code> through API calls.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        With correct access, you can see the created server in
+                        the compute node that OpenStack Compute manages.
+                    </para>
+                </listitem>
              </itemizedlist>
              <para>Troubleshooting</para>
              <itemizedlist>
-                 <listitem><para>If the server status remains <code>BUILDING</code>
-                 or shows another error status, the request failed. Ensure you meet
-                 the preconditions then investigate the compute node.
-                 </para></listitem>
-                 <listitem><para>The server is not created in the compute node
-                 which OpenStack Compute manages.</para></listitem>
-                 <listitem><para>The compute node needs enough free resource to
-                 match the specified resource of the server creation request.
-                 </para></listitem>
-                 <listitem><para>Ensure the scheduler selection filter can
-                 fulfill the request with the available compute nodes that
-                 match the filter's selection criteria.</para></listitem>
+                <listitem>
+                    <para>
+                        If the server status remains <code>BUILDING</code> or
+                        shows another error status, the request failed. Ensure
+                        you meet the preconditions then investigate the
+                        compute node.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The server is not created in the compute node that
+                        OpenStack Compute manages.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The compute node needs enough free resource to match
+                        the specified resource of the server creation request.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Ensure that the scheduler selection filter can fulfill the
+                        request with the available compute nodes that match
+                        the selection criteria of the filter.
+                    </para>
+                </listitem>
              </itemizedlist>
         </wadl:doc>
         <request>
