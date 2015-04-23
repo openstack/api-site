@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
 %common;]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -12,14 +12,7 @@
             <resource id="os-instance-usage-audit-log"
                 path="os-instance-usage-audit-log">
                 <method href="#listusageaudits"/>
-                <resource id="datetime" path="{datetime}">
-                    <param name="datetime" style="template"
-                        type="xsd:string">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>The date and time stamp.</para>
-                        </wadl:doc>
-                    </param>
+                <resource id="before" path="before">
                     <method href="#listinstanceusage"/>
                 </resource>
             </resource>
@@ -29,7 +22,7 @@
     <!--      OS Instance Usage Audit Log            -->
     <!--*******************************************************-->
     <method name="GET" id="listusageaudits">
-        <wadl:doc xml:lang="EN" title="List usage audits"
+        <wadl:doc xml:lang="EN" title="List usage audits for an instance"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Lists usage audits for a specified
                 instance.</para>
@@ -46,17 +39,22 @@
         </response>
     </method>
     <method name="GET" id="listinstanceusage">
-        <wadl:doc xml:lang="EN" title="List instance usage"
+        <wadl:doc xml:lang="EN" title="List usage audits before specified time"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists instance usage audits that
+            <para role="shortdesc">Lists usage audits that
                 occurred before a specified time.</para>
         </wadl:doc>
+         <request>
+            <representation mediaType="application/xml">
+                &auditQueryParameter;
+            </representation>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-instance-usage-audit-log/inst-usage-audit-log-index-with-before-get-resp.json"
+                        href="../api_samples/os-instance-usage-audit-log/inst-usage-audit-log-show-get-resp.json"
                     />
                 </wadl:doc> &x-openstack-request-idHeader;
             </representation>
