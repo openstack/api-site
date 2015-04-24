@@ -1,6 +1,6 @@
-===============================
-Section Four: Making it Durable
-===============================
+=================
+Making it durable
+=================
 
 .. todo:: https://github.com/apache/libcloud/pull/492
 
@@ -8,67 +8,81 @@ Section Four: Making it Durable
 
 .. todo:: Explain how to get objects back out again.
 
-.. todo:: Large object support in Swift http://docs.openstack.org/developer/swift/overview_large_objects.html
+.. todo:: Large object support in Swift
+          http://docs.openstack.org/developer/swift/overview_large_objects.html
 
-This section introduces object storage.
-`OpenStack Object Storage <http://www.openstack.org/software/openstack-storage/>`_
-(code-named Swift) is open source software for creating redundant, scalable data storage
-using clusters of standardized servers to store petabytes of accessible data.
-It is a long-term storage system for large amounts of static data that can be
-retrieved, leveraged, and updated. Access is via an API, not through a file-system
-like more traditional storage.
+This section introduces object storage.  `OpenStack Object Storage
+<http://www.openstack.org/software/openstack-storage/>`_ (code-named
+swift) is open source software for creating redundant, scalable data
+storage using clusters of standardized servers to store petabytes of
+accessible data.  It is a long-term storage system for large amounts
+of static data that can be retrieved, leveraged, and updated. Access
+is via an API, not through a file-system like more traditional
+storage.
 
-There are a two key concepts to understand in the Object Storage API. The Object
-Storage API is organized around two types of entities:
+There are a two key concepts to understand in the Object Storage
+API. The Object Storage API is organized around two types of entities:
 
 * Objects
 * Containers
 
-Similar to the Unix programming model, an Object is a "bag of bytes" that contains data,
-such as documents and images. Containers are used to group objects.
-You can make many objects inside a container, and have many containers inside your account.
+Similar to the Unix programming model, an object is a "bag of bytes"
+that contains data, such as documents and images. Containers are used
+to group objects.  You can make many objects inside a container, and
+have many containers inside your account.
 
-If you think about how you traditionally make what you store durable, very quickly you should come
-to the conclusion that keeping multiple copies of your objects on separate systems is a good way
-to do that. However, keeping track of multiple copies of objects is a pain, and building that
-into an app requires a lot of logic. OpenStack Object Storage does this automatically for you
-behind-the-scenes - replicating each object at least twice before returning 'write success' to your
-API call. It will always work to ensure that there are three copies of your objects (by default)
-at all times - replicating them around the system in case of hardware failure, maintanance, network
-outage or any other kind of breakage. This is very convenient for app creation - you can just dump
-objects into object storage and not have to care about any of this additional work to keep them safe.
+If you think about how you traditionally make what you store durable,
+very quickly you should come to the conclusion that keeping multiple
+copies of your objects on separate systems is a good way to do
+that. However, keeping track of multiple copies of objects is a pain,
+and building that into an app requires a lot of logic. OpenStack
+Object Storage does this automatically for you behind-the-scenes -
+replicating each object at least twice before returning 'write
+success' to your API call. It will always work to ensure that there
+are three copies of your objects (by default) at all times -
+replicating them around the system in case of hardware failure,
+maintanance, network outage or any other kind of breakage. This is
+very convenient for app creation - you can just dump objects into
+object storage and not have to care about any of this additional work
+to keep them safe.
 
 
 Using Object Storage to store fractals
 --------------------------------------
 
-The Fractals app currently uses the local filesystem on the instance to store the images it
-generates. This is not scalable or durable, for a number of reasons.
+The Fractals app currently uses the local filesystem on the instance
+to store the images it generates. This is not scalable or durable, for
+a number of reasons.
 
-Because the local filesystem is ephemeral storage, if the instance is terminated, the fractal
-images will be lost along with the instance. Block based storage, which we'll discuss in :doc:`/section5`,
-avoids that problem, but like local filesystems, it
-requires administration to ensure that it does not fill up, and immediate attention if disks fail.
+Because the local filesystem is ephemeral storage, if the instance is
+terminated, the fractal images will be lost along with the
+instance. Block based storage, which we'll discuss in
+:doc:`/section5`, avoids that problem, but like local filesystems, it
+requires administration to ensure that it does not fill up, and
+immediate attention if disks fail.
 
-The Object Storage service manages many of these tasks that normally would require the application owner
-to manage them, and presents a scalable and durable API that you can use for the fractals app, without
-having to be concerened with the low level details of how the objects are stored and replicated,
-and growing the storage pool. In fact, Object Storage handles replication intrinsicly, storing multiple
-copies of each object and returning one of them on demand using the API.
+The Object Storage service manages many of these tasks that normally
+would require the application owner to manage them, and presents a
+scalable and durable API that you can use for the fractals app,
+without having to be concerened with the low level details of how the
+objects are stored and replicated, and growing the storage pool. In
+fact, Object Storage handles replication intrinsicly, storing multiple
+copies of each object and returning one of them on demand using the
+API.
 
-First, let's learn how to connect to the Object Storage Endpoint:
+First, let's learn how to connect to the Object Storage endpoint:
 
 .. only:: dotnet
 
-    .. warning:: This section has not yet been completed for the .NET SDK
+    .. warning:: This section has not yet been completed for the .NET SDK.
 
 .. only:: fog
 
-    .. warning:: This section has not yet been completed for the fog SDK
+    .. warning:: This section has not yet been completed for the fog SDK.
 
 .. only:: jclouds
 
-    .. warning:: This section has not yet been completed for the jclouds SDK
+    .. warning:: This section has not yet been completed for the jclouds SDK.
 
 .. only:: libcloud
 
@@ -79,25 +93,31 @@ First, let's learn how to connect to the Object Storage Endpoint:
 
     .. warning::
 
-        Libcloud 0.16 and 0.17 are afflicted with a bug that means authentication to
-        a swift endpoint can fail with `a Python exception <https://issues.apache.org/jira/browse/LIBCLOUD-635>`_.
-        If you encounter this, you can upgrade your libcloud version, or apply a simple
-        `2-line patch <https://github.com/fifieldt/libcloud/commit/ec58868c3344a9bfe7a0166fc31c0548ed22ea87>`_.
+        Libcloud 0.16 and 0.17 are afflicted with a bug that means
+        authentication to a swift endpoint can fail with `a Python
+        exception
+        <https://issues.apache.org/jira/browse/LIBCLOUD-635>`_.  If
+        you encounter this, you can upgrade your libcloud version, or
+        apply a simple `2-line patch
+        <https://github.com/fifieldt/libcloud/commit/ec58868c3344a9bfe7a0166fc31c0548ed22ea87>`_.
 
-    .. note:: Libcloud uses a different connector for Object Storage to all other OpenStack services,
-               so a conn object from previous sections won't work here and we have to create a new one named :code:`swift`.
+    .. note:: Libcloud uses a different connector for Object Storage
+              to all other OpenStack services, so a conn object from
+              previous sections won't work here and we have to create
+              a new one named :code:`swift`.
 
 .. only:: node
 
-    .. warning:: This section has not yet been completed for the pkgcloud SDK
+    .. warning:: This section has not yet been completed for the pkgcloud SDK.
 
 .. only:: openstacksdk
 
-    .. warning:: This section has not yet been completed for the OpenStack SDK
+    .. warning:: This section has not yet been completed for the OpenStack SDK.
 
 .. only:: phpopencloud
 
-    .. warning:: This section has not yet been completed for the PHP-OpenCloud SDK
+    .. warning:: This section has not yet been completed for the
+                 PHP-OpenCloud SDK.
 
 
 To begin to store objects, we must first make a container.
@@ -131,7 +151,8 @@ all containers in your account:
         [<Container: name=fractals, provider=OpenStack Swift>]
 
 The next logical step is to upload an object. Find a photo of a goat
-online, name it :code:`goat.jpg` and upload it to your container :code:`fractals`:
+online, name it :code:`goat.jpg` and upload it to your container
+:code:`fractals`:
 
 .. only:: libcloud
 
@@ -139,8 +160,9 @@ online, name it :code:`goat.jpg` and upload it to your container :code:`fractals
         :start-after: step-4
         :end-before: step-5
 
-List objects in your container :code:`fractals` to see if the upload was successful, then download
-the file to verify the md5sum is the same:
+List objects in your container :code:`fractals` to see if the upload
+was successful, then download the file to verify the md5sum is the
+same:
 
 .. only:: libcloud
 
@@ -194,7 +216,9 @@ Finally, let's clean up by deleting our test object:
 Backup the Fractals from the database on the Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-So let's now use the knowledge from above to backup the images of the Fractals app, stored inside the database right now, on the Object Storage.
+So let's now use the knowledge from above to backup the images of the
+Fractals app, stored inside the database right now, on the Object
+Storage.
 
 Use the :code:`fractals`' container from above to put the images in:
 
@@ -204,7 +228,8 @@ Use the :code:`fractals`' container from above to put the images in:
         :start-after: step-10
         :end-before: step-11
 
-Next, we backup all of our existing fractals from the database to our swift container. A simple for loop takes care of that:
+Next, we backup all of our existing fractals from the database to our
+swift container. A simple for loop takes care of that:
 
 .. only:: libcloud
 
@@ -226,17 +251,19 @@ Next, we backup all of our existing fractals from the database to our swift cont
 Configure the Fractals app to use Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning:: Currenctly it is not possible to directly store generated images on the OpenStack Object Storage. Please revisit this section again in the future.
+.. warning:: Currently it is not possible to directly store generated
+             images on the OpenStack Object Storage. Please revisit
+             this section again in the future.
 
-Extra Features
+Extra features
 --------------
 
 Delete containers
 ~~~~~~~~~~~~~~~~~
 
-One call we didn't cover above that you probably need to know is how to delete a container.
-Ensure that you have removed all objects from the container before running this, otherwise
-it will fail:
+One call we didn't cover above that you probably need to know is how
+to delete a container.  Ensure that you have removed all objects from
+the container before running this, otherwise it will fail:
 
 .. only:: libcloud
 
@@ -268,23 +295,25 @@ This is more efficient, especially for larger files.
 Large objects
 ~~~~~~~~~~~~~
 
-For efficiency, most Object Storage installations treat large objects (say, :code:`> 5GB`)
-differently than smaller objects.
+For efficiency, most Object Storage installations treat large objects
+(say, :code:`> 5GB`) differently than smaller objects.
 
 .. only:: libcloud
 
-    If you are working with large objects, use the :code:`ex_multipart_upload_object`
-    call instead of the simpler :code:`upload_object` call. How the upload works behind-the-scenes
-    is by splitting the large object into chunks, and creating a special manifest so
-    they can be recombined on download. Alter the :code:`chunk_size` parameter (in bytes) according to
-    what your cloud can accept.
+    If you are working with large objects, use the
+    :code:`ex_multipart_upload_object` call instead of the simpler
+    :code:`upload_object` call. How the upload works behind-the-scenes
+    is by splitting the large object into chunks, and creating a
+    special manifest so they can be recombined on download. Alter the
+    :code:`chunk_size` parameter (in bytes) according to what your
+    cloud can accept.
 
     .. literalinclude:: ../../samples/libcloud/section4.py
         :start-after: step-14
         :end-before: step-15
 
 
-Next Steps
+Next steps
 ----------
 
 You should now be fairly confident working with Object Storage.
@@ -296,8 +325,8 @@ You can find more about the Object Storage SDK calls at:
 
 Or try a different step in the tutorial, including:
 
-* :doc:`/section5` - to migrate the database to block storage, or use the database-as-as-service component
-* :doc:`/section6` - to automatically orchestrate the application
-* :doc:`/section7` - to learn about more complex networking
-* :doc:`/section8` - for advice for developers new to operations
-
+* :doc:`/section5`: to migrate the database to block storage, or use
+  the database-as-as-service component
+* :doc:`/section6`: to automatically orchestrate the application
+* :doc:`/section7`: to learn about more complex networking
+* :doc:`/section8`: for advice for developers new to operations
