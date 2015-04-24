@@ -62,13 +62,13 @@ it. That application includes:
 Choosing your OpenStack SDK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Future versions of this book will cover completing these tasks with
+Future versions of this guide will cover completing these tasks with
 various toolkits, such as the OpenStack SDK, and using various
-languages, such as Java or Ruby. For now, however, this initial
-incarnation focuses on using Python with Apache Libcloud. That said,
-if you're not a master Python programmer, don't despair; the code is
-fairly straightforward, and should be readable to anyone with a
-programming background.
+programming languages, such as Java or Ruby. For now, however, this
+initial incarnation of the guide focuses on using Python with Apache
+Libcloud. That said, if you're not a master Python programmer, don't
+despair; the code is fairly straightforward, and should be readable to
+anyone with a programming background.
 
 If you're a developer for an alternate toolkit and would like to see this book
 support it, great!  Please feel free to submit alternate code snippets, or to
@@ -107,11 +107,11 @@ Fractals application itself runs in Ubuntu, Debian, and Fedora-based
 and openSUSE-based distributions, so you'll need to be creating
 instances using one of these operating systems.
 
-Interact with the cloud itself, you will also need to have
+To interact with the cloud itself, you will also need to have
 
 .. only:: dotnet
 
-      `OpenStack SDK for Microsoft .NET 0.9.1 or better installed
+      `OpenStack SDK for Microsoft .NET 0.9.1 or higher installed
       <https://www.nuget.org/packages/OpenStack-SDK-DotNet>`_.
       .. warning:: This document has not yet been completed for the .NET SDK.
 
@@ -475,12 +475,13 @@ and destroyed a little while ago. We'll go into more detail in later
 sections, but for now, simply create these resources so you can feed
 them to the instance:
 
-* A key pair. To access your instance, you must import an SSH public key
-  into OpenStack to create a key pair. OpenStack installs this key pair on the
-  new instance. Typically, your public key is written to
-  :code:`.ssh/id_rsa.pub`. If you do not have an SSH public key file, follow
-  the instructions `here <https://help.github.com/articles/generating-ssh-keys/>`_
-  first. We'll cover this in depth in section 2.
+* A key pair. To access your instance, you must import an SSH public
+  key into OpenStack to create a key pair. OpenStack installs this key
+  pair on the new instance. Typically, your public key is written to
+  :code:`.ssh/id_rsa.pub`. If you do not have an SSH public key file,
+  follow the instructions `here
+  <https://help.github.com/articles/generating-ssh-keys/>`_
+  first. We'll cover this in depth in :doc:`/section2`.
 
 .. only:: fog
 
@@ -501,7 +502,7 @@ them to the instance:
 
 * Network access. By default, OpenStack filters all traffic. You must
   create a security group that allows HTTP and SSH access and apply it to
-  your instance. We'll go into more detail in section 2.
+  your instance. We'll go into more detail :doc:`/section2`.
 
 .. only:: fog
 
@@ -518,7 +519,7 @@ them to the instance:
 * Userdata. During instance creation, userdata may be provided to OpenStack to
   configure instances after they boot. The userdata is applied to an instance
   by the cloud-init service. This service should be pre-installed on the image
-  you have chosen. We'll go into more detail in section 2.
+  you have chosen. We'll go into more detail in :doc:`/section2`.
 
 .. only:: fog
 
@@ -554,7 +555,7 @@ variable tells it to go ahead and deploy the Fractals application.
 Associating a Floating IP for external connectivity
 ---------------------------------------------------
 
-We'll cover networking in greater detail in section 7, but in order to
+We'll cover networking in greater detail in :doc:`/section7`, but in order to
 actually see the application running, you'll need to know where to
 look for it. Your instance will have outbound network access by
 default, but in order to provision inbound network access (in other
@@ -643,8 +644,9 @@ Full example code
 
 Here's every code snippet into a single file, in case you want to run
 it all in one, or you are so experienced you don't need instruction ;)
-If you are going to use this, don't forget to set your authentication
-information and the flavor and image ID.
+Before running this program, confirm that you have set your
+authentication information and the flavor and image ID.
+
 
 .. only:: libcloud
 
