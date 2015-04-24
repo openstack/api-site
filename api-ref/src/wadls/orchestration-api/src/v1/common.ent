@@ -1,168 +1,160 @@
 <!ENTITY filesParameter '
-  <param xmlns="http://wadl.dev.java.net/2009/02" name="files" style="plain" required="false">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                xml:lang="EN">
-        <para>
-          This parameter supplies the contents of files
-          referenced in the template or the environment. Stack
-          templates and resource templates may reference files
-          explicitly using the <link
-          xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-intrinsic-functions.html#get-file"><code>get_file</code> intrinsic function</link>. In
-          addition, the <code>environment</code> parameter can
-          contain implicit references to files.
-        </para>
-        <para>
-          The value is a JSON object, where each key is a
-          relative or absolute URI which serves as the name of a
-          file, and the associated value provides the contents
-          of the file. The following code shows the general structure of this
-          parameter.
-            <programlisting language="json">
-{ ...
-    "files":{
-        "fileA.yaml":"Contents of the file",
-        "file:///usr/fileB.template":"Contents of the file",
-        "http://example.com/fileC.template":"Contents of the file"
-... }
+<param xmlns="http://wadl.dev.java.net/2009/02" name="files" style="plain" required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
+      Supplies the contents of files referenced in the template or the
+      environment. Stack templates and resource templates can explicitly
+      reference files by using the <code>get_file</code> intrinsic function.
+      In addition, the <code>environment</code> parameter can contain implicit
+      references to files.
+   </para>
+   <para>
+      The value is a JSON object, where each key is a relative or absolute URI
+      which serves as the name of a file, and the associated value provides
+      the contents of the file. The following code shows the general structure
+      of this parameter.
+   </para>
+   <programlisting language="json">{ ...
+    "files": {
+        "fileA.yaml": "Contents of the file",
+        "file:///usr/fileB.template": "Contents of the file",
+        "http://example.com/fileC.template": "Contents of the file"
+    }
+... 
 }</programlisting>
-        </para>
-        <para>
-          This parameter may not be used to provide
-          the content of the template located at the address
-          specified by <code>template_url</code>. Use the
-          <code>template</code> parameter to supply the template content as part of
-          the request.
-        </para>
-      </wadl:doc>
+   <para>
+      This parameter may not be used to provide the content of the
+      template located at the address specified by
+      <code>template_url</code>. Use the <code>template</code> parameter
+      to supply the template content as part of the request.
+   </para>
+</wadl:doc>
 </param> '>
 <!ENTITY parametersParameter '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="parameters" style="plain" required="false">
-  <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN">
-    <para>
-      This parameter supplies arguments for parameters defined in the stack
-      template.</para> <para>The value is a JSON object, where each key is
-      the name of a parameter <link
-      xlink:href="http://docs.openstack.org/hot-guide/content/hot-spec-parameters.html">defined
-      in the template</link> and the associated value is the argument to use for
-      that parameter when instantiating the template. The following code
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="parameters" style="plain" required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
+      Supplies arguments for parameters defined in the stack
+      template.
+   </para>
+   <para>
+      The value is a JSON object, where each key is the name of a parameter
+      defined in the template and the associated value is the argument to use
+      for that parameter when instantiating the template. The following code
       shows the general structure of this parameter. In the example,
       <code>a</code> and <code>b</code> would be the names of two parameters
       defined in the template.
-      <programlisting language="json">
-{ ...
-    "parameters":{
-        "a":"Value",
-        "b":"3"
+   </para>
+   <programlisting language="json">{ ...
+    "parameters": {
+        "a": "Value",
+        "b": "3"
     }
-... }
-      </programlisting>
-      </para>
-      <para>
-        While the service accepts JSON numbers for parameters with the type
-        <code>number</code> and JSON objects for parameters with the type
-        <code>json</code>, all parameter values are converted to their string
-        representation for storage in the created Stack. Clients are
-        encouraged to send all parameter values using their string
-        representation for consistency between requests and responses from the
-        Orchestration service.
-      </para>
-      <para>
-        A value must be provided for each template parameter which does not
-        specify a default value. However, this parameter is not allowed to
-        contain JSON properties with names that do not match a parameter
-        defined in the template.
-      </para>
-  </wadl:doc>
+... 
+}</programlisting>
+   <para>
+      While the service accepts JSON numbers for parameters with the type
+      <code>number</code> and JSON objects for parameters with the type
+      <code>json</code>, all parameter values are converted to their string
+      representation for storage in the created Stack. Clients are
+      encouraged to send all parameter values using their string
+      representation for consistency between requests and responses from the
+      Orchestration service.
+   </para>
+   <para>
+      A value must be provided for each template parameter which does not
+      specify a default value. However, this parameter is not allowed to
+      contain JSON properties with names that do not match a parameter
+      defined in the template.
+   </para>
+</wadl:doc>
 </param> '>
 <!ENTITY sortKeys '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_keys" style="query" required="false">
-  <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN">
-    <para>
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="sort_keys" style="query" required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
       Sorts the list by the <code>resource_type</code> or
       <code>created_at</code> key.
-    </para>
-  </wadl:doc>
+   </para>
+</wadl:doc>
 </param> '>
 <!ENTITY sortDirection '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_dir" style="query" required="false">
-  <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN">
-    <para>
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="sort_dir" style="query" required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
       The sort direction of the list. A valid value is
       <code>asc</code> (ascending) or <code>desc</code> (descending).
-    </para>
-  </wadl:doc>
+   </para>
+</wadl:doc>
 </param> '>
 <!ENTITY templateUrlParameter '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="template_url" style="plain" required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN">
-        <para>
-          A URI to the location containing the stack template
-          on which to perform the specified operation.
-        </para>
-        <para>
-          See the description of the <code>template</code>
-          parameter for information about the expected template
-          content located at the URI.
-        </para>
-        <para>
-          This parameter is only required when you omit the
-          <code>template</code> parameter. If you specify both parameters,
-          this parameter is ignored.
-        </para>
-    </wadl:doc>
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="template_url" style="plain" required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
+      A URI to the location containing the stack template
+      on which to perform the specified operation.
+   </para>
+   <para>
+      See the description of the <code>template</code>
+      parameter for information about the expected template
+      content located at the URI.
+   </para>
+   <para>
+      This parameter is only required when you omit the
+      <code>template</code> parameter. If you specify both parameters,
+      this parameter is ignored.
+   </para>
+</wadl:doc>
 </param>'>
 <!ENTITY templateParameter '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="template" style="plain" required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xml:lang="EN">
-        <para>
-          The stack template on which to perform the specified operation.
-        </para>
-        <para>
-          This parameter is always provided as a <code>string</code> in the
-          JSON request body. The content of the string is an Orchestration
-          template in YAML or JSON format. For complete details about
-          the format of an Orchestration template, see the <link
-          xlink:href="http://docs.openstack.org/hot-guide/content/">Heat
-          Orchestration Template (HOT) specification</link>.
-        </para>
-        <para>
-          This parameter is only required when you omit the
-          <code>template_url</code> parameter. If you specify both parameters,
-          this value overrides the <code>template_url</code> parameter value.
-      </para>
-    </wadl:doc>
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="template" style="plain" required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
+      The stack template on which to perform the specified operation.
+   </para>
+   <para>
+      This parameter is always provided as a <code>string</code> in the
+      JSON request body. The content of the string is an Orchestration
+      template in YAML or JSON format.
+   </para>
+   <para>
+      This parameter is only required when you omit the
+      <code>template_url</code> parameter. If you specify both parameters,
+      this value overrides the <code>template_url</code> parameter value.
+   </para>
+</wadl:doc>
 </param>'>
 <!ENTITY environmentParameter '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="environment" style="plain"
-                    required="true">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN">
-        <para>
-          A JSON environment for the stack.
-        </para>
-    </wadl:doc>
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="environment"
+   style="plain" required="true">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
+      A JSON environment for the stack.
+   </para>
+</wadl:doc>
 </param>'>
 <!ENTITY environmentParameterOptional '
-<param xmlns="http://wadl.dev.java.net/2009/02" name="environment" style="plain"
-                    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN">
-        <para>
-          A JSON environment for the stack.
-        </para>
-    </wadl:doc>
+   <param xmlns="http://wadl.dev.java.net/2009/02" name="environment" style="plain"
+   required="false">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN">
+   <para>
+      A JSON environment for the stack.
+   </para>
+</wadl:doc>
 </param>'>
