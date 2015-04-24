@@ -33,7 +33,6 @@ import openstackdocstheme
 extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
-    'sphinxcontrib.blockdiag',
     'sphinxcontrib.nwdiag',
     'sphinx.ext.graphviz',
     'sphinx.ext.todo'
