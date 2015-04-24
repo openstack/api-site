@@ -2,38 +2,28 @@
 Writing your First OpenStack Application
 ========================================
 
-This repo contains the "Writing your First OpenStack Application"
+This directory contains the "Writing your First OpenStack Application"
 tutorial.
 
 The tutorials works with an application that can be found at:
 https://github.com/stackforge/faafo
 
-/bin
-~~~~
-
-This document was initially written in 'sprint' style.
-/bin contains some useful scripts for the sprint, such as
-pads2files which faciliates the creation of files from
-an etherpad server using its API.
-
 /doc
 ~~~~
 
-/doc contains a playground for the actual tutorial documentation
-
-It's RST, built with sphinx.
+The :code:`/doc` directory contains a playground for the actual tutorial
+documentation. It's reStructuredText (RST), built with Sphinx.
 
 The RST source includes conditional output logic, so specifying::
 
-  tox -e libcloud
+  tox -e openstack-firstapp-libcloud
 
-will invoke sphinx-build with -t libcloud, meaning sections
-marked .. only:: libcloud in the RST will be built, while others
+will invoke :code:`sphinx-build` with :code:`-t libcloud`, meaning sections
+marked :code:`.. only:: libcloud` in the RST will be built, while others
 won't.
 
-
-sphinx and openstackdoctheme are needed to build the docs
-
+Sphinx and the OpenStack docs.openstack.org Sphinx Theme (openstackdocstheme)
+are needed to build the docs.
 
 /samples
 ~~~~~~~~
