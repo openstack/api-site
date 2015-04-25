@@ -2,7 +2,8 @@
 Writing your First OpenStack Application
 ========================================
 
-Contents:
+Contents
+~~~~~~~~
 
 .. toctree::
    :maxdepth: 2
@@ -18,10 +19,8 @@ Contents:
    section9
    appendix
 
-Indices and tables
-~~~~~~~~~~~~~~~~~~
+Search in this guide
+~~~~~~~~~~~~~~~~~~~~
 
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 
