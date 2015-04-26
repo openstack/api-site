@@ -123,8 +123,8 @@ To interact with the cloud, you must also have
 
 .. only:: libcloud
 
-  `libcloud 0.15.1 or higher installed
-  <https://libcloud.apache.org/getting-started.html>`_.
+    `libcloud 0.15.1 or higher installed
+    <https://libcloud.apache.org/getting-started.html>`_.
 
 .. only:: pkgcloud
 
@@ -135,11 +135,8 @@ To interact with the cloud, you must also have
 
 .. only:: openstacksdk
 
-    the OpenStack SDK installed.
-
-    .. warning::
-
-       This document has not yet been completed for the OpenStack SDK.
+     a recent version of `openstacksdk <http://python-openstacksdk.readthedocs.org/en/latest/users/index.html>`_
+     installed.
 
 .. only:: phpopencloud
 
@@ -204,12 +201,12 @@ to run code snippets in your language of choice.
 
 .. only:: openstacksdk
 
-    .. code-block:: python
+    To try it out, add the following code to a Python script (or use an
+    interactive Python shell) by calling :code:`python -i`.
 
-      from openstack import connection
-      conn = connection.Connection(auth_url="http://controller:5000/v3",
-                                   user_name="your_auth_username",
-                                   password="your_auth_password", ...)
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-1
+        :end-before: step-2
 
 .. only:: pkgcloud
 
@@ -272,6 +269,14 @@ to run code snippets in your language of choice.
     .. literalinclude::  ../samples/shade/getting_started.py
         :start-after: step-1
         :end-before: step-2
+
+.. only:: openstacksdk
+
+    .. note:: If you receive the exception
+              :code:`openstack.exceptions.HttpException: HttpException:
+              401 Client Error: Unauthorized,` while trying to run one
+              of the following API calls please double-check your
+              credentials.
 
 Flavors and images
 ~~~~~~~~~~~~~~~~~~
@@ -378,6 +383,19 @@ To list the images that are available in your cloud, run some API calls:
         updated_at: '2014-10-15T22:42:52Z'
         visibility: public
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-2
+        :end-before: step-3
+
+    You should see output something like this:
+
+    .. code-block:: python
+
+        openstack.image.v1.image.Image(attrs={u'name': u'ubuntu-14.04', u'container_format': u'bare', u'disk_format': u'qcow2', u'checksum': u'6d8f1c8cf05e1fbdc8b543fda1a9fa7f', u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'size': 258540032}, loaded=True)
+        ...
+
 
 You can also get information about available flavors:
 
@@ -480,6 +498,25 @@ You can also get information about available flavors:
         swap: ''
         vcpus: 1
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-3
+        :end-before: step-4
+
+    You should see output something like this:
+
+    .. code-block:: python
+
+        openstack.compute.v2.flavor.FlavorDetail(attrs={u'name': u'm1.tiny', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/1', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/1', u'rel': u'bookmark'}], u'ram': 512, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 1, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 1, u'id': u'1'}, loaded=True)
+
+        openstack.compute.v2.flavor.FlavorDetail(attrs={u'name': u'm1.small', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}], u'ram': 2048, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 1, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 20, u'id': u'2'}, loaded=True)
+
+        openstack.compute.v2.flavor.FlavorDetail(attrs={u'name': u'm1.medium', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/3', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/3', u'rel': u'bookmark'}], u'ram': 4096, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 2, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 40, u'id': u'3'}, loaded=True)
+
+        ...
+
+
 Your images and flavors will be different, of course.
 
 Choose an image and flavor for your instance. You need about 1GB RAM, 1 CPU,
@@ -578,8 +615,19 @@ image that you picked in the previous section:
         updated_at: '2014-10-27T22:08:55Z'
         visibility: public
 
+.. only:: openstacksdk
 
-Next, choose which flavor you want to use:
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-4
+        :end-before: step-5
+
+    You should see output something like this:
+
+    .. code-block:: python
+
+        openstack.image.v1.image.Image(attrs={u'name': u'ubuntu-14.04', u'container_format': u'bare', u'disk_format': u'qcow2', u'checksum': u'6d8f1c8cf05e1fbdc8b543fda1a9fa7f', u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'size': 258540032}, loaded=True)
+
+Next, tell the script which flavor you want to use:
 
 .. only:: fog
 
@@ -666,6 +714,18 @@ Next, choose which flavor you want to use:
         swap: ''
         vcpus: 1
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-5
+        :end-before: step-6
+
+    You should see output something like this:
+
+    .. code-block:: python
+
+        openstack.compute.v2.flavor.Flavor(attrs={u'name': u'm1.small', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}], u'ram': 2048, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 1, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 20, 'id': u'2'}, loaded=True)
+
 Now, you're ready to launch the instance.
 
 Launch an instance
@@ -705,14 +765,15 @@ Create the instance.
 
 .. only:: openstacksdk
 
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-6
+        :end-before: step-7
+
+    You should see output something like:
+
     .. code-block:: python
 
-       args = {
-           "name": "testing",
-           "flavorRef": flavor,
-           "imageRef": image,
-       }
-       instance = conn.compute.create_server(**args)
+        openstack.compute.v2.server.Server(attrs={'flavorRef': openstack.compute.v2.flavor.Flavor(attrs={u'name': u'm1.small', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}], u'ram': 2048, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 1, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 20, 'id': u'2'}, loaded=True), 'name': 'testing', 'imageRef': openstack.image.v1.image.Image(attrs={u'name': u'ubuntu14.04', u'container_format': u'bare', u'disk_format': u'qcow2', u'checksum': u'6d8f1c8cf05e1fbdc8b543fda1a9fa7f', u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'size': 258540032}, loaded=True), 'id': u'a1700b84-dc9a-434e-8f7a-40852e97781c'}, loaded=False)
 
 .. only:: pkgcloud
 
@@ -782,6 +843,12 @@ If you list existing instances:
         :end-before: step-8
 
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-7
+        :end-before: step-8
+
 The new instance appears.
 
 .. only:: libcloud
@@ -794,9 +861,7 @@ The new instance appears.
 
     .. code-block:: python
 
-       instances = conn.compute.list_servers()
-       for instance in instances:
-           print(instance)
+        openstack.compute.v2.server.ServerDetail(attrs={u'OS-EXT-STS:task_state': u'scheduling', u'addresses': {}, u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/servers/a1700b84-dc9a-434e-8f7a-40852e97781c', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/servers/a1700b84-dc9a-434e-8f7a-40852e97781c', u'rel': u'bookmark'}], u'image': {u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'links': [{u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/images/cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'rel': u'bookmark'}]}, u'OS-EXT-STS:vm_state': u'building', u'OS-SRV-USG:launched_at': None, u'flavor': {u'id': u'2', u'links': [{u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}]}, u'id': u'a1700b84-dc9a-434e-8f7a-40852e97781c', u'user_id': u'59f76712914b44819cf311af43946079', 'imageRef': openstack.compute.v2.image.Image(attrs={u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'links': [{u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/images/cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'rel': u'bookmark'}]}, loaded=False), u'OS-DCF:diskConfig': u'MANUAL', u'accessIPv4': u'', u'accessIPv6': u'', u'progress': 0, u'OS-EXT-STS:power_state': 0, u'OS-EXT-AZ:availability_zone': u'nova', u'config_drive': u'', u'status': u'BUILD', u'updated': u'2015-10-12T13:45:37Z', u'hostId': u'', u'OS-SRV-USG:terminated_at': None, u'key_name': None, 'flavorRef': openstack.compute.v2.flavor.Flavor(attrs={u'id': u'2', u'links': [{u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}]}, loaded=False), u'name': u'testing', u'created': u'2015-10-12T13:45:37Z', u'tenant_id': u'96ff6aa79e60423d9848b70d5475c415', u'os-extended-volumes:volumes_attached': [], u'metadata': {}}, loaded=True)
 
 .. only:: pkgcloud
 
@@ -929,6 +994,12 @@ money. Destroy cloud resources to avoid unexpected expenses.
         :start-after: step-8
         :end-before: step-9
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-8
+        :end-before: step-9
+
 If you list the instances again, the instance disappears.
 
 Leave your shell open to use it for another instance deployment in this
@@ -958,10 +1029,10 @@ instance:
   `these instructions <https://help.github.com/articles/generating-ssh- keys/>`_ first.
   We'll cover these instructions in depth in :doc:`/introduction`.
 
-.. only:: fog
+In the following example, :code:`pub_key_file` should be set to the location
+of your public SSH key file.
 
-    In the following example, :code:`pub_key_file` should be set to
-    the location of your public SSH key file.
+.. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
         :language: ruby
@@ -970,9 +1041,6 @@ instance:
 
 
 .. only:: libcloud
-
-    In the following example, :code:`pub_key_file` should be set to
-    the location of your public SSH key file.
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-9
@@ -984,22 +1052,25 @@ instance:
 
 .. only:: pkgcloud
 
-    In the following example, :code:`pub_key_file` should be set to
-    the location of your public SSH key file.
-
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-9
         :end-before: step-10
 
 .. only:: shade
 
-    In the following example, :code:`pub_key_file` should be set to
-    the location of your public SSH key file.
-
     .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-9
         :end-before: step-10
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-9
+        :end-before: step-10
+
+    .. code-block:: python
+
+        openstack.compute.v2.keypair.Keypair(attrs={u'public_key': u'ssh-rsa ABAAABAQCyyzkyaPf.....', u'name': u'demokey', u'fingerprint': aa:bb:cc:... '}, loaded=True)
 
 * Network access. By default, OpenStack filters all traffic. You must create
   a security group and apply it to your instance. The security group allows HTTP
@@ -1030,7 +1101,13 @@ instance:
         :start-after: step-10
         :end-before: step-11
 
-* User data. During instance creation, you can provide user data to OpenStack to
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-10
+        :end-before: step-11
+
+* Userdata. During instance creation, you can provide userdata to OpenStack to
   configure instances after they boot. The cloud-init service applies the
   user data to an instance. You must pre-install the cloud-init service on your
   chosen image. We'll go into more detail in :doc:`/introduction`.
@@ -1057,6 +1134,14 @@ instance:
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-11
+        :end-before: step-12
+
+.. only:: openstacksdk
+
+    .. note:: User data in openstacksdk must be encoded to base64
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-11
         :end-before: step-12
 
@@ -1092,6 +1177,12 @@ request the instance, wait for it to build.
     The shade framework can select and assign a free floating IP quickly
 
     .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-12
+        :end-before: step-13
+
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-12
         :end-before: step-13
 
@@ -1148,7 +1239,6 @@ address to your instance.
         :start-after: step-14
         :end-before: step-15
 
-
 .. only:: pkgcloud
 
     Use :code:`getFloatingIps` to check for unused addresses, selecting the
@@ -1176,6 +1266,31 @@ address to your instance.
     .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-13
         :end-before: step-14
+
+.. only:: openstacksdk
+
+    .. note:: For this example we take Floating IP pool from network
+              which is called 'public'. This should be your external
+              network.
+
+    List all available Floating IPs for this project and select the first free
+    one. Allocate new Floating IP if none is available.
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-13
+        :end-before: step-14
+
+    This code returns the floating IP address:
+
+    .. code-block:: python
+
+        openstack.network.v2.floating_ip.FloatingIP(attrs={u'router_id': None, u'status': u'DOWN', u'tenant_id': u'96ff6aa79e60423d9848b70d5475c415', u'floating_network_id': u'0e43db46-8fd9-4ef1-8826-4cf9e809aede', u'fixed_ip_address': None, u'floating_ip_address': u'203.0.113.101', u'port_id': None, u'id': u'da890b1e-0afa-4724-9af6-0e5ab9cc33dd'}, loaded=True)
+
+    You can then attach it to the instance:
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-14
+        :end-before: step-15
 
 
 Run the script to start the deployment.
@@ -1207,6 +1322,11 @@ by using your preferred browser.
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-15
+
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-15
 
 .. note:: If you do not use floating IPs, substitute another IP address as appropriate
@@ -1268,4 +1388,9 @@ information, the flavor ID, and image ID.
 .. only:: shade
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
+       :language: python
+
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/getting_started.py
        :language: python
