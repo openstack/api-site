@@ -3,7 +3,7 @@
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
-<!--     You can resolve the entities with xmllint          -->
+<!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
 <!--        xmllint -noent os-compute-2.wadl               -->
 <!--*******************************************************-->
@@ -39,14 +39,12 @@
                 </param>
                 <resource id="extensions" type="#ExtensionList" path="extensions">
                     <resource id="extension" path="{alias}">
-                        <param required="true" xmlns="http://wadl.dev.java.net/2009/02" name="alias"
-                            style="template" type="xsd:string">
+                        <param name="alias" style="template" type="xsd:string">
                             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                                <para>An alias, which is a name for a pointer to a resource. For
-                                    example, a named extension.</para>
+                                <para>The extension name.</para>
                             </wadl:doc>
                         </param>
-                        <method href="#getExtensionv2"/>
+                        <method href="#getExtension-v2"/>
                     </resource>
                 </resource>
                 <resource id="limits" path="limits">
@@ -158,10 +156,10 @@
         <method href="#getVersionDetailsv2"/>
     </resource_type>
     <resource_type id="ExtensionList">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Detail image list">
-            <para>A list of supported extensions.</para>
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="List extensions">
+            <para role="shortdesc">Lists supported extensions.</para>
         </wadl:doc>
-        <method href="#listExtensionsv2"/>
+        <method href="#listExtensions-v2"/>
     </resource_type>
     <resource_type id="DetailServerList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Detail server list">
@@ -196,8 +194,10 @@
     </resource_type>
     <resource_type id="ImageList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Image list">
-            <para>A list of images. Each image contains IDs, names, and links. Other attributes are
-                omitted.</para>
+            <para>
+                A list of images. Each image contains IDs, names, and links.
+                Other attributes are omitted.
+            </para>
         </wadl:doc>
         <method href="#listImages"/>
     </resource_type>
@@ -209,8 +209,10 @@
     </resource_type>
     <resource_type id="FlavorList">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Flavor list">
-            <para>A list of flavors. Each flavor contains IDs, names, and links; other attributes
-                are omitted.</para>
+            <para>
+                A list of flavors. Each flavor contains IDs, names, and links;
+                other attributes are omitted.
+            </para>
         </wadl:doc>
         <method href="#listFlavors"/>
     </resource_type>
@@ -257,57 +259,74 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../api_samples/limit-get-resp.json"/>
-                </wadl:doc> &x-compute-request-idHeader;
+                </wadl:doc> &x-compute-request-idHeader; &absoluteLimits; &rateLimits;
             </representation>
             <representation mediaType="application/xml" element="common:limits">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../api_samples/limit-get-resp.xml"/>
                 </wadl:doc>
-                 &absoluteLimits; &rateLimits;
             </representation>
         </response>
         <!-- Common Faults and Header --> &commonFaults; </method>
     <!-- Extensions -->
-    <method name="GET" id="listExtensionsv2">
+    <method name="GET" id="listExtensions-v2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List extensions">
-            <para role="shortdesc">Lists available extensions.</para>
+            <para role="shortdesc">Lists extensions.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../api_samples/all_extensions/extensions-get-resp.json"/>
-                </wadl:doc> &x-compute-request-idHeader;
-            </representation>
-            <representation mediaType="application/xml" element="common:extensions">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/all_extensions/extensions-get-resp.xml"/>
                 </wadl:doc>
+                &x-compute-request-idHeader;
                 <param name="next" style="plain" type="xsd:anyURI"
-                    path="/common:extensions/atom:link[@rel='next']/@href">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Moves to the
-                            next metadata item.</para></wadl:doc>
+                    path="/capi:extensions/atom:link[@rel='next']/@href">
+                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>Moves to the next item in the list.</para>
+                    </wadl:doc>
                     <link resource_type="#ExtensionList" rel="next"/>
                 </param>
                 <param name="previous" style="plain" type="xsd:anyURI"
-                    path="/common:extensions/atom:link[@rel='previous']/@href">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Moves to the
-                            previous metadata item.</para></wadl:doc>
+                    path="/capi:extensions/atom:link[@rel='previous']/@href">
+                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>Moves to the previous item in the list.</para>
+                    </wadl:doc>
                     <link resource_type="#ExtensionList" rel="previous"/>
                 </param>
             </representation>
         </response>
-        <!-- Common Faults and Header --> &commonFaults; </method>
-    <method name="GET" id="getExtensionv2">
+        <!-- Common Faults and Header -->
+        &commonFaults;
+    </method>
+    <method name="GET" id="getExtension-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="Get extension">
             <para role="shortdesc">Gets details about the specified extension.</para>
-            <para>Extensions introduce features and vendor-specific functionality to the API without
-                requiring a version change.</para>
+            <para>
+                Extensions introduce features and vendor-specific
+                functionality to the API without requiring a version change.
+            </para>
         </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param required="true" xmlns="http://wadl.dev.java.net/2009/02" name="alias"
+                    style="template" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            An alias, which is a name for a pointer to a resource.
+                            For example, a named extension.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../api_samples/extension.json"/>
-                </wadl:doc> &x-compute-request-idHeader;
+                </wadl:doc>
+                &x-compute-request-idHeader;
             </representation>
             <representation mediaType="application/xml" element="common:extension">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -505,14 +524,17 @@
                         still persists.</para>
                 </listitem>
                 <listitem>
-                    <para><code>SUSPENDED</code>. The server is suspended, either by request or
-                        necessity. This status appears for only the following hypervisors:
-                        XenServer/XCP, KVM, and ESXi. Administrative users may suspend an instance
+                    <para>
+                        <code>SUSPENDED</code>. The server is suspended,
+                        either by request or necessity. This status appears
+                        for only the following hypervisors: XenServer/XCP,
+                        KVM, and ESXi. Administrative users may suspend an instance
                         if it is infrequently used or to perform system maintenance. When you
                         suspend an instance, its VM state is stored on disk, all memory is written
                         to disk, and the virtual machine is stopped. Suspending an instance is
                         similar to placing a device in hibernation; memory and vCPUs become
-                        available to create other instances.</para>
+                        available to create other instances.
+                    </para>
                 </listitem>
                 <listitem>
                     <para><code>UNKNOWN</code>. The state of the server is unknown. Contact your
@@ -1327,7 +1349,6 @@
             </representation>
         </response>
         <!-- Common Faults and GET Faults--> &commonFaults; &getFaults; </method>
-
     <method name="GET" id="showImageMetadata">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="Show image metadata">
             <para role="shortdesc">Shows metadata for a specified image.</para>
@@ -1404,7 +1425,6 @@
         </response>
         <!-- Common, GET, POST/PUT, inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
         &inProgressFault; </method>
-
     <method name="POST" id="updateImageMetadata">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update image metadata items">
@@ -1566,7 +1586,6 @@
         </response>
         <!-- Common Faults and GET Faults--> &commonFaults; &getFaults;
     </method>
-
     <method name="GET" id="getImageMetadataItem">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Show image metadata item details">
