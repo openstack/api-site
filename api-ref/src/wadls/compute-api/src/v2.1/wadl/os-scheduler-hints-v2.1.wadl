@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
+%common;]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-scheduler-hints-v2.1">
+        <resource id="v2.1" path="//v2.1">
+            <resource id="servers" path="servers">
+                <method href="#createServer"/>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="createServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create server with scheduler hints">
+            <para role="shortdesc">
+                Creates a server with scheduler hints that are passed directly
+                to the scheduler.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-scheduler-hints/scheduler-hints-post-req.json"
+                    />
+                </wadl:doc> <!-- &serverCreateParameters; -->
+                <param name="security_group" style="query" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The name of the security group. If blank, the
+                            server is created in the "default" security group.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="user_data" style="query" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Configuration information or scripts to use upon
+                            launch. Must be Base64 encoded.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="availability_zone" style="query"
+                    required="false" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The availability zone in which to launch the server.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="server" style="plain" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN" title="server">
+                        <para>Server.</para>
+                    </wadl:doc>
+                </param>
+                <param name="imageRef" style="plain" required="true"
+                    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN" title="imageRef">
+                        <para>The image reference for the desired image
+                            for your server instance.</para>
+                        <para>Specify as an ID or full
+                        URL.</para>
+                    </wadl:doc>
+                </param>
+                <param name="flavorRef" style="plain" required="true"
+                    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN" title="flavorRef">
+                        <para>The flavor reference for the desired flavor
+                            for your server instance.</para>
+                        <para>Specify as an ID or full
+                        URL.</para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" required="true"
+                    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN" title="name">
+                        <para>
+                            The name for your created server.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="metadata" style="plain" required="false"
+                    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN" title="metadata">
+                        <para>
+                            Metadata key and value pairs. The maximum size of
+                            the metadata key and value is 255 bytes each.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="personality" style="plain" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN" title="personality">
+                        <para>
+                            File path and contents (text only) to inject into the server at
+                            launch. The maximum size of the file path data is 255 bytes. The
+                            maximum limit refers to the number of bytes in the decoded data
+                            and not the number of characters in the encoded data.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="os:scheduler_hints" style="plain"
+                    required="true" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Dictionary of data to send to the scheduler.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-scheduler-hints/scheduler-hints-post-resp.json"
+                    />
+                </wadl:doc> <!-- &serverCreateParameters; -->
+            </representation>
+        </response>
+    </method>
+</application>
