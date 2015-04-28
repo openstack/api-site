@@ -11,8 +11,8 @@ Scaling out
 One of the most-often cited reasons for designing applications using
 cloud patterns is the ability to **scale out**. That is: to add
 additional resources as required. This is in contrast to the previous
-mentality of increasing capacity by scaling the size of existing
-resources up. In order for scale out to be feasible, you'll need to
+strategy of increasing capacity by scaling up the size of existing
+resources. In order for scale out to be feasible, you'll need to
 do two things:
 
 * Architect your application to make use of additional resources.
@@ -60,14 +60,15 @@ will be clear that we need more resources.
 Generate load
 ~~~~~~~~~~~~~
 
-You can test for yourself what happens when the Fractals app is under
-loaded by:
+You can test for yourself what happens when the Fractals application is under
+load by:
 
 * maxing out the CPU of the existing worker instances (loading the worker)
 * generating a lot of API requests (load up the API)
 
-Generate a lot of worker load
------------------------------
+
+Create a greater number of tasks
+--------------------------------
 
 Use SSH to login to the controller instance, :code:`app-controller`,
 using the previous added SSH keypair.
@@ -80,7 +81,7 @@ using the previous added SSH keypair.
           controller instance and USERNAME to the appropriate
           username.
 
-Call the Fractal app's command line interface (:code:`faafo`) to
+Call the Fractal application's command line interface (:code:`faafo`) to
 request the generation of 5 large fractals.
 
 ::
@@ -99,8 +100,9 @@ of more than 1 means we are at capacity.
 .. note:: Replace :code:`IP_WORKER` with the IP address of the worker
           instance and USERNAME to the appropriate username.
 
-Generate a lot of API load
---------------------------
+
+Create a greater number of API service requests
+-----------------------------------------------
 
 API load is a slightly different problem to the previous one regarding
 capacity to work. We can simulate many requests to the API as follows:
@@ -116,7 +118,7 @@ using the previous added SSH keypair.
           controller instance and USERNAME to the appropriate
           username.
 
-Call the Fractal app's command line interface (:code:`faafo`) in a for
+Call the Fractal application's command line interface (:code:`faafo`) in a for
 loop to send many requests to the API. The following command will
 request a random set of fractals, 500 times:
 
@@ -150,9 +152,8 @@ Remove the old app
 ------------------
 
 Go ahead and delete the existing instances and security groups you
-created in previous sections. Remember; when components in the cloud
-aren't doing what you want them to do, just remove them and re-create
-something new.
+created in previous sections. Remember, when instances in the cloud
+are no longer working, remove them and re-create something new.
 
 .. only:: libcloud
 
@@ -177,8 +178,8 @@ required security groups.
 A Floating IP helper function
 -----------------------------
 
-Define a short function to locate unused or allocate a new floating
-IP. This saves a few lines of boring code and prevents you from
+Define a short function to locate unused IPs or allocate a new floating
+IP. This saves a few lines of code and prevents you from
 reaching your Floating IP quota too quickly.
 
 .. only:: libcloud
@@ -190,10 +191,11 @@ reaching your Floating IP quota too quickly.
 Splitting off the database and message queue
 --------------------------------------------
 
-Prior to scaling out our application services like the API service or
-the workers we have to add a central database and messaging instance,
-called :code:`app-services`, that will be used to track the state of
-the fractals and to coordinate the communication between the services.
+Prior to scaling out our application services, like the API service or
+the workers, we have to add a central database and messaging instance,
+called :code:`app-services`. The database and messaging queue will be used
+to track the state of the fractals and to coordinate the communication
+between the services.
 
 .. only:: libcloud
 
@@ -233,7 +235,6 @@ explain in :doc:`/section7`.
 .. todo:: Add a note that we demonstrate this by using the first API
           instance for the workers and the second API instance for the
           load simulation.
-
 
 
 Scaling the workers
@@ -277,7 +278,7 @@ You will see that the Fractals app has a few new features.
 .. note:: Replace :code:`IP_API_1` with the IP address of the first
           API instance and USERNAME to the appropriate username.
 
-Use the Fractal app's command line interface to generate fractals
+Use the Fractal application's command line interface to generate fractals
 :code:`faafo create`. Watch the progress of fractal generation with
 the :code:`faafo list`. Use :code:`faafo UUID` to examine some of the
 fractals. The generated_by field will show which worker created the
@@ -339,7 +340,7 @@ redundant web services. If one dies, the others can be used.
           corresponding Floating IPs. Replace FRACTAL_UUID the UUID
           of an existing fractal.
 
-Go ahead and test the fault tolerance. Start killing workers and API
+Go ahead and test the fault tolerance. Start destroying workers and API
 instances. As long as you have one of each, your application should
 be fine. There is one weak point though. The database contains the
 fractals and fractal metadata. If you lose that instance, the
@@ -364,36 +365,38 @@ and autoscaling capabilities to do steps like this automatically.
 Next steps
 ~~~~~~~~~~
 
-You should now be fairly confident about starting new instance, and
-about segregating services of an application between them.
+You should be fairly confident now about starting new instances, and
+distributing services from an application amongst the instances.
 
-As mentioned in :doc:`/section2` the generated fractals images will be
+As mentioned in :doc:`/section2` the generated fractal images will be
 saved on the local filesystem of the API service instances. Because we
-now have multiple API instances up and running the generated fractal
-images will be spreaded accross multiple API services, stored on local
-instance filesystems. This ends in a lot of :code:`IOError: [Errno 2]
-No such file or directory` exceptions when trying to download a
+now have multiple API instances up and running, the fractal
+images will be spread across multiple API services. This results in a number of
+:code:`IOError: [Errno 2] No such file or directory` exceptions when trying to download a
 fractal image from an API service instance not holding the fractal
 image on its local filesystem.
 
 From here, you should go to :doc:`/section4` to learn how to use
-Object Storage to solve this problem in a elegant way. Alternately,
+Object Storage to solve this problem in a elegant way. Alternatively,
 you may jump to any of these sections:
 
-* :doc:`/section5`: to migrate the database to block storage, or use
-  the database-as-as-service component
-* :doc:`/section6`: to automatically orchestrate the application
-* :doc:`/section7`: to learn about more complex networking
-* :doc:`/section8`: for advice for developers new to operations
+* :doc:`/section5`: Migrate the database to block storage, or use
+  the database-as-a-service component
+* :doc:`/section6`: Automatically orchestrate your application
+* :doc:`/section7`: Learn about complex networking
+* :doc:`/section8`: Get advice about operations
+* :doc:`/section9`: Learn some crazy things that you might not think to do ;)
 
 
-Full example code
-~~~~~~~~~~~~~~~~~
+Complete code sample
+~~~~~~~~~~~~~~~~~~~~
 
-Here's every code snippet into a single file, in case you want to run
-it all in one, or you are so experienced you don't need instruction ;)
-If you are going to use this, don't forget to set your authentication
-information and the flavor and image ID.
+The following file contains all of the code from this
+section of the tutorial. This comprehensive code sample lets you view
+and run the code as a single script.
+
+Before you run this script, confirm that you have set your authentication
+information, the flavor ID, and image ID.
 
 .. only:: libcloud
 

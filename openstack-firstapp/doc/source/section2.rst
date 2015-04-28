@@ -2,14 +2,6 @@
 Introduction to the fractals application architecture
 =====================================================
 
-This tutorial works with a scalable cloud application that generates
-`fractals <http://en.wikipedia.org/wiki/Fractal>`_ - beautiful images made
-using only mathematics, like the following image.
-
-.. figure:: images/fractal-example.png
-   :scale: 50%
-   :align: left
-
 This section introduces the application architecture and explains how it was
 designed to take advantage of cloud features in general and OpenStack in
 particular. It also describes some commands in the previous section.
@@ -45,8 +37,12 @@ particular. It also describes some commands in the previous section.
 Cloud application architecture principles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cloud applications typically share several design principles. These principles
-influenced many Fractals application design decisions.
+Cloud applications typically share several design principles.
+These principles influenced the design of the Fractals application.
+
+.. todo:: Do you want to state the core design priniciples or assume
+          the reader can follow below.
+
 
 Modularity and micro-services
 -----------------------------
@@ -142,7 +138,7 @@ logical application functions, we can change this easily.
 .. graphviz:: images/architecture.dot
 
 Message queues are used to facilitate communication between the
-Fractal application services. The Fractal application uses a so-called `work queue
+Fractal application services. The Fractal application uses a `work queue
 <https://www.rabbitmq.com/tutorials/tutorial-two-python.html>`_ (or
 task queue) to distribute tasks to the worker services.
 
@@ -152,8 +148,8 @@ multiple clerks. The message queue in our application provides a feed
 of work requests that can be taken one-at-a-time by worker services,
 whether there is a single worker service or hundreds of them.
 
-This is a `useful pattern <https://msdn.microsoft.com/en-us/library/dn568101.aspx>`_ for many
-cloud applications that have long lists of requests coming in and a
+This is a `useful pattern <https://msdn.microsoft.com/en-us/library/dn568101.aspx>`_
+for many cloud applications that have long lists of requests coming in and a
 pool of resources from which to service them. This also means that a
 worker may crash and the tasks will be processed by other workers.
 
@@ -554,7 +550,7 @@ with :code:`faafo get --help`, :code:`faafo list --help`, and
 
 .. note:: The application stores the generated fractal images directly
           in the database used by the API service instance.  Storing
-          image files in database is not good practice. We're doing it
+          image files in a database is not good practice. We're doing it
           here as an example only as an easy way to allow multiple
           instances to have access to the data. For best practice, we
           recommend storing objects in Object Storage, which is
@@ -564,37 +560,36 @@ Next steps
 ~~~~~~~~~~
 
 You should now have a basic understanding of the architecture of
-cloud-based applications. In addition, you now have had practice
+cloud-based applications. In addition, you have had practice
 starting new instances, automatically configuring them at boot, and
 even modularizing an application so that you may use multiple
 instances to run it. These are the basic steps for requesting and
 using compute resources in order to run your application on an
 OpenStack cloud.
 
-From here, you should go to :doc:`/section3` to learn how to scale the
-application further. Alternately, you may jump to any of these
+From here, you should go to :doc:`/section3` to learn how to scale your
+application further. Alternatively, you may jump to any of these
 sections:
 
-* :doc:`/section4`: to learn how to make your application more durable
-  using Object Storage
-* :doc:`/section5`: to migrate the database to block storage, or use
-  the database-as-as-service component
-* :doc:`/section6`: to automatically orchestrate the application
-* :doc:`/section7`: to learn about more complex networking
-* :doc:`/section8`: for advice for developers new to operations
+* :doc:`/section4`: Learn how to use Object Storage to make your application more durable
+* :doc:`/section5`: Migrate the database to block storage, or use
+  the database-as-a-service component
+* :doc:`/section6`: Automatically orchestrate the application
+* :doc:`/section7`: Learn about more complex networking
+* :doc:`/section8`: Get advice about operations
+* :doc:`/section9`: Learn some crazy things that you might not think to do ;)
 
 
-Full example code
-~~~~~~~~~~~~~~~~~
+Complete code sample
+~~~~~~~~~~~~~~~~~~~~
 
-Here's every code snippet into a single file, in case you want to run
-it all in one, or you are so experienced you don't need instruction ;)
-If you are going to use this, don't forget to set your authentication
-information and the flavor and image ID.
+The following file contains all of the code from this section of the tutorial.
+This comprehensive code sample lets you view and run the code as a single script.
+
+Before you run this script, confirm that you have set your authentication
+information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
     .. literalinclude:: ../../samples/libcloud/section2.py
        :language: python
-
-

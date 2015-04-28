@@ -20,26 +20,14 @@ What you will learn
 Deploying applications in a cloud environment can be very different from
 deploying them in a traditional IT environment. This guide teaches you how to
 deploy applications on OpenStack and some best practices for cloud application
-development. Overall, this guide describes:
-
-* :doc:`/section1`: How to manage resources to develop a basic cloud application
-* :doc:`/section2`: The architecture of a sample cloud-based application
-* :doc:`/section3`: The importance of message queues
-* :doc:`/section4`: How to scale up and down in response to changes in
-  application load
-* :doc:`/section5`: How to use object or block storage to create persistence
-* :doc:`/section6`: How to orchestrate your cloud for better control of the
-  environment
-* :doc:`/section7`: Networking choices and actions to help relieve
-  potential congestion
-* :doc:`/section8`: Advice for developers who are new to operations
-* :doc:`/section9`: How to distribute your application across multiple regions or clouds
+development.
 
 A general overview
 ~~~~~~~~~~~~~~~~~~
 
 This tutorial shows two applications. The first application is a simple
-fractal generator that uses mathematical equations to generate images. We show
+fractal generator that uses mathematical equations to generate beautiful
+`fractal images <http://en.wikipedia.org/wiki/Fractal>`_ . We show
 you this application in its entirety so that you can compare it to the second,
 more robust, application.
 
@@ -50,10 +38,10 @@ The second application is an OpenStack application that enables you to:
 * Make cloud-related architecture decisions such as turning
   functions into micro-services and modularizing them.
 * Scale available resources up and down.
-* Use object and block storage for file and database persistence.
+* Use Object and Block storage for file and database persistence.
 * Use Orchestration services to automatically adjust to the environment.
 * Customize networking for better performance and segregation.
-* Learn some crazy things that you might not think to do ;)
+* Explore and apply advanced OpenStack cloud features.
 
 Choose your OpenStack SDK
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,7 +173,7 @@ How you'll interact with OpenStack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this tutorial, you interact with your OpenStack cloud through one of the
-SDKs listed in "Choosing your OpenStack SDK." The code snippets in this
+SDKs listed in "Choose your OpenStack SDK." The code snippets in this
 initial version of the guide assume that you're using Libcloud.
 
 .. only:: fog
@@ -619,14 +607,16 @@ Don't worry if these concepts are not yet completely clear. In
 * :doc:`/section8`: Get advice about operations
 * :doc:`/section9`: Learn some crazy things that you might not think to do ;)
 
-Full example code
-~~~~~~~~~~~~~~~~~
+.. todo:: List the next sections here or simply reference section2.
 
-The following file contains all the code snippets that this tutorial
-describes. This comprehensive code sample lets you see and run the code
-snippets in context.
+Complete code sample
+~~~~~~~~~~~~~~~~~~~~
 
-Before you run this program, confirm that you have set your authentication
+The following file contains all of the code from this section of the
+tutorial. This comprehensive code sample lets you view and run the code
+as a single script.
+
+Before you run this script, confirm that you have set your authentication
 information, the flavor ID, and image ID.
 
 .. only:: libcloud
