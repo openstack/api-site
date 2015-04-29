@@ -10,21 +10,18 @@
         xml:id="flavor-access-v2.1">
         <resource id="v2.1" path="//v2.1">
             <resource id="flavors" path="flavors">
-                <method href="#extendflavor"/>
-                <resource id="detail" path="detail">
-                    <method href="#addaccessresponse"/>
-                </resource>
-                <resource id="one" path="1">
-                    <method href="#extendflavorshow"/>
-                </resource>
-                <resource id="ten" path="10">
-                    <resource id="action" path="action">
-                        <method href="#addflavoraccess"/>
-                        <method href="#removeflavoraccess"/>
+                <resource id="os-flavor-access" path="os-flavor-access">
+                    <method href="#create-flavor-accesslist"/>
+                    <method href="#list-flavor-accesslist"/>
+                    <resource id="flavor_id" path="{flavor_id}">
+                        <method href="#show-flavor-accesslist"/>
+                        <resource id="action" path="action">
+                            <method href="#add-flavoraccess-to-tenant"/>
+                            <method href="#remove-flavoraccess-from-tenant"/>
+                        </resource>
                     </resource>
-                    <resource id="flavor-access"
-                        path="flavor-access">
-                        <method href="#returnaccesslist"/>
+                    <resource id="detail" path="detail">
+                        <method href="#list-flavor-accesslist-detail"/>
                     </resource>
                 </resource>
             </resource>
@@ -33,11 +30,14 @@
     <!--*******************************************************-->
     <!--             flavor-access                 -->
     <!--*******************************************************-->
-    <method name="POST" id="addflavoraccess">
-        <wadl:doc xml:lang="EN" title="Add flavor access"
+    <method name="POST" id="add-flavoraccess-to-tenant">
+        <wadl:doc xml:lang="EN" title="Add flavor access to tenant"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Adds flavor access for
-                a tenant.</para>
+            <para role="shortdesc">Adds flavor access to a specified
+                tenant and flavor.</para>
+            <para>
+                Specify the <code>add_tenant_access</code> action and the <code>tenant_id</code> in the request body.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -58,12 +58,11 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="extendflavor">
+    <method name="POST" id="create-flavor-accesslist">
         <wadl:doc xml:lang="EN"
-            title="Add access attribute to flavor create"
+            title="Create flavor with access list"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Adds the access
-                attribute to the flavor create response.</para>
+            <para role="shortdesc">Creates a flavor with access list.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -84,12 +83,11 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="addaccessresponse">
+    <method name="GET" id="list-flavor-accesslist-detail">
         <wadl:doc xml:lang="EN"
-            title="Add access attribute to flavor detail"
+            title="List flavors with details and access list"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Extends flavor detail to add
-                access attribute to the flavor detail response.
+            <para role="shortdesc">List flavors with details. Includes access list information.
            </para>
         </wadl:doc>
         <request> </request>
@@ -103,21 +101,11 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="returnaccesslist">
-        <wadl:doc xml:lang="EN" title="List access list"
+    <method name="GET" id="list-flavor-accesslist">
+        <wadl:doc xml:lang="EN" title="List flavors with access list"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists the access list, by flavor
-                ID.</para>
+            <para role="shortdesc">Lists flavors with access list information.</para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/flavor-access/flavor-access-add-tenant-req.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
@@ -128,11 +116,17 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="removeflavoraccess">
-        <wadl:doc xml:lang="EN" title="Remove flavor access"
+    <method name="POST" id="remove-flavoraccess-from-tenant">
+        <wadl:doc xml:lang="EN" title="Remove flavor access from tenant"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Removes flavor access for a tenant.
-           </para>
+        <para role="shortdesc">
+            Removes the specified flavor access from a specified tenant and
+            flavor.
+        </para>
+        <para>
+            Specify the <code>remove_tenant_access</code> action and the
+            <code>tenant_id</code> in the request body.
+        </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -153,12 +147,11 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="extendflavorshow">
+    <method name="GET" id="show-flavor-accesslist">
         <wadl:doc xml:lang="EN"
-            title="Add access attribute to flavor show"
+            title="Show flavor details with access list"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Adds access
-                attribute to the flavor show response.</para>
+            <para role="shortdesc">Shows details for a specified flavor. Includes access list information.</para>
         </wadl:doc>
         <request> </request>
         <response status="200">
