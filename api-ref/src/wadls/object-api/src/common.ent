@@ -600,15 +600,21 @@ include them in this header.</para>
             returns container names that are less in value than the specified
             marker.</para></wadl:doc>
 </param>'>
-<!ENTITY expires-requestParameter '<param xmlns="http://wadl.dev.java.net/2009/02" name="expires"
-    style="query" required="false" type="xsd:string">
+<!ENTITY temp_url_expires-requestParameter '<param xmlns="http://wadl.dev.java.net/2009/02" name="temp_url_expires"
+    style="query" required="true" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
-            ><para>Used with temporary URLs to specify the expiry time of the signature. For
-            more information about temporary URLs, see <link
+            ><para>
+                Used with temporary URLs to specify the expiry time of the
+                signature as a UNIX Epoch timestamp, which
+                is an integer value. For example, 1390852007 represents Mon,
+                27 Jan 2014 19:46:47 GMT. For more information about temporary
+                URLs, see <link
                 xlink:href="http://docs.openstack.org/developer/swift/api/temporary_url_middleware.html"
-                    ><citetitle>OpenStack Object Storage API v1
-                    Reference</citetitle></link>.</para></wadl:doc>
+                ><citetitle>OpenStack Object Storage API v1
+                Reference</citetitle></link>.
+            </para>
+    </wadl:doc>
 </param>'>
 <!ENTITY format-requestParameter '<param xmlns="http://wadl.dev.java.net/2009/02" name="format"
     style="query" required="false" type="xsd:string">
@@ -694,15 +700,40 @@ include them in this header.</para>
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
             ><para>Prefix value. Named items in the response begin with this value.</para></wadl:doc>
 </param>'>
-<!ENTITY signature-requestParameter '<param xmlns="http://wadl.dev.java.net/2009/02" name="signature"
+<!ENTITY temp_url_sig-requestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="temp_url_sig"
+    style="query" required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
+            ><para>
+                Used with temporary URLs to sign the request with an HMAC-SHA1
+                cryptographic signature that defines the allowed HTTP method,
+                expiration date, full path to the object, and the secret key
+                for the temporary URL. For more information about temporary
+                URLs, see <link
+                xlink:href="http://docs.openstack.org/developer/swift/api/temporary_url_middleware.html"
+                ><citetitle>OpenStack Object Storage API v1
+                Reference</citetitle></link>.
+            </para></wadl:doc>
+</param>'>
+<!ENTITY filename-requestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="filename"
     style="query" required="false" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
-            ><para>Used with temporary URLs to sign the request. For
-            more information about temporary URLs, see <link
+            ><para>
+                Used with temporary URLs to override the default file name.
+                Object Storage generates a default file name for &GET;
+                temporary URLs that is based on the object name. Object
+                Storage returns this value in the <code >Content-Disposition</code>
+                response header. Browsers can interpret
+                this file name value as a file attachment to be saved. For
+                more information about temporary URLs, see <link
                 xlink:href="http://docs.openstack.org/developer/swift/api/temporary_url_middleware.html"
-                    ><citetitle>OpenStack Object Storage API v1
-                    Reference</citetitle></link>.</para></wadl:doc>
+                ><citetitle>OpenStack Object Storage API v1
+                Reference</citetitle></link>.
+            </para>
+        </wadl:doc>
 </param>'>
 <!-- Response headers -->
 <!ENTITY accept-ranges-responseHeader '<param xmlns="http://wadl.dev.java.net/2009/02"
