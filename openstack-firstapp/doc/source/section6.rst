@@ -1,6 +1,6 @@
-==========================
-Section Six: Orchestration
-==========================
+=============
+Orchestration
+=============
 
 .. todo:: Needs to be restructured so that the fractals app is used as the example for the explanatory material.
 
