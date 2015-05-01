@@ -178,7 +178,7 @@ initial version of the guide assume that you're using Libcloud.
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-1
         :end-before: step-2
 
@@ -187,7 +187,7 @@ initial version of the guide assume that you're using Libcloud.
     To try it, add the following code to a Python script (or use an
     interactive Python shell) by calling :code:`python -i`.
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-1
         :end-before: step-2
 
@@ -230,13 +230,13 @@ To list the images that are available in your cloud, run some API calls:
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-2
         :end-before: step-3
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-2
         :end-before: step-3
 
@@ -251,13 +251,13 @@ You can also get information about available flavors:
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-3
         :end-before: step-4
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-3
         :end-before: step-4
 
@@ -293,13 +293,13 @@ image that you picked in the previous section:
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-4
         :end-before: step-5
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-4
         :end-before: step-5
 
@@ -313,13 +313,13 @@ Next, tell the script which flavor you want to use:
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-5
         :end-before: step-6
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-5
         :end-before: step-6
 
@@ -351,13 +351,13 @@ Create the instance.
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-6
         :end-before: step-7
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-6
         :end-before: step-7
 
@@ -382,13 +382,13 @@ If you list existing instances:
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-7
         :end-before: step-8
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-7
         :end-before: step-8
 
@@ -418,13 +418,13 @@ money. Destroy cloud resources to avoid unexpected expenses.
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-8
         :end-before: step-9
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-8
         :end-before: step-9
 
@@ -467,7 +467,7 @@ instance:
     In the following example, :code:`pub_key_file` should be set to
     the location of your public SSH key file.
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-9
         :end-before: step-10
 
@@ -481,13 +481,13 @@ instance:
 
 .. only:: fog
 
-    .. literalinclude:: ../../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/section1.rb
         :start-after: step-10
         :end-before: step-11
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-10
         :end-before: step-11
 
@@ -502,7 +502,7 @@ instance:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-11
         :end-before: step-12
 
@@ -520,7 +520,7 @@ request the instance, wait for it to build.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-12
         :end-before: step-13
 
@@ -550,7 +550,7 @@ address to your instance.
     address pool. Allocate this pool to your project and attach it to your
     instance.
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-13
         :end-before: step-14
 
@@ -564,7 +564,7 @@ address to your instance.
 
     You can then attach it to the instance:
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-14
         :end-before: step-15
 
@@ -580,7 +580,7 @@ using your preferred browser.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
         :start-after: step-15
 
 .. note:: If you do not use floating IPs, substitute another IP address as appropriate
@@ -621,5 +621,5 @@ information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/section1.py
        :language: python

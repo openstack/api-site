@@ -8,15 +8,15 @@ tutorial.
 The tutorials works with an application that can be found at:
 https://github.com/stackforge/faafo
 
-/doc
-~~~~
+/source
+~~~~~~~
 
-The :code:`/doc` directory contains a playground for the actual tutorial
+The :code:`/source` directory contains a playground for the actual tutorial
 documentation. It's reStructuredText (RST), built with Sphinx.
 
 The RST source includes conditional output logic, so specifying::
 
-  tox -e openstack-firstapp-libcloud
+  tox -e firstapp-libcloud
 
 will invoke :code:`sphinx-build` with :code:`-t libcloud`, meaning sections
 marked :code:`.. only:: libcloud` in the RST will be built, while others
