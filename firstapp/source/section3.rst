@@ -157,7 +157,7 @@ are no longer working, remove them and re-create something new.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
         :start-after: step-1
         :end-before: step-2
 
@@ -171,7 +171,7 @@ required security groups.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
         :start-after: step-2
         :end-before: step-3
 
@@ -184,7 +184,7 @@ reaching your Floating IP quota too quickly.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
         :start-after: step-3
         :end-before: step-4
 
@@ -199,7 +199,7 @@ between the services.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
         :start-after: step-4
         :end-before: step-5
 
@@ -216,7 +216,7 @@ multiple API services:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
         :start-after: step-5
         :end-before: step-6
 
@@ -244,7 +244,7 @@ To increase the overall capacity, we will now add 3 workers:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
         :start-after: step-6
         :end-before: step-7
 
@@ -400,5 +400,5 @@ information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/section3.py
        :language: python

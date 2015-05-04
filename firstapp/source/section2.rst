@@ -202,7 +202,7 @@ don't need to execute these commands again.)
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-1
         :end-before: step-2
 
@@ -234,7 +234,7 @@ your cloud provider to confirm the user name.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-2
         :end-before: step-3
 
@@ -274,7 +274,7 @@ port 22):
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-3
         :end-before: step-4
 
@@ -287,7 +287,7 @@ You can list available security groups with:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-4
         :end-before: step-5
 
@@ -296,7 +296,7 @@ Once you've created a rule or group, you can also delete it:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-5
         :end-before: step-6
 
@@ -305,7 +305,7 @@ To see which security groups apply to an instance, you can:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-6
         :end-before: step-7
 
@@ -344,7 +344,7 @@ then associate it to your instance's network interface.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-7
         :end-before: step-8
 
@@ -356,7 +356,7 @@ that it has available IP addresses.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-8
         :end-before: step-9
 
@@ -364,7 +364,7 @@ Now request that an address from this pool be allocated to your project.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-9
         :end-before: step-10
 
@@ -373,7 +373,7 @@ project, attach it to an instance.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-10
         :end-before: step-11
 
@@ -412,7 +412,7 @@ Parameter  Description            Values
 .. only:: libcloud
 
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-11
         :end-before: step-12
 
@@ -427,7 +427,7 @@ Next, start a second instance, which will be the worker instance:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-12
         :end-before: step-13
 
@@ -462,7 +462,7 @@ address of the worker:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
         :start-after: step-13
         :end-before: step-14
 
@@ -591,5 +591,5 @@ information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/section2.py
        :language: python

@@ -86,7 +86,7 @@ First, let's learn how to connect to the Object Storage endpoint:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-1
         :end-before: step-2
 
@@ -125,7 +125,7 @@ Call yours :code:`fractals`:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-2
         :end-before: step-3
 
@@ -140,7 +140,7 @@ all containers in your account:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-3
         :end-before: step-4
 
@@ -156,7 +156,7 @@ online, name it :code:`goat.jpg` and upload it to your container
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-4
         :end-before: step-5
 
@@ -166,7 +166,7 @@ same:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-5
         :end-before: step-6
 
@@ -175,7 +175,7 @@ same:
        [<Object: name=an amazing goat, size=191874, hash=439884df9c1c15c59d2cf43008180048, provider=OpenStack Swift ...>]
 
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-6
         :end-before: step-7
 
@@ -183,7 +183,7 @@ same:
 
         <Object: name=an amazing goat, size=954465, hash=7513986d3aeb22659079d1bf3dc2468b, provider=OpenStack Swift ...>
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-7
         :end-before: step-8
 
@@ -197,7 +197,7 @@ Finally, let's clean up by deleting our test object:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-8
         :end-before: step-9
 
@@ -205,7 +205,7 @@ Finally, let's clean up by deleting our test object:
 
     Now there should be no more objects be available in the container :code:`fractals`.
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-9
         :end-before: step-10
 
@@ -224,7 +224,7 @@ Use the :code:`fractals`' container from above to put the images in:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-10
         :end-before: step-11
 
@@ -233,7 +233,7 @@ swift container. A simple for loop takes care of that:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-11
         :end-before: step-12
 
@@ -267,7 +267,7 @@ the container before running this, otherwise it will fail:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-12
         :end-before: step-13
 
@@ -286,7 +286,7 @@ This is more efficient, especially for larger files.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-13
         :end-before: step-14
 
@@ -308,7 +308,7 @@ For efficiency, most Object Storage installations treat large objects
     :code:`chunk_size` parameter (in bytes) according to what your
     cloud can accept.
 
-    .. literalinclude:: ../../samples/libcloud/section4.py
+    .. literalinclude:: ../samples/libcloud/section4.py
         :start-after: step-14
         :end-before: step-15
 
