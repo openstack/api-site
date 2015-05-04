@@ -8,15 +8,15 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   section1
-   section2
-   section3
-   section4
-   section5
-   section6
-   section7
-   section8
-   section9
+   getting_started
+   introduction
+   scaling_out
+   durability
+   block_storage
+   orchestration
+   networking
+   advice
+   craziness
    appendix
 
 Search in this guide

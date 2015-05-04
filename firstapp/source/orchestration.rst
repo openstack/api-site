@@ -193,6 +193,6 @@ You should now be fairly confident working with the Orchestration service.
 There are several calls we did not cover. To see these and more,
 refer to the volume documentation of your SDK, or try a different step in the tutorial, including:
 
-* :doc:`/section7` - to learn about more complex networking
-* :doc:`/section8` - for advice for developers new to operations
-* :doc:`/section9` - to see all the crazy things we think ordinary folks won't want to do ;)
+* :doc:`/networking` - to learn about more complex networking
+* :doc:`/advice` - for advice for developers new to operations
+* :doc:`/craziness` - to see all the crazy things we think ordinary folks won't want to do ;)

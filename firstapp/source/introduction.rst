@@ -130,7 +130,7 @@ Fractals application architecture
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Fractals application was designed with the principles of the previous
-subsection in mind. You'll note that in :doc:`section1`, we deployed the
+subsection in mind. You'll note that in :doc:`getting_started`, we deployed the
 application in an all-in-one style, on a single virtual machine. This isn't
 good practice, but because the application uses micro-services to decouple
 logical application functions, we can change this easily.
@@ -176,8 +176,8 @@ and a simple command line interface.
 
 There are also multiple storage back ends (to store the generated
 fractal images) and a database component (to store the state of
-tasks), but we'll talk about those in :doc:`/section4` and
-:doc:`/section5` respectively.
+tasks), but we'll talk about those in :doc:`/durability` and
+:doc:`/block_storage` respectively.
 
 How the Fractals application interacts with OpenStack
 -----------------------------------------------------
@@ -202,11 +202,11 @@ don't need to execute these commands again.)
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-1
         :end-before: step-2
 
-We explained image and flavor in :doc:`section1`, so in the following
+We explained image and flavor in :doc:`getting_started`, so in the following
 sections, we will explain the other parameters in detail, including
 :code:`ex_userdata` (cloud-init) and :code:`ex_keyname` (key pairs).
 
@@ -234,7 +234,7 @@ your cloud provider to confirm the user name.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-2
         :end-before: step-3
 
@@ -274,7 +274,7 @@ port 22):
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-3
         :end-before: step-4
 
@@ -287,7 +287,7 @@ You can list available security groups with:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-4
         :end-before: step-5
 
@@ -296,7 +296,7 @@ Once you've created a rule or group, you can also delete it:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-5
         :end-before: step-6
 
@@ -305,7 +305,7 @@ To see which security groups apply to an instance, you can:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-6
         :end-before: step-7
 
@@ -344,7 +344,7 @@ then associate it to your instance's network interface.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-7
         :end-before: step-8
 
@@ -356,7 +356,7 @@ that it has available IP addresses.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-8
         :end-before: step-9
 
@@ -364,7 +364,7 @@ Now request that an address from this pool be allocated to your project.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-9
         :end-before: step-10
 
@@ -373,12 +373,12 @@ project, attach it to an instance.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-10
         :end-before: step-11
 
 That brings us to where we ended up at the end of
-:doc:`/section1`. But where do we go from here?
+:doc:`/getting_started`. But where do we go from here?
 
 Splitting services across multiple instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -412,7 +412,7 @@ Parameter  Description            Values
 .. only:: libcloud
 
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-11
         :end-before: step-12
 
@@ -427,7 +427,7 @@ Next, start a second instance, which will be the worker instance:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-12
         :end-before: step-13
 
@@ -462,7 +462,7 @@ address of the worker:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-13
         :end-before: step-14
 
@@ -554,7 +554,7 @@ with :code:`faafo get --help`, :code:`faafo list --help`, and
           here as an example only as an easy way to allow multiple
           instances to have access to the data. For best practice, we
           recommend storing objects in Object Storage, which is
-          covered in :doc:`section4`.
+          covered in :doc:`durability`.
 
 Next steps
 ~~~~~~~~~~
@@ -567,17 +567,17 @@ instances to run it. These are the basic steps for requesting and
 using compute resources in order to run your application on an
 OpenStack cloud.
 
-From here, you should go to :doc:`/section3` to learn how to scale your
+From here, you should go to :doc:`/scaling_out` to learn how to scale your
 application further. Alternatively, you may jump to any of these
 sections:
 
-* :doc:`/section4`: Learn how to use Object Storage to make your application more durable
-* :doc:`/section5`: Migrate the database to block storage, or use
+* :doc:`/durability`: Learn how to use Object Storage to make your application more durable
+* :doc:`/block_storage`: Migrate the database to block storage, or use
   the database-as-a-service component
-* :doc:`/section6`: Automatically orchestrate the application
-* :doc:`/section7`: Learn about more complex networking
-* :doc:`/section8`: Get advice about operations
-* :doc:`/section9`: Learn some crazy things that you might not think to do ;)
+* :doc:`/orchestration`: Automatically orchestrate the application
+* :doc:`/networking`: Learn about more complex networking
+* :doc:`/advice`: Get advice about operations
+* :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
 
 
 Complete code sample
@@ -591,5 +591,5 @@ information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section2.py
+    .. literalinclude:: ../samples/libcloud/introduction.py
        :language: python

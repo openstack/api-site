@@ -20,7 +20,7 @@ do two things:
 
 .. todo:: nickchase needs to restate the second point
 
-In section :doc:`/section2`, we talked about various aspects of the
+In section :doc:`/introduction`, we talked about various aspects of the
 application architecture, such as building in a modular fashion,
 creating an API, and so on. Now you'll see why those are so
 important. By creating a modular application with decoupled services,
@@ -52,7 +52,7 @@ one worker, we can only produce one fractal at a time. Before long, it
 will be clear that we need more resources.
 
 .. note:: If you don't have a working application, follow the steps in
-          :doc:`section2` to create one.
+          :doc:`introduction` to create one.
 
 .. todo:: Ensure we have the controller_ip even if this is a new
           python session.
@@ -157,7 +157,7 @@ are no longer working, remove them and re-create something new.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
         :start-after: step-1
         :end-before: step-2
 
@@ -171,7 +171,7 @@ required security groups.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
         :start-after: step-2
         :end-before: step-3
 
@@ -184,7 +184,7 @@ reaching your Floating IP quota too quickly.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
         :start-after: step-3
         :end-before: step-4
 
@@ -199,7 +199,7 @@ between the services.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
         :start-after: step-4
         :end-before: step-5
 
@@ -216,7 +216,7 @@ multiple API services:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
         :start-after: step-5
         :end-before: step-6
 
@@ -230,7 +230,7 @@ half the other, but that's certainly not a sustainable solution.
 Instead, we can do that automatically using a `DNS round robin
 <http://en.wikipedia.org/wiki/Round-robin_DNS>`_. However, OpenStack
 networking can provide Load Balancing as a Service, which we'll
-explain in :doc:`/section7`.
+explain in :doc:`/networking`.
 
 .. todo:: Add a note that we demonstrate this by using the first API
           instance for the workers and the second API instance for the
@@ -244,7 +244,7 @@ To increase the overall capacity, we will now add 3 workers:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
         :start-after: step-6
         :end-before: step-7
 
@@ -261,7 +261,7 @@ system would do this itself. If your application has been built to
 detect these situations, you can have it automatically request and
 remove resources, but you don't actually need to do this work
 yourself. Instead, the OpenStack Orchestration service can monitor
-load and start instances as appropriate. See :doc:`section6` to find
+load and start instances as appropriate. See :doc:`orchestration` to find
 out how to set that up.
 
 Verifying we've had an impact
@@ -349,7 +349,7 @@ point.
 
 If we had a load balancer, we could distribute this load between the
 two different API services. As mentioned previously, there are several
-options. We will show one in :doc:`section7`.
+options. We will show one in :doc:`networking`.
 
 You could in theory use a simple script to monitor the load on your
 workers and API services and trigger the creation of new instances,
@@ -357,7 +357,7 @@ which you already know how to do. If you can see how to do that -
 congratulations, you're ready to create scalable cloud applications.
 
 Of course, creating a monitoring system just for one application may
-not always be the best way. We recommend you look at :doc:`section6`
+not always be the best way. We recommend you look at :doc:`orchestration`
 to find out about how you can use OpenStack Orchestration's monitoring
 and autoscaling capabilities to do steps like this automatically.
 
@@ -368,7 +368,7 @@ Next steps
 You should be fairly confident now about starting new instances, and
 distributing services from an application amongst the instances.
 
-As mentioned in :doc:`/section2` the generated fractal images will be
+As mentioned in :doc:`/introduction` the generated fractal images will be
 saved on the local filesystem of the API service instances. Because we
 now have multiple API instances up and running, the fractal
 images will be spread across multiple API services. This results in a number of
@@ -376,16 +376,16 @@ images will be spread across multiple API services. This results in a number of
 fractal image from an API service instance not holding the fractal
 image on its local filesystem.
 
-From here, you should go to :doc:`/section4` to learn how to use
+From here, you should go to :doc:`/durability` to learn how to use
 Object Storage to solve this problem in a elegant way. Alternatively,
 you may jump to any of these sections:
 
-* :doc:`/section5`: Migrate the database to block storage, or use
+* :doc:`/block_storage`: Migrate the database to block storage, or use
   the database-as-a-service component
-* :doc:`/section6`: Automatically orchestrate your application
-* :doc:`/section7`: Learn about complex networking
-* :doc:`/section8`: Get advice about operations
-* :doc:`/section9`: Learn some crazy things that you might not think to do ;)
+* :doc:`/orchestration`: Automatically orchestrate your application
+* :doc:`/networking`: Learn about complex networking
+* :doc:`/advice`: Get advice about operations
+* :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
 
 
 Complete code sample
@@ -400,5 +400,5 @@ information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section3.py
+    .. literalinclude:: ../samples/libcloud/scaling_out.py
        :language: python

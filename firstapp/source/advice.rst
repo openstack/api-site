@@ -13,7 +13,7 @@ Monitoring is essential for cloud applications, especially if the
 application is to be 'scalable'. You must know how many requests are
 coming in, and what impact that has on the various services -- in
 other words, enough information to determine whether you should start
-another worker or API service as we did in :doc:`/section3`.
+another worker or API service as we did in :doc:`/scaling_out`.
 
 .. todo:: explain how to achieve this kind of monitoring.  Ceilometer?
           (STOP LAUGHING.)

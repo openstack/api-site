@@ -30,7 +30,7 @@ create them.
 
 Advanced users should consider how to remove the database from the
 architecture altogether and replace it with metadata in the Object
-Storage (then contribute these steps to :doc:`section9`). Others
+Storage (then contribute these steps to :doc:`craziness`). Others
 should read on to learn about how to work with block storage and move
 the Fractal app database server to use it.
 
@@ -129,7 +129,7 @@ Using Block Storage for the Fractal database server
 
 Firstly, we're going to need a new server for our dedicated database.
 Start a new instance called :code:`app-database` using the image, flavor
-and keypair you have been using since :doc:`/section1`.
+and keypair you have been using since :doc:`/getting_started`.
 We will also need a new security group to allow access to the database server
 (for mysql, port 3306) from the network:
 
@@ -300,6 +300,6 @@ There are several calls we did not cover. To see these and more, refer
 to the volume documentation of your SDK, or try a different step in
 the tutorial, including:
 
-* :doc:`/section6`: to automatically orchestrate the application
-* :doc:`/section7`: to learn about more complex networking
-* :doc:`/section8`: for advice for developers new to operations
+* :doc:`/orchestration`: to automatically orchestrate the application
+* :doc:`/networking`: to learn about more complex networking
+* :doc:`/advice`: for advice for developers new to operations

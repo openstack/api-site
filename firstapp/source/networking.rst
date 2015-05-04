@@ -477,7 +477,7 @@ Booting a worker
 
 Now that you've prepared the networking infrastructure, you can go
 ahead and boot an instance on it. Ensure you use appropriate flavor
-and image values for your cloud - see :doc:`section1` if you've not
+and image values for your cloud - see :doc:`getting_started` if you've not
 already.
 
 .. todo:: Show how to create an instance in libcloud using the network
@@ -835,6 +835,6 @@ are several calls we did not cover. To see these and more, refer to
 the volume documentation of your SDK, or try a different step in the
 tutorial, including:
 
-* :doc:`/section8`: for advice for developers new to operations
-* :doc:`/section9`: to see all the crazy things we think ordinary
+* :doc:`/advice`: for advice for developers new to operations
+* :doc:`/craziness`: to see all the crazy things we think ordinary
   folks won't want to do ;)

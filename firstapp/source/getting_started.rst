@@ -178,7 +178,7 @@ initial version of the guide assume that you're using Libcloud.
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-1
         :end-before: step-2
 
@@ -187,7 +187,7 @@ initial version of the guide assume that you're using Libcloud.
     To try it, add the following code to a Python script (or use an
     interactive Python shell) by calling :code:`python -i`.
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-1
         :end-before: step-2
 
@@ -230,13 +230,13 @@ To list the images that are available in your cloud, run some API calls:
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-2
         :end-before: step-3
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-2
         :end-before: step-3
 
@@ -251,13 +251,13 @@ You can also get information about available flavors:
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-3
         :end-before: step-4
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-3
         :end-before: step-4
 
@@ -293,13 +293,13 @@ image that you picked in the previous section:
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-4
         :end-before: step-5
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-4
         :end-before: step-5
 
@@ -313,13 +313,13 @@ Next, tell the script which flavor you want to use:
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-5
         :end-before: step-6
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-5
         :end-before: step-6
 
@@ -351,13 +351,13 @@ Create the instance.
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-6
         :end-before: step-7
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-6
         :end-before: step-7
 
@@ -382,13 +382,13 @@ If you list existing instances:
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-7
         :end-before: step-8
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-7
         :end-before: step-8
 
@@ -418,13 +418,13 @@ money. Destroy cloud resources to avoid unexpected expenses.
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-8
         :end-before: step-9
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-8
         :end-before: step-9
 
@@ -456,7 +456,7 @@ instance:
   instance. Typically, your public key is written to :code:`.ssh/id_rsa.pub`. If
   you do not have an SSH public key file, follow
   `these instructions <https://help.github.com/articles/generating-ssh- keys/>`_ first.
-  We'll cover these instructions in depth in :doc:`/section2`.
+  We'll cover these instructions in depth in :doc:`/introduction`.
 
 .. only:: fog
 
@@ -467,7 +467,7 @@ instance:
     In the following example, :code:`pub_key_file` should be set to
     the location of your public SSH key file.
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-9
         :end-before: step-10
 
@@ -477,24 +477,24 @@ instance:
 
 * Network access. By default, OpenStack filters all traffic. You must create
   a security group and apply it to your instance. The security group allows HTTP
-  and SSH access. We'll go into more detail in :doc:`/section2`.
+  and SSH access. We'll go into more detail in :doc:`/introduction`.
 
 .. only:: fog
 
-    .. literalinclude:: ../samples/fog/section1.rb
+    .. literalinclude:: ../samples/fog/getting_started.rb
         :start-after: step-10
         :end-before: step-11
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-10
         :end-before: step-11
 
 * Userdata. During instance creation, you can provide userdata to OpenStack to
   configure instances after they boot. The cloud-init service applies the
   userdata to an instance. You must pre-install the cloud-init service on your
-  chosen image. We'll go into more detail in :doc:`/section2`.
+  chosen image. We'll go into more detail in :doc:`/introduction`.
 
 .. only:: fog
 
@@ -502,7 +502,7 @@ instance:
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-11
         :end-before: step-12
 
@@ -520,7 +520,7 @@ request the instance, wait for it to build.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-12
         :end-before: step-13
 
@@ -530,7 +530,7 @@ instance to deploy the Fractals application.
 Associate a floating IP for external connectivity
 -------------------------------------------------
 
-We'll cover networking in detail in :doc:`/section7`.
+We'll cover networking in detail in :doc:`/networking`.
 
 To see the application running, you must know where to look for it. By
 default, your instance has outbound network access. To make your instance
@@ -550,7 +550,7 @@ address to your instance.
     address pool. Allocate this pool to your project and attach it to your
     instance.
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-13
         :end-before: step-14
 
@@ -564,7 +564,7 @@ address to your instance.
 
     You can then attach it to the instance:
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-14
         :end-before: step-15
 
@@ -580,7 +580,7 @@ using your preferred browser.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-15
 
 .. note:: If you do not use floating IPs, substitute another IP address as appropriate
@@ -596,18 +596,18 @@ Next steps
 ~~~~~~~~~~
 
 Don't worry if these concepts are not yet completely clear. In
-:doc:`/section2`, we explore these concepts in more detail.
+:doc:`/introduction`, we explore these concepts in more detail.
 
-* :doc:`/section3`: Learn how to scale your application
-* :doc:`/section4`: Learn how to use Object Storage to make your application durable
-* :doc:`/section5`: Migrate the database to block storage, or use
+* :doc:`/scaling_out`: Learn how to scale your application
+* :doc:`/durability`: Learn how to use Object Storage to make your application durable
+* :doc:`/block_storage`: Migrate the database to block storage, or use
   the database-as-a-service component
-* :doc:`/section6`: Automatically orchestrate your application
-* :doc:`/section7`: Learn about complex networking
-* :doc:`/section8`: Get advice about operations
-* :doc:`/section9`: Learn some crazy things that you might not think to do ;)
+* :doc:`/orchestration`: Automatically orchestrate your application
+* :doc:`/networking`: Learn about complex networking
+* :doc:`/advice`: Get advice about operations
+* :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
 
-.. todo:: List the next sections here or simply reference section2.
+.. todo:: List the next sections here or simply reference introduction.
 
 Complete code sample
 ~~~~~~~~~~~~~~~~~~~~
@@ -621,5 +621,5 @@ information, the flavor ID, and image ID.
 
 .. only:: libcloud
 
-    .. literalinclude:: ../samples/libcloud/section1.py
+    .. literalinclude:: ../samples/libcloud/getting_started.py
        :language: python
