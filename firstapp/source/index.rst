@@ -19,6 +19,9 @@ Contents
    craziness
    appendix
 
+   imported/app_support.rst
+   imported/glossary.rst
+
 Search in this guide
 ~~~~~~~~~~~~~~~~~~~~
 
