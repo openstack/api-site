@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -8,784 +8,911 @@
 <!--        xmllint -noent os-image-2.2.wadl               -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
-    %common;
-    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
-    %common_project;
-]>
+   <!ENTITY % common  SYSTEM "common.ent">
+   %common;
+   <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+   %common_project;
+   ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:db="http://docbook.org/ns/docbook"
-    xmlns:common="http://docs.openstack.org/common/api/v1.0"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:imageapi="http://docs.openstack.org/image/api/v2"
-    xmlns:csapi="http://docs.openstack.org/image/api/v2">
-    <grammars>
-        <include href="xsd/api.xsd"/>
-        <include href="xsd/api-common.xsd"/>
-    </grammars>
-    <!--*******************************************************-->
-    <!--             All Resources                             -->
-    <!--*******************************************************-->
-    <resources base="https://glance.example.com/" xml:id="os-image-v2">
-        <resource id="versions" path="//">
-            <method href="#listVersions-image-v2"/>
-        </resource>
-        <resource id="version" path="//v2">
-            <resource id="Images" type="#ImageList" path="images">
-                <method href="#createImage-v2"/>
-                <resource path="{image_id}" id="image_id">
-                    <method href="#getImage-v2"/>
-                    <method href="#updateImage-v2"/>
-                    <method href="#deleteImage-v2"/>
-                    <resource id="file" path="file">
-                        <method href="#storeImageFile-v2"/>
-                        <method href="#getImageFile-v2"/>
-                    </resource>
-                    <resource id="Tags" path="tags">
-                        <resource path="{tag}" id="tag">
-                            &tagParameter; <method
-                                href="#addImageTag-v2"/>
-                            <method href="#deleteImageTag-v2"/>
-                        </resource>
-                    </resource>
-                    <resource id="Members" type="#MemberList"
-                        path="members">
-                        <method href="#createImageMember-v2"/>
-                        <resource path="{member_id}" id="member_id">
-                            &member_idParameter; <method
-                                href="#getImageMember-v2"/>
-                            <method href="#deleteImageMember-v2"/>
-                            <method href="#updateImageMember-v2"/>
-                        </resource>
-                    </resource>
-                </resource>
+   xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+   xmlns:db="http://docbook.org/ns/docbook"
+   xmlns:common="http://docs.openstack.org/common/api/v1.0"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:imageapi="http://docs.openstack.org/image/api/v2"
+   xmlns:csapi="http://docs.openstack.org/image/api/v2">
+   <grammars>
+      <include href="xsd/api.xsd"/>
+      <include href="xsd/api-common.xsd"/>
+   </grammars>
+   <!--*******************************************************-->
+   <!--             All Resources                             -->
+   <!--*******************************************************-->
+   <resources base="https://glance.example.com/" xml:id="os-image-v2">
+      <resource id="versions" path="//">
+         <method href="#listVersions-image-v2"/>
+      </resource>
+      <resource id="version" path="//v2">
+         <resource id="Images" type="#ImageList" path="images">
+            <method href="#createImage-v2"/>
+            <resource path="{image_id}" id="image_id">
+                &image_idParameter;
+               <method href="#getImage-v2"/>
+               <method href="#updateImage-v2"/>
+               <method href="#deleteImage-v2"/>
+               <resource id="file" path="file">
+                  <method href="#storeImageFile-v2"/>
+                  <method href="#getImageFile-v2"/>
+               </resource>
+               <resource id="Tags" path="tags">
+                  <resource path="{tag}" id="tag">
+                     &tagParameter;
+                     <method href="#addImageTag-v2"/>
+                     <method href="#deleteImageTag-v2"/>
+                  </resource>
+               </resource>
+               <resource id="Members" type="#MemberList"
+                  path="members">
+                  <method href="#createImageMember-v2"/>
+                  <resource path="{member_id}" id="member_id">
+                     &member_idParameter;
+                     <method href="#getImageMember-v2"/>
+                     <method href="#deleteImageMember-v2"/>
+                     <method href="#updateImageMember-v2"/>
+                  </resource>
+               </resource>
             </resource>
-        </resource>
-    </resources>
-    <!--*******************************************************-->
-    <!--               Resource Types                          -->
-    <!--*******************************************************-->
-    <resource_type id="ImageList">
-        <method href="#listImages-v2"/>
-    </resource_type>
-    <resource_type id="MemberList">
-        <method href="#listImageMembers-v2"/>
-    </resource_type>
-    <!--*******************************************************-->
-    <!--               All Methods                             -->
-    <!--*******************************************************-->
-    <method name="GET" id="listVersions-image-v2">
-        <wadl:doc xml:lang="EN" title="List API versions"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists information about all Image
-                service API versions.</para>
-        </wadl:doc>
-        <response status="200 300">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="samples/image-versions-response.json"/>
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <!-- images methods -->
-    <method name="GET" id="listImages-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List images">
-            <para role="shortdesc">Lists public virtual machine (VM)
-                images. (Since Image API v2.0.)</para>
-            <para>Returns a subset of the larger collection of images
-                and a link that you can use to get the next set of
-                images. You should always check for the presence of a
-                    <code>next</code> link and use it as the URI in a
-                subsequent HTTP GET request. You should follow this
-                pattern until a <code>next</code> link is no longer
-                provided. The next link preserves any query parameters
-                that you send in your initial request. You can use the
-                    <code>first</code> link to jump back to the first
-                page of the collection. If you prefer to paginate
-                through images manually, use the <code>limit</code>
-                and <code>marker</code> parameters.</para>
-            <para>The list operation accepts several types of query
-                parameters that let you filter the results of the
-                returned collection.</para>
-            <para>A client can provide direct comparison filters using
-                most image attributes, such as
-                    <code>name=Ubuntu</code>,
-                    <code>visibility=public</code>, and so on. A
-                client cannot filter on tags or anything defined as a
-                    <code>link</code> in the json-schema, such as
-                self, file, or schema.</para>
-            <para>You can use the <code>size_min</code> and
-                    <code>size_max</code> query parameters to perform
-                greater-than and less-than filtering of images based
-                on their <code>size</code> attribute. The size is
-                measured in bytes and refers to the size of an image
-                when it is stored on disk.</para>
-            <para>For example, sending a <code>size_min</code> filter
-                of 1048576 and <code>size_max</code> of 4194304
-                filters the container to include only images that are
-                between 1 and 4 MB.</para>
-            <para>You can sort the results of this operation by using
-                the <code>sort_key</code> and <code>sort_dir</code>
-                parameters. The API uses the natural sorting of
-                whatever image attribute is provided as the
-                    <code>sort_key</code>.</para>
-            <para>You can see a list of VM images which status is in
-                <code>active</code>, <code>queued</code>, or
-                <code>saving</code>.</para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &limitMarkerReqParameter;
-                &imageListReqParameters;
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-list-response.json"/>
-                </wadl:doc> &imagesParameter; &statusParameter;
-                &nameParameter; &tagParameter; &container_formatParameter;
-                &created_atParameter; &disk_formatParameter;
-                &updated_atParameter; &min_diskParameter;
-                &protectedParameter; &idParameter; &min_ramParameter;
-                &checksumParameter; &ownerParameter;
-                &visibilityParameter; &virtual_sizeParameter;
-                &sizeParameter; &propertiesParameter;
-                &location_urlParameter; &metadataParameter;
-                &direct_urlParameter; &selfParameter;
-                &fileParameter; &image_schemaParameter;
-                &images_schemaParameter;
-                &firstParameter;
-                </representation>
-        </response>
-    </method>
-    <method name="POST" id="createImage-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Create image">
-            <para role="shortdesc">Creates a virtual machine (VM)
-                image. (Since Image API v2.0.)</para>
-            <para>Created with a <code>Location</code> header that
-                contains the newly-created URI for the image. Response
-                body represents the created image entity.</para>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>With correct permissions, you can see
-                    the image status as <code>queued</code> through API
-                    calls.</para></listitem>
-                <listitem><para>With correct permissions, you can see
-                    the image status as <code>active</code> through API
-                    calls if you created the image with
-                    <code>Location</code> header.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json"
-                element="image">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="samples/image-create-req.json"/>
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="name" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Name for the image. The
-                            name of an image is not unique to a Image
-                            service node. The API cannot expect users
-                            to know the names of images owned by
-                            others.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="id" style="plain" type="csapi:uuid"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>The image
-                        ID.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="visibility" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Image visibility. Public or private.
-                            Default is public.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="tags" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Image tags.</para>
-                    </wadl:doc>
-                </param>
-                &container_formatRequestParameter; &disk_formatRequestParameter;
-                &min_diskRequestParameter; &min_ramRequestParameter;
-                &protectedRequestParameter; &propertiesRequestParameter;
-            </representation>
-        </request>
-        <response status="201">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-create-response.json"/>
-                </wadl:doc> &statusParameter; &container_formatParameter;
-                &min_ramParameter; &updated_atParameter;
-                &ownerParameter; &min_diskParameter;
-                &tagsParameter; &visibilityParameter;
-                &idParameter; &sizeParameter; &virtual_sizeParameter;
-                &nameParameter; &checksumParameter;
-                &created_atParameter; &disk_formatParameter;
-                &propertiesParameter; &protectedParameter;
-                &locationParameter; &selfParameter;
-                &fileParameter; &image_schemaParameter;
-                <!--<param
-                    xmlns="http://wadl.dev.java.net/2009/02"
-                    name="location" style="plain" type="xsd:anyURI"
-                    required="true"
-                    path="/common:version/atom:link[@rel='self']/@href">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>The location for the image identified by
-                            a URI.</para>
-                    </wadl:doc>
-                    <link resource_type="#createImage" rel="self"/>
-                </param>-->
-            </representation>
-        </response>
-    </method>
-    <!-- images/{image_id} methods -->
-    <method name="PATCH" id="updateImage-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Update image">
-            <para role="shortdesc">Updates a specified image. (Since
-                Image API v2.0.)</para>
-            <para>Request body must conform to one of the following
-                media types:</para>
-            <itemizedlist spacing="compact">
-                <listitem>
-                    <para>application/openstack-images-v2.0-json-patch</para>
-                </listitem>
-                <listitem>
-                    <para>application/openstack-images-v2.1-json-patch
-                        (Since Image API v2.2)</para>
-                </listitem>
-            </itemizedlist>
-            <para>You can also use the &PATCH; method to add or remove
-                image properties.</para>
-            <para>
-                For information about the &PATCH; method and the available
-                media types, see <link
-                xlink:href="http://specs.openstack.org/openstack/glance-specs/specs/api/v2/http-patch-image-api-v2.html">Image
-                API v2 HTTP PATCH media types</link>.
-            </para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>When adding or replacing a new location
-                    to the specified image, you must set the <code>disk_format</code>
-                    and <code>container_format</code> parameters in the image.</para></listitem>
-                <listitem><para>When locations of the specified image
-                    is replaced by replacing operation, the old location
-                    must be set in the image on ahead.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>With correct permissions, you can see
-                    the updated values of the image's attributes.
-                    </para></listitem>
-                <listitem><para>With correct permissions, you can see
-                    the image status as <code>active</code> through API calls
-                    after adding a location to the image which had no
-                    location.</para></listitem>
-                <listitem><para>
-                    With correct permissions, you can see the image status as
-                    <code>queued</code> through API calls after removing all
-                    locations from the image.
-                </para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-                <listitem><para>
-                    If you cannot update locations, your request might lack
-                    some information. Ensure that you meet the preconditions
-                    and run the request again. If the request fails again,
-                    review your API request.
-                </para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="samples/image-update-req.json"/>
-                </wadl:doc> &image_idParameter;
-                &pathParameter; &valueParameter; &opParameter;
-                &urlParameter; &metadataParameter;
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-update-response.json"/>
-                </wadl:doc> &statusParameter;
-                &nameParameter; &tagParameter; &container_formatParameter;
-                &created_atParameter; &disk_formatParameter;
-                &updated_atParameter; &min_diskParameter;
-                &protectedParameter; &idParameter; &min_ramParameter;
-                &checksumParameter; &ownerParameter;
-                &visibilityParameter; &sizeParameter;
-                &location_urlParameter; &metadataParameter;
-                &propertiesParameter; &direct_urlParameter; &selfParameter;
-                &fileParameter; &image_schemaParameter;
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="getImage-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get image details">
-            <para role="shortdesc">Gets details for a specified image.
-                (Since Image API v2.0.)</para>
-            <para>Response body is a single image entity.</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified image must exist.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &image_idParameter;</representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-details-response.json"/>
-                </wadl:doc> &statusParameter;
-                &nameParameter; &tagParameter; &container_formatParameter;
-                &created_atParameter; &disk_formatParameter;
-                &updated_atParameter; &min_diskParameter;
-                &protectedParameter; &idParameter; &min_ramParameter;
-                &checksumParameter; &ownerParameter;
-                &visibilityParameter; &sizeParameter;
-                &location_urlParameter; &metadataParameter;
-                &propertiesParameter; &direct_urlParameter; &selfParameter;
-                &fileParameter; &image_schemaParameter;
-            </representation>
-        </response>
-    </method>
-    <method name="DELETE" id="deleteImage-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete image">
-            <para role="shortdesc">Deletes a specified image. (Since
-                Image API v2.0.)</para>
-            <para>You cannot delete images with the 'protected'
-                attribute set to true (boolean).</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>You can delete an image in all status
-                    except <code>deleted</code>.</para></listitem>
-                <listitem><para>You must first set the 'protected' attribute
-                    to <code>false</code> (boolean) and then perform
-                    the delete.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>The response is empty and returns the
-                    HTTP 204 status code.</para></listitem>
-                <listitem><para>The image is deleted in images index.
-                    </para></listitem>
-                <listitem><para>The binary image data managed by OpenStack
-                    Image service is deleted from the storage node if the
-                    deleted image stores image data in the node.</para></listitem>
-            </itemizedlist>
-            <para>TroubleShooting</para>
-            <itemizedlist>
-                <listitem><para>
-                    The response returns the HTTP 403 status code when the
-                    <code>protected</code> attribute is set to
-                    <code>true</code> even if you have correct permissions.
-                    Ensure that you meet the preconditions and run the request
-                    again. If the request fails again, review your API request.
-                </para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &image_idParameter; </representation>
-        </request>
-        <response status="204"/>
-        <response status="403"/>
-    </method>
-    <!-- images/{image_id}/file methods -->
-    <method name="PUT" id="storeImageFile-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Upload binary image data">
-            <para role="shortdesc">Uploads binary image data. (Since
-                Image API v2.0.)</para>
-            <para>Set the <code>Content-Type</code> request header to
-                    <code>application/octet-stream</code>.</para>
-            <para>Example call: <code>curl -i -X PUT -H "X-Auth-Token:
-                    $token" -H "Content-Type:
-                    application/octet-stream" -d
-                    @/home/glance/ubuntu-12.10.qcow2
-                    $image_url/v2/images/{image_id}/file</code></para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified image must exist before you
-                    store binary image data.</para></listitem>
-                <listitem><para>You must set disk_format and container_format
-                    in the image before you store the data.</para></listitem>
-                <listitem><para>You can only store the data into a image which
-                    status is <code>queued</code>.</para></listitem>
-                <listitem><para>The user must have enough image strage quota
-                    remaining to store the data.</para></listitem>
-                <listitem><para>Size of the data must be less than OpenStack
-                    Image service restricts.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>With correct permissions, you can see the
-                    image status as <code>active</code> through API calls.
-                    </para></listitem>
-                <listitem><para>With correct access, you can see the stored
-                    data in the storage system that OpenStack Image service
-                    manages.</para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-                <listitem><para>
-                    If you cannot store the data, your request might lack
-                    information or you exceeded your allotted quota. Ensure that you meet the
-                    preconditions and run the request again. If the request fails again, review
-                    your API request.
-             </para></listitem>
-                <listitem><para>The storage back ends for storing the data must have
-                    enough free storage space to match the size of the data.
-                    </para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &image_idParameter; </representation>
-        </request>
-        <response status="204"/>
-    </method>
-    <method name="GET" id="getImageFile-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Download binary image data">
-            <para role="shortdesc">Downloads binary image data. (Since
-                Image API v2.0.)</para>
-            <para>Example call: <code>curl -i -X GET -H "X-Auth-Token:
-                    $token"
-                    $image_url/v2/images/{image_id}/file</code></para>
-            <para>The response body contains the raw binary data that
-                represents the actual virtual disk. The
-                    <code>Content-Type</code> header contains the
-                value <code>application/octet-stream</code>. The
-                    <code>Content-MD5</code> header contains an MD5
-                checksum of the image data. Clients are encouraged to
-                verify the integrity of the image data they receive by
-                using this checksum.</para>
-            <para></para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified images must exist.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>You can download the binary image data
-                    in your machine if the specified image has image
-                    data.</para></listitem>
-                <listitem><para>If image data exists, you receive the
-                    HTTP 200 status code.</para></listitem>
-                <listitem><para>If no image data exists, you receive
-                    the HTTP 204 status code.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json"
-                >&image_idParameter; </representation>
-        </request>
-        <response status="200 204"/>
-    </method>
-    <!-- images/{image_id}/tags/{tag} methods -->
-    <method name="PUT" id="addImageTag-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Add image tag">
-            <para role="shortdesc">Adds a specified tag to a specified
-                image. (Since Image API v2.0.)</para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json"
-                >&image_idParameter; &tagParameter;</representation>
-        </request>
-        <response status="204"/>
-    </method>
-    <method name="DELETE" id="deleteImageTag-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete image tag">
-            <para role="shortdesc">Deletes a specified tag from a
-                specified image. (Since Image API v2.0.)</para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &image_idParameter; &tagParameter;</representation>
-        </request>
-        <response status="204"/>
-    </method>
-    <!-- images/{image_id}/members methods -->
-    <method name="GET" id="getImageMember-v2">
-        <wadl:doc xml:lang="EN" title="Show image member details"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Shows image member details.</para>
-            <para>Response body is a single image member entity.
-                (Since Image API 2.2.)</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified image must exist.
-                </para></listitem>
-                <listitem><para>You must be the owner or a member of
-                    the specified image.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &image_idParameter; </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-member-details-response.json"
-                    />
-                </wadl:doc> &memberListParameter;
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="listImageMembers-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List image members">
-            <para role="shortdesc">Lists the tenants with whom this
-                image has been shared. (Since Image API v2.1.)</para>
-            <para>If a user with whom this image is shared makes this
-                call, the member list contains only information for
-                that user.</para>
-            <para>If a user with whom this image has not been shared
-                makes this call, the call returns the HTTP 404 status
-                code.</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified image must exist.
-                </para></listitem>
-                <listitem><para>You must be the owner or a member of
-                    the specified image.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json"
-                >&image_idParameter; </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-members-list-response.json"
-                    />
-                </wadl:doc> &memberListParameter;
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    required="true" name="schema" style="plain"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>The URL for schema of the
-                            members.</para></wadl:doc>
-                </param>
-            </representation>
-        </response>
-        <response status="404"/>
-    </method>
-    <method name="POST" id="createImageMember-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Create image member">
-            <para role="shortdesc">Adds a specified tenant ID as an
-                image member. (Since Image API v2.1.)</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified images must exist.
-                </para></listitem>
-                <listitem><para>You can only add a new member to an
-                image which 'visibility' attribute is <code>private</code>.
-                </para></listitem>
-                <listitem><para>You must be the owner of the specified
-                image.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>With correct permissions, you can see
-                the member status of the image as <code>pending</code>
-                through API calls.</para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-                <listitem><para>
-                    Even if you have correct permissions, if the
-                    <code>visibility</code> attribute is set to <code>public</code>, the request
-                    returns the HTTP 403 error code. Ensure that you meet the preconditions
-                    and run the request again. If the request fails again,
-                    review your API request.
-                </para></listitem>
-                <listitem><para>
-                    If the specified member is already a member for the image,
-                    the service returns the HTTP 409 Conflict error code. In
-                    case you meant a different member, double-check that you
-                    specified the correct member.
-                </para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-member-create-request.json"
-                    />
-                </wadl:doc> &image_idParameter;
-                &member_idParameter; </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-member-create-response.json"
-                    />
-                </wadl:doc> &memberListParameter;
-            </representation>
-        </response>
-        <response status="403"  xmlns="http://wadl.dev.java.net/2009/02">
-        <representation mediaType="application/xml"
-                        element="csapi:invalidVisibility"/>
-        <representation mediaType="application/json"/>
-        </response>
-        <response status="409"  xmlns="http://wadl.dev.java.net/2009/02">
-        <representation mediaType="application/xml"
-                        element="csapi:memberConflict"/>
-        <representation mediaType="application/json"/>
-        </response>
-    </method>
-    <method name="PUT" id="updateImageMember-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Update image member">
-            <para role="shortdesc">Sets the specified status for the
-                specified member of the specified image. (Since Image
-                API v2.1.)</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified images must exist.
-                </para></listitem>
-                <listitem><para>You must be a member of the
-                specified image.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>If you update the member status to
-                <code>accepted</code> and have the correct permissions,
-                you see the image in list images responses.</para></listitem>
-                <listitem><para>With correct permissions, you can see
-                the updated member status of the image through API
-                calls.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-member-update-request.json"
-                    />
-                </wadl:doc> &image_idParameter;
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    required="true" name="status" style="plain"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>The status of this image
-                            member.</para></wadl:doc>
-                </param>
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="samples/image-member-update-response.json"
-                    />
-                </wadl:doc> &memberListParameter;
-            </representation>
-        </response>
-    </method>
-    <method name="DELETE" id="deleteImageMember-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete image member">
-            <para role="shortdesc">Deletes a specified tenant ID from
-                the member list of the specified image. (Since Image
-                API v2.1.)</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified image must exist.
-                </para></listitem>
-                <listitem><para>You must be the owner of the specified
-                image.</para></listitem>
-            </itemizedlist>
-            <para>Synchronous Postconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified member is removed from
-                the image members.</para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-                <listitem><para>
-                    Even if you have correct permissions, if you are not the
-                    owner of the specified image, the request returns the HTTP
-                    403 error code. Ensure that you meet the preconditions
-                    and run the request again. If the request fails again,
-                    review your API request.
-                </para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &image_idParameter;</representation>
-        </request>
-        <response status="204"/>
-        <response status="403"  xmlns="http://wadl.dev.java.net/2009/02">
-        <representation mediaType="application/xml"
-                        element="csapi:forbidden"/>
-        <representation mediaType="application/json"/>
-        </response>
-    </method>
+         </resource>
+      </resource>
+   </resources>
+   <!--*******************************************************-->
+   <!--               Resource Types                          -->
+   <!--*******************************************************-->
+   <resource_type id="ImageList">
+      <method href="#listImages-v2"/>
+   </resource_type>
+   <resource_type id="MemberList">
+      <method href="#listImageMembers-v2"/>
+   </resource_type>
+   <!--*******************************************************-->
+   <!--               All Methods                             -->
+   <!--*******************************************************-->
+   <method name="GET" id="listVersions-image-v2">
+      <wadl:doc xml:lang="EN" title="List API versions"
+         xmlns="http://docbook.org/ns/docbook">
+         <para role="shortdesc">Lists information about all Image
+            service API versions.
+         </para>
+      </wadl:doc>
+      <response status="200 300">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN">
+               <xsdxt:code
+                  href="samples/image-versions-response.json"/>
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <!-- images methods -->
+   <method name="GET" id="listImages-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="List images">
+         <para role="shortdesc">Lists public virtual machine (VM)
+            images. (Since Image API v2.0.)
+         </para>
+         <para>Returns a subset of the larger collection of images
+            and a link that you can use to get the next set of
+            images. You should always check for the presence of a
+            <code>next</code> link and use it as the URI in a
+            subsequent HTTP GET request. You should follow this
+            pattern until a <code>next</code> link is no longer
+            provided. The next link preserves any query parameters
+            that you send in your initial request. You can use the
+            <code>first</code> link to jump back to the first
+            page of the collection. If you prefer to paginate
+            through images manually, use the <code>limit</code>
+            and <code>marker</code> parameters.
+         </para>
+         <para>The list operation accepts several types of query
+            parameters that let you filter the results of the
+            returned collection.
+         </para>
+         <para>A client can provide direct comparison filters using
+            most image attributes, such as
+            <code>name=Ubuntu</code>,
+            <code>visibility=public</code>, and so on. A
+            client cannot filter on tags or anything defined as a
+            <code>link</code> in the json-schema, such as
+            self, file, or schema.
+         </para>
+         <para>You can use the <code>size_min</code> and
+            <code>size_max</code> query parameters to perform
+            greater-than and less-than filtering of images based
+            on their <code>size</code> attribute. The size is
+            measured in bytes and refers to the size of an image
+            when it is stored on disk.
+         </para>
+         <para>For example, sending a <code>size_min</code> filter
+            of 1048576 and <code>size_max</code> of 4194304
+            filters the container to include only images that are
+            between 1 and 4 MB.
+         </para>
+         <para>You can sort the results of this operation by using
+            the <code>sort_key</code> and <code>sort_dir</code>
+            parameters. The API uses the natural sorting of
+            whatever image attribute is provided as the
+            <code>sort_key</code>.
+         </para>
+         <para>You can see a list of VM images which status is in
+            <code>active</code>, <code>queued</code>, or
+            <code>saving</code>.
+         </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            &limitMarkerReqParameter;
+            &imageListReqParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-list-response.json"/>
+            </wadl:doc>
+            &imagesParameter; &statusParameter;
+            &nameParameter; &tagParameter; &container_formatParameter;
+            &created_atParameter; &disk_formatParameter;
+            &updated_atParameter; &min_diskParameter;
+            &protectedParameter; &idParameter; &min_ramParameter;
+            &checksumParameter; &ownerParameter;
+            &visibilityParameter; &virtual_sizeParameter;
+            &sizeParameter; &propertiesParameter;
+            &location_urlParameter; &metadataParameter;
+            &direct_urlParameter; &selfParameter;
+            &fileParameter; &image_schemaParameter;
+            &images_schemaParameter;
+            &firstParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="createImage-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Create image">
+         <para role="shortdesc">Creates a virtual machine (VM)
+            image. (Since Image API v2.0.)
+         </para>
+         <para>Created with a <code>Location</code> header that
+            contains the newly-created URI for the image. Response
+            body represents the created image entity.
+         </para>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>With correct permissions, you can see
+                  the image status as <code>queued</code> through API
+                  calls.
+               </para>
+            </listitem>
+            <listitem>
+               <para>With correct permissions, you can see
+                  the image status as <code>active</code> through API
+                  calls if you created the image with
+                  <code>Location</code> header.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json"
+            element="image">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code href="samples/image-create-req.json"/>
+            </wadl:doc>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+               name="name" style="plain" type="xsd:string"
+               required="true">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+               xml:lang="EN">
+               <para>Name for the image. The
+                  name of an image is not unique to a Image
+                  service node. The API cannot expect users
+                  to know the names of images owned by
+                  others.
+               </para>
+            </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+               name="id" style="plain" type="csapi:uuid"
+               required="false">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+               xml:lang="EN">
+               <para>The image
+                  ID.
+               </para>
+            </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+               name="visibility" style="plain" type="xsd:string"
+               required="false">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+               xml:lang="EN">
+               <para>Image visibility. Public or private.
+                  Default is public.
+               </para>
+            </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+               name="tags" style="plain" type="xsd:dict"
+               required="false">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+               xml:lang="EN">
+               <para>Image tags.</para>
+            </wadl:doc>
+            </param>
+            &container_formatRequestParameter; &disk_formatRequestParameter;
+            &min_diskRequestParameter; &min_ramRequestParameter;
+            &protectedRequestParameter; &propertiesRequestParameter;
+         </representation>
+      </request>
+      <response status="201">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-create-response.json"/>
+            </wadl:doc>
+            &statusParameter; &container_formatParameter;
+            &min_ramParameter; &updated_atParameter;
+            &ownerParameter; &min_diskParameter;
+            &tagsParameter; &visibilityParameter;
+            &idParameter; &sizeParameter; &virtual_sizeParameter;
+            &nameParameter; &checksumParameter;
+            &created_atParameter; &disk_formatParameter;
+            &propertiesParameter; &protectedParameter;
+            &locationParameter; &selfParameter;
+            &fileParameter; &image_schemaParameter;
+         </representation>
+      </response>
+   </method>
+   <!-- images/{image_id} methods -->
+   <method name="PATCH" id="updateImage-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Update image">
+         <para role="shortdesc">Updates a specified image. (Since
+            Image API v2.0.)
+         </para>
+         <para>Request body must conform to one of the following
+            media types:
+         </para>
+         <itemizedlist spacing="compact">
+            <listitem>
+               <para>application/openstack-images-v2.0-json-patch</para>
+            </listitem>
+            <listitem>
+               <para>application/openstack-images-v2.1-json-patch
+                  (Since Image API v2.2)
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>You can also use the &PATCH; method to add or remove
+            image properties.
+         </para>
+         <para>
+            For information about the &PATCH; method and the available
+            media types, see
+            <link
+               xlink:href="http://specs.openstack.org/openstack/glance-specs/specs/api/v2/http-patch-image-api-v2.html">
+            Image
+            API v2 HTTP PATCH media types</link>.
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>When adding or replacing a new location
+                  to the specified image, you must set the <code>disk_format</code>
+                  and <code>container_format</code> parameters in the image.
+               </para>
+            </listitem>
+            <listitem>
+               <para>When locations of the specified image
+                  is replaced by replacing operation, the old location
+                  must be set in the image on ahead.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>With correct permissions, you can see
+                  the updated values of the image's attributes.
+               </para>
+            </listitem>
+            <listitem>
+               <para>With correct permissions, you can see
+                  the image status as <code>active</code> through API calls
+                  after adding a location to the image which had no
+                  location.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  With correct permissions, you can see the image status as
+                  <code>queued</code> through API calls after removing all
+                  locations from the image.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Troubleshooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  If you cannot update locations, your request might lack
+                  some information. Ensure that you meet the preconditions
+                  and run the request again. If the request fails again,
+                  review your API request.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code href="samples/image-update-req.json"/>
+            </wadl:doc>
+            &image_idParameter;
+            &pathParameter; &valueParameter; &opParameter;
+            &urlParameter; &metadataParameter;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-update-response.json"/>
+            </wadl:doc>
+            &statusParameter;
+            &nameParameter; &tagParameter; &container_formatParameter;
+            &created_atParameter; &disk_formatParameter;
+            &updated_atParameter; &min_diskParameter;
+            &protectedParameter; &idParameter; &min_ramParameter;
+            &checksumParameter; &ownerParameter;
+            &visibilityParameter; &sizeParameter;
+            &location_urlParameter; &metadataParameter;
+            &propertiesParameter; &direct_urlParameter; &selfParameter;
+            &fileParameter; &image_schemaParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getImage-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Get image details">
+         <para role="shortdesc">Gets details for a specified image.
+            (Since Image API v2.0.)
+         </para>
+         <para>Response body is a single image entity.</para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist.</para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-details-response.json"/>
+            </wadl:doc>
+            &statusParameter;
+            &nameParameter; &tagParameter; &container_formatParameter;
+            &created_atParameter; &disk_formatParameter;
+            &updated_atParameter; &min_diskParameter;
+            &protectedParameter; &idParameter; &min_ramParameter;
+            &checksumParameter; &ownerParameter;
+            &visibilityParameter; &sizeParameter;
+            &location_urlParameter; &metadataParameter;
+            &propertiesParameter; &direct_urlParameter; &selfParameter;
+            &fileParameter; &image_schemaParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="deleteImage-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Delete image">
+         <para role="shortdesc">Deletes a specified image. (Since
+            Image API v2.0.)
+         </para>
+         <para>You cannot delete images with the 'protected'
+            attribute set to true (boolean).
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>You can delete an image in all status
+                  except <code>deleted</code>.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must first set the 'protected' attribute
+                  to <code>false</code> (boolean) and then perform
+                  the delete.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The response is empty and returns the
+                  HTTP 204 status code.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The image is deleted in images index.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The binary image data managed by OpenStack
+                  Image service is deleted from the storage node if the
+                  deleted image stores image data in the node.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>TroubleShooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  The response returns the HTTP 403 status code when the
+                  <code>protected</code> attribute is set to
+                  <code>true</code> even if you have correct permissions.
+                  Ensure that you meet the preconditions and run the request
+                  again. If the request fails again, review your API request.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="204"/>
+      <response status="403"/>
+   </method>
+   <!-- images/{image_id}/file methods -->
+   <method name="PUT" id="storeImageFile-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Upload binary image data">
+         <para role="shortdesc">Uploads binary image data. (Since
+            Image API v2.0.)
+         </para>
+         <para>Set the <code>Content-Type</code> request header to
+            <code>application/octet-stream</code>.
+         </para>
+         <para>Example call: <code>curl -i -X PUT -H "X-Auth-Token:
+            $token" -H "Content-Type:
+            application/octet-stream" -d
+            @/home/glance/ubuntu-12.10.qcow2
+            $image_url/v2/images/{image_id}/file</code>
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist before you
+                  store binary image data.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must set disk_format and container_format
+                  in the image before you store the data.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You can only store the data into a image which
+                  status is <code>queued</code>.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The user must have enough image strage quota
+                  remaining to store the data.
+               </para>
+            </listitem>
+            <listitem>
+               <para>Size of the data must be less than OpenStack
+                  Image service restricts.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>With correct permissions, you can see the
+                  image status as <code>active</code> through API calls.
+               </para>
+            </listitem>
+            <listitem>
+               <para>With correct access, you can see the stored
+                  data in the storage system that OpenStack Image service
+                  manages.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Troubleshooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  If you cannot store the data, your request might lack
+                  information or you exceeded your allotted quota. Ensure that you meet the
+                  preconditions and run the request again. If the request fails again, review
+                  your API request.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The storage back ends for storing the data must have
+                  enough free storage space to match the size of the data.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="204"/>
+   </method>
+   <method name="GET" id="getImageFile-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Download binary image data">
+         <para role="shortdesc">Downloads binary image data. (Since
+            Image API v2.0.)
+         </para>
+         <para>Example call: <code>curl -i -X GET -H "X-Auth-Token:
+            $token"
+            $image_url/v2/images/{image_id}/file</code>
+         </para>
+         <para>The response body contains the raw binary data that
+            represents the actual virtual disk. The
+            <code>Content-Type</code> header contains the
+            value <code>application/octet-stream</code>. The
+            <code>Content-MD5</code> header contains an MD5
+            checksum of the image data. Clients are encouraged to
+            verify the integrity of the image data they receive by
+            using this checksum.
+         </para>
+         <para></para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified images must exist.</para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>You can download the binary image data
+                  in your machine if the specified image has image
+                  data.
+               </para>
+            </listitem>
+            <listitem>
+               <para>If image data exists, you receive the
+                  HTTP 200 status code.
+               </para>
+            </listitem>
+            <listitem>
+               <para>If no image data exists, you receive
+                  the HTTP 204 status code.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200 204"/>
+   </method>
+   <!-- images/{image_id}/tags/{tag} methods -->
+   <method name="PUT" id="addImageTag-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Add image tag">
+         <para role="shortdesc">
+            Adds a specified tag to a specified image. (Since Image API v2.0.)
+         </para>
+      </wadl:doc>
+      <response status="204"/>
+   </method>
+   <method name="DELETE" id="deleteImageTag-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Delete image tag">
+         <para role="shortdesc">
+            Deletes a specified tag from a specified image. (Since Image API
+            v2.0.)
+         </para>
+      </wadl:doc>
+      <response status="204"/>
+   </method>
+   <!-- images/{image_id}/members methods -->
+   <method name="GET" id="getImageMember-v2">
+      <wadl:doc xml:lang="EN" title="Show image member details"
+         xmlns="http://docbook.org/ns/docbook">
+         <para role="shortdesc">Shows image member details.</para>
+         <para>Response body is a single image member entity.
+            (Since Image API 2.2.)
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must be the owner or a member of
+                  the specified image.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-member-details-response.json"
+                  />
+            </wadl:doc>
+           <!--  &memberListParameter; -->
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="listImageMembers-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="List image members">
+         <para role="shortdesc">Lists the tenants with whom this
+            image has been shared. (Since Image API v2.1.)
+         </para>
+         <para>If a user with whom this image is shared makes this
+            call, the member list contains only information for
+            that user.
+         </para>
+         <para>If a user with whom this image has not been shared
+            makes this call, the call returns the HTTP 404 status
+            code.
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must be the owner or a member of
+                  the specified image.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-members-list-response.json"
+                  />
+            </wadl:doc>
+           <!--  &memberListParameter; -->
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+               required="true" name="schema" style="plain"
+               type="xsd:string">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+               xml:lang="EN">
+               <para>The URL for schema of the
+                  members.
+               </para>
+            </wadl:doc>
+            </param>
+         </representation>
+      </response>
+      <response status="404"/>
+   </method>
+   <method name="POST" id="createImageMember-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Create image member">
+         <para role="shortdesc">Adds a specified tenant ID as an
+            image member. (Since Image API v2.1.)
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified images must exist.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You can only add a new member to an
+                  image which 'visibility' attribute is <code>private</code>.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must be the owner of the specified
+                  image.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>With correct permissions, you can see
+                  the member status of the image as <code>pending</code>
+                  through API calls.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Troubleshooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  Even if you have correct permissions, if the
+                  <code>visibility</code> attribute is set to <code>public</code>, the request
+                  returns the HTTP 403 error code. Ensure that you meet the preconditions
+                  and run the request again. If the request fails again,
+                  review your API request.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  If the specified member is already a member for the image,
+                  the service returns the HTTP 409 Conflict error code. In
+                  case you meant a different member, double-check that you
+                  specified the correct member.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-member-create-request.json"
+                  />
+            </wadl:doc>
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-member-create-response.json"
+                  />
+            </wadl:doc>
+          <!--   &memberListParameter; -->
+         </representation>
+      </response>
+      <response status="403"  xmlns="http://wadl.dev.java.net/2009/02">
+         <representation mediaType="application/xml"
+            element="csapi:invalidVisibility"/>
+         <representation mediaType="application/json"/>
+      </response>
+      <response status="409"  xmlns="http://wadl.dev.java.net/2009/02">
+         <representation mediaType="application/xml"
+            element="csapi:memberConflict"/>
+         <representation mediaType="application/json"/>
+      </response>
+   </method>
+   <method name="PUT" id="updateImageMember-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Update image member">
+         <para role="shortdesc">Sets the specified status for the
+            specified member of the specified image. (Since Image
+            API v2.1.)
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified images must exist.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must be a member of the
+                  specified image.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>If you update the member status to
+                  <code>accepted</code> and have the correct permissions,
+                  you see the image in list images responses.
+               </para>
+            </listitem>
+            <listitem>
+               <para>With correct permissions, you can see
+                  the updated member status of the image through API
+                  calls.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-member-update-request.json"
+                  />
+            </wadl:doc>
+            <param xmlns="http://wadl.dev.java.net/2009/02"
+               required="true" name="status" style="plain"
+               type="xsd:string">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+               xml:lang="EN">
+               <para>The status of this image
+                  member.
+               </para>
+            </wadl:doc>
+            </param>
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-member-update-response.json"
+                  />
+            </wadl:doc>
+           <!--  &memberListParameter; -->
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="deleteImageMember-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Delete image member">
+         <para role="shortdesc">Deletes a specified tenant ID from
+            the member list of the specified image. (Since Image
+            API v2.1.)
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You must be the owner of the specified
+                  image.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Synchronous Postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified member is removed from
+                  the image members.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Troubleshooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  Even if you have correct permissions, if you are not the
+                  owner of the specified image, the request returns the HTTP
+                  403 error code. Ensure that you meet the preconditions
+                  and run the request again. If the request fails again,
+                  review your API request.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="204"/>
+      <response status="403"  xmlns="http://wadl.dev.java.net/2009/02">
+         <representation mediaType="application/xml"
+            element="csapi:forbidden"/>
+         <representation mediaType="application/json"/>
+      </response>
+   </method>
 </application>
