@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint          -->
+<!--                                                       -->
+<!--        xmllint -noent os-image-2.2.wadl               -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:imageapi="http://docs.openstack.org/image/api/v2"
+    xmlns:csapi="http://docs.openstack.org/image/api/v2">
+    <grammars>
+        <include href="xsd/api.xsd"/>
+        <include href="xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://glance.example.com/"
+        xml:id="os-metadef-tag-v2">
+        <resource id="v2" path="//v2">
+            <resource id="metadefs" path="metadefs">
+                <resource id="namespaces" path="namespaces">
+                    <resource path="{namespace}" id="namespace">
+                        <resource id="tags" type="#TagList" path="tags">
+                            <method href="#createTags-v2"/>
+                            <method href="#listTags-v2"/>
+                            <method href="#deleteAllTags-v2"/>
+                            <resource path="{name}" id="tag_name">
+                                <method href="#addTag-v2"/>
+                                <method href="#getTag-v2"/>
+                                <method href="#updateTag-v2"/>
+                                <method href="#deleteTag-v2"/>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!-- Property methods -->
+    <method name="POST" id="createTags-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create tags">
+            <para role="shortdesc">
+                Creates one or more tag definitions in a specified namespace.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-tag-create-req.json"/>
+                </wadl:doc>
+                &metadefNamespaceParameter;
+                &metadefTagsParameter;
+                &metadefTagNameParameter;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-tag-create-response.json"/>
+                </wadl:doc>
+                &metadefTagsParameter;
+                &metadefTagNameParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listTags-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="List tags">
+            <para role="shortdesc">Lists the tag definitions within
+                a namespace.</para>
+            <para>To manually paginate through the list of tags, use
+                the <code>limit</code> and <code>marker</code>
+                parameters.</para>
+            <para>To sort the results of this operation use the
+                <code>sort_key</code> and <code>sort_dir</code> parameters.
+                The API uses the natural sort order of the tag attribute
+                of the specified <code>sort_key</code> parameter.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespaceParameter;
+                &limitMarkerReqParameter;
+                &metadefTagListSortParameters; </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-tag-list-response.json"/>
+                </wadl:doc>
+                &metadefTagsParameter;
+                &metadefTagNameParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteAllTags-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete all tag definitions">
+            <para role="shortdesc">
+                Deletes all tag definitions within a namespace.
+            </para>
+            <para>
+                You cannot delete tags in a namespace with the 'protected'
+                attribute set to true (boolean); the response returns
+                the HTTP 403 status code.
+            </para>
+            <para>
+                You must first set the <code>protected</code> attribute to
+                false (boolean) on the namespace and then perform the delete.
+                The response is empty and returns the HTTP 204 status code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespaceParameter;
+            </representation>
+        </request>
+        <response status="204"/>
+        <response status="403"/>
+    </method>
+    <method name="POST" id="addTag-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Add tag definition">
+            <para role="shortdesc">
+                Adds a specified tag to the list of namespace tag definitions.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                    &metadefNamespaceParameter;
+                    &metadefTagNameParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-tag-add-response.json"/>
+                </wadl:doc> &metadefTagNameParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getTag-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get tag definition">
+            <para role="shortdesc">Gets a definition for the specified tag.
+                </para>
+            <para>The response body shows a single tag entity.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespaceParameter;
+                &metadefTagNameParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-tag-details-response.json"/>
+                </wadl:doc> &metadefTagNameParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="updateTag-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Update tag definition">
+            <para role="shortdesc">
+                Renames a specified tag definition.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="samples/metadef-tag-update-req.json"/>
+                </wadl:doc>
+                    &metadefNamespaceParameter;
+                    &metadefTagNameParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="samples/metadef-tag-update-response.json"/>
+                </wadl:doc>
+                &metadefTagNameParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteTag-v2">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete tag definition">
+            <para role="shortdesc">
+                Deletes a specified tag definition within a namespace.
+            </para>
+            <para>
+                You cannot delete tags in a namespace with the 'protected'
+                attribute set to true (boolean); the response returns
+                the HTTP 403 status code.
+            </para>
+            <para>
+                You must first set the <code>protected</code> attribute to
+                false (boolean) on the namespace and then perform the delete.
+                The response is empty and returns the HTTP 204 status code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &metadefNamespaceParameter;
+                &metadefTagNameParameter;
+            </representation>
+        </request>
+        <response status="204"/>
+        <response status="403"/>
+    </method>
+</application>
