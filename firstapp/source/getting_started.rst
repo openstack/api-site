@@ -59,7 +59,7 @@ Python        Libcloud      A Python-based library managed by the Apache Foundat
 Python        OpenStack SDK A python-based library specifically developed for OpenStack.      https://github.com/stackforge/python-openstacksdk
 Java          jClouds       A Java-based library. Like Libcloud, it's also managed by the     https://jclouds.apache.org
                             Apache Foundation and works with multiple types of clouds.
-Ruby          fog           A Ruby-based SDK for multiple clouds.                             http://www.fogproject.org
+Ruby          fog           A Ruby-based SDK for multiple clouds.                             https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
 node.js       pkgcloud      A Node.js-based SDK for multiple clouds.                          https://github.com/pkgcloud/pkgcloud
 PHP           php-opencloud A library for developers using PHP to work with OpenStack clouds. http://php-opencloud.com/
 NET Framework OpenStack SDK A .NET based library that can be used to write C++ applications.  https://www.nuget.org/packages/OpenStack-SDK-DotNet
