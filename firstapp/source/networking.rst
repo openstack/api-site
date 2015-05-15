@@ -8,12 +8,21 @@ Networking
 Prior to this chapter, all of the nodes that comprise the fractal application
 were attached to the same network.
 
-In this section of the tutorial, we introduce the Networking API,
-which will enable us to build networking topologies that separate
+In this section of the tutorial, we introduce the Networking API.
+This will enable us to build networking topologies that separate
 public traffic accessing the application from traffic between the API
-instances and the worker components, introduce load balancing for
-resilience, and create a secure backend network for communication between the
-database, webserver, file storage, and worker components.
+and the worker components.  We also introduce load balancing for
+resilience, and create a secure backend network for communication between
+the database, webserver, file storage, and worker components.
+
+.. warning:: This section assumes your cloud provider has implemented the
+             OpenStack Networking API (neutron). Users of clouds which have
+             implemented legacy networking (nova-network) will have access to
+             networking via the Compute API. Log in to the Horizon dashboard
+             and navigate to :guilabel:`Project->Access & Security->API Access`.
+             If you see a service endpoint for the Network API, your cloud
+             is most likely running the Networking API. If you are still in
+             doubt, ask your cloud provider for more information.
 
 .. only:: dotnet
 
@@ -54,10 +63,10 @@ database, webserver, file storage, and worker components.
 Working with the CLI
 ~~~~~~~~~~~~~~~~~~~~
 
-As SDKs don't currently support the OpenStack Networking API this section uses
-the commandline.
+As SDKs don't currently fully support the OpenStack Networking API, this section
+uses the command-line clients.
 
-Install the 'neutron' commandline client by following this guide:
+Install the 'neutron' command-line client by following this guide:
 http://docs.openstack.org/cli-reference/content/install_clients.html
 
 Then set up the necessary variables for your cloud in an 'openrc' file
@@ -82,13 +91,13 @@ neutron client works: ::
 Networking segmentation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In traditional datacenters, multiple network segments are
+In traditional datacenters, network segments are
 dedicated to specific types of network traffic.
 
 The fractal application we are building contains three types of
 network traffic:
 
-* public-facing wev traffic
+* public-facing web traffic
 * API traffic
 * internal worker traffic
 
@@ -122,23 +131,22 @@ would be similar to the following diagram:
         }
 
 In this network layout, we are assuming that the OpenStack cloud in which
-you have been building your application has a public
-network and tenant router that was already created in advance, either by the
-administrators of the cloud you are running the Fractal application on,
-or by you, following the instructions in the appendix.
+you have been building your application has a public network and tenant router
+that was previously created by your cloud provider or by yourself, following
+the instructions in the appendix.
 
 Many of the network concepts that are discussed in this section are
 already present in the diagram above. A tenant router provides
 routing and external access for the worker nodes, and floating IP addresses
-are already associated with each node in the Fractal application cluster
+are associated with each node in the Fractal application cluster
 to facilitate external access.
 
 At the end of this section, we will be making some slight changes to
 the networking topology by using the OpenStack Networking API to
-create a new network to which the worker nodes will attach
+create a network to which the worker nodes will attach
 (10.0.1.0/24). We will use the API network (10.0.3.0/24) to attach the
 Fractal API servers. Webserver instances have their own network
-(10.0.2.0/24), and will be accessible by fractal aficionados
+(10.0.2.0/24) and will be accessible by fractal aficionados
 worldwide, by allocating floating IPs from the public network.
 
 .. nwdiag::
@@ -178,17 +186,9 @@ With the OpenStack Networking API, the workflow for creating a network
 topology that separates the public-facing Fractals app API from the
 worker back end is as follows:
 
-* Create a network for the web server nodes.
+* Create a network and subnet for the web server nodes.
 
-* Create a network for the worker nodes. This is the private data network.
-
-* Create a subnet for the private data network to use for
-  addressing. In other words, when worker instances are created, their
-  IP addresses will come from this subnet.
-
-* Create a subnet for the web server network to use for addressing. In
-  other words, when web server instances are created, their IP
-  addresses will come from this subnet.
+* Create a network and subnet for the worker nodes. This is the private data network.
 
 * Create a router for the private data network.
 
@@ -197,16 +197,27 @@ worker back end is as follows:
 Creating networks
 ~~~~~~~~~~~~~~~~~
 
-We assume that the public network, with the subnet that floating IPs
-can be allocated from, was provisioned for you by your cloud
-operator. This is due to the nature of L3 routing, where the IP
-address range that is used for floating IPs is configured in other
-parts of the operator's network, so that traffic is properly routed.
+Most cloud providers will make a public network accessible to you.
+We will attach a router to this public network to grant Internet access
+to our instances. After also attaching this router to our internal networks, we
+will allocate floating IPs from the public network for instances which need to
+be accessed from the Internet.
 
-.. todo:: Rework the console outputs in these sections to be more
-          comprehensive, based on the outline above.
+Let's just confirm that we have a public network by listing the networks our
+tenant has access to. The public network doesn't have to be named public -
+it could be 'external', 'net04_ext' or something else - the important thing
+is it exists and can be used to reach the internet.
 
-Next, create a private data network, `worker_network`:
+::
+
+        $ neutron net-list
+        +--------------------------------------+------------------+--------------------------------------------------+
+        | id                                   | name             | subnets                                          |
+        +--------------------------------------+------------------+--------------------------------------------------+
+        | 29349515-98c1-4f59-922e-3809d1b9707c | public           | 7203dd35-7d17-4f37-81a1-9554b3316ddb             |
+        +--------------------------------------+------------------+--------------------------------------------------+
+
+Next, create a network and subnet for the workers.
 
 ::
 
@@ -225,28 +236,7 @@ Next, create a private data network, `worker_network`:
         | tenant_id       | f77bf3369741408e89d8f6fe090d29d2     |
         +-----------------+--------------------------------------+
 
-Now let's just confirm that we have both the worker network, and a
-public network by getting a list of all networks in the cloud. The
-public network doesn't have to be named public - it could be
-'external', 'net04_ext' or something else - the important thing is it
-exists and can be used to reach the internet.
-
-::
-
-        $ neutron net-list
-        +--------------------------------------+------------------+--------------------------------------------------+
-        | id                                   | name             | subnets                                          |
-        +--------------------------------------+------------------+--------------------------------------------------+
-        | 29349515-98c1-4f59-922e-3809d1b9707c | public           | 7203dd35-7d17-4f37-81a1-9554b3316ddb             |
-        | 953224c6-c510-45c5-8a29-37deffd3d78e | worker_network   |                                                  |
-        +--------------------------------------+------------------+--------------------------------------------------+
-
-Next create the subnet from which addresses will be allocated for
-instances on the worker network:
-
-::
-
-        $ neutron subnet-create --name worker_cidr worker_network 10.0.1.0/24
+        $ neutron subnet-create --name worker_subnet worker_network 10.0.1.0/24
         Created a new subnet:
         +-------------------+--------------------------------------------+
         | Field             | Value                                      |
@@ -261,12 +251,12 @@ instances on the worker network:
         | ip_version        | 4                                          |
         | ipv6_address_mode |                                            |
         | ipv6_ra_mode      |                                            |
-        | name              | worker_cidr                                |
+        | name              | worker_subnet                              |
         | network_id        | 953224c6-c510-45c5-8a29-37deffd3d78e       |
         | tenant_id         | f77bf3369741408e89d8f6fe090d29d2           |
         +-------------------+--------------------------------------------+
 
-Now create a network for the webservers ...
+Now, create a network and subnet for the webservers.
 
 ::
 
@@ -286,11 +276,7 @@ Now create a network for the webservers ...
     | tenant_id       | 0cb06b70ef67424b8add447415449722     |
     +-----------------+--------------------------------------+
 
-and a subnet from which they can pull IP addresses:
-
-::
-
-    $ neutron subnet-create webserver_network 10.0.2.0/24
+    $ neutron subnet-create --name webserver_subnet webserver_network 10.0.2.0/24
     Created a new subnet:
     +-------------------+--------------------------------------------+
     | Field             | Value                                      |
@@ -305,12 +291,12 @@ and a subnet from which they can pull IP addresses:
     | ip_version        | 4                                          |
     | ipv6_address_mode |                                            |
     | ipv6_ra_mode      |                                            |
-    | name              |                                            |
+    | name              | webserver_subnet                           |
     | network_id        | 28cf9704-2b43-4925-b23e-22a892e354f2       |
     | tenant_id         | 0cb06b70ef67424b8add447415449722           |
     +-------------------+--------------------------------------------+
 
-Next, create the network for the API servers:
+Next, create a network and subnet for the API servers.
 
 ::
 
@@ -330,11 +316,7 @@ Next, create the network for the API servers:
     | tenant_id       | 0cb06b70ef67424b8add447415449722     |
     +-----------------+--------------------------------------+
 
-Finally, create the subnet for the API network:
-
-::
-
-    $ neutron subnet-create api_network 10.0.3.0/24
+    $ neutron subnet-create --name api_subnet api_network 10.0.3.0/24
     Created a new subnet:
     +-------------------+--------------------------------------------+
     | Field             | Value                                      |
@@ -349,15 +331,14 @@ Finally, create the subnet for the API network:
     | ip_version        | 4                                          |
     | ipv6_address_mode |                                            |
     | ipv6_ra_mode      |                                            |
-    | name              |                                            |
+    | name              | api_network                                |
     | network_id        | 5fe4045a-65dc-4672-b44e-1f14a496a71a       |
     | tenant_id         | 0cb06b70ef67424b8add447415449722           |
     +-------------------+--------------------------------------------+
 
 Now that you've got the networks created, go ahead and create two
 Floating IPs, for web servers. Ensure that you replace 'public' with
-the name of the public/external network set up by your cloud
-administrator.
+the name of the public/external network offered by your cloud provider.
 
 ::
 
@@ -395,20 +376,13 @@ administrator.
           "No more IP addresses available on network", contact your cloud
           administrator. You may also want to ask about IPv6 :)
 
-Next we'll need to enable OpenStack to route traffic appropriately.
 
-Creating the SNAT gateway
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Connecting to the Internet
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because we are using cloud-init and other tools to deploy and
-bootstrap the application, the Fractal app worker instances require
-Source Network Address Translation (SNAT). If the Fractal app worker
-nodes were deployed from a "golden image" that had all the software
-components already installed, there would be no need to create a
-neutron router to provide SNAT functionality.
-
-.. todo:: nickchase doesn't understand the above paragraph. Why
-          wouldn't it be required?
+Most instances will need access to the Internet.  The instances in our Fractals
+App are no exception! We'll add routers to pass traffic between the various
+networks we are using.
 
 ::
 
@@ -426,13 +400,12 @@ neutron router to provide SNAT functionality.
         | tenant_id             | f77bf3369741408e89d8f6fe090d29d2     |
         +-----------------------+--------------------------------------+
 
-After creating the router, you need to set up the gateway for the
-router. For outbound access we will set the router's gateway as the
-public network.
+We tell OpenStack which network should be used for Internet access by
+specifying an external gateway for our router.
 
 ::
 
-    $ neutron router-gateway-set worker_router public
+    $ neutron router-gateway-set tenant_router public
     Set gateway for router tenant_router
 
     $ neutron router-show tenant_router
@@ -450,27 +423,18 @@ public network.
             +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
-The final, most important step is to create an interface on the worker
-network and attach it to the router you just created.
+Now, attach our router to the worker, api, and webserver subnets.
 
 ::
 
-        $ neutron router-interface-add tenant_router worker_cidr
-        Added interface 0d8bd523-06c2-4ddd-8b33-8726af2daa0a to router worker_router.
+        $ neutron router-interface-add tenant_router worker_subnet
+        Added interface 0d8bd523-06c2-4ddd-8b33-8726af2daa0a to router tenant_router.
 
+        $ neutron router-interface-add tenant_router api_subnet
+        Added interface 40a7f9a7-0922-4a3d-80de-078222476ba0 to router tenant_router.
 
-::
-
-        $ neutron net-list
-        +--------------------------------------+----------------+--------------------------------------------------+
-        | id                                   | name           | subnets                                          |
-        +--------------------------------------+----------------+--------------------------------------------------+
-        | 29349515-98c1-4f59-922e-3809d1b9707c | public         | 7203dd35-7d17-4f37-81a1-9554b3316ddb             |
-        | 953224c6-c510-45c5-8a29-37deffd3d78e | worker_network | a0e2ebe4-5d4e-46b3-82b5-4179d778e615 10.0.1.0/24 |
-        +--------------------------------------+----------------+--------------------------------------------------+
-
-.. todo::
-    Wire up the tenant router to the api_network and webserver_network
+        $ neutron router-interface-add tenant_router webserver_subnet
+        Added interface e07271dc-816e-4f62-ab25-3aff155d7faf to router tenant_router.
 
 Booting a worker
 ----------------
