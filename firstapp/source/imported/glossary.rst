@@ -754,6 +754,10 @@ OpenStack contribution process.
 
       Configuration Management Database.
 
+   congress
+
+      OpenStack project that provides the Governance service.
+
    command filter
 
       Lists allowed commands within the Compute rootwrap
@@ -1575,6 +1579,13 @@ OpenStack contribution process.
       image is created and then used by all nodes without
       modification.
 
+   Governance service
+
+      OpenStack project to provide governance as a service across
+      any collection of cloud services in order to monitor,
+      enforce, and audit policy over dynamic infrastructure. The
+      code name for the project is congress.
+
    Graphic Interchange Format (GIF)
 
       A type of image file that is commonly used for animated images
@@ -2056,6 +2067,12 @@ OpenStack contribution process.
       services wishing to enable encryption features. The code name
       of the project is barbican.
 
+   Key-Value Store as a Service
+
+      OpenStack project that provides a key-value store for
+      applications running in an OpenStack cloud. The code name
+      for the project is magnetoDB.
+
    keystone
 
       The project that provides OpenStack Identity services.
@@ -2159,6 +2176,11 @@ OpenStack contribution process.
       Provides a method of allocating space on mass-storage
       devices that is more flexible than conventional partitioning
       schemes.
+
+   magnetoDB
+
+      OpenStack project that provides a Key-Value Store as a
+      Service for OpenStack users.
 
    magnum
 
