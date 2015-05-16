@@ -144,9 +144,9 @@ Accept: application/json</programlisting>
                     <code>external_gateway_info</code> attribute in
                 the request body, as follows:</para>
             <programlisting language="json">{
-   "router":{
-      "external_gateway_info":{
-         "network_id":"8ca37218-28ff-41cb-9b10-039601ea7e6b"
+   "router": {
+      "external_gateway_info": {
+         "network_id": "8ca37218-28ff-41cb-9b10-039601ea7e6b"
       }
    }
 }</programlisting>
@@ -271,55 +271,71 @@ Accept: application/json</programlisting></wadl:doc>
     <method name="PUT" id="addRouterInterface">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Add interface to router">
-            <para role="shortdesc">Adds an internal interface to a
-                logical router.</para>
-            <para>This operation attaches a subnet to an internal
-                router interface. You must specify either a subnet or
-                port ID in the request body. If you specify both IDs,
-                the operation returns a <code>400 Bad Request</code>
-                error.</para>
-            <para>If you specify a subnet ID in the request body, the
-                gateway IP address for the subnet is used to create
-                the router interface.</para>
-            <para>If you specify a port ID in the request body, the IP
-                address associated with the port is used to create the
-                router interface.</para>
-            <para>The operation returns a <code>400 Bad Request</code>
-                error if several IP addresses are associated with the
-                specified port, or if no IP address is associated with
-                the port.</para><para>The operation returns a
-                    <code>409 Conflict</code> error if the port is
-                already used.</para>
-            <para>The port ID that is returned by this operation can
-                either be the same ID passed in the request body or
-                the ID of a new port created by this operation to
-                attach the specified subnet to the router. After you
-                run this operation, the device ID of this port is set
-                to the router ID, and the <code>device_owner</code>
-                attribute is set to
-                    <code>network:router_interface</code>, as shown in
-                this example:</para>
-            <programlisting language="json">{
-   "port":{
-      "status":"ACTIVE",
-      "name":"",
-      "admin_state_up":true,
-      "network_id":"5307648b-e836-4658-8f1a-ff7536870c64",
-      "tenant_id":"6b96ff0cb17a4b859e1e575d221683d3",
-      "device_owner":"network:router_interface",
-      "mac_address":"fa:16:3e:f7:d1:9c",
-      "fixed_ips":[
-         {
-            "subnet_id":"a2f1f29d-571b-4533-907f-5803ab96ead1",
-            "ip_address":"10.1.1.1"
-         }
-      ],
-      "id":"3a44f4e5-1694-493a-a1fb-393881c673a4",
-      "device_id":"7177abc4-5ae9-4bb7-b0d4-89e94a4abf3b"
-   }
-}</programlisting>
+            <para role="shortdesc">
+                Adds an internal interface to a logical router.
+            </para>
+            <para>
+                Attaches a subnet to an internal router interface.
+            </para>
+            <para>
+                Specify a subnet ID or port ID in the request body:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Subnet ID. The gateway IP address for the subnet is
+                        used to create the router interface.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Port ID. The IP address associated with the port is
+                        used to create the router interface.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>
+                If you specify both IDs, the operation returns a <code>400 Bad
+                Request</code> error.
+            </para>
+            <para>
+                If the port is already used, the operation returns a <code>409
+                Conflict</code> error.
+            </para>
+            <para>
+                The port ID that is returned by this operation can be either:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The same ID that is passed in the request body.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The ID of a port that is created by this operation to
+                        attach the specified subnet to the router.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>
+                After you run this operation:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The device ID of this port is set to the router ID.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        The <code>device_owner</code> attribute is set to
+                        <code>network:router_interface</code>.
+                    </para>
+                </listitem>
+            </itemizedlist>
         </wadl:doc>
-        <request> &subnet-idParameter; &port-idParameter;
+        <request>
             <representation
                 mediaType="application/json" element="csapi:router">
                 <wadl:doc
@@ -330,23 +346,29 @@ Accept: application/json</programlisting></wadl:doc>
                         href="api_samples/router-add-interface.req.json"
                     />
                 </wadl:doc>
+                &subnet-idParameter; &port-idParameter;
             </representation>
         </request>
-        <response status="200"> &subnet-idParameter;
-            &tenant-idParameter; &port-idParameter;
-            &idParameter; <representation
+        <response status="200">
+            <representation
                 mediaType="application/json" element="csapi:router">
                 <wadl:doc
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code
-                        href="api_samples/router-add-interface-resp.json"
-                    />
+                    <xsdxt:code href="api_samples/router-add-interface-resp.json"/>
                 </wadl:doc>
+                &subnet-idParameter;
+                &tenant-idParameter;
+                &port-idParameter;
+                &idParameter;
             </representation>
-        </response> &fault400; &fault401; &fault404;
-        &fault409;</method>
+        </response>
+        &fault400;
+        &fault401;
+        &fault404;
+        &fault409;
+    </method>
     <method name="PUT" id="removeRouterInterface">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Remove interface from router">
