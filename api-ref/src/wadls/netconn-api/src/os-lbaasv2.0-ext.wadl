@@ -78,7 +78,7 @@
     <method name="GET" id="listLoadBalancers">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List load balancers">
             <para role="shortdesc">Lists load balancers.</para>
-            <para>This operation lists all load
+            <para>Lists all load
                 balancers that are associated with your tenant account.</para>
             <para>This operation does not require a request body.</para>
             <para>This operation returns a response body. It returns a
@@ -579,22 +579,35 @@
                 <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
                 <listitem><para><code>weight</code>: The default is 1.</para></listitem>
             </itemizedlist>
-            <para>If the request cannot be fulfilled due to insufficient or
-            invalid data, an HTTP 400 (Bad Request) error response is returned
-            with information about the nature of the failure in the response
-            body. Failures in the validation process are non-recoverable and
-            require the caller to correct the cause of the failure and POST
-            the request again.</para>
-            <para>You can configure all documented member features at creation time by specifying the additional elements or attributes in the request.</para>
-            <para>Users with an administrative role can create members on behalf of other tenants by specifying a <code>tenant_id</code> attribute that is different than their own.</para>
-            <para>You cannot update a member if the load balancer to which it is attempting to attach does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
-            <para>Example: Add a member to a pool</para>
+            <para>
+                If you omit the <code>subnet_id</code> parameter, LBaaS
+                uses the <code>vip_subnet_id</code> parameter value for the subnet ID.
+            </para>
+            <para>
+                If the request fails due to incorrect data, the response
+                returns an HTTP 400 (Bad Request) error with information about
+                reason for the failure. Validation errors require that you
+                correct the error and submit the request again.
+            </para>
+            <para>
+                To configure all documented member features at creation time,
+                specify additional elements or attributes in the request.
+            </para>
+            <para>
+                Users with an administrative role can create members on behalf
+                of other tenants by specifying a <code>tenant_id</code>
+                attribute that is different than their own.
+            </para>
+            <para>
+                To update a member, the load balancer must have a
+                <code>provisioning_status</code> of <code>ACTIVE</code>.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Add member to a pool: JSON request">
                     <xsdxt:code href="api_samples/Member-post-req.json"/>
-                </wadl:doc> &memberCreateRequestParams; </representation>
+                </wadl:doc> &memberCreatev2RequestParams; </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
@@ -605,7 +618,12 @@
     <method name="GET" id="listMembers">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List pool members">
             <para role="shortdesc">Lists members of a specified pool.</para>
-            <para>This operation lists all members associated with a pool that is associated with your tenant account. The list of members includes only members that belong to the pool object identified by <code>pool_id</code>.</para>
+            <para>
+                Lists all members that are associated with a pool that is
+                associated with your tenant account. The list of members
+                includes only members that belong to the pool object
+                identified by <code>pool_id</code>.
+            </para>
             <para>This operation does not require a request body.</para>
             <para>This operation returns a response body. It returns a (potentially empty) list. Each element in the list is a member that can contain the following attributes:</para>
             <itemizedlist>
@@ -786,8 +804,8 @@
     <method name="PUT" id="updateHealthMonitor">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update health monitor">
             <para role="shortdesc">Updates a specified health monitor.</para>
-            <para>This operation updates the attributes of the specified health monitor. Upon successful validation of the request, the service will return a 202 (Accepted) response code.</para>
-            <para>The update operation allows the caller to change one or more of the following health monitor attributes:</para>
+            <para>This operation updates the attributes of the specified health monitor. Upon successful validation of the request, the service returns the 202 (Accepted) response code.</para>
+            <para>The update operation enables you to change one or more health monitor attributes:</para>
             <itemizedlist>
                 <listitem><para><code>delay</code></para></listitem>
                 <listitem><para><code>timeout</code></para></listitem>
