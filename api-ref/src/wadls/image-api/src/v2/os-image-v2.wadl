@@ -42,6 +42,14 @@
                <method href="#getImage-v2"/>
                <method href="#updateImage-v2"/>
                <method href="#deleteImage-v2"/>
+               <resource id="actions" path="actions">
+                  <resource id="reactivate" path="reactivate">
+                     <method href="#reactivateImage-v2"/>
+                  </resource>
+                  <resource id="deactivate" path="deactivate">
+                     <method href="#deactivateImage-v2"/>
+                  </resource>
+               </resource>
                <resource id="file" path="file">
                   <method href="#storeImageFile-v2"/>
                   <method href="#getImageFile-v2"/>
@@ -426,6 +434,65 @@
             &location_urlParameter; &metadataParameter;
             &propertiesParameter; &direct_urlParameter; &selfParameter;
             &fileParameter; &image_schemaParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="reactivateImage-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Reactivate image">
+         <para role="shortdesc">Reactivates a specified image.
+            (Since Image API v2.0.)
+         </para>
+         <para>
+            The reactivate operation returns an error if the image status is
+            not <code>active</code> or <code>deactivated</code>.
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist.</para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-details-response.json"/>
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="deactivateImage-v2">
+      <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+         title="Deactivate image">
+         <para role="shortdesc">Deactivates a specified image.
+            (Since Image API v2.0.)
+         </para>
+         <para>
+            If you try to download a deactivated image, the 403 Forbidden
+            error is returned. Also, image locations are not visible for
+            deactivated images unless the user is an administrative user.
+         </para>
+         <para>
+            The deactivate operation returns an error if the image status is
+            not <code>active</code> or <code>deactivated</code>.
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified image must exist.</para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code
+                  href="samples/image-details-deactivate-response.json"/>
+            </wadl:doc>
          </representation>
       </response>
    </method>
