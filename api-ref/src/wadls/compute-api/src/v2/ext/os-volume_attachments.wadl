@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2011-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2011-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -93,34 +93,59 @@
                 server.</para>
             <para>Preconditions</para>
             <itemizedlist>
-                <listitem><para>You can attach a volume to a server with an
-                <code>ACTIVE</code>, <code>PAUSED</code>,
-                <code>SHUTOFF</code>, <code>VERIFY_RESIZE</code>, or
-                <code>SOFT_DELETED</code> status.</para></listitem>
-                <listitem><para>You can attach a volume to a server with
-                a status that is not locked.</para></listitem>
-                <listitem><para>You can attach a volume when its status
-                is <code>available</code>.</para></listitem>
-                <listitem><para>You can attach a volume when its volume
-                type supports volume attaching.</para></listitem>
+                <listitem>
+                    <para>
+                        You can attach a volume to a server with an
+                        <code>ACTIVE</code>, <code>PAUSED</code>,
+                        <code>SHUTOFF</code>, <code>VERIFY_RESIZE</code>, or
+                        <code>SOFT_DELETED</code> status.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        You can attach a volume to a server with a status that
+                        is not locked.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        You can attach a volume when its status is
+                        <code>available</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        You can attach a volume when its volume type supports
+                        volume attaching.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Asynchronous Postconditions</para>
             <itemizedlist>
-                <listitem><para>After successfully attaching a volume
-                to a server, the volume's status changes to
-                <code>in-use</code>.</para></listitem>
-                <listitem><para>You can see the attached volume when you
-                log in to the server.</para></listitem>
+                <listitem>
+                    <para>
+                        After successfully attaching a volume to a server, the
+                        volume status changes to <code>in-use</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        You can see the attached volume when you
+                        log in to the server.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
                 <listitem>
-                    <para>If the volume's status remains in
-                    <code>available</code> state, the request failed. Ensure that you
-                    meet the preconditions and run the request again. If the
-                    request fails again,
-                    investigate the server and the volume status.</para>
-            </listitem>
+                    <para>
+                        If the volume status remains in <code>available</code>
+                        state, the request failed. Ensure that you meet the
+                        preconditions and run the request again. If the
+                        request fails again, investigate the server and the
+                        volume status.
+                    </para>
+                </listitem>
             </itemizedlist>
         </wadl:doc>
         <request>
@@ -151,11 +176,14 @@
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Name of the device such as, <code>/dev/vdb</code>.
-                            Omit this parameter or set it to null for auto-assignment, if
-                            supported. If you specify this parameter, the device must not
-                            exist in Guest OS.
-                    .</para></wadl:doc>
+                        <para>
+                            Name of the device such as, <code>/dev/vdb</code>.
+                            Omit or set this parameter to null for auto-assignment,
+                            if supported. If you specify this
+                            parameter, the device must not exist in the guest
+                            operating system.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="volumeAttachment" style="template"
                     type="xsd:string">
@@ -259,14 +287,15 @@
         &getFaults; &postPutFaults; &inProgressFault; </method>
     <method name="DELETE" id="deleteVolumeAttachment">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete volume attachment">
-            <para role="shortdesc">Deletes the specified volume
-                attachment from a specified server.</para>
+            title="Detach volume">
+            <para role="shortdesc">
+                Detaches the specified volume from a specified server.
+            </para>
             <para>Preconditions</para>
             <itemizedlist>
                 <listitem><para>The specified volume must be attached
                 to the server.</para></listitem>
-                <listitem><para>You can detach a volume when the server's
+                <listitem><para>You can detach a volume when the server
                 status is <code>ACTIVE</code>, <code>PAUSED</code>,
                 <code>SHUTOFF</code>, <code>VERIFY_RESIZE</code>, or
                 <code>SOFT_DELETED</code>.</para></listitem>
@@ -274,6 +303,11 @@
                 is <code>in-use</code>.</para></listitem>
                 <listitem><para>You can detach a volume from a server with
                 a status that is not locked.</para></listitem>
+                <listitem>
+                    <para>
+                        You cannot detach a root device volume.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Asynchronous Postconditions</para>
             <itemizedlist>
@@ -286,12 +320,21 @@
             <para>Troubleshooting</para>
             <itemizedlist>
                 <listitem>
-                    <para>If the volume's status remains in
-                    <code>available</code> state, the request failed. Ensure that you
-                    meet the preconditions and run the request again. If the
-                    request fails again, investigate whether another operation is
-                    running that causes a race condition.</para>
-            </listitem>
+                    <para>
+                        If the volume status remains in <code>available</code>
+                        state, the request failed. Ensure that you meet the
+                        preconditions and run the request again. If the
+                        request fails again, investigate whether another
+                        operation is running that causes a race condition.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        If you attempt to detach a root device volume, this
+                        operation returns the <code>403 HTTP Forbidden</code>
+                        error code.
+                    </para>
+                </listitem>
             </itemizedlist>
         </wadl:doc>
         <request>
