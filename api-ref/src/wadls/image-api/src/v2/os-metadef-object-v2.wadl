@@ -40,6 +40,14 @@
                             <method href="#createObject-v2"/>
                             <method href="#listObjects-v2"/>
                             <resource path="{object_name}" id="object_name">
+                                &metadefNamespace_idParameter;
+                                <param xmlns="http://wadl.dev.java.net/2009/02" name="object_name"
+                                       style="template" required="true" type="xsd:string">
+                                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                                       <para>The name of the object.</para>
+                                    </wadl:doc>
+                                </param>
                                 <method href="#getObject-v2"/>
                                 <method href="#updateObject-v2"/>
                                 <method href="#deleteObject-v2"/>
@@ -160,30 +168,36 @@
             title="List objects">
             <para role="shortdesc">Lists object definitions within
                 a namespace.</para>
-            <para>Returns a subset of the larger collection of namespaces
-                and a link that you can use to get the next set of
-                namespaces. You should always check for the presence of a
-                <code>next</code> link and use it as the URI in a
-                subsequent HTTP GET request. You should follow this
-                pattern until a <code>next</code> link is no longer
-                provided. The next link preserves any query parameters
-                that you send in your initial request. You can use the
-                <code>first</code> link to jump back to the first
-                page of the collection. If you prefer to paginate
-                through namespaces manually, use the <code>limit</code>
-                and <code>marker</code> parameters.</para>
-            <para>The list operation accepts <code>resource_types</code> and
+            <para>
+                Returns a subset of the larger collection of namespaces and a
+                link that you can use to get the next set of namespaces. You
+                should always check for the presence of a <code>next</code>
+                link and use it as the URI in a subsequent HTTP GET request.
+                You should follow this pattern until a <code>next</code> link
+                is no longer provided. The next link preserves any query
+                parameters that you send in your initial request. You can use
+                the <code>first</code> link to jump back to the first page of
+                the collection. If you prefer to paginate through namespaces
+                manually, use the <code>limit</code> and <code>marker</code>
+                parameters.
+            </para>
+            <para>
+                The list operation accepts <code>resource_types</code> and
                 <code>visibility</code> as query parameters that let you
-                filter the results of the returned collection.</para>
-            <para>For example, sending a <code>resource_types</code> filter
-                of <code>OS::Glance::Image,OS::Nova::Flavor</code> filters
-                the namespaces to include only namespaces that are associated
-                to the given resource types.</para>
-            <para>You can sort the results of this operation by using
-                the <code>sort_key</code> and <code>sort_dir</code>
-                parameters. The API uses the natural sorting of
-                whatever namespace attribute is provided as the
-                <code>sort_key</code>.</para>
+                filter the results of the returned collection.
+            </para>
+            <para>
+                For example, sending a <code>resource_types</code> filter of
+                <code>OS::Glance::Image,OS::Nova::Flavor</code> filters the
+                namespaces to include only namespaces that are associated to
+                the given resource types.
+            </para>
+            <para>
+                You can sort the results of this operation by using the
+                <code>sort_key</code> and <code>sort_dir</code> parameters.
+                The API uses the natural sorting of whatever namespace
+                attribute is provided as the <code>sort_key</code>.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -222,19 +236,22 @@
             </representation>
         </response>
     </method>
-    <method name="PUT" xml:id="updateObject-v2">
+    <method name="PUT" id="updateObject-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update object definition">
             <para role="shortdesc">
-                Updates a specified object definition.
+                Updates a specified object definition in a specified
+                namespace.
             </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/json">
+            <representation mediaType="application/json"
+                element="image">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="samples/metadef-object-update-req.json"/>
-                </wadl:doc> &metadefNamespace_idParameter; </representation>
+                </wadl:doc>
+            </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -265,7 +282,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                &metadefNamespace_idParameter; </representation>
+                 </representation>
         </request>
         <response status="204"/>
         <response status="403"/>
