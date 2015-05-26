@@ -288,11 +288,80 @@
    <method name="PATCH" id="updateImage-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Update image">
-         <para role="shortdesc">Updates a specified image. (Since
-            Image API v2.0.)
+         <para role="shortdesc">
+            Updates a specified image. (Since Image API v2.0.)
          </para>
-         <para>Request body must conform to one of the following
-            media types:
+         <para>
+            Depending on the referenced target location, this operation
+            performs one of the following functions:
+         </para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  The target location is an array index. A new value is
+                  inserted into the array at the specified index.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  The target location is an object member that does not
+                  exist. A new member is added to the object.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  The target location is an object member that exists.
+                  The member value is replaced.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>
+            The operation object MUST contain a <code>value</code> member that
+            specifies the value to add. For example:
+         </para>
+<programlisting language="json">{
+   "op": "add",
+   "path": "/a/b/c",
+   "value": [
+      "foo",
+      "bar"
+   ]
+}</programlisting>
+         <para>
+            The target location MUST reference one of these values:
+         </para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  The root of the target document. The specified value is the
+                  entire content of the target document.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  A member to add to an object. The specified value is added
+                  to that object at the specified location. If the member
+                  already exists, it is replaced by the specified value.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  An element to add to the array. The specified value is added
+                  to the array at the specified location. Any element that is
+                  at or above the specified index is shifted one position to
+                  the right. The specified index MUST NOT be greater than the
+                  number of elements in the array. If the hyphen (-) character
+                  is used to index the end of the array (see [RFC6901]), the
+                  value is appended to the array.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>
+            Because this operation adds to existing objects and arrays, its
+            target location often does not exist.
+         </para>
+         <para>
+            The request body must conform to one of the following media types:
          </para>
          <itemizedlist spacing="compact">
             <listitem>
@@ -304,51 +373,52 @@
                </para>
             </listitem>
          </itemizedlist>
-         <para>You can also use the &PATCH; method to add or remove
-            image properties.
+         <para>
+            You can also use the &PATCH; method to add or remove image
+            properties.
          </para>
          <para>
-            For information about the &PATCH; method and the available
-            media types, see
-            <link
-               xlink:href="http://specs.openstack.org/openstack/glance-specs/specs/api/v2/http-patch-image-api-v2.html">
-            Image
-            API v2 HTTP PATCH media types</link>.
+            For information about the &PATCH; method and the available media
+            types, see <link
+            xlink:href="http://specs.openstack.org/openstack/glance-specs/specs/api/v2/http-patch-image-api-v2.html">Image API v2
+            HTTP PATCH media types</link>.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
             <listitem>
-               <para>When adding or replacing a new location
-                  to the specified image, you must set the <code>disk_format</code>
-                  and <code>container_format</code> parameters in the image.
+               <para>
+                  When you add or replace a location to the specified image,
+                  you must set the <code>disk_format</code> and
+                  <code>container_format</code> parameters in the image.
                </para>
             </listitem>
             <listitem>
-               <para>When locations of the specified image
-                  is replaced by replacing operation, the old location
-                  must be set in the image on ahead.
+               <para>
+                  When you replace a location, a location must be previously
+                  set in the image.
                </para>
             </listitem>
          </itemizedlist>
          <para>Synchronous Postconditions</para>
          <itemizedlist>
             <listitem>
-               <para>With correct permissions, you can see
-                  the updated values of the image's attributes.
-               </para>
-            </listitem>
-            <listitem>
-               <para>With correct permissions, you can see
-                  the image status as <code>active</code> through API calls
-                  after adding a location to the image which had no
-                  location.
+               <para>
+                  With correct permissions, you can view the updated values of
+                  the attributes of the image.
                </para>
             </listitem>
             <listitem>
                <para>
-                  With correct permissions, you can see the image status as
-                  <code>queued</code> through API calls after removing all
-                  locations from the image.
+                  After you add a location to an image that had no location
+                  and with correct permissions, you can use API calls to view
+                  the image status as <code>active</code>.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  After you remove all locations from the image and with
+                  correct permissions, you can use API calls to view the image
+                  status as <code>queued</code>.
                </para>
             </listitem>
          </itemizedlist>
@@ -356,10 +426,10 @@
          <itemizedlist>
             <listitem>
                <para>
-                  If you cannot update locations, your request might lack
-                  some information. Ensure that you meet the preconditions
-                  and run the request again. If the request fails again,
-                  review your API request.
+                  If you cannot update locations, your request might
+                  be missing some information. Make sure that you meet
+                  the preconditions and run the request again. If the
+                  request fails again, review your API request.
                </para>
             </listitem>
          </itemizedlist>
