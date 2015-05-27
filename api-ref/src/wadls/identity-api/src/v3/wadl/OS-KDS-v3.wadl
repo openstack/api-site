@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!-- Import Common XML Entities                            -->
+<!--                                                       -->
+<!-- You can resolve the entities with xmllint              -->
+<!--                                                       -->
+<!-- xmllint -noent OS-KDS.wadl                         -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+<!ENTITY % common SYSTEM "common.ent">
+%common;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:identity="http://docs.openstack.org/identity/api/v3"
+    xmlns:capi="http://docs.openstack.org/common/api/v1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xsi:schemaLocation="http://docs.openstack.org/identity/api/v3 ../xsd/api.xsd
+    http://docs.openstack.org/common/api/v1.0 ../xsd/api-common.xsd
+    http://wadl.dev.java.net/2009/02 http://www.w3.org/Submission/wadl/wadl.xsd
+    ">
+    <grammars>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
+    </grammars>
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <!-- We should use SSL in production -->
+    <resources base="http://localhost:35357" xml:id="OS-KDS-v3">
+        <!-- FYI: double slash needed in path to get a single slash to display -->
+        <resource id="v1" path="//v1">
+            <resource id="keys" path="keys">
+                <resource id="party-name" path="{name}">
+                    <param name="name" style="template"
+                        type="csapi:string" required="true">
+                        <wadl:doc xml:lang="EN"
+                            xmlns="http://docbook.org/ns/docbook"
+                            >
+                            <para>
+                                The name of the party that is associated with
+                                the key.
+                            </para>
+                        </wadl:doc>
+                    </param>
+                    <param name="key" style="plain"
+                        type="xsd:string" required="true">
+                        <wadl:doc xml:lang="EN"
+                            xmlns="http://docbook.org/ns/docbook">
+                            <para>
+                                A base64-encoded 128-bit long cryptographic
+                                random key.
+                            </para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#createKey"/>
+                    <method href="#deleteKey"/>
+                </resource>
+            </resource>
+            <resource id="tickets" path="tickets">
+                <method href="#generateTicket"/>
+            </resource>
+            <resource id="groups" path="groups">
+                <method href="#getGroupKey"/>
+                <resource id="group-name" path="{name}">
+                    <param name="name" style="template"
+                        type="csapi:string" required="true">
+                        <wadl:doc xml:lang="EN"
+                            xmlns="http://docbook.org/ns/docbook"
+                            >
+                            <para>
+                                The name of the group.
+                            </para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#createGroup"/>
+                    <method href="#deleteGroup"/>
+               </resource>
+           </resource>
+       </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <!--Consumers Operations-->
+    <method name="POST" id="createKey">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create key">
+            <para role="shortdesc">Creates a long-term key in the KDS.</para>
+            <para>
+                The request body contains the key.
+            </para>
+            <para>
+                The response shows the key name and generation value.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-KDS/KeyCreateRequest.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-KDS/KeyCreateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="name" style="plain"
+                        type="xsd:string" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            The name of the party that is associated with the
+                            key.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="generation" style="plain"
+                        type="xsd:int" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            A unique integer value that identifies the
+                            key. The generation value changes only if you
+                            set a new key. If the request sets the key to
+                            the same value that already exists, the
+                            response shows the existing generation value,
+                            which makes the request idempotent.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response> &commonFaults;
+    </method>
+    <method name="DELETE" id="deleteKey">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete key">
+            <para role="shortdesc">
+                Deletes a long-term key from the KDS.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="POST" id="generateTicket">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Generate ticket">
+            <para role="shortdesc">
+                Generates a ticket to facilitate messaging between a source
+                and destination.
+            </para>
+            <para>
+                A generate ticket request contains metadata that you specify
+                as a base64-encoded JSON object and a signature.
+            </para>
+            <para>
+                The response shows the metadata, encrypted ticket, and
+                signature.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-KDS/TicketGenerateRequest.json"/>
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="metadata" style="plain"
+                        type="xsd:string" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            A base64-encoded JSON object that contains
+                            these key and value pairs:
+                        </para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <code>source</code>. The identity who
+                                    is requesting a ticket.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>destination</code>. The target
+                                    for which the ticket will be valid.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>timestamp</code>. Current
+                                    timestamp from the requester.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>nonce</code>. Random single-use
+                                    data.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                        <para>
+                            The timestamp and nonce are required to prevent
+                            replay attacks.
+                        </para>
+                        <para>For example:</para>
+<programlisting language="json">{
+    "source": "scheduler.host.example.com",
+    "destination": "compute.host.example.com",
+    "timestamp": "2012-03-26T10:01:01.720000",
+    "nonce": 1234567890
+}</programlisting>
+                    </wadl:doc>
+                </param>
+                <param name="signature" style="plain"
+                       type="xsd:string" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            A base64-encoded HMAC signature over the
+                            base64-encoded request metadata object. For
+                            example:
+                        </para>
+                        <para>
+                            <code>Base64encode(HMAC(SigningKey,
+                            RequestMetadata))</code>
+                        </para>
+                        <para>
+                            The long-term key of the requester is used for the
+                            signature. When the request is received, the KDS
+                            must verify the signature. To do so, the KDS must
+                            access the <code>source</code> from the request
+                            metadata to look up the associated long-term key
+                            to use to verify the signature. The KDS should not
+                            access any other data contained in the request
+                            metadata before verifying the signature. If the
+                            KDS fails to verify the signature, it risks
+                            issuing a ticket to a party who is impersonating
+                            the source.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="generation" style="plain"
+                    type="xsd:int" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            A unique integer value that identifies the key. The
+                            generation value changes only if you set a new key. If
+                            the request sets the key to the same value that
+                            already exists, the response shows the existing
+                            generation value, which makes the request idempotent.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-KDS/TicketGenerateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="metadata" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            A base64-encoded JSON object that contains
+                            these key and value pairs:
+                        </para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <code>source</code>. The identity who
+                                    requests the ticket.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>destination</code>. The target
+                                    for which the ticket will be valid.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>timestamp</code>. Current
+                                    timestamp from the requester.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>nonce</code>. Random single-use
+                                    data.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                        <para>
+                            The timestamp and nonce are required to prevent
+                            replay attacks.
+                        </para>
+                        <para>For example:</para>
+<programlisting language="json">{
+    "source": "scheduler.host.example.com",
+    "destination": "compute.host.example.com",
+    "timestamp": "2012-03-26T10:01:01.720000",
+    "nonce": 1234567890
+}</programlisting>
+                </wadl:doc>
+            </param>
+            <param name="ticket" style="plain"
+                    type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>
+                        The ticket is encrypted with the long-term key of
+                        the source and contains a base64-encoded JSON
+                        object containing the following key and value
+                        pairs:
+                    </para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                <code>skey</code>. The newly-generated
+                                base64-encoded message signing key.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <code>ekey</code>. The newly-generated
+                                base64-encoded message encryption key.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <code>esek</code>. Encrypted signing and
+                                encryption key pair for the receiver.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                    <para>For example:</para>
+                    <programlisting language="json">{
+    "skey": "ZjhkuYZH8y87rzhgi7...",
+    "ekey": "Fk8yksa8z8zKtakc8s...",
+    "esek": "KBo8fajfo8ysad5hq2..."
+}</programlisting>
+                    <para>
+                        The long-term key of the destination is used to
+                        encrypt the <code>esek</code> value. The
+                        <code>esek</code> value contains a base64-encoded
+                        JSON object that contains the following key and
+                        value pairs:
+                    </para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                <code>key</code>. The base64-encoded
+                                random key that is used to generate the signing and
+                                encryption keys.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <code>timestamp</code>. Timestamp when the
+                                key was created.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <code>ttl</code>. An integer value that
+                                specifies the validity length of the key,
+                                in seconds.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                    <para>For example:</para>
+                    <programlisting language="json">{
+    "key": "Afa8sad2hgsd7asv7ad...",
+    "timestamp": "2012-03-26T10:01:01.720000",
+    "ttl": 28800
+}</programlisting>
+                    <para>
+                        The <code>key</code> and <code>timestamp</code>
+                        values are used as inputs to the HKDF
+                        <code>expand</code> function to generate the
+                        signing and encryption keys, as described in the
+                        overview on this page.
+                    </para>
+                    <para>
+                        The <code>timestamp</code> and <code>ttl</code>
+                        values must equal the <code>expiration</code>
+                        timestamp value that is contained in the response
+                        metadata.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param name="signature" style="plain"
+                    type="xsd:string" required="true">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <para>
+                        A base64-encoded HMAC signature over the
+                        base64-encoded request metadata object. For
+                        example:
+                    </para>
+                    <para>
+                        <code>Base64encode(HMAC(SigningKey,
+                        RequestMetadata))</code>
+                    </para>
+                    <para>
+                        The long-term key of the requester is used for the
+                        signature. When the KDS receives the request, the KDS
+                        must access the <code>source</code> value from the
+                        request metadata to look up the associated long-term
+                        key to use to verify the signature. The KDS should not
+                        access any other data that is contained in the request
+                        metadata before verifying the signature. If the KDS
+                        fails to verify the signature, it risks issuing a
+                        ticket to a party who is impersonating the source.
+                    </para>
+                </wadl:doc>
+            </param>
+        </representation>
+    </response> &commonFaults; </method>
+    <method name="GET" id="getGroupKey">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Get group key">
+            <para role="shortdesc">Gets the key for a group in the KDS.</para>
+            <para>
+                When a ticket is requested where the destination is a group, a
+                group key is generated that is valid for a predetermined
+                amount of time. Any member of the group can get the key as
+                long as it is still valid. Group keys are necessary to verify
+                signatures and decrypt messages that have a group name as the
+                target.
+            </para>
+        </wadl:doc>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-KDS/GroupGetKeyResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="name" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            The name of the group.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response> &commonFaults;
+    </method>
+    <method name="POST" id="createGroup">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Create group">
+            <para role="shortdesc">Creates a group in the KDS.</para>
+            <para>
+                Membership in groups is based on the party name. For example,
+                a <code>scheduler</code> group implicitly includes any party
+                name that starts with <code>scheduler</code>. For example, a
+                member named <code>scheduler.host.example.com</code>.
+            </para>
+        </wadl:doc>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/OS-KDS/GroupCreateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param name="name" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xml:lang="EN"
+                        xmlns="http://docbook.org/ns/docbook">
+                        <para>
+                            The name of the group.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response> &commonFaults;
+    </method>
+    <method name="DELETE" id="deleteGroup">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Delete group">
+            <para role="shortdesc">
+                Deletes a group from the KDS.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+</application>
