@@ -288,7 +288,7 @@ how to upload images, see
 Set the image and size variables to appropriate values for your cloud. We'll
 use these variables in later sections.
 
-First, tell the connection to get a specifed image by using the ID of the
+First, tell the connection to get a specified image by using the ID of the
 image that you picked in the previous section:
 
 .. only:: fog

@@ -27,7 +27,7 @@ The OpenStack Orchestration API contains the following constructs:
 
 Stacks are created from Templates, which contain Resources. Resources
 are an abstraction in the HOT (Heat Orchestration Template) template language, which enables you to define different
-cloud resources by setting the `type` attibute.
+cloud resources by setting the `type` attribute.
 
 For example, you might use the Orchestration API to create two compute
 instances by creating a Stack and by passing a Template to the Orchestration API.
@@ -41,7 +41,7 @@ compute instances, networking topology, and security policies.
 .. note:: The Orchestration module isn't deployed by default in every cloud. If these commands don't work, it means the Orchestration API isn't available; ask your support team for assistance.
 
 This section introduces the `HOT templating language <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_,
-and takes you throughsome of the common calls you will make when working with OpenStack Orchestration.
+and takes you through some of the common calls you will make when working with OpenStack Orchestration.
 
 Unlike previous sections of this guide, in which you used your SDK to programmatically interact with
 OpenStack, in this section you'll be using the Orchestration API directly through Template files,

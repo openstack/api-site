@@ -41,7 +41,7 @@ replicating each object at least twice before returning 'write
 success' to your API call. It will always work to ensure that there
 are three copies of your objects (by default) at all times -
 replicating them around the system in case of hardware failure,
-maintanance, network outage or any other kind of breakage. This is
+maintenance, network outage or any other kind of breakage. This is
 very convenient for app creation - you can just dump objects into
 object storage and not have to care about any of this additional work
 to keep them safe.
@@ -64,9 +64,9 @@ immediate attention if disks fail.
 The Object Storage service manages many of these tasks that normally
 would require the application owner to manage them, and presents a
 scalable and durable API that you can use for the fractals app,
-without having to be concerened with the low level details of how the
+without having to be concerned with the low level details of how the
 objects are stored and replicated, and growing the storage pool. In
-fact, Object Storage handles replication intrinsicly, storing multiple
+fact, Object Storage handles replication intrinsically, storing multiple
 copies of each object and returning one of them on demand using the
 API.
 

@@ -31,7 +31,7 @@ health check.
 Backups
 ~~~~~~~
 
-Where instances store information that is not reproducable (such as a
+Where instances store information that is not reproducible (such as a
 database server, a file server, or even log files for an application),
 it is important to back up this information as you would a normal
 non-cloud server. It sounds simple, but just because it is 'in the

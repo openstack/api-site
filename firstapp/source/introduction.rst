@@ -40,7 +40,7 @@ Cloud application architecture principles
 Cloud applications typically share several design principles.
 These principles influenced the design of the Fractals application.
 
-.. todo:: Do you want to state the core design priniciples or assume
+.. todo:: Do you want to state the core design principles or assume
           the reader can follow below.
 
 
@@ -183,7 +183,7 @@ How the Fractals application interacts with OpenStack
 -----------------------------------------------------
 
 .. todo:: Description of the components of OpenStack and how they
-          relate to the Fractals applicaiton and how it runs on the cloud.
+          relate to the Fractals application and how it runs on the cloud.
           TF notes this is already covered in the guide, just split
           across each section. Adding it here forces the
           introduction of block storage, object storage, orchestration
