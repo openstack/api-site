@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2.1">
+    <grammars>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
+    </grammars>
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-pci-v2.1">
+        <resource id="v2.1" path="//v2.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="os-pci" path="os-pci">
+                    <method href="#listPciDevices"/>
+                    <resource id="detail" path="detail">
+                        <method href="#listPciDevicesDetail"/>
+                    </resource>
+                    <resource id="pci_id" path="{pci_id}">
+                        <param name="pci_id" style="template" type="csapi:UUID">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>The ID of the PCI device.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#showPciDevicePool"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- *******************************************************-->
+    <!--        OS PCI pools                                    -->
+    <!-- *******************************************************-->
+    <method name="GET" id="listPciDevices">
+        <wadl:doc xml:lang="EN" title="List PCI devices"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists PCI devices.
+            </para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/pci-index-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listPciDevicesDetail">
+        <wadl:doc xml:lang="EN" title="List PCI devices with extra information"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists PCI devices with extra information.
+            </para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/pci-detail-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showPciDevicePool">
+        <wadl:doc xml:lang="EN" title="Show PCI device with extra information"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows information for a specified PCI device. Includes extra
+                information.
+            </para>
+        </wadl:doc>
+        <request> </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-pci/pci-show-resp.json"
+                    />
+                </wadl:doc> &x-openstack-request-idHeader;
+            </representation>
+        </response>
+    </method>
+</application>
