@@ -1196,7 +1196,7 @@ OpenStack contribution process.
       A system by which Internet domain name-to-address and
       address-to-name resolutions are determined.
       DNS helps navigate the Internet by translating the IP address
-      into an address that is easier to remember For example, translating
+      into an address that is easier to remember. For example, translating
       111.111.111.1 into www.yahoo.com.
       All domains and their components, such as mail servers, utilize
       DNS to resolve to the appropriate locations. DNS servers are usually
