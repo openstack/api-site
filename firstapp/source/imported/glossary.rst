@@ -43,7 +43,7 @@ OpenStack contribution process.
 
       The Object Storage context of an account. Do not confuse with a
       user account from an authentication service, such as Active Directory,
-      /etc/passwd, OpenLDAP, OpenStack Identity Service, and so on.
+      /etc/passwd, OpenLDAP, OpenStack Identity, and so on.
 
    account auditor
 
@@ -70,7 +70,7 @@ OpenStack contribution process.
 
       An Object Storage component that provides account services such
       as list, create, modify, and audit. Do not confuse with OpenStack
-      Identity Service, OpenLDAP, or similar user-account services.
+      Identity service, OpenLDAP, or similar user-account services.
 
    accounting
 
@@ -113,7 +113,7 @@ OpenStack contribution process.
 
    admin server
 
-      In the context of the Identity Service, the worker process that
+      In the context of the Identity service, the worker process that
       provides access to the admin API.
 
    Advanced Message Queuing Protocol (AMQP)
@@ -143,17 +143,17 @@ OpenStack contribution process.
    Amazon Kernel Image (AKI)
 
       Both a VM container format and disk format. Supported by Image
-      Service.
+      service.
 
    Amazon Machine Image (AMI)
 
       Both a VM container format and disk format. Supported by Image
-      Service.
+      service.
 
    Amazon Ramdisk Image (ARI)
 
       Both a VM container format and disk format. Supported by Image
-      Service.
+      service.
 
    Anvil
 
@@ -319,7 +319,7 @@ OpenStack contribution process.
 
    AuthN
 
-      The Identity Service component that provides authentication
+      The Identity service component that provides authentication
       services.
 
    authorization
@@ -334,7 +334,7 @@ OpenStack contribution process.
 
    AuthZ
 
-      The Identity Service component that provides high-level
+      The Identity component that provides high-level
       authorization services.
 
    Auto ACK
@@ -371,7 +371,7 @@ OpenStack contribution process.
 
    back-end catalog
 
-      The storage method used by the Identity Service catalog service
+      The storage method used by the Identity service catalog service
       to store and retrieve information about API endpoints that are
       available to the client. Examples include a SQL database, LDAP
       database, or KVS back end.
@@ -594,12 +594,12 @@ OpenStack contribution process.
    catalog
 
       A list of API endpoints that are available to a user after
-      authentication with the Identity Service.
+      authentication with the Identity service.
 
    catalog service
 
-      An Identity Service that lists API endpoints that are available
-      to a user after authentication with the Identity Service.
+      An Identity service that lists API endpoints that are available
+      to a user after authentication with the Identity service.
 
    ceilometer
 
@@ -703,8 +703,8 @@ OpenStack contribution process.
    cloud controller
 
       Collection of Compute components that represent the global state
-      of the cloud; talks to services, such as Identity Service
-      authentication, Object Storage, and node/storage workers through a
+      of the cloud; talks to services, such as Identity authentication,
+      Object Storage, and node/storage workers through a
       queue.
 
    cloud controller node
@@ -1021,7 +1021,7 @@ OpenStack contribution process.
 
    default token
 
-      An Identity Service token that is not associated with a specific
+      An Identity service token that is not associated with a specific
       tenant and is exchanged for a scoped token.
 
    delayed delete
@@ -1044,7 +1044,7 @@ OpenStack contribution process.
 
       An option within Compute that enables administrators to create
       and manage users through the `nova-manage` command as
-      opposed to using the Identity Service.
+      opposed to using the Identity service.
 
    Designate
 
@@ -1096,7 +1096,7 @@ OpenStack contribution process.
       A grouped release of projects related to OpenStack that came out
       in the fall of 2011, the fourth release of OpenStack. It included
       Compute (nova 2011.3), Object Storage (swift 1.4.3), and the Image
-      Service (glance).
+      service (glance).
       Diablo is the code name for the fourth release of
       OpenStack. The design summit took place in
       in the Bay Area near Santa Clara,
@@ -1291,7 +1291,7 @@ OpenStack contribution process.
 
    endpoint registry
 
-      Alternative term for an Identity Service catalog.
+      Alternative term for an Identity service catalog.
 
    encapsulation
 
@@ -1399,7 +1399,7 @@ OpenStack contribution process.
    extension
 
       Alternative term for an API extension or plug-in. In the context
-      of Identity Service, this is a call that is specific to the
+      of Identity service, this is a call that is specific to the
       implementation, such as adding support for OpenID.
 
    external network
@@ -1416,7 +1416,7 @@ OpenStack contribution process.
    FakeLDAP
 
       An easy method to create a local LDAP directory for testing
-      Identity Service and Compute. Requires Redis.
+      Identity and Compute. Requires Redis.
 
    fan-out exchange
 
@@ -1565,7 +1565,7 @@ OpenStack contribution process.
 
    global endpoint template
 
-      The Identity Service endpoint template that contains services
+      The Identity service endpoint template that contains services
       available to all tenants.
 
    GlusterFS
@@ -1768,16 +1768,16 @@ OpenStack contribution process.
 
    ID number
 
-      Unique numeric ID associated with each user in Identity Service,
+      Unique numeric ID associated with each user in Identity,
       conceptually similar to a Linux or LDAP UID.
 
    Identity API
 
-      Alternative term for the Identity Service API.
+      Alternative term for the Identity service API.
 
    Identity back end
 
-      The source used by Identity Service to retrieve user
+      The source used by Identity service to retrieve user
       information; an OpenLDAP server, for example.
 
    identity provider
@@ -1786,17 +1786,17 @@ OpenStack contribution process.
       name and password. It is a typical source of authentication
       tokens.
 
-   Identity Service
+   Identity
 
       The OpenStack core project that provides a central directory of
       users mapped to the OpenStack services they can access. It also
       registers endpoints for OpenStack services. It acts as a common
-      authentication system. The project name of the Identity Service is
+      authentication system. The project name of Identity is
       keystone.
 
-   Identity Service API
+   Identity service API
 
-      The API used to access the OpenStack Identity Service provided
+      The API used to access the OpenStack Identity service provided
       through keystone.
 
    IDS
@@ -1830,7 +1830,7 @@ OpenStack contribution process.
    image membership
 
       A list of tenants that can access a given VM image within Image
-      Service.
+      service.
 
    image owner
 
@@ -1840,7 +1840,7 @@ OpenStack contribution process.
    image registry
 
       A list of VM images that are available through Image
-      Service.
+      service.
 
    Image service
 
@@ -2015,7 +2015,7 @@ OpenStack contribution process.
    ISO9960
 
       One of the VM image disk formats supported by Image
-      Service.
+      service.
 
    itsec
 
@@ -2241,7 +2241,7 @@ OpenStack contribution process.
    membership list
 
       A list of tenants that can access a given VM image within Image
-      Service.
+      service.
 
    memcached
 
@@ -2331,8 +2331,8 @@ OpenStack contribution process.
    multi-factor authentication
 
       Authentication method that uses two or more credentials, such as
-      a password and a private key. Currently not supported in Identity
-      Service.
+      a password and a private key. Currently not supported in
+      Identity.
 
    MultiNic
 
@@ -2587,7 +2587,7 @@ OpenStack contribution process.
    OpenLDAP
 
       An open source LDAP server. Supported by both Compute and
-      Identity Service.
+      Identity.
 
    OpenStack
 
@@ -2700,7 +2700,7 @@ OpenStack contribution process.
 
    policy service
 
-      Component of Identity Service that provides a rule-management
+      Component of Identity that provides a rule-management
       interface and a rule-based authorization engine.
 
    pool
@@ -2833,7 +2833,7 @@ OpenStack contribution process.
    QEMU Copy On Write 2 (QCOW2)
 
       One of the VM image disk formats supported by Image
-      Service.
+      service.
 
    Qpid
 
@@ -2954,7 +2954,7 @@ OpenStack contribution process.
    region
 
       A discrete OpenStack environment with dedicated API endpoints
-      that typically shares only the Identity Service (keystone) with other
+      that typically shares only the Identity (keystone) with other
       regions.
 
    registry
@@ -3037,7 +3037,7 @@ OpenStack contribution process.
 
       Provides a predefined list of actions that the user can perform,
       such as start or stop VMs, reset passwords, and so on. Supported in
-      both Identity Service and Compute and can be configured using the
+      both Identity and Compute and can be configured using the
       horizon dashboard.
 
    role
@@ -3048,7 +3048,7 @@ OpenStack contribution process.
 
    role ID
 
-      Alphanumeric ID assigned to each Identity Service role.
+      Alphanumeric ID assigned to each Identity service role.
 
    rootwrap
 
@@ -3114,13 +3114,13 @@ OpenStack contribution process.
 
    scoped token
 
-      An Identity Service API access token that is associated with a
+      An Identity service API access token that is associated with a
       specific tenant.
 
    scrubber
 
       Checks for and deletes unused VMs; the component of Image
-      Service that implements delayed delete.
+      service that implements delayed delete.
 
    secret key
 
@@ -3168,17 +3168,17 @@ OpenStack contribution process.
    service
 
       An OpenStack service, such as Compute, Object Storage, or Image
-      Service. Provides one or more endpoints through which users can access
+      service. Provides one or more endpoints through which users can access
       resources and perform operations.
 
    service catalog
 
-      Alternative term for the Identity Service catalog.
+      Alternative term for the Identity service catalog.
 
    service ID
 
       Unique ID assigned to each service that is available in the
-      Identity Service catalog.
+      Identity service catalog.
 
    service provider
 
@@ -3188,7 +3188,7 @@ OpenStack contribution process.
 
    service registration
 
-      An Identity Service feature that enables services, such as
+      An Identity service feature that enables services, such as
       Compute, to automatically register with the catalog.
 
    service tenant
@@ -3199,7 +3199,7 @@ OpenStack contribution process.
    service token
 
       An administrator-defined token used by Compute to communicate
-      securely with the Identity Service.
+      securely with the Identity service.
 
    session back end
 
@@ -3352,7 +3352,7 @@ OpenStack contribution process.
    strategy
 
       Specifies the authentication source used by Image service or
-      Identity Service.
+      Identity.
 
    subdomain
 
@@ -3459,12 +3459,12 @@ OpenStack contribution process.
 
    tenant endpoint
 
-      An Identity Service API endpoint that is associated with one or
+      An Identity service API endpoint that is associated with one or
       more tenants.
 
    tenant ID
 
-      Unique ID assigned to each tenant within the Identity Service.
+      Unique ID assigned to each tenant within the Identity service.
       The project IDs map to the tenant IDs.
 
    token
@@ -3474,7 +3474,7 @@ OpenStack contribution process.
 
    token services
 
-      An Identity Service component that manages and validates tokens
+      An Identity service component that manages and validates tokens
       after a user or tenant has been authenticated.
 
    tombstone
@@ -3531,7 +3531,7 @@ OpenStack contribution process.
 
    unscoped token
 
-      Alternative term for an Identity Service default token.
+      Alternative term for an Identity service default token.
 
    updater
 
@@ -3540,7 +3540,7 @@ OpenStack contribution process.
 
    user
 
-      In Identity Service, each user is associated with one or more
+      In Identity, each user is associated with one or more
       tenants, and in Compute can be associated with roles, projects, or
       both.
 
@@ -3576,7 +3576,7 @@ OpenStack contribution process.
    Virtual Disk Image (VDI)
 
       One of the VM image disk formats supported by Image
-      Service.
+      service.
 
    virtual extensible LAN (VXLAN)
 
@@ -3588,7 +3588,7 @@ OpenStack contribution process.
    Virtual Hard Disk (VHD)
 
       One of the VM image disk formats supported by Image
-      Service.
+      service.
 
    virtual IP
 
@@ -3669,7 +3669,7 @@ OpenStack contribution process.
    VM disk (VMDK)
 
       One of the VM image disk formats supported by Image
-      Service.
+      service.
 
    VM image
 
