@@ -28,7 +28,7 @@
         <include href="../xsd/OS-KSS3-credentials.xsd"/>
     </grammars>
     <!--*******************************************************-->
-    <!--             All Resoruces                             -->
+    <!--             All resources                             -->
     <!--*******************************************************-->
 
     <!-- We should use SSL in production -->
@@ -54,12 +54,12 @@
                         <resource id="userCredentials"
                             path="credentials">
                             <method href="#listCredentials"/>
-                            <method href="#addUserCredential"/>
+                            <method href="#grantCredentialToUser"/>
                             <resource id="userCredentialsByType"
                                 path="s3credentials">
                                 <method href="#getUserCredential"/>
                                 <method href="#updateUserCredential"/>
-                                <method href="#deleteUserCredential"/>
+                                <method href="#revokeUserCredentials"/>
                                 <resource id="type" path="{type}">
                                    <param name="type" style="query"
                                    required="true" type="xsd:string">
@@ -84,10 +84,10 @@
     <!--*******************************************************-->
 
     <!-- user credentials-->
-    <method name="POST" id="addUserCredential">
+    <method name="POST" id="grantCredentialToUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add user credential">
-            <para role="shortdesc">Adds a credential to a user.</para>
+            title="Grant credential to user">
+            <para role="shortdesc">Grants a specified credential to a specified user.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json" element="s3credentials">
@@ -172,10 +172,10 @@
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
 
-    <method name="DELETE" id="deleteUserCredential">
+    <method name="DELETE" id="revokeUserCredentials">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete user credentials">
-            <para role="shortdesc" class="shortdesc">Deletes user
+            title="Revoke user credentials">
+            <para role="shortdesc" class="shortdesc">Revokes user
                 credentials.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &postPutFaults;

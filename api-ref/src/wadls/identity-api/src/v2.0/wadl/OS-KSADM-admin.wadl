@@ -40,7 +40,7 @@
             </param>
             <resource id="users-v2.0" path="users">
                 <method href="#listUsers"/>
-                <method href="#addUser"/>
+                <method href="#createUser"/>
                 <resource id="userById-v2.0" path="{userId}">
                     <param name="userId" style="template"
                         required="true" type="xsd:string">
@@ -70,18 +70,18 @@
                                    <wadl:doc
                                    xmlns="http://docbook.org/ns/docbook"
                                    xml:lang="EN"><para>The ID of the
-                                   role that you want to add or
+                                   role that you want to create or
                                    delete.</para></wadl:doc>
                                 </param>
-                                <method href="#addUserRole"/>
-                                <method href="#deleteUserRole"/>
+                                <method href="#grantGlobalRoleToUser"/>
+                                <method href="#revokeGlobalRoleFromUser"/>
                             </resource>
                         </resource>
                     </resource>
                 </resource>
             </resource>
             <resource id="tenants-v2.0" path="tenants">
-                <method href="#addTenant"/>
+                <method href="#createTenant"/>
                 <resource id="tenantById-v2.0" path="{tenantId}">
                     <param name="tenantId" style="template"
                         type="xsd:string">
@@ -119,9 +119,9 @@
                                    ID.</para></wadl:doc>
                                    </param>
                                    <method
-                                   href="#addRolesToUserOnTenant"/>
+                                   href="#grantRoleToUserOnTenant"/>
                                    <method
-                                   href="#deleteRoleFromUserOnTenant"
+                                   href="#revokeRoleFromUserOnTenant"
                                    />
                                    </resource>
                                 </resource>
@@ -150,7 +150,7 @@
                         </param>
                         <method href="#listRoles"/>
                     </resource>
-                    <method href="#addRole"/>
+                    <method href="#createRole"/>
                     <resource id="roleId-v2.0" path="{roleId}">
                         <param name="roleId" style="template"
                             type="xsd:string">
@@ -165,7 +165,7 @@
                 </resource>
                 <resource id="services-v2.0" path="services">
                     <method href="#listServices"/>
-                    <method href="#addService"/>
+                    <method href="#createService"/>
                     <resource id="serviceName-v2.0">
                         <param name="name" style="query"
                             type="xsd:string" required="true">
@@ -197,9 +197,9 @@
     <!--*******************************************************-->
 
     <!-- Tenant Operations -->
-    <method name="POST" id="addTenant">
+    <method name="POST" id="createTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add tenant">
+            title="Create tenant">
             <para role="shortdesc">Creates a tenant.</para>
         </wadl:doc>
         <request>
@@ -224,7 +224,8 @@
     <method name="POST" id="updateTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update tenant">
-            <para role="shortdesc"> Updates a tenant.</para>
+            <para role="shortdesc">
+                Updates a tenant.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -268,18 +269,18 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="PUT" id="addRolesToUserOnTenant">
+    <method name="PUT" id="grantRoleToUserOnTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add roles to user on tenant">
-            <para role="shortdesc">Adds a specified role to a user for
+            title="Grant roles to user on tenant">
+            <para role="shortdesc">Grants a specified role to a user for
                 a tenant.</para>
         </wadl:doc>
         <response status="201"/> &commonFaults; &postPutFaults;
         &getFaults; </method>
-    <method name="DELETE" id="deleteRoleFromUserOnTenant">
+    <method name="DELETE" id="revokeRoleFromUserOnTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Delete roles from user on tenant">
-            <para role="shortdesc">Deletes a specified role from a
+            title="Revoke role from user on tenant">
+            <para role="shortdesc">Revokes a specified role from a
                 user on a tenant.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -301,10 +302,10 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="POST" id="addUser">
-        <wadl:doc xml:lang="EN" title="Add user"
+    <method name="POST" id="createUser">
+        <wadl:doc xml:lang="EN" title="Create user"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Adds a user.</para>
+            <para role="shortdesc">Creates a user.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -409,19 +410,19 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="PUT" id="addUserRole">
+    <method name="PUT" id="grantGlobalRoleToUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add global role to user">
-            <para role="shortdesc">Adds a specific global role to a
+            title="Grant global role to user">
+            <para role="shortdesc">Grants a specified global role to a
                 user.</para>
         </wadl:doc>
         <response status="201"/> &commonFaults; &postPutFaults;
         &getFaults; </method>
 
-    <method name="DELETE" id="deleteUserRole">
+    <method name="DELETE" id="revokeGlobalRoleFromUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete global role from user">
-            <para role="shortdesc">Deletes a specific global role from
+            <para role="shortdesc">Deletes a specified global role from
                 a user.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -455,10 +456,10 @@
             </representation>
         </response> &commonFaults; &getFaults; </method>
 
-    <method name="POST" id="addRole">
+    <method name="POST" id="createRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add role">
-            <para role="shortdesc">Adds a role.</para>
+            title="Create role">
+            <para role="shortdesc">Creates a role.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -573,10 +574,10 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="POST" id="addService">
+    <method name="POST" id="createService">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Add service">
-            <para role="shortdesc">Adds a service.</para>
+            title="Create service">
+            <para role="shortdesc">Creates a service.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
