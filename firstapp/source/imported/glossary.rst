@@ -184,7 +184,7 @@ OpenStack contribution process.
 
       The daemon, worker, or service that a client communicates with
       to access an API. API endpoints can provide any number of services,
-      such as authentication, sales data, performance metrics, Compute VM
+      such as authentication, sales data, performance meters, Compute VM
       commands, census data, and so on.
 
    API extension
@@ -2926,7 +2926,7 @@ OpenStack contribution process.
 
    Recon
 
-      An Object Storage component that collects metrics.
+      An Object Storage component that collects meters.
 
    record
 
@@ -3423,7 +3423,7 @@ OpenStack contribution process.
    system usage
 
       A Compute component that, along with the notification system,
-      collects metrics and usage information. This information can be used
+      collects meters and usage information. This information can be used
       for billing.
 
    Telemetry
