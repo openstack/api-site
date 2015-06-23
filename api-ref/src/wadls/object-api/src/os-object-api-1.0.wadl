@@ -478,10 +478,12 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create container">
             <para role="shortdesc">Creates a container.</para>
-            <para>You do not need to check if a container already
-                exists before issuing a &PUT; operation because the
-                operation is idempotent: It creates a container or
-                updates an existing container, as appropriate.</para>
+            <para>
+                You do not need to check whether a container already exists
+                before issuing a &PUT; operation because the operation is
+                idempotent: It creates a container or updates an existing
+                container, as appropriate.
+            </para>
             <para>Example requests and responses:</para><itemizedlist>
                 <listitem><para>Create a container with no metadata:
                             <code>curl -i $publicURL/steven -X PUT -H
@@ -779,15 +781,18 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
         <!-- create, replace object -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create or replace object">
-            <para role="shortdesc">Creates a new object with specified
-                data content and metadata, or replaces an existing
-                object with specified data content and
-                metadata.</para>
-            <para>The &PUT; operation always creates a new object. If
-                you use this operation on an existing object, you
-                replace the existing object and metadata rather than
-                modifying the object. Consequently, this operation
-                returns a <code>201 Created</code> status code.</para>
+            <para role="shortdesc">
+                Creates an object with specified data content and metadata, or
+                replaces an existing object with specified data content and
+                metadata.
+            </para>
+            <para>
+                The &PUT; operation always creates an object. If you use this
+                operation on an existing object, you replace the existing
+                object and metadata rather than modifying the object.
+                Consequently, this operation returns a <code>201
+                Created</code> status code.
+            </para>
             <para>If you use this operation to copy a manifest object,
                 the new object is a normal object and not a copy of
                 the manifest. Instead it is a concatenation of all the
@@ -859,33 +864,43 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para></listitem>
         <!-- copy object -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Copy object">
-            <para role="shortdesc">Copies an object to another object
-                in the object store.</para>
-            <para>You can copy an object to a new object with the same
-                name. Copying to the same name is an alternative to
-                using &POST; to add metadata to an object. With
-                &POST;, you must specify all the metadata. With
-                &COPY;, you can add additional metadata to the
-                object.</para>
-            <para>Alternatively, you can use &PUT; with the
-                    <code>X-Copy-From</code> request header to
-                accomplish the same operation as the &COPY; object
-                operation.</para>
-            <para>The &PUT; operation always creates a new object. If
-                you use this operation on an existing object, you
-                replace the existing object and metadata rather than
-                modifying the object. Consequently, this operation
-                returns a <code>201 Created</code> success
-                node.</para>
-            <para>If you use this operation to copy a manifest object,
-                the new object is a normal object and not a copy of
-                the manifest. Instead it is a concatenation of all the
-                segment objects. This means that you cannot copy
-                objects larger than 5 GB in size. All metadata is
-                preserved during the object copy. If you specify
-                metadata on the request to copy the object, either
-                &PUT; or &COPY;, the metadata overwrites any
-                conflicting keys on the target (new) object.</para>
+            <para role="shortdesc">
+                Copies an object to another object in the object store.
+            </para>
+            <para>
+                You can copy an object to a new object with the same name.
+                Copying to the same name is an alternative to using &POST; to
+                add metadata to an object. With &POST;, you must specify all
+                the metadata. With &COPY;, you can add additional metadata to
+                the object.
+            </para>
+            <para>
+                With &COPY;, you can set the <code>X-Fresh-Metadata</code>
+                header to <code>True</code> to copy the object without any
+                existing metadata.
+            </para>
+            <para>
+                Alternatively, you can use &PUT; with the <code>X-Copy-From</code>
+                request header to accomplish the same operation as
+                the &COPY; object operation.
+            </para>
+            <para>
+                The &PUT; operation always creates an object. If you use this
+                operation on an existing object, you replace the existing
+                object and metadata rather than modifying the object.
+                Consequently, this operation returns a <code>201
+                Created</code> success node.
+            </para>
+            <para>
+                If you use this operation to copy a manifest object, the new
+                object is a normal object and not a copy of the manifest.
+                Instead it is a concatenation of all the segment objects. This
+                means that you cannot copy objects larger than 5 GB in size.
+                All metadata is preserved during the object copy. If you
+                specify metadata on the request to copy the object, either
+                &PUT; or &COPY;, the metadata overwrites any conflicting keys
+                on the target (new) object.
+            </para>
             <para>Example requests and responses:</para>
             <itemizedlist>
                 <listitem><para>Copy the <code>goodbye</code> object
@@ -935,7 +950,8 @@ Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para>
             &destination-requestHeader; &content-type-requestHeader;
             &content-encoding-requestHeader;
             &content-disposition-requestHeader;
-            &object-meta-name-requestHeader; </request>
+            &object-meta-name-requestHeader;
+            &fresh-metadata-requestHeader; </request>
         <response status="201"> &content-length-responseHeader-OP;
             &copied-from-last-modified-responseHeader;
             &copied-from-responseHeader;
