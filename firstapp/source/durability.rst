@@ -106,7 +106,7 @@ First, let's learn how to connect to the Object Storage endpoint:
               previous sections won't work here and we have to create
               a new one named :code:`swift`.
 
-.. only:: node
+.. only:: pkgcloud
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK.
 

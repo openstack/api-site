@@ -46,10 +46,9 @@ The second application is an OpenStack application that enables you to:
 Choose your OpenStack SDK
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This guide focuses on how to use Python with Apache Libcloud. Anyone with a
-programming background can easily read the code in this guide. Although this
-guide focuses on Libcloud, you can use other languages and toolkits with the
-OpenStack cloud:
+Anyone with a programming background can easily read the code in this guide.
+Although this guide focuses on a particular SDK, you can use other languages
+and toolkits with the OpenStack cloud:
 
 ============= ============= ================================================================= ====================================================
 Language      Name          Description                                                       URL
@@ -69,11 +68,11 @@ NET Framework OpenStack SDK A .NET based library that can be used to write C++ a
 
 For a list of available SDKs, see `Software Development Kits <https://wiki.openstack.org/wiki/SDKs>`_.
 
-Future versions of this guide will show you how to use the OpenStack SDK and
-languages such as Java and Ruby to complete these tasks. If you're a developer
-for another toolkit that you would like this guide to include, feel free to
-submit code snippets. You can also contact OpenStack Documentation team
-members.
+Other versions of this guide show you how to use the other SDKs and
+languages to complete these tasks. If you're a developer for another toolkit
+that you would like this guide to include, feel free to submit code snippets.
+You can contact `OpenStack Documentation team <https://wiki.openstack.org/Documentation>`_
+members for more information.
 
 What you need
 -------------
@@ -118,14 +117,12 @@ To interact with the cloud, you must also have
   `libcloud 0.15.1 or higher installed
   <https://libcloud.apache.org/getting-started.html>`_.
 
-.. only:: node
+.. only:: pkgcloud
 
-      `a recent version of pkgcloud installed
+      `pkgcloud 1.2 or higher installed
       <https://github.com/pkgcloud/pkgcloud#getting-started>`_.
 
-      .. warning::
-
-         This document has not yet been completed for the pkgcloud SDK.
+     .. highlight:: javascript
 
 .. only:: openstacksdk
 
@@ -173,8 +170,8 @@ How you'll interact with OpenStack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this tutorial, you interact with your OpenStack cloud through one of the
-SDKs listed in "Choose your OpenStack SDK." The code snippets in this
-initial version of the guide assume that you're using Libcloud.
+SDKs you have chosen in "Choose your OpenStack SDK." This guide assumes you
+are familiar with running code snippets in your language of choice.
 
 .. only:: fog
 
@@ -200,8 +197,17 @@ initial version of the guide assume that you're using Libcloud.
                                    user_name="your_auth_username",
                                    password="your_auth_password", ...)
 
+.. only:: pkgcloud
 
-.. note:: Because the tutorial uses the :code:`conn` object,
+    To try it, add the following code to a script (or use an
+    interactive nodejs shell) by calling :code:`node`.
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-1
+        :end-before: step-2
+
+
+.. note:: Because the tutorial reuses the :code:`conn` object,
           make sure that you always have one handy.
 
 .. only:: libcloud
@@ -247,6 +253,30 @@ To list the images that are available in your cloud, run some API calls:
         <NodeImage: id=2cccbea0-cea9-4f86-a3ed-065c652adda5, name=ubuntu-14.04, driver=OpenStack  ...>
         <NodeImage: id=f2a8dadc-7c7b-498f-996a-b5272c715e55, name=cirros-0.3.3-x86_64, driver=OpenStack  ...>
 
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-2
+        :end-before: step-3
+
+    You should see a result something like:
+
+    .. code-block:: none
+
+        id: 6c7f5627-ca40-4781-ac34-4d9af53d4b29
+        name: Fedora 22 - Updated
+        created: 2015-08-17T03:53:17Z
+        updated: 2015-08-17T04:53:12Z
+        status: ACTIVE
+
+        ...
+        id: 2cccbea0-cea9-4f86-a3ed-065c652adda5
+        name: Ubuntu 14.04
+        created: 2015-08-13T02:25:10Z
+        updated: 2015-08-13T02:43:38Z
+        status: ACTIVE
+
+
 You can also get information about available flavors:
 
 .. only:: fog
@@ -271,6 +301,28 @@ You can also get information about available flavors:
         <OpenStackNodeSize: id=4, name=m1.large, ram=8192, disk=80, bandwidth=None, price=0.0, driver=OpenStack, vcpus=4,  ...>
         <OpenStackNodeSize: id=5, name=m1.xlarge, ram=16384, disk=160, bandwidth=None, price=0.0, driver=OpenStack, vcpus=8,  ...>
 
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-3
+        :end-before: step-4
+
+    This code produces output like:
+
+    .. code-block:: none
+
+        id: c46104de-d5fd-4567-ab0b-3dcfd117bd99
+        name: m2.xlarge
+        ram: 49152
+        disk: 30
+        vcpus: 12
+
+        ...
+        id: cba9ea52-8e90-468b-b8c2-777a94d81ed3
+        name: m1.small
+        ram: 2048
+        disk: 20
+        vcpus: 1
 
 Your images and flavors will be different, of course.
 
@@ -309,7 +361,24 @@ image that you picked in the previous section:
 
          <NodeImage: id=2cccbea0-cea9-4f86-a3ed-065c652adda5, name=ubuntu-14.04, driver=OpenStack  ...>
 
-Next, tell the script which flavor you want to use:
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-4
+        :end-before: step-5
+
+    You should see output something like this:
+
+    .. code-block:: none
+
+        id: 2cccbea0-cea9-4f86-a3ed-065c652adda5
+        name: Ubuntu 14.04
+        created: 2015-08-13T02:25:10Z
+        updated: 2015-08-13T02:43:38Z
+        status: ACTIVE
+
+
+Next, choose which flavor you want to use:
 
 .. only:: fog
 
@@ -329,6 +398,24 @@ Next, tell the script which flavor you want to use:
 
         <OpenStackNodeSize: id=3, name=m1.medium, ram=4096, disk=40, bandwidth=None, price=0.0, driver=OpenStack, vcpus=2,  ...>
 
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-5
+        :end-before: step-6
+
+    You should see output something like this:
+
+    .. code-block:: none
+
+
+        id: 3
+        name: m1.small
+        ram: 2048
+        disk: 20
+        vcpus: 1
+
+
 Now, you're ready to launch the instance.
 
 Launch an instance
@@ -336,14 +423,12 @@ Launch an instance
 
 Use your selected image and flavor to create an instance.
 
-.. only:: libcloud
-
-    .. note:: The following instance creation example assumes that you have a
-              single-tenant network. If you receive the 'Exception: 400 Bad
-              Request Multiple possible networks found, use a Network ID to be
-              more specific' error, you have multiple-tenant networks. You
-              must add a `networks` parameter to the `create_node` call. See
-              :doc:`/appendix` for details.
+.. note:: The following instance creation example assumes that you have a
+          single-tenant network. If you receive the 'Exception: 400 Bad
+          Request Multiple possible networks found, use a Network ID to be
+          more specific' error, you have multiple-tenant networks. You
+          must add a `networks` parameter to the call that creates the
+          server. See :doc:`/appendix` for details.
 
 Create the instance.
 
@@ -378,6 +463,19 @@ Create the instance.
        }
        instance = conn.compute.create_server(**args)
 
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-6
+        :end-before: step-7
+
+    You should see output something like:
+
+    .. code-block:: none
+
+        0d7968dc-4bf4-4e01-b822-43c9c1080d77
+
+
 If you list existing instances:
 
 .. only:: fog
@@ -389,6 +487,12 @@ If you list existing instances:
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
+        :start-after: step-7
+        :end-before: step-8
+
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-7
         :end-before: step-8
 
@@ -407,6 +511,27 @@ The new instance appears.
        instances = conn.compute.list_servers()
        for instance in instances:
            print(instance)
+
+.. only:: pkgcloud
+
+    .. code-block:: none
+
+        ...
+        id: '0d7968dc-4bf4-4e01-b822-43c9c1080d77',
+        name: 'testing',
+        status: 'PROVISIONING',
+        progress: 0,
+        imageId: '2cccbea0-cea9-4f86-a3ed-065c652adda5',
+        adminPass: undefined,
+        addresses: {},
+        metadata: {},
+        flavorId: '3',
+        hostId: 'b6ee757ed678e8c6589ae8cce405eeded89ac914daec73e45a5c50b8',
+        created: '2015-06-30T08:17:39Z',
+        updated: '2015-06-30T08:17:44Z',
+        ...
+
+
 
 Before you move on, you must do one more thing.
 
@@ -427,6 +552,13 @@ money. Destroy cloud resources to avoid unexpected expenses.
     .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-8
         :end-before: step-9
+
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-8
+        :end-before: step-9
+
 
 
 If you list the instances again, the instance disappears.
@@ -475,6 +607,15 @@ instance:
 
        <KeyPair name=demokey fingerprint=aa:bb:cc... driver=OpenStack>
 
+.. only:: pkgcloud
+
+    In the following example, :code:`pub_key_file` should be set to
+    the location of your public SSH key file.
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-9
+        :end-before: step-10
+
 * Network access. By default, OpenStack filters all traffic. You must create
   a security group and apply it to your instance. The security group allows HTTP
   and SSH access. We'll go into more detail in :doc:`/introduction`.
@@ -491,6 +632,12 @@ instance:
         :start-after: step-10
         :end-before: step-11
 
+.. only::  pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-10
+        :end-before: step-11
+
 * Userdata. During instance creation, you can provide userdata to OpenStack to
   configure instances after they boot. The cloud-init service applies the
   userdata to an instance. You must pre-install the cloud-init service on your
@@ -503,6 +650,12 @@ instance:
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
+        :start-after: step-11
+        :end-before: step-12
+
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-11
         :end-before: step-12
 
@@ -523,6 +676,13 @@ request the instance, wait for it to build.
     .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-12
         :end-before: step-13
+
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-12
+        :end-before: step-13
+
 
 When the instance boots, the `ex_userdata` variable value instructs the
 instance to deploy the Fractals application.
@@ -568,6 +728,30 @@ address to your instance.
         :start-after: step-14
         :end-before: step-15
 
+
+.. only:: pkgcloud
+
+    Use :code:`getFloatingIps` to check for unused addresses, selecting the
+    first one if available, otherwise use :code:`allocateNewFloatingIp` to
+    allocate a new Floating IP to your project from the default address pool.
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-13
+        :end-before: step-14
+
+    You should see the floating IP output to the command line:
+
+    ::
+
+        203.0.113.101
+
+    You can then attach it to the instance:
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-14
+        :end-before: step-15
+
+
 Run the script to start the deployment.
 
 Access the application
@@ -581,6 +765,11 @@ using your preferred browser.
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
+        :start-after: step-15
+
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-15
 
 .. note:: If you do not use floating IPs, substitute another IP address as appropriate
@@ -623,3 +812,8 @@ information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
        :language: python
+
+.. only:: pkgcloud
+
+    .. literalinclude:: ../samples/pkgcloud/getting_started.js
+       :language: javascript

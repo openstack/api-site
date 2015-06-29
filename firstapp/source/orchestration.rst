@@ -69,7 +69,7 @@ http://docs.openstack.org/cli-reference/content/cli_openrc.html
 
     .. warning:: libcloud does not currently support OpenStack Orchestration.
 
-.. only:: node
+.. only:: pkgcloud
 
    .. note:: Pkgcloud supports OpenStack Orchestration :D:D:D but this section is `not written yet <https://github.com/pkgcloud/pkgcloud/blob/master/docs/providers/openstack/orchestration.md>`_
 

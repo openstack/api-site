@@ -46,7 +46,7 @@ the database, webserver, file storage, and worker components.
 
     .. warning:: Libcloud does not support the OpenStack Networking API.
 
-.. only:: node
+.. only:: pkgcloud
 
     .. warning:: Pkgcloud supports the OpenStack Networking API, but
                  this section has not been completed.
