@@ -120,7 +120,22 @@
                     </resource>
                 </resource>
                 <resource id="datastores" path="datastores">
-                    <resource id="config_versions" path="versions">
+                    <resource id="datastore_name" path="{datastore_name}">
+                        <param name="datastore_name" style="template"
+                            type="xsd:uuid">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>
+                                    The name of the datastore whose versions
+                                    you want to list.
+                                </para>
+                            </wadl:doc>
+                        </param>
+                        <resource id="datastore_versions" path="versions">
+                            <method href="#listDatastoreVersions"/>
+                        </resource>
+                    </resource>
+                    <resource id="versions" path="versions">
                         <resource id="datastore_version_id" path="{datastore_version_id}">
                             <param name="datastore_version_id" style="template"
                                 type="xsd:uuid">
@@ -144,12 +159,12 @@
                                         </wadl:doc>
                                     </param>
                                     <method href="#showParameterDetails"/>
+                                </resource>
                             </resource>
                         </resource>
                     </resource>
                 </resource>
             </resource>
-          </resource>
         </resource>
     </resources>
     <!--<resource_type id="ExtensionList">
@@ -1349,6 +1364,37 @@
                         href="samples/db-flavors-by-id-response-json-http.txt"/>
                     <xsdxt:code
                         href="samples/db-flavors-by-id-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="listDatastoreVersions">
+        <wadl:doc xml:lang="EN" title="List datastore versions"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists the available versions of
+                a specified datastore.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-list-datastore-versions-request-json-http.txt"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-list-datastore-versions-response-json-http.txt"
+                    />
+                    <xsdxt:code
+                        href="samples/db-list-datastore-versions.json"
                     />
                 </wadl:doc>
             </representation>
