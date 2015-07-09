@@ -2125,7 +2125,7 @@ OpenStack contribution process.
    Liberty
 
       The code name for the twelfth release of OpenStack. The
-      design summit will take place in Vancouver, Canada and Liberty is
+      design summit took place in Vancouver, Canada and Liberty is
       the name of a village in the Canadian province of
       Saskatchewan.
 
@@ -2602,12 +2602,12 @@ OpenStack contribution process.
 
       Each OpenStack release has a code name. Code names ascend in
       alphabetical order: Austin, Bexar, Cactus, Diablo, Essex,
-      Folsom, Grizzly, Havana, Icehouse, Juno, and Kilo. Code names are
-      cities or counties near where the corresponding OpenStack
-      design summit took place. An exception, called the Waldon
-      exception, is granted to elements of the state flag that
-      sound especially cool. Code names are chosen by popular
-      vote.
+      Folsom, Grizzly, Havana, Icehouse, Juno, Kilo, and Liberty.
+      Code names are cities or counties near where the
+      corresponding OpenStack design summit took place. An
+      exception, called the Waldon exception, is granted to
+      elements of the state flag that sound especially cool. Code
+      names are chosen by popular vote.
 
    openSUSE
 
