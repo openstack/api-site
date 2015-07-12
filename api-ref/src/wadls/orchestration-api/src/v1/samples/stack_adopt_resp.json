@@ -1,11 +1,51 @@
 {
-    "stack": {
-        "id": "5333af0c-cc26-47ee-ac3d-8784cefafbd7",
-        "links": [
-            {
-                "href": "http://192.168.123.200:8004/v1/eb1c63a4f77141548385f113a28f0f52/stacks/simple_stack/5333af0c-cc26-47ee-ac3d-8784cefafbd7",
-                "rel": "self"
+    "action": "CREATE",
+    "id": "46c927bb-671a-43db-a29c-16a2610865ca",
+    "name": "trove",
+    "resources": {
+        "MySqlCloudDatabaseServer": {
+            "action": "CREATE",
+            "metadata": {},
+            "name": "MySqlCloudDatabaseServer",
+            "resource_data": {},
+            "resource_id": "74c5be7e-3e62-41e7-b455-93d1c32d56e3",
+            "status": "COMPLETE",
+            "type": "OS::Trove::Instance"
+        }
+    },
+    "status": "COMPLETE",
+    "template": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "MYSQL server cloud database instance",
+        "Parameters": {
+            "InstanceName": {
+                "Description": "The database instance name",
+                "Type": "String"
             }
-        ]
+        },
+        "Resources": {
+            "MySqlCloudDatabaseServer": {
+                "Properties": {
+                    "databases": [
+                        {
+                            "name": "testdbonetwo"
+                        }
+                    ],
+                    "flavor": "1GB Instance",
+                    "name": "test-trove-db",
+                    "size": 30,
+                    "users": [
+                        {
+                            "databases": [
+                                "testdbonetwo"
+                            ],
+                            "name": "testuser",
+                            "password": "testpass123"
+                        }
+                    ]
+                },
+                "Type": "OS::Trove::Instance"
+            }
+        }
     }
 }
