@@ -20,7 +20,7 @@ particular. It also describes some commands in the previous section.
 
     .. warning:: This section has not yet been completed for the jclouds SDK.
 
-.. only:: node
+.. only:: pkgcloud
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK.
 
