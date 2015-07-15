@@ -2297,6 +2297,12 @@ OpenStack contribution process.
 
       OpenStack project that provides the Workflow service.
 
+   Mitaka
+
+      The code name for the thirteenth release of OpenStack.
+      The design summit will take place in Tokyo, Japan. Mitaka
+      is a city in Tokyo.
+
    multi-host
 
       High-availability mode for legacy (nova) networking.
@@ -2602,7 +2608,8 @@ OpenStack contribution process.
 
       Each OpenStack release has a code name. Code names ascend in
       alphabetical order: Austin, Bexar, Cactus, Diablo, Essex,
-      Folsom, Grizzly, Havana, Icehouse, Juno, Kilo, and Liberty.
+      Folsom, Grizzly, Havana, Icehouse, Juno, Kilo, Liberty,
+      and Mitaka.
       Code names are cities or counties near where the
       corresponding OpenStack design summit took place. An
       exception, called the Waldon exception, is granted to
