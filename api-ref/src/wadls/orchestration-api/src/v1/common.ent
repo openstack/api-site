@@ -71,8 +71,50 @@
       contain JSON properties with names that do not match a parameter
       defined in the template.
    </para>
+   <para>
+      The <code>files</code> parameter maps logical file names to file
+      contents. Both the <code>get_file</code> intrinsic function and
+      provider template functionality use this mapping. When you want to
+      use a provider template, for example, the Orchestration service
+      adds an entry to the <code>files</code> map by using:
+   </para>
+   <itemizedlist>
+   <li>The URL
+      of the provider template as the name.</li>
+   <li>The contents of that file as
+      the value.</li>
+   </itemizedlist>
+   <para>
+      Additionally, some template authors encode their user data in a local
+      file. The Orchestration client examines the template for the
+      <code>get_file</code> intrinsic function and adds an entry to the
+      <code>files</code> map with the path to the file as the name and the
+      file contents as the value. So, a simple example looks like this:
+   </para>
+   <programlisting language="json">{
+   "files": {
+      "myfile": "#!/bin/bash\necho \"Hello world\" > /root/testfile.txt"
+   },
+   ...,
+   "stack_name": "teststack",
+   "template": {
+      ...,
+      "resources": {
+         "my_server": {
+            "type": "OS::Nova::Server",
+            "properties": {
+               ...,
+               "user_data": {
+                  "get_file": "myfile"
+               }
+            }
+         }
+      }
+   },
+   "timeout_mins": 60
+}</programlisting>
 </wadl:doc>
-</param> '>
+</param>'>
 <!ENTITY sortKeys '
    <param xmlns="http://wadl.dev.java.net/2009/02" name="sort_keys" style="query" required="false">
 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -96,7 +138,7 @@
 </wadl:doc>
 </param> '>
 <!ENTITY templateUrlParameter '
-   <param xmlns="http://wadl.dev.java.net/2009/02" name="template_url" style="plain" required="false">
+<param xmlns="http://wadl.dev.java.net/2009/02" name="template_url" style="plain" required="false">
 <wadl:doc xmlns="http://docbook.org/ns/docbook"
    xmlns:wadl="http://wadl.dev.java.net/2009/02"
    xml:lang="EN">
@@ -117,7 +159,7 @@
 </wadl:doc>
 </param>'>
 <!ENTITY templateParameter '
-   <param xmlns="http://wadl.dev.java.net/2009/02" name="template" style="plain" required="false">
+<param xmlns="http://wadl.dev.java.net/2009/02" name="template" style="plain" required="false">
 <wadl:doc xmlns="http://docbook.org/ns/docbook"
    xmlns:wadl="http://wadl.dev.java.net/2009/02"
    xml:lang="EN">
