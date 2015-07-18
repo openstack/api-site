@@ -50,21 +50,21 @@ Anyone with a programming background can easily read the code in this guide.
 Although this guide focuses on a particular SDK, you can use other languages
 and toolkits with the OpenStack cloud:
 
-============= ============= ================================================================= ====================================================
-Language      Name          Description                                                       URL
-============= ============= ================================================================= ====================================================
-Python        Libcloud      A Python-based library managed by the Apache Foundation.
-                            This library enables you to work with multiple types of clouds.   https://libcloud.apache.org
-Python        OpenStack SDK A python-based library specifically developed for OpenStack.      https://github.com/stackforge/python-openstacksdk
-Java          jClouds       A Java-based library. Like Libcloud, it's also managed by the     https://jclouds.apache.org
-                            Apache Foundation and works with multiple types of clouds.
-Ruby          fog           A Ruby-based SDK for multiple clouds.                             https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
-node.js       pkgcloud      A Node.js-based SDK for multiple clouds.                          https://github.com/pkgcloud/pkgcloud
-PHP           php-opencloud A library for developers using PHP to work with OpenStack clouds. http://php-opencloud.com/
-NET Framework OpenStack SDK A .NET based library that can be used to write C++ applications.  https://www.nuget.org/packages/OpenStack-SDK-DotNet
-              for Microsoft
-              .NET
-============= ============= ================================================================= ====================================================
+============== ============= ================================================================= ====================================================
+Language        Name          Description                                                       URL
+============== ============= ================================================================= ====================================================
+Python         Libcloud      A Python-based library managed by the Apache Foundation.
+                             This library enables you to work with multiple types of clouds.   https://libcloud.apache.org
+Python         OpenStack SDK A Python-based library specifically developed for OpenStack.      https://github.com/stackforge/python-openstacksdk
+Java           jClouds       A Java-based library. Like Libcloud, it's also managed by the     https://jclouds.apache.org
+                             Apache Foundation and works with multiple types of clouds.
+Ruby           fog           A Ruby-based SDK for multiple clouds.                             https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
+node.js        pkgcloud      A Node.js-based SDK for multiple clouds.                          https://github.com/pkgcloud/pkgcloud
+PHP            php-opencloud A library for developers using PHP to work with OpenStack clouds. http://php-opencloud.com/
+.NET Framework OpenStack SDK A .NET-based library enables you to write C++ or C# code for      https://www.nuget.org/packages/openstack.net
+               for Microsoft Microsoft applications.
+               .NET
+============== ============= ================================================================= ====================================================
 
 For a list of available SDKs, see `Software Development Kits <https://wiki.openstack.org/wiki/SDKs>`_.
 
@@ -78,7 +78,7 @@ What you need
 -------------
 
 We assume that you can already access an OpenStack cloud. You must have a
-project (also known as a tenant) with a minimum quota of six instances.
+project, also known as a tenant, with a minimum quota of six instances.
 Because the Fractals application runs in Ubuntu, Debian, Fedora-based, and
 openSUSE-based distributions, you must create instances that use one of these
 operating systems.
@@ -87,8 +87,15 @@ To interact with the cloud, you must also have
 
 .. only:: dotnet
 
-      `OpenStack SDK for Microsoft .NET 0.9.1 or higher installed
-      <https://www.nuget.org/packages/OpenStack-SDK-DotNet>`_.
+      `OpenStack Cloud SDK for Microsoft .NET 1.4.0.1 or later installed
+      <https://www.nuget.org/packages/openstack.net>`_.
+
+      .. note::
+
+         To install the OpenStack .NET SDK, use the NeGet Package Manager that
+         is included with Visual Studio and Xamarin Studio. You simply add a
+         package named 'openstack.net' and the NeGet Package Manager
+         automatically installs the necessary dependencies.
 
       .. warning::
 
@@ -206,6 +213,26 @@ are familiar with running code snippets in your language of choice.
         :start-after: step-1
         :end-before: step-2
 
+.. only:: dotnet
+
+    To use the OpenStack .NET SDK, add the following code in the required
+    namespace section.
+
+    .. code-block:: c#
+
+        using net.openstack.Core.Domain;
+        using net.openstack.Core.Providers;
+        using net.openstack.Providers.Rackspace;
+
+    Because all service endpoints use the Identity Service for authentication
+    and authorization, place the following code in the 'void Main()'
+    entry-point function.
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-1
+        :end-before: step-2
+
 
 .. note:: Because the tutorial reuses the :code:`conn` object,
           make sure that you always have one handy.
@@ -246,7 +273,7 @@ To list the images that are available in your cloud, run some API calls:
         :start-after: step-2
         :end-before: step-3
 
-    You should see a result something like:
+    This code returns output like this:
 
     .. code-block:: python
 
@@ -259,7 +286,7 @@ To list the images that are available in your cloud, run some API calls:
         :start-after: step-2
         :end-before: step-3
 
-    You should see a result something like:
+    This code returns output like this:
 
     .. code-block:: none
 
@@ -276,6 +303,21 @@ To list the images that are available in your cloud, run some API calls:
         updated: 2015-08-13T02:43:38Z
         status: ACTIVE
 
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-2
+        :end-before: step-3
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        Image Id: dce1a289-2ad5-4aaa-a7a6-fe30adc2094e - Image Name: snap1
+        Image Id: 97f55846-6ea5-4e9d-b437-bda97586bd0c - Image Name: cirros-0.3.4-x86_64-uec
+        Image Id: 3e0e8270-0da4-4fec-bfc7-eeb763604cad - Image Name: cirros-0.3.4-x86_64-uec-ramdisk
+        Image Id: 0b151382-d2f1-44d7-835b-6408bd523917 - Image Name: cirros-0.3.4-x86_64-uec-kernel
 
 You can also get information about available flavors:
 
@@ -291,7 +333,7 @@ You can also get information about available flavors:
         :start-after: step-3
         :end-before: step-4
 
-    This code produces output like:
+    This code returns output like this:
 
     .. code-block:: python
 
@@ -307,7 +349,7 @@ You can also get information about available flavors:
         :start-after: step-3
         :end-before: step-4
 
-    This code produces output like:
+    This code returns output like this:
 
     .. code-block:: none
 
@@ -323,6 +365,25 @@ You can also get information about available flavors:
         ram: 2048
         disk: 20
         vcpus: 1
+
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-3
+        :end-before: step-4
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        Flavor Id: 1 - Flavor Name: m1.tiny
+        Flavor Id: 2 - Flavor Name: m1.small
+        Flavor Id: 3 - Flavor Name: m1.medium
+        Flavor Id: 4 - Flavor Name: m1.large
+        Flavor Id: 42 - Flavor Name: m1.nano
+        Flavor Id: 5 - Flavor Name: m1.xlarge
+        Flavor Id: 84 - Flavor Name: m1.micro
 
 Your images and flavors will be different, of course.
 
@@ -355,7 +416,7 @@ image that you picked in the previous section:
         :start-after: step-4
         :end-before: step-5
 
-    You should see output something like this:
+    This code returns output like this:
 
     .. code-block:: python
 
@@ -367,7 +428,7 @@ image that you picked in the previous section:
         :start-after: step-4
         :end-before: step-5
 
-    You should see output something like this:
+    This code returns output like this:
 
     .. code-block:: none
 
@@ -377,6 +438,18 @@ image that you picked in the previous section:
         updated: 2015-08-13T02:43:38Z
         status: ACTIVE
 
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-4
+        :end-before: step-5
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        Image Id: 97f55846-6ea5-4e9d-b437-bda97586bd0c - Image Name: cirros-0.3.4-x86_64-uec
 
 Next, choose which flavor you want to use:
 
@@ -392,7 +465,7 @@ Next, choose which flavor you want to use:
         :start-after: step-5
         :end-before: step-6
 
-    You should see output something like this:
+    This code returns output like this:
 
     .. code-block:: python
 
@@ -404,7 +477,7 @@ Next, choose which flavor you want to use:
         :start-after: step-5
         :end-before: step-6
 
-    You should see output something like this:
+    This code returns output like this:
 
     .. code-block:: none
 
@@ -414,6 +487,19 @@ Next, choose which flavor you want to use:
         ram: 2048
         disk: 20
         vcpus: 1
+
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-5
+        :end-before: step-6
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        Flavor Id: 42 - Flavor Name: m1.nano
 
 
 Now, you're ready to launch the instance.
@@ -446,7 +532,7 @@ Create the instance.
         :start-after: step-6
         :end-before: step-7
 
-    You should see output something like:
+    This code returns output like this:
 
     .. code-block:: python
 
@@ -469,12 +555,24 @@ Create the instance.
         :start-after: step-6
         :end-before: step-7
 
-    You should see output something like:
+    This code returns output like this:
 
     .. code-block:: none
 
         0d7968dc-4bf4-4e01-b822-43c9c1080d77
 
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-6
+        :end-before: step-7
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        Instance Id: 4e480ef1-68f0-491f-b237-d9b7f500ef24 at net.openstack.Core.Domain.Link[]
 
 If you list existing instances:
 
@@ -493,6 +591,13 @@ If you list existing instances:
 .. only:: pkgcloud
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-7
+        :end-before: step-8
+
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
         :start-after: step-7
         :end-before: step-8
 
@@ -531,7 +636,11 @@ The new instance appears.
         updated: '2015-06-30T08:17:44Z',
         ...
 
+.. only:: dotnet
 
+    .. code-block:: none
+
+        Instance Id: 4e480ef1-68f0-491f-b237-d9b7f500ef24 at net.openstack.Core.Domain.Link[]
 
 Before you move on, you must do one more thing.
 
@@ -559,7 +668,12 @@ money. Destroy cloud resources to avoid unexpected expenses.
         :start-after: step-8
         :end-before: step-9
 
+.. only:: dotnet
 
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+        :language: c#
+        :start-after: step-8
+        :end-before: step-9
 
 If you list the instances again, the instance disappears.
 
@@ -716,7 +830,7 @@ address to your instance.
 
 .. todo:: remove extra blank line after break
 
-    You should see the floating IP output to the command line:
+    This code returns the floating IP address:
 
     ::
 
@@ -739,7 +853,7 @@ address to your instance.
         :start-after: step-13
         :end-before: step-14
 
-    You should see the floating IP output to the command line:
+    This code returns the floating IP address:
 
     ::
 
@@ -817,3 +931,8 @@ information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
        :language: javascript
+
+.. only:: dotnet
+
+    .. literalinclude:: ../samples/dotnet/getting_started.cs
+       :language: c#
