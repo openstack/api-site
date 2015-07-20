@@ -25,10 +25,39 @@
 ... 
 }</programlisting>
    <para>
-      This parameter may not be used to provide the content of the
-      template located at the address specified by
-      <code>template_url</code>. Use the <code>template</code> parameter
-      to supply the template content as part of the request.
+      Additionally, some template authors encode their user data in a local
+      file. The Orchestration client examines the template for the
+      <code>get_file</code> intrinsic function and adds an entry to the
+      <code>files</code> map with the path to the file as the name and the
+      file contents as the value. So, a simple example looks like this:
+   </para>
+   <programlisting language="json">{
+   "files": {
+      "myfile": "#!/bin/bash\necho \"Hello world\" > /root/testfile.txt"
+   },
+   ...,
+   "stack_name": "teststack",
+   "template": {
+      ...,
+      "resources": {
+         "my_server": {
+            "type": "OS::Nova::Server",
+            "properties": {
+               ...,
+               "user_data": {
+                  "get_file": "myfile"
+               }
+            }
+         }
+      }
+   },
+   "timeout_mins": 60
+}</programlisting>
+   <para>
+      Do not use this parameter to provide the content of the template located
+      at the address specified by <code>template_url</code>. Instead, use the
+      <code>template</code> parameter to supply the template content as part
+      of the request.
    </para>
 </wadl:doc>
 </param> '>
