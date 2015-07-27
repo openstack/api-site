@@ -230,6 +230,7 @@ are familiar with running code snippets in your language of choice.
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-1
         :end-before: step-2
 
@@ -307,6 +308,7 @@ To list the images that are available in your cloud, run some API calls:
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-2
         :end-before: step-3
 
@@ -370,6 +372,7 @@ You can also get information about available flavors:
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-3
         :end-before: step-4
 
@@ -442,6 +445,7 @@ image that you picked in the previous section:
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-4
         :end-before: step-5
 
@@ -492,6 +496,7 @@ Next, choose which flavor you want to use:
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-5
         :end-before: step-6
 
@@ -565,6 +570,7 @@ Create the instance.
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-6
         :end-before: step-7
 
@@ -598,6 +604,7 @@ If you list existing instances:
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-7
         :end-before: step-8
 
@@ -672,6 +679,7 @@ money. Destroy cloud resources to avoid unexpected expenses.
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
+        :dedent: 3
         :start-after: step-8
         :end-before: step-9
 
