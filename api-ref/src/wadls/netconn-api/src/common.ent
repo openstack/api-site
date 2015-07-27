@@ -1614,7 +1614,7 @@ router.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="lb_algorithm" style="plain" type="xsd:string">
+    name="lb_method" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
@@ -1639,11 +1639,21 @@ router.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
-    name="healthmonitor_id" style="plain" type="xsd:list">
+    name="health_monitors" style="plain" type="xsd:list">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The ID of the health monitor.</para>
+        <para>List of health monitors that are associated with the pool.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="subnet_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+          All members of this pool are on this subnet.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -1652,8 +1662,8 @@ router.</para>
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
         <para>
-          The ID of the tenant who owns the pool. Only administrative users can
-          specify a tenant ID other than their own.
+          The ID of the tenant who owns the pool. Only administrative users
+          can specify a tenant ID other than their own.
         </para>
     </wadl:doc>
 </param>
@@ -1661,7 +1671,10 @@ router.</para>
     name="admin_state_up" style="plain" type="xsd:boolean">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The administrative state of the pool, which is up (<code>true</code>) or down (<code>false</code>).</para>
+        <para>
+          The administrative state of the pool, which is up
+          (<code>true</code>) or down (<code>false</code>).
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -1677,7 +1690,11 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Session persistence algorithm that should be used (if any). This is a dictionary that has keys of "type" and "cookie_name"..</para>
+        <para>
+          The session persistence algorithm, if any, to use. This algorithm is
+          a dictionary with the <code>type</code> and <code>cookie_name</code>
+          keys.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -1695,6 +1712,33 @@ router.</para>
         xml:lang="EN">
         <para>The unique ID for the pool.</para>
     </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="vip_id" style="plain" type="csapi:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The ID of VIP.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="health_monitors_status" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+          Information about the health monitors that are associated with the
+          pool.
+        </para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="provider" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The load-balancer provider.</para>
+    </wadl:doc>
 </param>' >
 <!ENTITY poolCreateRequestParams '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -1703,8 +1747,8 @@ router.</para>
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
         <para>
-          The ID of the tenant who owns the pool. Only administrative users can
-          specify a tenant ID other than their own.
+          The ID of the tenant who owns the pool. Only administrative users
+          can specify a tenant ID other than their own.
         </para>
     </wadl:doc>
 </param>
@@ -1781,7 +1825,9 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>ID of default pool. Must have compatible protocol with listener.</para>
+        <para>
+          The ID of default pool. Must have compatible protocol with listener.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -1797,7 +1843,9 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Detailed description of the listener.</para>
+        <para>
+          Detailed description of the listener.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -1827,14 +1875,17 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Protocol to load balance: HTTP, HTTPS, TCP, UDP.</para>
+        <para>
+          The protocol to load balance. A valid values is HTTP, HTTPS, TCP, or
+          UDP.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="protocol_port" style="plain" type="xsd:int">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>TCP (or UDP) port to listen on.</para>
+        <para>The TCP or UDP port on which to listen.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -2054,7 +2105,10 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The type of probe, which is PING, TCP, HTTP, or HTTPS, that is sent by the load balancer to verify the member state.</para>
+        <para>
+          The type of probe that is sent by the load balancer to verify the
+          member state. A valid value is PING, TCP, HTTP, or HTTPS.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -2131,8 +2185,8 @@ router.</para>
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
        <para>
-          The ID of the tenant who owns the member. Only administrative users can
-          specify a tenant ID other than their own.
+          The ID of the tenant who owns the member. Only administrative users
+          can specify a tenant ID other than their own.
         </para>
     </wadl:doc>
 </param>
@@ -2157,16 +2211,19 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which the application is hosted.</para>
+        <para>The port where the application is hosted.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="weight" style="plain" type="xsd:int">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A positive integer value that indicates the relative portion of traffic that this
-        member should receive from the pool. For example, a member with a weight of 10 receives five times
-        as much traffic as a member with a weight of 2.</para>
+        <para>
+          A positive integer value that indicates the relative portion of
+          traffic that this member should receive from the pool. For example,
+          a member with a weight of 10 receives five times as much traffic as
+          a member with a weight of 2.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -2183,7 +2240,9 @@ router.</para>
     name="status" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The status of the member. Indicates whether the member is operational.</para>
+        <para>
+          The status of the member. Indicates whether the member is operational.
+        </para>
     </wadl:doc>
 </param>'>
 <!ENTITY memberResponseParams '
@@ -2227,7 +2286,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which the application is hosted.</para>
+        <para>The port where the application is hosted.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -2251,7 +2310,9 @@ router.</para>
     name="status" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The status of the member. Indicates whether the member is operational.</para>
+        <para>
+          The status of the member. Indicates whether the member is operational.
+        </para>
     </wadl:doc>
 </param>' >
 <!ENTITY memberCreateRequestParams '
@@ -2279,7 +2340,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which the application is hosted.</para>
+        <para>The port where the application is hosted.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -2315,7 +2376,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which the application is hosted.</para>
+        <para>The port where the application is hosted.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -2405,8 +2466,10 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which to listen to client traffic that is associated with the VIP address.
-        A valid value is from 0 to 65535.</para>
+        <para>
+          The port on which to listen to client traffic that is associated
+          with the VIP address. A valid value is from 0 to 65535.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -2606,7 +2669,10 @@ router.</para>
     name="admin_state_up" style="plain" type="xsd:boolean">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The administrative state of the VIP. A valid value is true (UP) or false (DOWN).</para>
+        <para>
+          The administrative state of the VIP. A valid value is true (UP) or
+          false (DOWN).
+        </para>
     </wadl:doc>
 </param>' >
 <!-- pools  -->
@@ -2857,7 +2923,10 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>Number of allowed connection failures before changing the status of the member to INACTIVE. A valid value is from 1 to 10.</para>
+        <para>
+          Number of allowed connection failures before changing the status of
+          the member to INACTIVE. A valid value is from 1 to 10.
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -3084,7 +3153,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which the application is hosted.</para>
+        <para>The port where the application is hosted.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -3151,7 +3220,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The port on which the application is hosted.</para>
+        <para>The port where the application is hosted.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -3647,7 +3716,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The subnet on which the tenant wants the VPN
+        <para>The subnet where the tenant wants the VPN
               service.</para>
     </wadl:doc>
 </param>
@@ -3693,7 +3762,7 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The subnet on which the tenant wants the VPN
+        <para>The subnet where the tenant wants the VPN
               service.</para>
     </wadl:doc>
 </param>
