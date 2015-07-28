@@ -3,40 +3,48 @@ API-Site repository
 
 This repository contains documentation for the OpenStack project.
 
-For more details, see the `OpenStack Documentation wiki page
-<http://wiki.openstack.org/Documentation>`_.
-
-It includes these pages and PDFs:
+For details, see the
+`OpenStack Documentation wiki page <http://wiki.openstack.org/Documentation>`_, 
+which includes these pages and PDFs:
 
  * API Quick Start
  * API Complete Reference (web pages)
  * API Reference PDFs
  * API Guide (in progress)
 
-In addition to these, this repository contains:
+In addition to these documents, this repository contains:
 
  * developer.openstack.org: ``www``
+ * Writing your first OpenStack application tutorial (in progress): ``firstapp``
 
 Prerequisites
 =============
 
-`Apache Maven <http://maven.apache.org/>`_ must be installed to build the
-documentation.
+To build the documentation, you must install
+`Apache Maven <http://maven.apache.org/>`_.
 
-To install Maven 3 for Ubuntu 12.04 and later,and Debian wheezy and later::
+To install Maven 3 for Ubuntu 12.04 or later or Debian 7 ("wheezy") or later::
 
     apt-get install maven
 
-On Fedora 20 and later::
+On Fedora 20 or later::
 
     yum install maven
+
+To run tests, you must install `Python Tox <https://tox.readthedocs.org/>`_.
+
+To install Tox for Ubuntu 14.04 or later::
+
+    apt-get install python-tox python-dev libxml2-dev libxslt1-dev
 
 Build and update API docs
 =========================
 
-For more details about the Gerrit workflow, see `Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
+To complete code reviews in this repository, use the standard OpenStack Gerrit
+`workflow <https://review.openstack.org>`_ . For details, see 
+`Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
-To build and updates any of the API documents:
+To build and update the API documents:
 
 #. Open a Terminal window.
 
@@ -48,17 +56,17 @@ To build and updates any of the API documents:
 
 #. CD into the api-site directory.
 
-#. Run these commands to ensure you have the latest changes::
+#. Run these commands to ensure that you have the latest changes::
 
         git remote update
         git checkout master
         git pull origin master
 
-#. To checkout a new branch::
+#. To check out a new branch::
 
         git checkout -b "*my_branch*"
 
-   Otherwise, to checkout an existing review::
+   Otherwise, to check out an existing review::
 
         git review -d change-number /* where change-number is the change number of the review
 
@@ -68,7 +76,8 @@ To build and updates any of the API documents:
 
         mvn clean generate-sources
 
-#. To check in your changes, see `Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
+#. To check in your changes, see 
+`Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 - The root of the generated HTML (API site) documentation is::
 
@@ -90,45 +99,43 @@ To build and updates any of the API documents:
 Run tests
 =========
 
-Install the python tox package and run ``tox`` from the top-level
-directory to use the same tests that are done as part of our Jenkins
-gating jobs.
+To use the same tests that are used as part of our Jenkins gating jobs,
+install the Python tox package and run ``tox`` from the top-level directory.
 
-If you like to run individual tests, run:
+To run individual tests:
 
- * ``tox -e checkniceness`` - to run the niceness tests
- * ``tox -e checksyntax`` - to run syntax checks
- * ``tox -e checkdeletions`` - to check that no deleted files are referenced
- * ``tox -e checkbuild`` - to actually build the manual
+ * ``tox -e checkniceness`` - Niceness tests
+ * ``tox -e checksyntax`` - Syntax checks
+ * ``tox -e checkdeletions`` - Verifies that no deleted files are referenced
+ * ``tox -e checkbuild`` - Builds the manual
 
-tox will use the `openstack-doc-tools package
-<https://github.com/openstack/openstack-doc-tools>`_ for execution of
-these tests. openstack-doc-tools has a requirement on maven for the
-build check.
+To run these tests, the Tox package uses the
+`OpenStack doc tools package <https://github.com/openstack/openstack-doc-tools>`_. 
+
+The OpenStack doc tools require Maven for the build check.
 
 
 Contribute
 ==========
 
-Our community welcomes all people interested in open source cloud
-computing, and encourages you to join the `OpenStack Foundation
-<http://www.openstack.org/join>`_.
+Our community welcomes everyone who is interested in open source cloud
+computing and encourages you to join the `OpenStack Foundation <http://www.openstack.org/join>`_.
 
 The best way to get involved with the community is to talk with others online
-or at a meetup and offer contributions through our processes, the `OpenStack
-wiki <http://wiki.openstack.org>`_, blogs, or on IRC at ``#openstack``
-on ``irc.freenode.net``.
+or at a meetup and offer contributions through our processes,
+the `OpenStack wiki <http://wiki.openstack.org>`_, blogs, or
+on IRC at ``#openstack`` on ``irc.freenode.net``.
 
 We welcome all types of contributions, from blueprint designs to documentation
 to testing to deployment scripts.
 
-If you would like to contribute to the documents, please see the
+To contribute to the documents, see
 `Documentation HowTo <https://wiki.openstack.org/wiki/Documentation/HowTo>`_.
 
 Bugs
 ====
 
-Bugs should be filed on Launchpad, and not GitHub:
+File bugs on Launchpad and not through GitHub:
 
    https://bugs.launchpad.net/openstack-api-site/
 
@@ -136,4 +143,4 @@ Bugs should be filed on Launchpad, and not GitHub:
 Install
 =======
 
-See `OpenStack <http://www.openstack.org/>`_ to learn more about the OpenStack project.
+To learn more about the OpenStack project, see `OpenStack <http://www.openstack.org/>`_.
