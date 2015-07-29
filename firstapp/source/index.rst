@@ -1,5 +1,5 @@
 ========================================
-Writing your First OpenStack Application
+Writing your first OpenStack application
 ========================================
 
 Contents

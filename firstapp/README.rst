@@ -1,32 +1,48 @@
 ========================================
-Writing your First OpenStack Application
+Writing your first OpenStack application
 ========================================
 
-This directory contains the "Writing your First OpenStack Application"
-tutorial.
+This tutorial works with the `First App Application for OpenStack <https://github.com/stackforge/faafo/>`_.
 
-The tutorials works with an application that can be found at:
-https://github.com/stackforge/faafo
+Prerequisites
+=============
+
+To build the documentation, install `Python Tox <https://tox.readthedocs.org/>`_.
+
+To install Tox for Ubuntu 14.04 and later::
+
+    apt-get install python-tox python-dev libxml2-dev libxslt1-dev
+
+Structure
+=========
 
 /source
 ~~~~~~~
 
-The :code:`/source` directory contains a playground for the actual tutorial
-documentation. It's reStructuredText (RST), built with Sphinx.
+The :code:`/source` directory contains the tutorial documentation as
+`reStructuredText <http://docutils.sourceforge.net/rst.html>`_ (RST). The
+documentation is built with `Sphinx <http://sphinx-doc.org/>`_.
 
 The RST source includes conditional output logic, so specifying::
 
   tox -e firstapp-libcloud
 
 will invoke :code:`sphinx-build` with :code:`-t libcloud`, meaning sections
-marked :code:`.. only:: libcloud` in the RST will be built, while others
-won't.
+marked :code:`.. only:: libcloud` in the RST are built, while others
+are not built.
 
-Sphinx and the OpenStack docs.openstack.org Sphinx Theme (openstackdocstheme)
-are needed to build the docs.
+To build the documentation, you need Sphinx and the OpenStack
+docs.openstack.org Sphinx Theme (openstackdocstheme). When you invoke tox,
+these dependencies are automatically pulled in from the top-level :code:`test-requirements.txt`.
 
 /samples
 ~~~~~~~~
 
-The code samples provided in the guide are sourced from files
-in this directory. There is a sub-directory for each SDK.
+The code samples provided in the guide are sourced from files in this
+directory. Each SDK has its own subdirectory.
+
+/build-libcloud
+~~~~~~~~~~~~~~~
+
+The HTML documentation is built in this directory. This directory is included
+in the project :code:`.gitignore`.
