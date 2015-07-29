@@ -9,26 +9,32 @@
 <application xmlns="http://wadl.dev.java.net/2009/02"
              xmlns:wadl="http://wadl.dev.java.net/2009/02"
              xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+             xmlns:csapi="http://docs.openstack.org/identity/api/v3">
    <resources base="https://servers.api.openstack.com"
               xml:id="os-security-groups-v2.1">
       <resource id="v2.1" path="//v2.1">
-         <resource path="os-security-groups" id="os-security-groups2">
-            <method href="#listSecGroups" />
-            <method href="#createSecGroup" />
-            <resource id="security_group_id" path="{security_group_id}">
-               <method href="#showSecGroup" />
-               <method href="#deleteSecGroup" />
-            </resource>
-         </resource>
-         <resource id="Servers" path="servers">
-            <resource path="{server_id}" id="server_id">
-               <resource path="os-security-groups" id="os-security-groups">
-                  <method href="#listSecGroupsByServer" />
+         <resource id="tenant_id" path="{tenant_id}">
+            &tenantIdRequestParameter;
+            <resource path="os-security-groups" id="os-security-groups2">
+               <method href="#listSecGroups" />
+               <method href="#createSecGroup" />
+               <resource id="security_group_id" path="{security_group_id}">
+                  &securityGroupIdRequestParameter;
+                  <method href="#showSecGroup" />
+                  <method href="#deleteSecGroup" />
                </resource>
+           </resource>
+           <resource id="Servers" path="servers">
+               <resource path="{server_id}" id="server_id">
+                  &serverIdRequestParameter;
+                  <resource path="os-security-groups" id="os-security-groups">
+                     <method href="#listSecGroupsByServer" />
+                  </resource>
             </resource>
          </resource>
       </resource>
+   </resource>
    </resources>
    <method name="GET" id="listSecGroups">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List security groups">

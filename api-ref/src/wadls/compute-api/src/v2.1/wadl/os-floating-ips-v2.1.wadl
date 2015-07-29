@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
-%common;]>
+<!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-floating-ips-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="os-floating-ips" path="os-floating-ips">
-                <method href="#ListFloatingIPs"/>
-                <method href="#AllocateFloatingIP"/>
-                <resource path="{id}">
-                    <param name="id" style="template"
-                        required="true">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The unique
-                               identifier associated with
-                               allocated floating IP address.
-                           </para></wadl:doc>
-                    </param>
-                    <method href="#DeallocateFloatingIP"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="os-floating-ips" path="os-floating-ips">
+                    <method href="#ListFloatingIPs"/>
+                    <method href="#AllocateFloatingIP"/>
+                    <resource path="{id}">
+                        &floatingIpIdRequestParameter;
+                        <method href="#DeallocateFloatingIP"/>
+                    </resource>
                 </resource>
             </resource>
         </resource>
@@ -31,11 +31,13 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List floating IPs">
             <para role="shortdesc">Lists floating IP addresses
-                associated with the tenant or account.</para>
+                associated with the tenant or account.
+            </para>
             <para>
               Policy defaults enable only users with the administrative role
-              or the owner of the server to perform this operation. Cloud providers can change
-              these permissions through the <code>policy.json</code> file.
+              or the owner of the server to perform this operation. Cloud
+              providers can change these permissions through the
+              <code>policy.json</code> file.
             </para>
         </wadl:doc>
         <response status="200">
@@ -61,7 +63,6 @@
             </para>
         </wadl:doc>
         <request>
-
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -104,8 +105,7 @@
     <method name="DELETE" id="DeallocateFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Deallocate floating IP">
-            <para role="shortdesc">Deallocates the floating IP address
-                associated with floating_IP_address_ID.
+            <para role="shortdesc">Deallocates a specified floating IP address.
             </para>
             <para>
               You can use this call to deallocate and delete only manually-allocated

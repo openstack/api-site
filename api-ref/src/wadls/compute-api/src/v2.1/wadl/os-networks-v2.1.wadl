@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application
-[
-<!ENTITY % common  SYSTEM "../common.ent">
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
-<!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-networks-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <method href="#CreateNetwork"/>
-            <resource id="os-networks" path="os-networks">
-                <method href="#ListNetworks"/>
-                <resource path="add" id="add">
-                    <method href="#AddNetwork"/>
-                </resource>
-                <resource path="{id}" id="id">
-                    <method href="#GetNetwork"/>
-                    <method href="#DeleteNetwork"/>
-                    <resource path="action" id="action">
-                        <method href="#AssociateHost"/>
-                        <method href="#DisassociateHost"/>
-                        <method href="#DisassociateNetwork"/>
-                        <method href="#DisassociateProject"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="os-networks" path="os-networks">
+                    <method href="#CreateNetwork"/>
+                    <method href="#ListNetworks"/>
+                    <resource path="add" id="add">
+                        <method href="#AddNetwork"/>
+                    </resource>
+                    <resource path="{id}" id="id">
+                        &networkIdRequestParameter;
+                        <method href="#GetNetwork"/>
+                        <method href="#DeleteNetwork"/>
+                        <resource path="action" id="action">
+                            <method href="#AssociateHost"/>
+                            <method href="#DisassociateHost"/>
+                            <method href="#DisassociateNetwork"/>
+                            <method href="#DisassociateProject"/>
+                        </resource>
                     </resource>
                 </resource>
             </resource>

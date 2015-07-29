@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
-%common;]>
+<!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-instance-actions-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="servers" path="servers">
-                <resource id="os-instance-actions"
-                        path="os-instance-actions">
-                    <resource id="server_id" path="{server_id}">
-                        <method href="#returnactionlist"/>
-                            <resource id="request_id" path="{request_id}">
-                                <method href="#returninstancedata"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="servers" path="servers">
+                    <resource id="os-instance-actions"
+                            path="os-instance-actions">
+                        <resource id="server_id" path="{server_id}">
+                            &serverIdRequestParameter;
+                            <method href="#returnactionlist"/>
+                                <resource id="request_id" path="{request_id}">
+                                    <method href="#returninstancedata"/>
+                                </resource>
                             </resource>
                         </resource>
                     </resource>
@@ -32,7 +41,6 @@
                 Shows details for a specified action and specified instance.
             </para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
@@ -50,7 +58,6 @@
                 Lists actions for a specified instance.
             </para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
