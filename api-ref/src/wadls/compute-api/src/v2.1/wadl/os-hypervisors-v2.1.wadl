@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
-%common;]>
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-hypervisors-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="os-hypervisors" path="os-hypervisors">
-                <method href="#listhypervisors"/>
-                <resource id="statistics" path="statistics">
-                    <method href="#showhypervisorstatistics"/>
-                </resource>
-                <resource id="search" path="search">
-                    <param name="query" style="query"
-                        type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>Filters the search
-                                results by the specified
-                                   <code>?query={filter}</code> query
-                                parameter.</para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#searchhypervisors"/>
-                </resource>
-                <resource id="hypervisor_id" path="{hypervisor_id}">
-                    <method href="#showhypervisordetails"/>
-                    <resource id="servers" path="servers">
-                        <method href="#listservers"/>
-                        <resource id="server_id" path="{server_id}">
-                            <method href="#showserver">
-                            </method>
-                        </resource>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="os-hypervisors" path="os-hypervisors">
+                    <method href="#listhypervisors"/>
+                    <resource id="statistics" path="statistics">
+                        <method href="#showhypervisorstatistics"/>
                     </resource>
-                    <resource id="uptime" path="uptime">
-                        <method href="#showhypervisoruptime"/>
+                    <resource id="search" path="search">
+                        <param name="query" style="query"
+                            type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>Filters the search
+                                    results by the specified
+                                       <code>?query={filter}</code> query
+                                    parameter.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#searchhypervisors"/>
+                    </resource>
+                    <resource id="hypervisor_id" path="{hypervisor_id}">
+                        &hypervisorIdRequestParameter;
+                        <method href="#showhypervisordetails"/>
+                        <resource id="servers" path="servers">
+                            <method href="#listservers"/>
+                            <resource id="server_id" path="{server_id}">
+                                <method href="#showserver">
+                                </method>
+                            </resource>
+                        </resource>
+                        <resource id="uptime" path="uptime">
+                            <method href="#showhypervisoruptime"/>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
@@ -51,7 +60,6 @@
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Lists hypervisors.</para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -69,7 +77,6 @@
             <para role="shortdesc">Shows details for a specified
                 hypervisor.</para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -87,7 +94,6 @@
             <para role="shortdesc">Shows statistics for all
                 hypervisors.</para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -105,7 +111,6 @@
             <para role="shortdesc">Shows the uptime for a specified
                 hypervisor.</para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
-%common;]>
+<!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-floating-ip-dns-v2.1">
         <resource id="v2.1" path="//v2.1">
-          <resource id="os-floating-ip-dns"
-                path="os-floating-ip-dns">
-                <method href="#ListDomains"/>
-                <resource path="{domain}" id="domain">
-                    <param name="domain" style="template"
-                        required="true" type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN">
-                            <para>
-                                Registered DNS domain published by the DNS
-                                drivers.
-                            </para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#CreateDomain"/>
-                    <method href="#DeleteDomain"/>
-                    <resource id="entries" path="entries">
-                        <resource path="{name}" id="name">
-                            <param name="name" style="template"
-                               required="true" type="xsd:string">
-                               <wadl:doc
-                               xmlns="http://docbook.org/ns/docbook"
-                               xml:lang="EN">
-                                   <para>
-                                        DNS entry name assigned under a domain.
-                                   </para>
-                                </wadl:doc>
-                            </param>
-                            <method href="#CreateEntry"/>
-                            <method href="#FindUniqueEntry"/>
-                            <method href="#DeleteEntry"/>
-                        </resource>
-                        <resource path="{ip}" id="ip">
-                            <method href="#FindEntriesbyIP"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="os-floating-ip-dns"
+                    path="os-floating-ip-dns">
+                    <method href="#ListDomains"/>
+                    <resource path="{domain}" id="domain">
+                        <param name="domain" style="template"
+                            required="true" type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>
+                                    Registered DNS domain published by the DNS
+                                    drivers.
+                                </para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#CreateDomain"/>
+                        <method href="#DeleteDomain"/>
+                        <resource id="entries" path="entries">
+                            <resource path="{name}" id="name">
+                                &dnsEntryRequestParameter;
+                                <method href="#CreateEntry"/>
+                                <method href="#FindUniqueEntry"/>
+                                <method href="#DeleteEntry"/>
+                            </resource>
+                            <resource path="{ip}" id="ip">
+                                &dnsIpRequestParameter;
+                                <method href="#FindEntriesbyIP"/>
+                            </resource>
                         </resource>
                     </resource>
                 </resource>

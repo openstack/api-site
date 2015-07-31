@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
-%common;]>
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-migrations-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="os-migrations" path="os-migrations">
-                <method href="#returnmigrations"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="os-migrations" path="os-migrations">
+                    <method href="#returnmigrations"/>
+                </resource>
             </resource>
         </resource>
     </resources>
@@ -29,7 +37,6 @@
                 these permissions through the <code>policy.json</code> file.
             </para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">

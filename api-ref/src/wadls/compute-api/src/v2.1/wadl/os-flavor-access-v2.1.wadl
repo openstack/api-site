@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "../common.ent">
-%common;]>
+<!-- (C) 2014-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="flavor-access-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="flavors" path="flavors">
-                <resource id="os-flavor-access" path="os-flavor-access">
-                    <method href="#create-flavor-accesslist"/>
-                    <method href="#list-flavor-accesslist"/>
-                    <resource id="flavor_id" path="{flavor_id}">
-                        <method href="#show-flavor-accesslist"/>
-                        <resource id="action" path="action">
-                            <method href="#add-flavoraccess-to-tenant"/>
-                            <method href="#remove-flavoraccess-from-tenant"/>
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="flavors" path="flavors">
+                    <resource id="os-flavor-access" path="os-flavor-access">
+                        <method href="#create-flavor-accesslist"/>
+                        <method href="#list-flavor-accesslist"/>
+                        <resource id="flavor_id" path="{flavor_id}">
+                            &flavorIdRequestParameter;
+                            <method href="#show-flavor-accesslist"/>
+                            <resource id="action" path="action">
+                                <method href="#add-flavoraccess-to-tenant"/>
+                                <method href="#remove-flavoraccess-from-tenant"/>
+                            </resource>
                         </resource>
-                    </resource>
-                    <resource id="detail" path="detail">
-                        <method href="#list-flavor-accesslist-detail"/>
+                        <resource id="detail" path="detail">
+                            <method href="#list-flavor-accesslist-detail"/>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
@@ -90,7 +99,6 @@
             <para role="shortdesc">List flavors with details. Includes access list information.
            </para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
@@ -153,7 +161,6 @@
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Shows details for a specified flavor. Includes access list information.</para>
         </wadl:doc>
-        <request> </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
