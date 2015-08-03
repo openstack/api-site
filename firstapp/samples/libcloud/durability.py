@@ -1,4 +1,5 @@
 # step-1
+from __future__ import print_function
 from libcloud.storage.types import Provider
 from libcloud.storage.providers import get_driver
 
@@ -36,7 +37,7 @@ print(objects)
 
 # step-6
 object = swift.get_object(container_name, object_name)
-print object
+print(object)
 
 # step-7
 import hashlib
