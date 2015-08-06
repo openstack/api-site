@@ -183,40 +183,56 @@
     <method name="POST" id="createLoadBalancer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create load balancer">
             <para role="shortdesc">Creates a load balancer.</para>
-            <para>This operation provisions a new load balancer based
-                on the configuration defined in the request object.
-                After the request is validated and progress has started
-                on the provisioning process, a response object is
-                returned. The object contains a unique identifier
-                and the status of provisioning the load
-                balancer.</para>
-            <para>The <code>provisioning_status</code> of the load balancer in the
-                response can have one of the following values: <code>ACTIVE</code>,
-                <code>PENDING_CREATE</code>, or <code>ERROR</code>.</para>
-            <para>If the status is <code>PENDING_CREATE</code>,
-            the caller can view the progress of the provisioning operation by
-            performing a GET on
-            <code>/lbaas/loadbalancers/loadbalancer_id</code>. When the status
-            of the load balancer changes to <code>ACTIVE</code>, the load
-            balancer was successfully provisioned and is operational for
-            traffic handling.</para>
+            <para>
+                This operation provisions a new load balancer based on the
+                configuration defined in the request object. After the request
+                is validated and progress has started on the provisioning
+                process, a response object is returned. The object contains a
+                unique identifier and the status of provisioning the load
+                balancer.
+            </para>
+            <para>
+                The <code>provisioning_status</code> of the load balancer in
+                the response can have one of the following values:
+                <code>ACTIVE</code>, <code>PENDING_CREATE</code>, or
+                <code>ERROR</code>.
+            </para>
+            <para>
+                If the status is <code>PENDING_CREATE</code>,
+                the caller can view the progress of the provisioning operation by
+                performing a GET on
+                <code>/lbaas/loadbalancers/loadbalancer_id</code>. When the status
+                of the load balancer changes to <code>ACTIVE</code>, the load
+                balancer was successfully provisioned and is operational for
+                traffic handling.
+            </para>
            <!--  <para>The caller of this operation must specify these load balancer attributes, at a minimum:</para> -->
-            <para>If the request cannot be fulfilled due to insufficient or
-            invalid data, an HTTP 400 (Bad Request) error response is
-            returned with information about the nature of the failure in
-            the response body. Failures in the validation process are
-            non-recoverable and require the caller to correct the cause of
-            the failure and POST the request again.</para>
-            <para>You can configure all documented features of the load
-            balancer at creation time by specifying the additional
-            elements or attributes in the request.</para>
+            <para>
+                If the request cannot be fulfilled due to insufficient or
+                invalid data, an HTTP 400 (Bad Request) error response is
+                returned with information about the nature of the failure in
+                the response body. Failures in the validation process are non-
+                recoverable and require the caller to correct the cause of the
+                failure and POST the request again.
+            </para>
+            <para>
+                You can configure all documented features of the load balancer
+                at creation time by specifying the additional elements or
+                attributes in the request.
+            </para>
             <para>Users with an administrative role can create load balancers on behalf
             of other tenants by specifying a <code>tenant_id</code> attribute different
             than their own.</para>
             <para><emphasis role="bold">Example: Create a load balancer</emphasis></para>
             <itemizedlist>
                 <listitem><para><code>tenant_id</code>: only required if the caller has an administrative role and wants to create a load balancer for another tenant.</para></listitem>
-                <listitem><para><code>vip_subnet_id</code>: The network on which to allocate the load balancer's vip address. A tenant can only create load balancer vips on networks authorized by policy (e.g. her own networks or shared/provider networks).</para></listitem>
+                <listitem><para>
+                    <code>vip_subnet_id</code>: The network on which to
+                    allocate the VIP address for the load balancer. A tenant can
+                    only create load balancer VIPs on networks that are authorized by the
+                    policy, such as her own networks or shared or provider
+                    networks.
+                </para></listitem>
             </itemizedlist>
             <para>Some attributes receive default values if not specified in the request:</para>
             <itemizedlist>
@@ -390,7 +406,7 @@
             attributes: <code>listener_id</code>, <code>tenant_id</code>,
             <code>loadbalancer_id</code>, <code>loadbalancers</code>,
             <code>default_pool_id</code>, <code>protocol</code>, and
-            <code>protocol_port</code>. Attempting to update an imutable attribute results
+            <code>protocol_port</code>. Attempting to update an immutable attribute results
             in a 422 (Immutable) fault.</para>
             <para>Note: You cannot update a listener if the load balancer to
             which the listener is attached does not have a <code>provisioning_status</code> of
@@ -428,7 +444,12 @@
             <itemizedlist>
                 <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
                 <listitem><para><code>protocol</code>: The protocol this pool and its members listen for. Must be one of TCP, HTTP, or HTTPS</para></listitem>
-                <listitem><para><code>lb_algorithm</code>: The load balancing algorithm to distribute traffic to the pool's members. Must be one of ROUND_ROBIN, LEAST_CONNECTIONS, or SOURCE_IP.</para></listitem>
+                <listitem><para>
+                    <code>lb_method</code>: The load-balancer algorithm, which
+                    is round-robin, least-connections, and so on, that is used to distribute
+                    traffic to the pool members. This value, which must be supported, is dependent
+                    on the load-balancer provider. The round-robin algorithm must be supported.
+                </para></listitem>
                 <listitem><para><code>protocol_port</code>: The port on which the front end listens. Must be an integer in the range from 1 to 65535.</para></listitem>
                 <listitem><para><code>listener_id</code>: The listener in which this pool becomes the default pool. There can only be on default pool for a listener.</para></listitem>
             </itemizedlist>
@@ -474,7 +495,7 @@
                 <listitem><para><code>name</code></para></listitem>
                 <listitem><para><code>description</code></para></listitem>
                 <listitem><para><code>protocol</code></para></listitem>
-                <listitem><para><code>lb_algorithm</code></para></listitem>
+                <listitem><para><code>lb_method</code></para></listitem>
                 <listitem><para><code>session_persistence</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
                 <listitem><para><code>listeners</code></para></listitem>
@@ -502,7 +523,7 @@
                 <listitem><para><code>name</code></para></listitem>
                 <listitem><para><code>description</code></para></listitem>
                 <listitem><para><code>protocol</code></para></listitem>
-                <listitem><para><code>lb_algorithm</code></para></listitem>
+                <listitem><para><code>lb_method</code></para></listitem>
                 <listitem><para><code>session_persistence</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
                 <listitem><para><code>listeners</code></para></listitem>
@@ -527,7 +548,7 @@
                 <listitem><para><code>name</code></para></listitem>
                 <listitem><para><code>description</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>lb_algorithm</code></para></listitem>
+                <listitem><para><code>lb_method</code></para></listitem>
                 <listitem><para><code>session_persistence</code></para></listitem>
             </itemizedlist>
             <para>Note:
@@ -775,7 +796,12 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show health monitor details">
             <para role="shortdesc">Shows details for a specified health monitor.</para>
-            <para>This operation returns a health monitor object identified by healthmonitor_id. If the user is not an admin, and the health monitor object doesn't belong to her tenant account, she would receive a 403 (Forbidden) error.</para>
+            <para>
+                This operation returns a health monitor object identified by
+                healthmonitor_id. If the user is not an administrative user,
+                and the health monitor object does not belong to her tenant
+                account, she receives a 403 (Forbidden) error.
+            </para>
             <para>This operation does not require a request body.</para>
             <para>This operation returns a response body. On success, the returned element is a health monitor that can contain the following attributes:</para>
             <itemizedlist>
