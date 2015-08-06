@@ -29,6 +29,7 @@
                             <method href="#createImage"/>
                             <method href="#start"/>
                             <method href="#stop"/>
+                            <method href="#attachVolume"/>
                         </resource>
                     </resource>
                 </resource>
@@ -371,4 +372,78 @@
         </request>
         <response status="202"/>
     </method>
+    <method name="POST" id="attachVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Attach volume">
+            <para role="shortdesc">
+                Attaches a specified volume. Specify the <code>attach</code>
+                action in the request body.
+            </para>
+            <para>
+                If the attach operation succeeds, the volume status
+                is <code>in-use</code>.
+            </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+                <listitem><para>You can only attach a volume to the server
+                when its status is <code>available</code>.</para></listitem>
+                <listitem><para>The connection to the Block storage service is valid.
+                </para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+            <listitem><para>If the request fails due to an OpenStack
+                Compute service error, ensure you meet the preconditions
+                and run the request again. If the request fails again,
+                investigate OpenStack Compute service
+                or ask your cloud provider.
+            </para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/servers/server-action-attach-volume.json"/>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="volume_id" style="plain" type="csapi:UUID"
+                    required="true" id="volume_id">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The volume ID.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="device" style="plain" type="xsd:string"
+                    required="false" id="device">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The device name.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="disk_bus" style="plain" type="xsd:string"
+                    required="false" id="disk_bus">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The disk bus name.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="device_type" style="plain" type="xsd:string"
+                    required="false" id="device_type">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The device type name.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+        </response>
+        <response status="409">
+            <representation mediaType="application/json"/>
+        </response>
+        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
 </application>
