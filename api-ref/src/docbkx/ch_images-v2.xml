@@ -9,13 +9,14 @@
     role="api-reference">
     <title>Image service API v2 (CURRENT)</title>
     <para>Image service API v2.0, API v2.1, and API v2.2.</para>
-    <para>Cloud providers can configure property protections that
-        prevent non-administrative users from updating and deleting
-        protected properties. For more information, see <link
-            xlink:href="http://docs.openstack.org/admin-guide-cloud/content/glance-property-protection.html"
-            >Image property protection</link> in the
-            <citetitle>OpenStack Cloud Administrator
-        Guide</citetitle>.</para>
+    <para>
+        Cloud providers can configure property protections that prevent non-
+        administrative users from updating and deleting protected properties.
+        For more information, see <link
+        xlink:href="http://docs.openstack.org/admin-guide-cloud/content/glance-property-protection.html">Image property
+        protection</link> in the <citetitle>OpenStack Cloud Administrator
+        Guide</citetitle>.
+    </para>
     <section xml:id="versions-images-v2">
         <title>API versions</title>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
@@ -29,10 +30,81 @@
         <title>Images</title>
         <para>Creates, lists, updates, and deletes images.</para>
         <para>
-            Image operations include all fields in the response body, even if
-            the field has no value. For these fields, the response body shows
-            <code>None</code>.
+            Image operations show all fields in the response body. For any
+            field with no value, the response body shows <code>None</code>.
         </para>
+        <para>
+            The possible status values for images are:
+        </para>
+        <table rules="all" frame="border">
+            <caption>Image status</caption>
+            <col width="15%"/>
+            <col width="85%"/>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><para>queued</para></td>
+                    <td>
+                        <para>
+                            The Image service reserved an image ID for the
+                            image in the registry but has not uploaded any
+                            image data.
+                        </para>
+                    </td>
+                </tr>
+                <tr>
+                    <td><para>saving</para></td>
+                    <td>
+                        <para>
+                            The Image service is currently uploading the raw
+                            data for the image.
+                        </para>
+                    </td>
+                </tr>
+                <tr>
+                    <td><para>active</para></td>
+                    <td>
+                        <para>
+                            The image is active and fully available in the
+                            Image service.
+                        </para>
+                    </td>
+                </tr>
+                <tr>
+                    <td><para>killed</para></td>
+                    <td>
+                        <para>
+                            An error occurred during the upload of image data.
+                        </para>
+                    </td>
+                </tr>
+                <tr>
+                    <td><para>deleted</para></td>
+                    <td>
+                        <para>
+                            The Image service retains information about the
+                            image but the image is no longer available for
+                            use.
+                        </para>
+                    </td>
+                </tr>
+                <tr>
+                    <td><para>pending_delete</para></td>
+                    <td>
+                        <para>
+                            Similar to the <code>deleted</code> status. An
+                            image in this state is not recoverable.
+                        </para>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <para></para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource
                 href="../wadls/image-api/src/v2/os-image-v2.wadl#Images">
