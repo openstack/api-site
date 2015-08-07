@@ -23,23 +23,27 @@ The :code:`/source` directory contains the tutorial documentation as
 `reStructuredText <http://docutils.sourceforge.net/rst.html>`_ (RST). The
 documentation is built with `Sphinx <http://sphinx-doc.org/>`_.
 
-The RST source includes conditional output logic, so specifying::
+The RST source includes conditional output logic. To invoke
+:code:`sphinx-build` with :code:`-t libcloud`::
 
   tox -e firstapp-libcloud
 
-will invoke :code:`sphinx-build` with :code:`-t libcloud`, meaning sections
-marked :code:`.. only:: libcloud` in the RST are built, while others
-are not built.
+Only the sections marked :code:`.. only:: libcloud` in the RST are built.
 
-To build the documentation, you need Sphinx and the OpenStack
-docs.openstack.org Sphinx Theme (openstackdocstheme). When you invoke tox,
-these dependencies are automatically pulled in from the top-level :code:`test-requirements.txt`.
+To build the documentation, you must install `Sphinx <http://sphinx-doc.org/>`_
+and the
+`OpenStack docs.openstack.org Sphinx theme (openstackdocstheme) <https://pypi.python.org/pypi/openstackdocstheme>`_.
+
+When you invoke tox, these dependencies are automatically pulled in from the
+top-level :code:`test-requirements.txt`.
+
+You must also install `Graphviz <http://www.graphviz.org/>`_ on your build system.
 
 /samples
 ~~~~~~~~
 
-The code samples provided in the guide are sourced from files in this
-directory. Each SDK has its own subdirectory.
+The code samples in the guide are located in this directory. The code samples
+for each SDK are located in separate subdirectories.
 
 /build-libcloud
 ~~~~~~~~~~~~~~~

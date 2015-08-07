@@ -20,8 +20,7 @@ In addition to these documents, this repository contains:
 Prerequisites
 =============
 
-To build the documentation, you must install
-`Apache Maven <http://maven.apache.org/>`_.
+To build the documentation, you must install `Apache Maven <http://maven.apache.org/>`_.
 
 To install Maven 3 for Ubuntu 12.04 or later or Debian 7 ("wheezy") or later::
 
@@ -36,6 +35,28 @@ To run tests, you must install `Python Tox <https://tox.readthedocs.org/>`_.
 To install Tox for Ubuntu 14.04 or later::
 
     apt-get install python-tox python-dev libxml2-dev libxslt1-dev
+
+"Writing your First OpenStack Application" tutorial
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To build the "Writing your first OpenStack application" tutorial, you must
+install `Graphviz <http://www.graphviz.org/>`_.
+
+To install Graphviz for Ubuntu 12.04 or later or Debian 7 ("wheezy") or later::
+
+    apt-get install graphviz
+
+On Fedora 22 and later::
+
+    dnf install graphviz
+
+On openSUSE::
+
+    zypper install graphviz
+
+On Mac OSX with Homebrew installed::
+
+    brew install graphviz
 
 Build and update API docs
 =========================
@@ -122,9 +143,9 @@ Our community welcomes everyone who is interested in open source cloud
 computing and encourages you to join the `OpenStack Foundation <http://www.openstack.org/join>`_.
 
 The best way to get involved with the community is to talk with others online
-or at a meetup and offer contributions through our processes,
-the `OpenStack wiki <http://wiki.openstack.org>`_, blogs, or
-on IRC at ``#openstack`` on ``irc.freenode.net``.
+or at a meetup and offer contributions through our processes, the
+`OpenStack wiki <http://wiki.openstack.org>`_, blogs, or on IRC at ``#openstack`` on
+``irc.freenode.net``.
 
 We welcome all types of contributions, from blueprint designs to documentation
 to testing to deployment scripts.
