@@ -106,7 +106,6 @@ for floating_ip in conn.ex_list_floating_ips():
         unused_floating_ip = floating_ip
         break
 
-
 if not unused_floating_ip:
     pool = conn.ex_list_floating_ip_pools()[0]
     print('Allocating new Floating IP from pool: {}'.format(pool))

@@ -836,8 +836,6 @@ address to your instance.
         :start-after: step-13
         :end-before: step-14
 
-.. todo:: remove extra blank line after break
-
     This code returns the floating IP address:
 
     ::
