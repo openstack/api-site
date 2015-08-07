@@ -30,6 +30,7 @@
                             <method href="#start"/>
                             <method href="#stop"/>
                             <method href="#attachVolume"/>
+                            <method href="#rescue"/>
                         </resource>
                     </resource>
                 </resource>
@@ -228,12 +229,14 @@
             </para>
             <para>
                 After you make this request, you typically must keep polling
-                the created image's status to determine whether the request
-                succeeded. A successfully creating image operation shows an
-                image's status of <code>available</code> and the serve's
-                status goes back to the original status. You can also see the
-                new image in the image back end that OpenStack Image service
-                manages.
+                the status of the created image to determine whether the
+                request succeeded.
+            </para>
+            <para>
+                If the operation succeeds, the created image has a status of
+                <code>available</code> and the server status returns to the
+                original status. You can also see the new image in the image
+                back end that OpenStack Image service manages.
             </para>
             <para>Preconditions</para>
             <itemizedlist>
@@ -445,5 +448,91 @@
             <representation mediaType="application/json"/>
         </response>
         <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+    <method name="POST" id="rescue">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Rescue server">
+            <para role="shortdesc">
+                Puts a server in rescue mode and changes its status to
+                <code>RESCUE</code>.
+            </para>
+            <para>
+                If you specify the <code>rescue_image_ref</code> extended
+                attribute, the specified image is used to rescue the instance.
+                If you omit an image reference, the base image reference is
+                used by default.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Rescue server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/servers/server-rescue-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Rescue server: XML request">
+                    <xsdxt:code
+                        href="../api_samples/servers/server-rescue-req.xml"
+                    />
+                </wadl:doc>
+                <param name="rescue" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Rescue action"
+                            ><para>Specify the <code>rescue</code>
+                            action in the request
+                        body.</para></wadl:doc>
+                </param>
+                <param name="adminPass" style="plain"
+                    type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Admin password">
+                        <para>
+                            The password for the rescued instance. If you omit
+                            this parameter, the operation generates a new
+                            password.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="rescue_image_ref" style="plain"
+                    type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Image reference for rescue">
+                        <para>
+                            The image reference to use to rescue your server
+                            instance. Specify the image reference by ID or
+                            full URL.
+                        </para>
+                        <para>
+                            If you omit an image reference, default is the
+                            base image reference.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Extended rescue server: JSON response">
+                    <xsdxt:code
+                        href="../api_samples/servers/server-get-resp-rescue.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Extended rescue server: XML response">
+                    <xsdxt:code
+                        href="../api_samples/servers/server-get-resp-rescue.xml"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
 </application>
