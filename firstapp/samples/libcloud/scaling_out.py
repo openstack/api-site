@@ -15,10 +15,10 @@ api_group = conn.ex_create_security_group('api', 'for API services only')
 conn.ex_create_security_group_rule(api_group, 'TCP', 80, 80)
 conn.ex_create_security_group_rule(api_group, 'TCP', 22, 22)
 
-worker_group = conn.ex_create_security_group('worker', 'for services that run on a worker note')
+worker_group = conn.ex_create_security_group('worker', 'for services that run on a worker node')
 conn.ex_create_security_group_rule(worker_group, 'TCP', 22, 22)
 
-controller_group = conn.ex_create_security_group('control', 'for services that run on a control note')
+controller_group = conn.ex_create_security_group('control', 'for services that run on a control node')
 conn.ex_create_security_group_rule(controller_group, 'TCP', 22, 22)
 conn.ex_create_security_group_rule(controller_group, 'TCP', 80, 80)
 conn.ex_create_security_group_rule(controller_group, 'TCP', 5672, 5672, source_security_group=worker_group)
