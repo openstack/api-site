@@ -786,7 +786,7 @@ Now, you can boot and configure the instance.
 Boot and configure an instance
 ------------------------------
 
-Use the image, flavor, key pair, and userdata to create a instance. After you
+Use the image, flavor, key pair, and userdata to create an instance. After you
 request the instance, wait for it to build.
 
 .. only:: fog
