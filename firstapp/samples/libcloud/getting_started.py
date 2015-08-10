@@ -59,7 +59,7 @@ for keypair in conn.list_key_pairs():
         keypair_exists = True
 
 if keypair_exists:
-    print('Keypair already exists.  Skipping import.')
+    print('Keypair ' + keypair_name + ' already exists. Skipping import.')
 else:
     print('adding keypair...')
     conn.import_key_pair_from_file(keypair_name, pub_key_file)
@@ -67,20 +67,24 @@ else:
 for keypair in conn.list_key_pairs():
     print(keypair)
 
-
 # step-10
+print('Checking for existing security group...')
+security_group_name = 'all-in-one'
 security_group_exists = False
 for security_group in conn.ex_list_security_groups():
-    if security_group.name =='all-in-one':
+    if security_group.name == security_group_name:
         all_in_one_security_group = security_group
         security_group_exists = True
 
 if security_group_exists:
-    print('Security Group already exists.  Skipping creation.')
+    print('Security Group ' + all_in_one_security_group.name + ' already exists. Skipping creation.')
 else:
-    all_in_one_security_group = conn.ex_create_security_group('all-in-one', 'network access for all-in-one application.')
+    all_in_one_security_group = conn.ex_create_security_group(security_group_name, 'network access for all-in-one application.')
     conn.ex_create_security_group_rule(all_in_one_security_group, 'TCP', 80, 80)
     conn.ex_create_security_group_rule(all_in_one_security_group, 'TCP', 22, 22)
+
+for security_group in conn.ex_list_security_groups():
+    print(security_group)
 
 # step-11
 userdata = '''#!/usr/bin/env bash
@@ -89,14 +93,27 @@ curl -L -s https://git.openstack.org/cgit/stackforge/faafo/plain/contrib/install
 '''
 
 # step-12
+print('Checking for existing instance...')
 instance_name = 'all-in-one'
-testing_instance = conn.create_node(name=instance_name,
-                                    image=image,
-                                    size=flavor,
-                                    ex_keyname=keypair_name,
-                                    ex_userdata=userdata,
-                                    ex_security_groups=[all_in_one_security_group])
-conn.wait_until_running([testing_instance])
+instance_exists = False
+for instance in conn.list_nodes():
+    if instance.name == instance_name:
+        testing_instance = instance
+        instance_exists = True
+
+if instance_exists:
+    print('Instance ' + testing_instance.name + ' already exists. Skipping creation.')
+else:
+    testing_instance = conn.create_node(name=instance_name,
+                                        image=image,
+                                        size=flavor,
+                                        ex_keyname=keypair_name,
+                                        ex_userdata=userdata,
+                                        ex_security_groups=[all_in_one_security_group])
+    conn.wait_until_running([testing_instance])
+
+for instance in conn.list_nodes():
+    print(instance)
 
 # step-13
 print('Checking for unused Floating IP...')
@@ -112,7 +129,10 @@ if not unused_floating_ip:
     unused_floating_ip = pool.create_floating_ip()
 
 # step-14
-conn.ex_attach_floating_ip_to_node(testing_instance, unused_floating_ip)
+if len(testing_instance.public_ips) > 0:
+    print('Instance ' + testing_instance.name + ' already has a public ip. Skipping attachment.')
+else:
+    conn.ex_attach_floating_ip_to_node(testing_instance, unused_floating_ip)
 
 # step-15
 print('The Fractals app will be deployed to http://%s' % unused_floating_ip.ip_address)
