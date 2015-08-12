@@ -27,9 +27,9 @@ A general overview
 
 This tutorial shows two applications. The first application is a simple
 fractal generator that uses mathematical equations to generate beautiful
-`fractal images <http://en.wikipedia.org/wiki/Fractal>`_ . We show
-you this application in its entirety so that you can compare it to the second,
-more robust, application.
+`fractal images <http://en.wikipedia.org/wiki/Fractal>`_ . We show you this
+application in its entirety so that you can compare it to a second, more
+robust, application.
 
 The second application is an OpenStack application that enables you to:
 
@@ -56,6 +56,8 @@ Language        Name          Description                                       
 Python         Libcloud      A Python-based library managed by the Apache Foundation.
                              This library enables you to work with multiple types of clouds.   https://libcloud.apache.org
 Python         OpenStack SDK A Python-based library specifically developed for OpenStack.      https://github.com/stackforge/python-openstacksdk
+Python         Shade         A Python-based library developed by OpenStack Infra team to       https://github.com/openstack-infra/shade
+                             operate multiple OpenStack clouds.
 Java           jClouds       A Java-based library. Like Libcloud, it's also managed by the     https://jclouds.apache.org
                              Apache Foundation and works with multiple types of clouds.
 Ruby           fog           A Ruby-based SDK for multiple clouds.                             https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
@@ -147,8 +149,13 @@ To interact with the cloud, you must also have
 
        This document has not yet been completed for the php-opencloud SDK.
 
-You need the following information that you can obtain from your cloud
-provider:
+.. only:: shade
+
+     `a recent version of shade library installed <https://pypi.python.org/pypi/shade/0.11.0>`_.
+
+     .. note:: Before proceeding, install the latest version of shade.
+
+Obtain the following information from your cloud provider:
 
 * auth URL
 * user name
@@ -156,29 +163,28 @@ provider:
 * project ID or name (projects are also known as tenants)
 * cloud region
 
-You can also download the OpenStack RC file from the OpenStack dashboard. Log
-in to the Horizon dashboard and click :guilabel:`Project->Access &
-Security->API Access->Download OpenStack RC file`. If you choose this route,
-be aware that the "auth URL" doesn't include the path. For example, if your
+You can also download the OpenStack RC file from the OpenStack Horizon
+dashboard. Log in to the dashboard and click :guilabel:`Project->Access &
+Security->API Access->Download OpenStack RC file`. If you use this method, be
+aware that the "auth URL" does not include the path. For example, if your
 :file:`openrc.sh` file shows:
 
 .. code-block:: bash
 
         export OS_AUTH_URL=http://controller:5000/v2.0
 
-the actual auth URL will be
+The actual auth URL is:
 
 .. code-block:: python
 
         http://controller:5000
 
-
 How you'll interact with OpenStack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this tutorial, you interact with your OpenStack cloud through one of the
-SDKs you have chosen in "Choose your OpenStack SDK." This guide assumes you
-are familiar with running code snippets in your language of choice.
+In this tutorial, you interact with your OpenStack cloud through the SDK that
+you chose in "Choose your OpenStack SDK." This guide assumes that you know how
+to run code snippets in your language of choice.
 
 .. only:: fog
 
@@ -242,11 +248,29 @@ are familiar with running code snippets in your language of choice.
 
     .. note:: If you receive the
               :code:`libcloud.common.types.InvalidCredsError: 'Invalid
-              credentials with the provider'` exception while trying to run
-              one of the following API calls, double-check your credentials.
+              credentials with the provider'` exception when you run
+              one of these API calls, double-check your credentials.
 
     .. note:: If your provider does not support regions, try a
               blank string ('') for the `region_name`.
+
+.. only:: shade
+
+    Use your credentials above to specify the cloud provider name,
+    user name, password, project_name and region_name in the file
+    :file:`~/.config/openstack/clouds.yml`.
+
+    .. literalinclude:: ../samples/shade/clouds.yml
+        :language: yaml
+
+    .. note:: If you do use a public cloud `known by shade
+              <http://git.openstack.org/cgit/openstack/os-client-config/tree/os_client_config/vendors>`_,
+              you can avoid specifying :code:`auth_url:` and instead specify
+              :code:`profile: $PROVIDER_NAME` in the clouds.yml file.
+
+    .. literalinclude::  ../samples/shade/getting_started.py
+        :start-after: step-1
+        :end-before: step-2
 
 Flavors and images
 ~~~~~~~~~~~~~~~~~~
@@ -321,6 +345,38 @@ To list the images that are available in your cloud, run some API calls:
         Image Id: 3e0e8270-0da4-4fec-bfc7-eeb763604cad - Image Name: cirros-0.3.4-x86_64-uec-ramdisk
         Image Id: 0b151382-d2f1-44d7-835b-6408bd523917 - Image Name: cirros-0.3.4-x86_64-uec-kernel
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :language: python
+        :start-after: step-2
+        :end-before: step-3
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        checksum: 750a56555d4ec7303f5dc33b007ff632
+        container_format: bare
+        created_at: '2014-07-14T19:02:15Z'
+        direct_url:
+        rbd://7e14670e-a6f8-445b-b632-4b79bafc4781/masseffect-images/b4efbc2a-6130-4f2e-b436-55a618c4de20/snap
+        disk_format: raw
+        file: /v2/images/b4efbc2a-6130-4f2e-b436-55a618c4de20/file
+        id: b4efbc2a-6130-4f2e-b436-55a618c4de20
+        min_disk: 10
+        min_ram: 1024
+        name: Debian-7.0-Wheezy
+        owner: 0bacd8121bb548698f340455b38bf561
+        protected: false
+        schema: /v2/schemas/image
+        size: 5242880000
+        status: active
+        tags: []
+        updated_at: '2014-10-15T22:42:52Z'
+        visibility: public
+
+
 You can also get information about available flavors:
 
 .. only:: fog
@@ -388,13 +444,46 @@ You can also get information about available flavors:
         Flavor Id: 5 - Flavor Name: m1.xlarge
         Flavor Id: 84 - Flavor Name: m1.micro
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :language: python
+        :start-after: step-3
+        :end-before: step-4
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        HUMAN_ID: true
+        NAME_ATTR: name
+        OS-FLV-DISABLED:disabled: false
+        OS-FLV-EXT-DATA:ephemeral: 0
+        disk: 80
+        ephemeral: 0
+        human_id: supersonic
+        id: '200'
+        is_public: true
+        links:
+        -   href:
+            https://compute.dream.io:8774/v2/5d013ac5962749a49af7ff18c2fb228c/flavors/200
+            rel: self
+        -   href:
+            https://compute.dream.io:8774/5d013ac5962749a49af7ff18c2fb228c/flavors/200
+            rel: bookmark
+        name: supersonic
+        os-flavor-access:is_public: true
+        ram: 2048
+        swap: ''
+        vcpus: 1
+
 Your images and flavors will be different, of course.
 
 Choose an image and flavor for your instance. You need about 1GB RAM, 1 CPU,
-and a 1GB disk. This example uses the Ubuntu image with the :code:`m1.small`
-flavor, which are safe choices. In subsequent tutorial sections in this guide,
-you must change the image and flavor IDs to correspond to the image and flavor
-that you choose.
+and a 1GB disk. This example uses the Ubuntu image with a small
+flavor, which is a safe choice. In subsequent tutorial sections in
+this guide, you must change the image and flavor IDs to correspond to
+the image and flavor that you choose.
 
 If the image that you want is not available in your cloud, you can usually
 upload one depending on your cloud's policy settings. For information about
@@ -455,6 +544,37 @@ image that you picked in the previous section:
 
         Image Id: 97f55846-6ea5-4e9d-b437-bda97586bd0c - Image Name: cirros-0.3.4-x86_64-uec
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-4
+        :end-before: step-5
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        checksum: da578dd59289a35a0ac7744a0bd85cf5
+        container_format: bare
+        created_at: '2014-10-27T22:05:37Z'
+        direct_url:
+        rbd://7e14670e-a6f8-445b-b632-4b79bafc4781/masseffect-images/c55094e9-699c-4da9-95b4-2e2e75f4c66e/snap
+        disk_format: raw
+        file: /v2/images/c55094e9-699c-4da9-95b4-2e2e75f4c66e/file
+        id: c55094e9-699c-4da9-95b4-2e2e75f4c66e
+        min_disk: 0
+        min_ram: 0
+        name: Ubuntu-14.04-Trusty
+        owner: 0bacd8121bb548698f340455b38bf561
+        protected: false
+        schema: /v2/schemas/image
+        size: 10737418240
+        status: active
+        tags: []
+        updated_at: '2014-10-27T22:08:55Z'
+        visibility: public
+
+
 Next, choose which flavor you want to use:
 
 .. only:: fog
@@ -506,6 +626,40 @@ Next, choose which flavor you want to use:
 
         Flavor Id: 42 - Flavor Name: m1.nano
 
+.. only:: shade
+
+    Since shade can either use the ID or the name in most API calls,
+    let's specify the name for the flavor.
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-5
+        :end-before: step-6
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        HUMAN_ID: true
+        NAME_ATTR: name
+        OS-FLV-DISABLED:disabled: false
+        OS-FLV-EXT-DATA:ephemeral: 0
+        disk: 80
+        ephemeral: 0
+        human_id: subsonic
+        id: '100'
+        is_public: true
+        links:
+        -   href:
+            https://compute.dream.io:8774/v2/5d013ac5962749a49af7ff18c2fb228c/flavors/100
+            rel: self
+        -   href:
+            https://compute.dream.io:8774/5d013ac5962749a49af7ff18c2fb228c/flavors/100
+            rel: bookmark
+        name: subsonic
+        os-flavor-access:is_public: true
+        ram: 1024
+        swap: ''
+        vcpus: 1
 
 Now, you're ready to launch the instance.
 
@@ -580,6 +734,12 @@ Create the instance.
 
         Instance Id: 4e480ef1-68f0-491f-b237-d9b7f500ef24 at net.openstack.Core.Domain.Link[]
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-6
+        :end-before: step-7
+
 If you list existing instances:
 
 .. only:: fog
@@ -607,6 +767,13 @@ If you list existing instances:
         :dedent: 3
         :start-after: step-7
         :end-before: step-8
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-7
+        :end-before: step-8
+
 
 The new instance appears.
 
@@ -649,7 +816,72 @@ The new instance appears.
 
         Instance Id: 4e480ef1-68f0-491f-b237-d9b7f500ef24 at net.openstack.Core.Domain.Link[]
 
-Before you move on, you must do one more thing.
+.. only:: shade
+
+   .. code-block:: none
+
+       HUMAN_ID: true
+        NAME_ATTR: name
+        OS-DCF:diskConfig: MANUAL
+        OS-EXT-AZ:availability_zone: iad-1
+        OS-EXT-STS:power_state: 1
+        OS-EXT-STS:task_state: null
+        OS-EXT-STS:vm_state: active
+        OS-SRV-USG:launched_at: '2015-07-20T20:31:10.000000'
+        OS-SRV-USG:terminated_at: null
+        accessIPv4: ''
+        accessIPv6: ''
+        addresses:
+            private-network:
+            -   OS-EXT-IPS-MAC:mac_addr: fa:16:3e:60:f5:cd
+                OS-EXT-IPS:type: fixed
+                addr: 2607:f298:6050:4e14:f816:3eff:fe60:f5cd
+                version: 6
+            -   OS-EXT-IPS-MAC:mac_addr: fa:16:3e:60:f5:cd
+                OS-EXT-IPS:type: fixed
+                addr: 10.10.10.14
+                version: 4
+        config_drive: ''
+        created: '2015-07-20T20:30:23Z'
+        flavor:
+            id: '100'
+            links:
+            -   href:
+                https://compute.dream.io:8774/5d013ac5962749a49af7ff18c2fb228c/flavors/100
+                rel: bookmark
+        hostId: f71865b497e6fa71063e292b11846eb64b5a41cd5c00fbb7465b6a48
+        human_id: testing
+        id: 67ecebdc-daff-4d84-bd04-bc76c67b48ec
+        image:
+            id: c55094e9-699c-4da9-95b4-2e2e75f4c66e
+            links:
+            -   href:
+                https://compute.dream.io:8774/5d013ac5962749a49af7ff18c2fb228c/images/c55094e9-699c-4da9-95b4-2e2e75f4c66e
+                rel: bookmark
+        key_name: null
+        links:
+        -   href:
+            https://compute.dream.io:8774/v2/5d013ac5962749a49af7ff18c2fb228c/servers/67ecebdc-daff-4d84-bd04-bc76c67b48ec
+            rel: self
+        -   href:
+            https://compute.dream.io:8774/5d013ac5962749a49af7ff18c2fb228c/servers/67ecebdc-daff-4d84-bd04-bc76c67b48ec
+            rel: bookmark
+        metadata: {}
+        name: testing
+        networks:
+            private-network:
+            - 2607:f298:6050:4e14:f816:3eff:fe60:f5cd
+            - 10.10.10.14
+        os-extended-volumes:volumes_attached: []
+        progress: 0
+        security_groups:
+        -   name: default
+        status: ACTIVE
+        tenant_id: 5d013ac5962749a49af7ff18c2fb228c
+        updated: '2015-07-20T20:31:10Z'
+        user_id: bfd3dbf1c8a242cd90884408de547bb9
+
+Before you continue, you must do one more thing.
 
 Destroy an instance
 ~~~~~~~~~~~~~~~~~~~
@@ -680,6 +912,12 @@ money. Destroy cloud resources to avoid unexpected expenses.
     .. literalinclude:: ../samples/dotnet/getting_started.cs
         :language: c#
         :dedent: 3
+        :start-after: step-8
+        :end-before: step-9
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-8
         :end-before: step-9
 
@@ -738,6 +976,16 @@ instance:
         :start-after: step-9
         :end-before: step-10
 
+.. only:: shade
+
+    In the following example, :code:`pub_key_file` should be set to
+    the location of your public SSH key file.
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-9
+        :end-before: step-10
+
+
 * Network access. By default, OpenStack filters all traffic. You must create
   a security group and apply it to your instance. The security group allows HTTP
   and SSH access. We'll go into more detail in :doc:`/introduction`.
@@ -760,9 +1008,15 @@ instance:
         :start-after: step-10
         :end-before: step-11
 
-* Userdata. During instance creation, you can provide userdata to OpenStack to
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-10
+        :end-before: step-11
+
+* User data. During instance creation, you can provide user data to OpenStack to
   configure instances after they boot. The cloud-init service applies the
-  userdata to an instance. You must pre-install the cloud-init service on your
+  user data to an instance. You must pre-install the cloud-init service on your
   chosen image. We'll go into more detail in :doc:`/introduction`.
 
 .. only:: fog
@@ -778,6 +1032,12 @@ instance:
 .. only:: pkgcloud
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-11
+        :end-before: step-12
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-11
         :end-before: step-12
 
@@ -805,6 +1065,13 @@ request the instance, wait for it to build.
         :start-after: step-12
         :end-before: step-13
 
+.. only:: shade
+
+    The shade framework can select and assign a free floating IP quickly
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-12
+        :end-before: step-13
 
 When the instance boots, the `ex_userdata` variable value instructs the
 instance to deploy the Fractals application.
@@ -871,6 +1138,12 @@ address to your instance.
         :start-after: step-14
         :end-before: step-15
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-13
+        :end-before: step-14
+
 
 Run the script to start the deployment.
 
@@ -880,7 +1153,7 @@ Access the application
 Deploying application data and configuration to the instance can take some
 time. Consider enjoying a cup of coffee while you wait. After the application
 deploys, you can visit the awesome graphic interface at the following link
-using your preferred browser.
+by using your preferred browser.
 
 .. only:: libcloud
 
@@ -890,6 +1163,11 @@ using your preferred browser.
 .. only:: pkgcloud
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
+        :start-after: step-15
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-15
 
 .. note:: If you do not use floating IPs, substitute another IP address as appropriate
@@ -942,3 +1220,8 @@ information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/dotnet/getting_started.cs
        :language: c#
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/libcloud/getting_started.py
+       :language: python
