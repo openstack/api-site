@@ -38,65 +38,65 @@
             </resource>
         </resource>-->
         <resource id="version" type="#VersionDetails" path="//v1">
-                <resource id="Images" type="#ImageList" path="images">
-                    <method href="#createImage-v1"/>
-                    <resource path="detail" type="#DetailImageList"
-                        id="detail"/>
-                    <resource path="{image_id}" id="image_id">
-                        <param
-                            xmlns="http://wadl.dev.java.net/2009/02"
-                            name="image_id" style="template"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                                xml:lang="EN" title="Image ID"
-                                   ><para>Image ID stored through the
-                                   image API. Typically a
-                                UUID.</para></wadl:doc>
-                        </param>
-                        <method href="#getImage-v1"/>
-                        <method href="#getImageHeaders-v1"/>
-                        <method href="#updateImage-v1"/>
-                        <method href="#deleteImage-v1"/>
-                        <resource id="members" path="members">
-                            <method href="#replaceMember-v1"/>
-                            <resource path="{owner_id}" id="owner-id">
-                                <param
-                                   xmlns="http://wadl.dev.java.net/2009/02"
-                                   name="owner_id" style="template"
-                                   type="xsd:string">
-                                   <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                                   xml:lang="EN" title="Owner ID"
-                                   ><para>Owner ID, which is the
-                                   tenant ID.</para></wadl:doc>
-                                </param>
-                                <method href="#addMember-v1"/>
-                                <method href="#removeMember-v1"/>
-                            </resource>
+            <resource id="Images" type="#ImageList" path="images">
+                <method href="#createImage-v1"/>
+                <resource path="detail" type="#DetailImageList"
+                    id="detail"/>
+                <resource path="{image_id}" id="image_id">
+                    <param
+                        xmlns="http://wadl.dev.java.net/2009/02"
+                        name="image_id" style="template"
+                        type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                            xml:lang="EN" title="Image ID"
+                               ><para>Image ID stored through the
+                               image API. Typically a
+                            UUID.</para></wadl:doc>
+                    </param>
+                    <method href="#getImage-v1"/>
+                    <method href="#getImageHeaders-v1"/>
+                    <method href="#updateImage-v1"/>
+                    <method href="#deleteImage-v1"/>
+                    <resource id="members" path="members">
+                        <method href="#replaceMember-v1"/>
+                        <resource path="{owner_id}" id="owner-id">
+                            <param
+                               xmlns="http://wadl.dev.java.net/2009/02"
+                               name="owner_id" style="template"
+                               type="xsd:string">
+                               <wadl:doc
+                               xmlns="http://docbook.org/ns/docbook"
+                               xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                               xml:lang="EN" title="Owner ID"
+                               ><para>Owner ID, which is the
+                               tenant ID.</para></wadl:doc>
+                            </param>
+                            <method href="#addMember-v1"/>
+                            <method href="#removeMember-v1"/>
                         </resource>
                     </resource>
                 </resource>
-                <resource id="shared-images" path="shared-images">
-                    <resource path="{owner}" id="owner-2">
-                        <param
-                            xmlns="http://wadl.dev.java.net/2009/02"
-                            name="owner" style="plain" required="true"
-                            type="csapi:uuid">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                                xml:lang="EN" title="Image ID">
-                                <para>Owner ID. The owner ID is the
-                                   tenant ID.</para>
-                            </wadl:doc>
-                        </param>
-                        <method href="#getSharedImages-v1"/>
-                    </resource>
+            </resource>
+            <resource id="shared-images" path="shared-images">
+                <resource path="{owner}" id="owner-2">
+                    <param
+                        xmlns="http://wadl.dev.java.net/2009/02"
+                        name="owner" style="plain" required="true"
+                        type="csapi:uuid">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                            xml:lang="EN" title="Image ID">
+                            <para>Owner ID. The owner ID is the
+                               tenant ID.</para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#getSharedImages-v1"/>
                 </resource>
             </resource>
+        </resource>
     </resources>
     <!--*******************************************************-->
     <!--               Resource Types                          -->
@@ -280,8 +280,13 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
                         xml:lang="EN" title="Image disk format">
-                        <para>Valid values are: aki, ari, ami, raw,
-                            iso, vhd, vdi, qcow2, or vmdk.</para>
+                        <para>
+                            A valid value is <code>aki</code>,
+                            <code>ari</code>, <code>ami</code>,
+                            <code>raw</code>, <code>iso</code>,
+                            <code>vhd</code>, <code>vdi</code>,
+                            <code>qcow2</code>, or <code>vmdk</code>.
+                        </para>
                         <para>The disk format of a VM image is the
                             format of the underlying disk image.
                             Virtual appliance vendors have different
@@ -361,11 +366,12 @@
                             the VM image is in a file format that also
                             contains metadata about the actual
                             VM.</para>
-                        <para>Container formats include OVF and Amazon
-                            AMI. In addition, a VM image might not
-                            have a container format – instead, the
-                            image is just a blob of unstructured
-                            data.</para>
+                        <para>
+                            Container formats include OVF and Amazon AMI. In
+                            addition, a VM image might not have a container
+                            format. Instead, the image is a blob of
+                            unstructured data.
+                        </para>
                         <para>You can set the container format to one
                             of the following formats:</para>
                         <itemizedlist>
@@ -404,7 +410,6 @@
             </representation>
         </request>
         <response status="202">
-
             <representation mediaType="application/xml"
                 element="common:version">
                 <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -542,66 +547,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="name" style="query" required="false"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Name of the image as a string.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="container_format" style="query"
-                    required="false" type="imageapi:ImageStatus">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the container format, such as
-                            ovf, bare, aki, ari, or ami.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="disk_format" style="query" required="false"
-                    type="imageapi:UUID">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the disk format.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="status" style="query" required="false"
-                    type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Filters the list of images to those with
-                            this status. Valid values are queued,
-                            saving, active, killed, deleted, and
-                            pending_delete.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="size_min" style="query" required="false"
-                    type="xsd:string" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the minimum size of the image
-                            in bytes.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="size_min" style="query" required="false"
-                    type="xsd:string" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the maximum size of the image
-                            in bytes.</para>
-                    </wadl:doc>
-                </param>
+                &listImagesQueryParameters;
             </representation>
         </request>
         <response status="200">
@@ -616,7 +562,6 @@
             </representation>
         </response>
     </method>
-
     <method name="GET" id="listDetailImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -626,77 +571,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="name" style="query" required="false"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Name of the image as a string.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="container_format" style="query"
-                    required="false" type="imageapi:ImageStatus">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the container format, such as
-                            ovf, bare, aki, ari, or ami.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="disk_format" style="query" required="false"
-                    type="imageapi:UUID">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the disk format.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="status" style="query" required="false"
-                    type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Filters the list of images to those with
-                            this status. Valid values are queued,
-                            saving, active, killed, deleted, and
-                            pending_delete.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="size_min" style="query" required="false"
-                    type="xsd:string" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>The minimum size of the image, in
-                            bytes.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="size_min" style="query" required="false"
-                    type="xsd:string" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Value of the maximum size of the image
-                            in bytes.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="changes-since" style="query"
-                    required="false" type="xsd:dateTime" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Filters the list of images to those that
-                            have changed since this time stamp
-                            value.</para>
-                    </wadl:doc>
-                </param>
+                &listImagesQueryParameters;
             </representation>
         </request>
         <response status="200">
@@ -726,7 +601,13 @@
                         rel="previous"/>
                 </param>
             </representation>
-            <representation mediaType="application/json"/>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <xsdxt:code href="samples/imagedetails.json"/>
+                </wadl:doc>
+            </representation>
         </response>
     </method>
     <method name="PUT" id="addMember-v1">
