@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application [
     <!ENTITY % common  SYSTEM "common.ent">
     %common;
@@ -12,14 +12,6 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:json="http://json-schema.org/schema#"
     xmlns:wadl="http://wadl.dev.java.net/2009/02">
-  <!-- <grammars>
-    <include href="grammar/requests/create-volume.json"/>
-    <include href="grammar/requests/update-volume.json"/>
-    <include href="grammar/requests/create-volume-type.json"/>
-    <include href="grammar/requests/create-snapshot.json"/>
-    <include href="grammar/requests/update-snapshot.json"/>
-    <include href="grammar/requests/update-snapshot-metadata.json"/>
-  </grammars> -->
     <resources base="https://volume.example.com/" xml:id="volume-v2">
         <resource id="versions" path="//">
             <method href="#listVersions"/>
@@ -73,6 +65,8 @@
                             id="volume-action">
                             <method href="#extendVolume"/>
                             <method href="#resetVolume"/>
+                            <method href="#setVolumeimagemetadata"/>
+                            <method href="#unsetVolumeimagemetadata"/>
                         </resource>
                     </resource>
                 </resource>
@@ -459,7 +453,8 @@
             title="Extend volume">
             <para role="shortdesc">
                 Extends the size of a specified volume to a new size requested
-                in gibibytes (GiB).
+                in gibibytes (GiB). Specify the <code>os-extend</code> action
+                in the request body.
             </para>
             <para>Preconditions</para>
             <itemizedlist>
@@ -494,7 +489,11 @@
                 <param name="new_size" style="plain"
                     type="xsd:int" required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The new size, in gibibytes (GiB), of the volume.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                            The new size, in gibibytes (GiB), of the volume.
+                        </para>
+                    </wadl:doc>
                 </param>
             </representation>
         </request>
@@ -504,7 +503,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Reset volume statuses">
             <para role="shortdesc">
-                Resets the volume status, volume attach status, and volume migration status.
+                Resets the status, attach status, and  migration status for a
+                specified volume. Specify the <code>os-reset_status</code>
+                action in the request body.
             </para>
         </wadl:doc>
         <request>
@@ -529,6 +530,85 @@
                     type="xsd:string" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN"><para>The volume migration status.</para></wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="setVolumeimagemetadata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Set image metadata for volume">
+            <para role="shortdesc">
+                Sets the image metadata for a specified volume. Specify the
+                <code>os-set_image_metadata</code> action in the request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/volume_set_image_metadata_request.json"
+                    />
+                </wadl:doc>
+                <param name="os-set_image_metadata" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The <code>os-set_image_metadata</code> action.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="metadata" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The image metadata to add to the volume as a set
+                            of metadata key and value pairs.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="unsetVolumeimagemetadata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Remove image metadata from volume">
+            <para role="shortdesc">
+                Removes image metadata, by key, from a specified volume.
+                Specify the <code>os-unset_image_metadata</code> action in the
+                request body and the <code>key</code> for the metadata key and
+                value pair that you want to remove.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/volume_unset_image_metadata_request.json"
+                    />
+                </wadl:doc>
+                <param name="os-unset_image_metadata" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The <code>os-os-unset_image_metadata</code> action.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="key" style="plain"
+                    type="xsd:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The metadata key name for the metadata that you want to remove.
+                        </para>
+                    </wadl:doc>
                 </param>
             </representation>
         </request>
