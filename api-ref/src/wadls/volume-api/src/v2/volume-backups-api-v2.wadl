@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/v2"
@@ -40,12 +40,9 @@
                         <resource path="restore" id="restore">
                             <method href="#restoreBackup"/>
                         </resource>
-                        <resource path="export_record" id="export_record">
-                            <method href="#exportrecordBackup"/>
+                        <resource path="action" id="action">
+                            <method href="#forceDeleteBackup"/>
                         </resource>
-                    </resource>
-                    <resource path="import_record" id="import_record">
-                        <method href="#importrecordBackup"/>
                     </resource>
                 </resource>
             </resource>
@@ -482,116 +479,42 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="exportrecordBackup">
+    <method name="POST" id="forceDeleteBackup">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Export backup details">
-            <para role="shortdesc">Exports details for a specified backup.</para>
-        </wadl:doc>
-        <response status="200">
-            <representation>
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                        <xsdxt:code
-                        href="api_samples/backup/backup_export_record_response.json"
-                    />
-                </wadl:doc>
-                <param name="backup-record" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A <code>backup-record</code>
-                            object.</para>
-                    </wadl:doc>
-                </param>
-                <param name="backup_url" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>An identifier string
-                            for the backup record.</para>
-                    </wadl:doc>
-                </param>
-                <param name="backup_service" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The required backup driver.</para>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </response>
-        <response status="400 403 404"/>
-    </method>
-    <method name="POST" id="importrecordBackup">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Import backup record">
-            <para role="shortdesc">Imports a specified backup record.</para>
+            title="Force-delete backup">
+            <para role="shortdesc">
+                Force-deletes a specified backup. Specify the
+                <code>os-force_delete</code> action in the request body.
+            </para>
+            <para>
+                The backup and any backup data is deleted.
+            </para>
+            <para>
+                The backup driver returns the <code>405</code> status code if
+                it does not support this operation.
+            </para>
         </wadl:doc>
         <request>
-            <representation>
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/backup/backup_import_record_request.json"
+                        href="api_samples/backup/backup_force_delete_request.json"
                     />
                 </wadl:doc>
-                <param name="backup-record" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A <code>backup-record</code>
-                            object.</para>
-                    </wadl:doc>
-                </param>
-                <param name="backup_url" style="plain" type="xsd:string"
+                <param name="os-force_delete" style="plain" type="xsd:string"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                            The identifier string for the backup record that
-                            you want to import.
+                            The <code>os-force_delete</code> action.
                         </para>
-                    </wadl:doc>
-                </param>
-                <param name="backup_service" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The required backup driver.</para>
                     </wadl:doc>
                 </param>
             </representation>
         </request>
-        <response status="201">
-            <representation>
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="api_samples/backup/backup_import_record_response.json"
-                    />
-                </wadl:doc>
-                <param name="backup" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>A <code>backup</code>
-                        object.</para></wadl:doc>
-                </param>
-                <param name="id" style="plain" type="csapi:uuid"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The ID of the backup.</para></wadl:doc>
-                </param>
-                <param name="links" style="plain" type="xsd:dict"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Links for the backup.</para></wadl:doc>
-                </param>
-                <param name="name" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The backup name.</para></wadl:doc>
-                </param>
-            </representation>
-        </response>
-        <response status="400 403 500"/>
+        <response status="202"/>
+        <response status="404"/>
+        <response status="405"/>
     </method>
 </application>
