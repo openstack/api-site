@@ -36,6 +36,12 @@
                         <resource path="restore" id="restore">
                             <method href="#restoreBackup"/>
                         </resource>
+                        <resource path="export_record" id="export_record">
+                            <method href="#exportrecordBackup"/>
+                        </resource>
+                    </resource>
+                    <resource path="import_record" id="import_record">
+                        <method href="#importrecordBackup"/>
                     </resource>
                 </resource>
             </resource>
@@ -450,5 +456,117 @@
                 </param>
             </representation>
         </response>
+    </method>
+    <method name="GET" id="exportrecordBackup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Export backup details">
+            <para role="shortdesc">Exports details for a specified backup.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                        <xsdxt:code
+                        href="api_samples/backup/backup_export_record_response.json"
+                    />
+                </wadl:doc>
+                <param name="backup-record" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>A <code>backup-record</code>
+                            object.</para>
+                    </wadl:doc>
+                </param>
+                <param name="backup_url" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>An identifier string
+                            for the backup record.</para>
+                    </wadl:doc>
+                </param>
+                <param name="backup_service" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The required backup driver.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+        <response status="400 403 404"/>
+    </method>
+    <method name="POST" id="importrecordBackup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Import backup record">
+            <para role="shortdesc">Imports a specified backup record.</para>
+        </wadl:doc>
+        <request>
+            <representation>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/backup/backup_import_record_request.json"
+                    />
+                </wadl:doc>
+                <param name="backup-record" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>A <code>backup-record</code>
+                            object.</para>
+                    </wadl:doc>
+                </param>
+                <param name="backup_url" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The identifier string for the backup record that
+                            you want to import.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="backup_service" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The required backup driver.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/backup/backup_import_record_response.json"
+                    />
+                </wadl:doc>
+                <param name="backup" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>A <code>backup</code>
+                        object.</para></wadl:doc>
+                </param>
+                <param name="id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The ID of the backup.</para></wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:dict"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>Links for the backup.</para></wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The backup name.</para></wadl:doc>
+                </param>
+            </representation>
+        </response>
+        <response status="400 403 500"/>
     </method>
 </application>
