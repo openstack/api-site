@@ -4,7 +4,7 @@ API-Site repository
 This repository contains documentation for the OpenStack project.
 
 For details, see the
-`OpenStack Documentation wiki page <http://wiki.openstack.org/Documentation>`_, 
+`OpenStack Documentation wiki page <http://wiki.openstack.org/Documentation>`_,
 which includes these pages and PDFs:
 
  * API Quick Start
@@ -62,7 +62,7 @@ Build and update API docs
 =========================
 
 To complete code reviews in this repository, use the standard OpenStack Gerrit
-`workflow <https://review.openstack.org>`_ . For details, see 
+`workflow <https://review.openstack.org>`_ . For details, see
 `Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 To build and update the API documents:
@@ -73,7 +73,7 @@ To build and update the API documents:
 
 #. Run this command to clone openstack/api-site::
 
-        git clone https://github.com/openstack/api-site
+        git clone https://git.openstack.org/openstack/api-site
 
 #. CD into the api-site directory.
 
@@ -97,7 +97,7 @@ To build and update the API documents:
 
         mvn clean generate-sources
 
-#. To check in your changes, see 
+#. To check in your changes, see
 `Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 - The root of the generated HTML (API site) documentation is::
@@ -131,7 +131,7 @@ To run individual tests:
  * ``tox -e checkbuild`` - Builds the manual
 
 To run these tests, the Tox package uses the
-`OpenStack doc tools package <https://github.com/openstack/openstack-doc-tools>`_. 
+`OpenStack doc tools package <https://github.com/openstack/openstack-doc-tools>`_.
 
 The OpenStack doc tools require Maven for the build check.
 
