@@ -32,7 +32,7 @@ image = conn.get_image(image_id)
 print(image)
 
 # step-5
-flavor_id = '3'
+flavor_id = '2'
 flavor = conn.ex_get_size(flavor_id)
 print(flavor)
 
