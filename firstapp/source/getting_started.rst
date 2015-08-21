@@ -27,7 +27,7 @@ A general overview
 
 This tutorial shows two applications. The first application is a simple
 fractal generator that uses mathematical equations to generate beautiful
-`fractal images <http://en.wikipedia.org/wiki/Fractal>`_ . We show you this
+`fractal images <http://en.wikipedia.org/wiki/Fractal>`_. We show you this
 application in its entirety so that you can compare it to a second, more
 robust, application.
 
@@ -593,7 +593,7 @@ Next, choose which flavor you want to use:
 
     .. code-block:: python
 
-        <OpenStackNodeSize: id=3, name=m1.medium, ram=4096, disk=40, bandwidth=None, price=0.0, driver=OpenStack, vcpus=2,  ...>
+        <OpenStackNodeSize: id=2, name=m1.small, ram=2048, disk=20, bandwidth=None, price=0.0, driver=OpenStack, vcpus=1,  ...>
 
 .. only:: pkgcloud
 
@@ -606,7 +606,7 @@ Next, choose which flavor you want to use:
     .. code-block:: none
 
 
-        id: 3
+        id: cba9ea52-8e90-468b-b8c2-777a94d81ed3
         name: m1.small
         ram: 2048
         disk: 20
@@ -624,12 +624,12 @@ Next, choose which flavor you want to use:
 
     .. code-block:: none
 
-        Flavor Id: 42 - Flavor Name: m1.nano
+        Flavor Id: 2 - Flavor Name: m1.small
 
 .. only:: shade
 
-    Since shade can either use the ID or the name in most API calls,
-    let's specify the name for the flavor.
+    Because shade accepts either the ID or name in most API calls, specify the
+    name for the flavor:
 
     .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-5

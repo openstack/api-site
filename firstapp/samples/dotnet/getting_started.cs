@@ -59,7 +59,7 @@ namespace openstack
 				_image.Name));
 
 			// step-5
-			var flavor_id = "42";
+			var flavor_id = "2";
 			var _flavor = conn.GetFlavor (flavor_id, region: region);
 			Console.WriteLine (string.Format(
 				"Flavor Id: {0} - Flavor Name: {1}",

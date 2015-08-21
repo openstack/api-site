@@ -50,7 +50,7 @@ conn.getImage(image_id, function(err, image) {
 
 
 // step-5
-flavor_id = '3';
+flavor_id = 'cba9ea52-8e90-468b-b8c2-777a94d81ed3';
 conn.getFlavor(flavor_id, function(err, flavor) {
         console.log("id: " + flavor.id);
         console.log("name: " + flavor.name);
