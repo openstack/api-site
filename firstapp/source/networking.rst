@@ -494,7 +494,7 @@ Neutron LbaaS API
 -----------------
 
 .. note:: This section is based on the Neutron LBaaS API version 1.0
-          http://docs.openstack.org/admin-guide-cloud/content/lbaas_workflow.html
+          http://docs.openstack.org/admin-guide-cloud/networking_adv-features.html#basic-load-balancer-as-a-service-operations
 
 .. todo:: libcloud support added 0.14:
           https://developer.rackspace.com/blog/libcloud-0-dot-14-released/ -
