@@ -160,8 +160,9 @@
    </resource_type>
    <resource_type id="ServerList">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Server list">
-         <para>A list of servers. In the list, each server element shows includes its ID, name,
-            and links attributes. Other attributes are omitted.
+         <para>
+            A list of servers. In the list, each server element shows includes
+            its ID, name, and links attributes. Other attributes are omitted.
          </para>
       </wadl:doc>
       <method href="#listServers"/>
@@ -342,11 +343,11 @@
          </para>
          <para>
             Issue a <code>GET /servers/{id}</code> request to check the
-            progress of the request, which returns a progress attribute
-            with a from 0 to 100% complete value. The
-            <code>Location</code> header returns the full URL to the newly
-            created server and is available as a <code>self</code> and
-            <code>bookmark</code> link in the server representation.
+            progress of the request, which returns a progress attribute with a
+            from 0 to 100% complete value. The <code>Location</code> header
+            returns the full URL to the newly created server and is available
+            as a <code>self</code> and <code>bookmark</code> link in the
+            server representation.
          </para>
          <note>
             <para>
@@ -362,10 +363,9 @@
          </para>
          <para>
             Include the <code>key_name</code> parameter in the create request
-            body to add a keypair to the server when you create it.
-            To create a keypair, make a <link
-            xlink:href="http://developer.openstack.org/api-ref-compute-v2-ext.html#createKeypair">
-            create keypair</link> request.
+            body to add a keypair to the server when you create it. To create
+            a keypair, make a
+            <link xlink:href="http://developer.openstack.org/api-ref-compute-v2-ext.html#createKeypair">create keypair</link> request.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
@@ -454,7 +454,7 @@
          <representation mediaType="application/json"/>
          <representation mediaType="application/xml" element="csapi:UnprocessableEntity"/>
       </response>
-      <!-- All other common faults except build in progess --> &commonFaults; &getFaults;
+      <!-- All other common faults except build in progress --> &commonFaults; &getFaults;
       &postPutFaults; &buildFaults;
    </method>
    <method name="GET" id="listServers">
@@ -895,7 +895,7 @@
          </representation>
       </request>
       <response status="202"/>
-      <!-- Common, GET, postput, inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
+      <!-- Common, GET, POST, PUT, and inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
       &inProgressFault;
    </method>
    <method name="POST" id="rebootServer">
@@ -938,7 +938,7 @@
          </representation>
       </request>
       <response status="202"/>
-      <!-- Common, GET, postput, inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
+      <!-- Common, GET, POST, PUT, and inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
       &rebootFaults; &inProgressFault;
    </method>
    <method name="POST" id="rebuildServer">
@@ -985,11 +985,12 @@
          <para role="shortdesc">Resizes the specified server. Specify the <code>resize</code>
             action in the request body.
          </para>
-         <para>A successfully resized server shows a status of
-            <code>VERIFY_RESIZE</code>, a vm_status of <code>RESIZED</code>,
-            and a migration_status of <code>finished</code>. If you set the
-            auto_confirm option of the Compute service to <code>True</code>,
-            the Compute service automatically confirms the resize operation.
+         <para>
+            A successfully resized server shows the <code>VERIFY_RESIZE</code>
+            status, <code>RESIZED</code> VM status, and <code>finished</code>
+            migration status. If you set the <code>auto_confirm</code> option
+            of the Compute service to <code>True</code>, the Compute service
+            automatically confirms the resize operation.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
@@ -1030,18 +1031,22 @@
          <para>
             After you make this request, you typically must keep polling the
             server status to determine whether the request succeeded. A
-            successfully confirming resize operation shows a status of
-            <code>ACTIVE</code> and a migration_status of
-            <code>confirmed</code>. You can also see the resized server in the
-            compute node that OpenStack Compute manages.
+            successfully confirming resize operation shows <code>ACTIVE</code>
+            status and <code>confirmed</code> migration status. You can also
+            see the resized server in the compute node that OpenStack Compute
+            manages.
          </para>
          <para>Preconditions</para>
+         <para>
+            To confirm a pending resize action, these preconditions must be
+            met:
+         </para>
          <itemizedlist>
             <listitem>
-               <para>You can only confirm the resized server where the status
-                  is <code>VERIFY_RESIZED</code>, the vm_status is <code>RESIZED</code>,
-                  and the migration_status is <code>finished</code> or
-                  <code>confirming</code>.
+               <para>
+                  Server status is <code>VERIFY_RESIZED</code>, VM status is
+                  <code>RESIZED</code>, and migration status is
+                  <code>finished</code> or <code>confirming</code>.
                </para>
             </listitem>
             <listitem>
@@ -1083,19 +1088,24 @@
          <para role="shortdesc">Cancels and reverts a pending resize action. Specify the
             <code>revertResize</code> action in the request body.
          </para>
-         <para>After you make this request, you typically must keep
-            polling the server status to determine whether the request
-            succeeded. A successfully reverting resize operation shows
-            a status of <code>ACTIVE</code> and
-            a migration_status of <code>reverted</code>. You can also see
-            the reverted server in the compute node that OpenStack
-            Compute manages.
+         <para>
+            After you make this request, you typically must keep polling the
+            server status to determine whether the request succeeded. A
+            successfully reverting resize operation shows <code>ACTIVE</code>
+            status and <code>reverted</code> migration status. You can also
+            see the reverted server in the compute node that OpenStack Compute
+            manages.
          </para>
          <para>Preconditions</para>
+         <para>
+            To cancel and revert a pending resize action, these preconditions
+            must be met:
+         </para>
          <itemizedlist>
             <listitem>
-               <para>You can only confirm the resized server where the status
-                  is <code>VERIFY_RESIZE</code> and the vm_status is <code>RESIZED</code>.
+               <para>
+                  Server status is <code>VERIFY_RESIZE</code> and VM status is
+                  <code>RESIZED</code>.
                </para>
             </listitem>
             <listitem>
@@ -1107,9 +1117,10 @@
          <para>Troubleshooting</para>
          <itemizedlist>
             <listitem>
-               <para>If the specified server status remains
-                  <code>RESIZED</code>, the request failed. Ensure you meet the
-                  preconditions and run the request again. If the request fails again,
+               <para>
+                  If the specified server status remains <code>RESIZED</code>,
+                  the request failed. Ensure you meet the preconditions and
+                  run the request again. If the request fails again,
                   investigate the compute back end.
                </para>
             </listitem>
@@ -1153,7 +1164,7 @@
          </representation>
       </request>
       <response status="202"/>
-      <!-- Common, GET, postput, inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
+      <!-- Common, GET, POST, PUT, and inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
       &inProgressFault;
    </method>
    <method name="POST" id="createImage">
@@ -1162,22 +1173,25 @@
             Creates an image. Specify the <code>createImage</code> action in
             the request body.
          </para>
-         <para>After you make this request, you typically must keep
-            polling the created image's status to determine whether the
-            request succeeded. A successfully creating image operation
-            shows an image's status of <code>available</code> and the
-            serve's status goes back to the original status. You can
-            also see the new image in the image back end that OpenStack
-            Image service manages.
+         <para>
+            After you make this request, you typically must keep polling the
+            created image's status to determine whether the request succeeded.
+            A successfully creating image operation shows the
+            <code>available</code> image status and the server status reverts
+            to its original status. You can also see the new image in the
+            image back end that OpenStack Image service manages.
          </para>
          <para>Preconditions</para>
+         <para>
+            To create an image, these preconditions must be met:
+         </para>
          <itemizedlist>
             <listitem>
                <para>The specified server must exist.</para>
             </listitem>
             <listitem>
-               <para>You can only create an image from the server
-                  when its status is <code>ACTIVE</code>,
+               <para>
+                  The server status is <code>ACTIVE</code>,
                   <code>PAUSED</code>, or <code>SUSPENDED</code>.
                </para>
             </listitem>
@@ -1189,10 +1203,11 @@
          <para>Troubleshooting</para>
          <itemizedlist>
             <listitem>
-               <para>If the image status remains uploading or shows
-                  another error status, the request failed. Ensure you meet the
-                  preconditions and run the request again. If the request fails
-                  again, investigate the image back end.
+               <para>
+                  If the image status remains uploading or shows another error
+                  status, the request failed. Ensure you meet the
+                  preconditions and run the request again. If the request
+                  fails again, investigate the image back end.
                </para>
             </listitem>
             <listitem>
@@ -1329,17 +1344,16 @@
             <param name="flavors" style="plain" required="true"
                type="csapi:FlavorsWithOnlyIDsNamesLinks" path="/csapi:flavors">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Flavors are
-                  known combinations of memory, disk space, and number of
-                  CPUs.
+               <para>
+                  Flavors are known combinations of memory, disk space, and
+                  number of CPUs.
                </para>
             </wadl:doc>
             </param>
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:flavors/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#FlavorList" rel="next"/>
@@ -1347,8 +1361,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:flavors/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#FlavorList" rel="previous"/>
@@ -1382,8 +1395,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:flavors/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#DetailFlavorList" rel="next"/>
@@ -1391,8 +1403,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:flavors/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#DetailFlavorList" rel="previous"/>
@@ -1445,8 +1456,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#DetailImageList" rel="next"/>
@@ -1454,8 +1464,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#DetailImageList" rel="previous"/>
@@ -1488,16 +1497,14 @@
             <param name="images" style="plain" required="true"
                type="csapi:ImagesWithOnlyIDsNamesLinks" path="/csapi:images">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Image
-                  information.
+               <para>Image information.
                </para>
             </wadl:doc>
             </param>
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageList" rel="next"/>
@@ -1505,8 +1512,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageList" rel="previous"/>
@@ -1560,8 +1566,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="next"/>
@@ -1569,8 +1574,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="previous"/>
@@ -1597,8 +1601,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="next"/>
@@ -1606,8 +1609,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="previous"/>
@@ -1624,10 +1626,8 @@
             specified in the request.
          </para>
          <para>
-            An overLimit (
-            <errorcode>413</errorcode>
-            ) fault might be thrown if the operation
-            causes the quota for metadata items to be exceeded.
+            If this operation causes the metadata items quota to be exceeded,
+            an <code>overLimit (413)</code> fault is thrown.
          </para>
       </wadl:doc>
       <request>
@@ -1655,8 +1655,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="next"/>
@@ -1664,8 +1663,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="previous"/>
@@ -1683,10 +1681,8 @@
             specified in the request.
          </para>
          <para>
-            An overLimit (
-            <errorcode>413</errorcode>
-            ) fault might be thrown if the operation
-            causes the quota for metadata items to be exceeded.
+            If this operation causes the metadata items quota to be exceeded,
+            an <code>overLimit (413)</code> fault is thrown.
          </para>
       </wadl:doc>
       <request>
@@ -1714,8 +1710,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="next"/>
@@ -1723,8 +1718,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="previous"/>
@@ -1742,10 +1736,8 @@
             items in the request.
          </para>
          <para>
-            If the number of metadata items exceeds the quota for metadata items, an overLimit
-            (
-            <errorcode>413</errorcode>
-            ) fault might be thrown.
+            If this operation causes the metadata items quota to be exceeded,
+            an <code>overLimit (413)</code> fault is thrown.
          </para>
       </wadl:doc>
       <request>
@@ -1773,8 +1765,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="next"/>
@@ -1782,8 +1773,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ServerMetadataDetails" rel="previous"/>
@@ -1801,10 +1791,8 @@
             exists, this key retains its value.
          </para>
          <para>
-            If the number of metadata items exceeds the quota for metadata items, an overLimit
-            (
-            <errorcode>413</errorcode>
-            ) fault might be thrown.
+            If this operation causes the metadata items quota to be exceeded,
+            an <code>overLimit (413)</code> fault is thrown.
          </para>
       </wadl:doc>
       <request>
@@ -1832,8 +1820,7 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  next metadata item.
+               <para>Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="next"/>
@@ -1841,8 +1828,7 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the
-                  previous metadata item.
+               <para>Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="previous"/>
@@ -1901,10 +1887,8 @@
          title="Create or update server metadata item">
          <para role="shortdesc">Sets a metadata item by key for a specified server.</para>
          <para>
-            An overLimit (
-            <errorcode>413</errorcode>
-            ) fault might be thrown if the operation
-            causes the quota for metadata items to be exceeded.
+            If this operation causes the metadata items quota to be exceeded,
+            an <code>overLimit (413)</code> fault is thrown.
          </para>
       </wadl:doc>
       <request>
@@ -1941,10 +1925,8 @@
             image.
          </para>
          <para>
-            An overLimit (
-            <errorcode>413</errorcode>
-            ) fault might be thrown if the operation
-            causes the quota for metadata items to be exceeded.
+            If this operation causes the metadata items quota to be exceeded,
+            an <code>overLimit (413)</code> fault is thrown.
          </para>
       </wadl:doc>
       <request>
