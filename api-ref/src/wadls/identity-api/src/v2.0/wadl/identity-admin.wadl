@@ -79,8 +79,9 @@
                                 Validates that a token has the specified
                                 tenant in scope, for performance. Valid tokens
                                 are in the <code>/tokens/{tokenId}</code>
-                                path. An itemNotFound (<code>404</code>) fault
-                                is returned for a token that is not valid.
+                                path. If the token is not valid, this call
+                                returns the HTTP <code>itemNotFound
+                                (404)</code> status code.
                             </para>
                         </wadl:doc>
                     </param>
@@ -232,19 +233,30 @@
         <wadl:doc xml:lang="EN" title="Authenticate for admin API"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Authenticates and generates a token.</para>
-            <para>Client authentication is provided through a ReST interface by using the &POST;
-                method with v2.0/tokens supplied as the path. Include a payload of credentials in
-                the body.</para>
-            <para>The Identity API is a ReSTful web service. It is the entry point to all service
-                APIs. To access the Identity API, you must know its URL.</para>
-            <para>Each ReST request against the Identity Service requires the
-                    <code>X-Auth-Token</code> header. Clients obtain this token, along with the URL
-                to other service APIs, by first authenticating against Identity with valid
-                credentials.</para>
-            <para>If the authentication token has expired, a <errorcode>401</errorcode> response
-                code is returned.</para>
-            <para>If the token specified in the request body has expired, this call returns a
-                    <errorcode>404</errorcode> response code.</para>
+            <para>
+                A REST interface provides client authentication by using the
+                &POST; method with <code>v2.0/tokens</code>  as the path.
+                Include a payload of credentials in the body.
+            </para>
+            <para>
+                The Identity API is a RESTful web service. It is the entry
+                point to all service APIs. To access the Identity API, you
+                must know its URL.
+            </para>
+            <para>
+                Each REST request against the Identity Service requires the
+                <code>X-Auth-Token</code> header. Clients obtain this token
+                and the URL endpoints for other service APIs by supplying
+                their valid credentials to the authentication service.
+            </para>
+            <para>
+                If the authentication token has expired, this call returns the
+                HTTP <code>401</code> status code.
+            </para>
+            <para>
+                If the token specified in the request body has expired, this
+                call returns the HTTP <code>404</code> status code.
+            </para>
             <para>Identity treats expired tokens as invalid tokens.</para>
             <para>The deployment determines how long expired tokens are stored.</para>
         </wadl:doc>
@@ -330,12 +342,12 @@
                 </param>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="issued_at" style="plain"
                     required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A timestamp that indicates
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A time stamp that indicates
                             when the token was issued.</para></wadl:doc>
                 </param>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="expires" style="plain"
                     required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A timestamp that indicates
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A time stamp that indicates
                             when the token expires.</para></wadl:doc>
                 </param>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
