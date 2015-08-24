@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <!-- (C) 2011-2014 OpenStack Foundation, All Rights Reserved -->
+ <!-- (C) 2011-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!-- Import Common XML Entities                            -->
 <!--                                                       -->
@@ -8,8 +8,10 @@
 <!-- xmllint -noent OS-OAUTH1.wadl                         -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-<!ENTITY % common SYSTEM "common.ent">
-%common;
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -64,10 +66,12 @@
                         type="xsd:dict" required="false">
                         <wadl:doc xml:lang="EN"
                             xmlns="http://docbook.org/ns/docbook">
-                            <para>Comma-separated list of role IDs for
-                                the roles that the consumer would like
-                                to delegate. Example:
-                                   <code>requested_role_ids=a3b29b,49993e</code>.</para>
+                            <para>
+                                Comma-separated list of role IDs for the roles
+                                that the consumer would like to delegate.
+                                For example,
+                                <code>requested_role_ids=a3b29b,49993e</code>.
+                            </para>
                         </wadl:doc>
                     </param>
                     <param name="requested_project_id" style="plain"
@@ -102,24 +106,8 @@
                                    >signing
                             requests</link>.</para></wadl:doc>
                     </param>
-                    <param name="oauth_timestamp" style="plain"
-                        type="xsd:string" required="true">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>As defined in <link
-                                   xlink:href="http://oauth.net/core/1.0a/#nonce"
-                                   >Nonce and
-                            Timestamp</link>.</para></wadl:doc>
-                    </param>
-                    <param name="oauth_nonce" style="plain"
-                        type="xsd:string" required="true">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>As defined in <link
-                                   xlink:href="http://oauth.net/core/1.0a/#nonce"
-                                   >Nonce and
-                            Timestamp</link>.</para></wadl:doc>
-                    </param>
+                    &oauth_expires_at-RequestParameter;
+                    &oauth_nonce-RequestParameter;
                     <param name="oauth_version" style="plain"
                         type="xsd:string" required="false">
                         <wadl:doc xml:lang="EN"
@@ -179,24 +167,8 @@
                                    >signing
                             requests</link>.</para></wadl:doc>
                     </param>
-                    <param name="oauth_timestamp" style="plain"
-                        type="xsd:string" required="true">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>As defined in <link
-                                   xlink:href="http://oauth.net/core/1.0a/#nonce"
-                                   >Nonce and
-                            Timestamp</link>.</para></wadl:doc>
-                    </param>
-                    <param name="oauth_nonce" style="plain"
-                        type="xsd:string" required="true">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>As defined in <link
-                                   xlink:href="http://oauth.net/core/1.0a/#nonce"
-                                   >Nonce and
-                            Timestamp</link>.</para></wadl:doc>
-                    </param>
+                    &oauth_expires_at-RequestParameter;
+                    &oauth_nonce-RequestParameter;
                     <param name="oauth_version" style="plain"
                         type="xsd:string" required="false">
                         <wadl:doc xml:lang="EN"
@@ -304,24 +276,8 @@
                                    >signing
                             requests</link>.</para></wadl:doc>
                     </param>
-                    <param name="oauth_timestamp" style="plain"
-                        type="xsd:string" required="true">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>As defined in <link
-                                   xlink:href="http://oauth.net/core/1.0a/#nonce"
-                                   >Nonce and
-                            Timestamp</link>.</para></wadl:doc>
-                    </param>
-                    <param name="oauth_nonce" style="plain"
-                        type="xsd:string" required="true">
-                        <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook">
-                            <para>As defined in <link
-                                   xlink:href="http://oauth.net/core/1.0a/#nonce"
-                                   >Nonce and
-                            Timestamp</link>.</para></wadl:doc>
-                    </param>
+                    &oauth_expires_at-RequestParameter;
+                    &oauth_nonce-RequestParameter;
                     <param name="oauth_version" style="plain"
                         type="xsd:string" required="false">
                         <wadl:doc xml:lang="EN"
@@ -416,7 +372,7 @@
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
-        </response> &commonFaults;</method>
+        </response> &commonFaults; </method>
     <method name="GET" id="listConsumers">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List consumers">
@@ -603,16 +559,7 @@
                     <para>The secret associated with the request
                         token.</para></wadl:doc>
             </param>
-            <param name="oauth_expires_at" style="plain"
-                type="xsd:dict" required="false">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <para>The ISO 8601 date time when a request token
-                        expires. If the Identity API does not
-                        include this attribute or the attribute is
-                        null, the token lasts
-                    indefinitely.</para></wadl:doc>
-            </param>
+            &oauth_expires_at-RequestParameter;
             <representation mediaType="application/txt">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
@@ -691,16 +638,7 @@
             <representation mediaType="application/json"/>
         </request>
         <response status="200">
-            <param name="oauth_expires_at" style="plain"
-                type="xsd:dict" required="false">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <para>The ISO 8601 date time when a request token
-                        expires. If the Identity Service API does not
-                        include this attribute or the attribute is
-                        null, the token lasts
-                    indefinitely.</para></wadl:doc>
-            </param>
+            &oauth_expires_at-RequestParameter;
             <param name="oauth_token" style="plain" type="xsd:dict"
                 required="true">
                 <wadl:doc xml:lang="EN"
@@ -777,16 +715,7 @@
                     <para>The ID for the access
                     token.</para></wadl:doc>
             </param>
-            <param name="expires_at" style="plain" type="xsd:dict"
-                required="false">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <para>The ISO 8601 date time when an access token
-                        expires. If the Identity Service API does not
-                        include this attribute or the attribute is
-                        null, the token lasts
-                    indefinitely.</para></wadl:doc>
-            </param>
+            &oauth_expires_at-RequestParameter;
             <param name="links" style="plain" type="xsd:dict"
                 required="true">
                 <wadl:doc xml:lang="EN"
@@ -840,16 +769,7 @@
                     <para>The ID for the access
                     token.</para></wadl:doc>
             </param>
-            <param name="expires_at" style="plain" type="xsd:dict"
-                required="false">
-                <wadl:doc xml:lang="EN"
-                    xmlns="http://docbook.org/ns/docbook">
-                    <para>The ISO 8601 date time when an access token
-                        expires. If the Identity Service API does not
-                        include this attribute or the attribute is
-                        null, the token lasts
-                    indefinitely.</para></wadl:doc>
-            </param>
+            &oauth_expires_at-RequestParameter;
             <param name="links" style="plain" type="xsd:dict"
                 required="true">
                 <wadl:doc xml:lang="EN"

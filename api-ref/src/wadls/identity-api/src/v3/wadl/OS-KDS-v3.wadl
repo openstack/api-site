@@ -8,8 +8,10 @@
 <!-- xmllint -noent OS-KDS.wadl                         -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-<!ENTITY % common SYSTEM "common.ent">
-%common;
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -54,7 +56,7 @@
                         <wadl:doc xml:lang="EN"
                             xmlns="http://docbook.org/ns/docbook">
                             <para>
-                                A base64-encoded 128-bit long cryptographic
+                                A Base64-encoded 128-bit long cryptographic
                                 random key.
                             </para>
                         </wadl:doc>
@@ -165,7 +167,7 @@
             </para>
             <para>
                 A generate ticket request contains metadata that you specify
-                as a base64-encoded JSON object and a signature.
+                as a Base64-encoded JSON object and a signature.
             </para>
             <para>
                 The response shows the metadata, encrypted ticket, and
@@ -185,7 +187,7 @@
                     <wadl:doc xml:lang="EN"
                         xmlns="http://docbook.org/ns/docbook">
                         <para>
-                            A base64-encoded JSON object that contains
+                            A Base64-encoded JSON object that contains
                             these key and value pairs:
                         </para>
                         <itemizedlist>
@@ -203,19 +205,21 @@
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>timestamp</code>. Current
-                                    timestamp from the requester.
+                                    <code>timestamp</code>. The current
+                                    time stamp from the requester.
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>nonce</code>. Random single-use
-                                    data.
+                                    <code>nonce</code>. Random, single-use
+                                    data. See <link
+                                    xlink:href="https://en.wikipedia.org/wiki/Cryptographic_nonce">Cryptographic
+                                    nonce</link>.
                                 </para>
                             </listitem>
                         </itemizedlist>
                         <para>
-                            The timestamp and nonce are required to prevent
+                            The time stamp and nonce are required to prevent
                             replay attacks.
                         </para>
                         <para>For example:</para>
@@ -232,8 +236,8 @@
                     <wadl:doc xml:lang="EN"
                         xmlns="http://docbook.org/ns/docbook">
                         <para>
-                            A base64-encoded HMAC signature over the
-                            base64-encoded request metadata object. For
+                            A Base64-encoded HMAC signature over the
+                            Base64-encoded request metadata object. For
                             example:
                         </para>
                         <para>
@@ -284,7 +288,7 @@
                     <wadl:doc xml:lang="EN"
                         xmlns="http://docbook.org/ns/docbook">
                         <para>
-                            A base64-encoded JSON object that contains
+                            A Base64-encoded JSON object that contains
                             these key and value pairs:
                         </para>
                         <itemizedlist>
@@ -302,19 +306,19 @@
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>timestamp</code>. Current
-                                    timestamp from the requester.
+                                    <code>timestamp</code>. The current
+                                    time stamp from the requester.
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>nonce</code>. Random single-use
+                                    <code>nonce</code>. Random, single-use
                                     data.
                                 </para>
                             </listitem>
                         </itemizedlist>
                         <para>
-                            The timestamp and nonce are required to prevent
+                            The time stamp and nonce are required to prevent
                             replay attacks.
                         </para>
                         <para>For example:</para>
@@ -332,7 +336,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <para>
                         The ticket is encrypted with the long-term key of
-                        the source and contains a base64-encoded JSON
+                        the source and contains a Base64-encoded JSON
                         object containing the following key and value
                         pairs:
                     </para>
@@ -340,13 +344,13 @@
                         <listitem>
                             <para>
                                 <code>skey</code>. The newly-generated
-                                base64-encoded message signing key.
+                                Base64-encoded message signing key.
                             </para>
                         </listitem>
                         <listitem>
                             <para>
                                 <code>ekey</code>. The newly-generated
-                                base64-encoded message encryption key.
+                                Base64-encoded message encryption key.
                             </para>
                         </listitem>
                         <listitem>
@@ -365,21 +369,21 @@
                     <para>
                         The long-term key of the destination is used to
                         encrypt the <code>esek</code> value. The
-                        <code>esek</code> value contains a base64-encoded
+                        <code>esek</code> value contains a Base64-encoded
                         JSON object that contains the following key and
                         value pairs:
                     </para>
                     <itemizedlist>
                         <listitem>
                             <para>
-                                <code>key</code>. The base64-encoded
+                                <code>key</code>. The Base64-encoded
                                 random key that is used to generate the signing and
                                 encryption keys.
                             </para>
                         </listitem>
                         <listitem>
                             <para>
-                                <code>timestamp</code>. Timestamp when the
+                                <code>timestamp</code>. The time stamp when the
                                 key was created.
                             </para>
                         </listitem>
@@ -398,17 +402,15 @@
     "ttl": 28800
 }</programlisting>
                     <para>
-                        The <code>key</code> and <code>timestamp</code>
-                        values are used as inputs to the HKDF
-                        <code>expand</code> function to generate the
-                        signing and encryption keys, as described in the
-                        overview on this page.
+                        The <code>key</code> and <code>timestamp</code> values
+                        are used as inputs to the HKDF <code>expand</code>
+                        function to generate the signing and encryption keys,
+                        as described in the overview on this page.
                     </para>
                     <para>
-                        The <code>timestamp</code> and <code>ttl</code>
-                        values must equal the <code>expiration</code>
-                        timestamp value that is contained in the response
-                        metadata.
+                        The <code>timestamp</code> and <code>ttl</code> values
+                        must equal the <code>expiration</code> time stamp
+                        value that is contained in the response metadata.
                     </para>
                 </wadl:doc>
             </param>
@@ -417,8 +419,8 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <para>
-                        A base64-encoded HMAC signature over the
-                        base64-encoded request metadata object. For
+                        A Base64-encoded HMAC signature over the
+                        Base64-encoded request metadata object. For
                         example:
                     </para>
                     <para>

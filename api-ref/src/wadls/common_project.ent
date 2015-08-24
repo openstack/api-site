@@ -3,7 +3,8 @@
 <param xmlns="http://wadl.dev.java.net/2009/02" name="limit"
        style="query" required="false" type="xsd:int">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+              xmlns:wadl="http://wadl.dev.java.net/2009/02"
+              xml:lang="EN">
         <para>
             Requests a specified page size of returned items from the query.
             Returns a number of items up to the specified limit value. Use the
@@ -16,12 +17,562 @@
 <param xmlns="http://wadl.dev.java.net/2009/02" name="marker"
        style="query" required="false" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
         <para>
             Specifies the ID of the last-seen item. Use the <code>limit</code>
             parameter to make an initial limited request and use the ID of the
             last-seen item from the response as the <code>marker</code>
             parameter value in a subsequent limited request.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- Timestamp entities           -->
+<!-- ISO 8601 request parameters  -->
+<!ENTITY before_timestamp-QueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  name="before_timestamp" style="query" required="true"
+  type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time before which to list usage audits.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, returns the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        If you omit the time zone, the UTC time zone is assumed.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY changes_since-QueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+       name="changes-since" style="query" required="false" type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the image or server last changed status.
+    </para>
+    <para>
+        Use this query parameter to check for changes since a previous request
+        rather than re-downloading and re-parsing the full status at each
+        polling interval. If data has changed, only the items changed since
+        the specified time are returned in the response. If data has not
+        changed since the <code>changes-since</code> time, an empty list is
+        returned.
+    </para>
+    <para>
+        For example, issue a &GET; request against the following endpoint to
+        list all servers that have changed since Mon, 24 Jan 2015 17:08:00
+        UTC:
+    </para>
+    <programlisting>GET /v2/010101/servers?changes-since=2015-01-24T17:08:00Z</programlisting>
+    <para>
+        To enable you to keep track of changes, this filter also displays
+        images and servers that were deleted if the <code>changes-since</code>
+        value specifies a date in the last 30 days. Items deleted more than 30
+        days ago might be returned, but it is not guaranteed.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, returns the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        If you omit the time zone, the UTC time zone is assumed.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY created_at-QueryParameter  '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="created_at" style="query" required="false"
+   type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the image or server was created.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, returns the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        If you omit the created-at date and time stamp, its value is <code>null</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY deleted_at-RequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="deleted_at" style="plain" required="false"
+   type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the server or image was deleted.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, returns the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        If you omit the deleted-at date and time stamp, its value is <code>null</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY oauth_expires_at-RequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="oauth_expires_at" style="plain"
+    type="xsd:dateTime" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The date and time when a request token expires.
+        </para>
+        <para>
+            The date and time stamp format is <link
+            xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+        </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        If the Identity API does not include this attribute or its value is
+        <code>null</code>, the token never expires.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY oauth_nonce-RequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="oauth_nonce"
+       style="plain" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The nonce. This random string is uniquely generated for each
+            request and enables the service provider to verify that a request has never
+            been made before. A nonce helps prevent replay attacks when requests are made
+            over a non-secure channel, such as HTTP. For information, see <link
+            xlink:href="http://oauth.net/core/1.0a/#nonce">Nonce and Timestamp</link>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY updated_at-RequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="updated_at" style="plain"
+   required="false" type="xsd:string">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the server or image was updated.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        If you omit the time zone, the UTC time zone is assumed.
+    </para>
+    <para>
+        If you omit the updated-at date and time stamp, its value is <code>null</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!-- ISO 8601 response parameters -->
+<!ENTITY created_at-ResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="created_at" style="plain" required="true"
+   type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the server, image, or backup was created.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an offset from UTC.
+    </para>
+    <para>
+        If the updated-at date and time stamp is not set, its value is
+        <code>null</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY Date-ResponseHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="Date" style="header" required="true"
+    type="xsd:dateTime">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The transaction date and time.
+        </para>
+        <para>
+            The date and time stamp format is <link
+            xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+        </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        A <code>null</code> value indicates that the token never expires.
+    </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY deleted_at-ResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="deleted_at" style="plain" required="true"
+   type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the server or image was deleted.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an offset from UTC.
+    </para>
+    <para>
+        If the deleted-at date and time stamp is not set, its value is
+        <code>null</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY expires-ResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  name="expires" style="plain" required="true"
+  type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the token expires.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        A <code>null</code> value indicates that the token never expires.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY expires_at-ResponseParameter '
+<param name="expires_at"
+ style="plain" required="false"
+type="xsd:dateTime" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+    <para>
+        The date and time when the token expires.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        A <code>null</code> value indicates that the token never expires.
+    </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY issued_at-ResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+       name="issued_at" style="plain" required="true" type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+    <para>
+        The date and time when the token was issued.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an
+        offset from UTC.
+    </para>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY last_modified-ResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="last_modified" style="plain" required="true"
+    type="xsd:dateTime">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The date and time when the object was last modified.
+        </para>
+        <para>
+            The date and time stamp format is <link
+            xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+        </para>
+<programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+        <para>
+            For example, <code>2015-08-27T09:49:58-05:00</code>.
+        </para>
+        <para>
+            The <code>±hh:mm</code> value, if included, is the time zone as an
+            offset from UTC.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY Last-Modified-ResponseHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="Last-Modified"
+    style="header" required="true" type="xsd:dateTime">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The date and time when the object was created or its
+            metadata was changed.
+        </para>
+        <para>
+            The date and time stamp format is <link
+            xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+        </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+        <para>
+            The <code>±hh:mm</code> value, if included, is the time zone as an
+            offset from UTC.
+        </para>
+        <para>
+            For example, <code>2015-08-27T09:49:58-05:00</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY updated_at-ResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="updated_at" style="plain"
+   required="true" type="xsd:dateTime">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+          xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          xml:lang="EN">
+   <para>
+        The date and time when the server or image was updated.
+    </para>
+    <para>
+        The date and time stamp format is <link
+        xlink:href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</link>:
+    </para>
+    <programlisting>CCYY-MM-DDThh:mm:ss±hh:mm</programlisting>
+    <para>
+        For example, <code>2015-08-27T09:49:58-05:00</code>.
+    </para>
+    <para>
+        The <code>±hh:mm</code> value, if included, is the time zone as an offset from UTC.
+    </para>
+    <para>
+        If the updated-at date and time stamp is not set, its value is
+        <code>null</code>.
+    </para>
+</wadl:doc>
+</param>'>
+<!-- UNIX Epoch timestamps -->
+<!-- request timestamps -->
+<!ENTITY swiftinfo_expires-QueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="swiftinfo_expires"
+    style="query" required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The expiration date and time in <link
+            xlink:href="https://en.wikipedia.org/wiki/Unix_time">UNIX Epoch time
+            stamp format</link>.
+        </para>
+        <para>
+            For example, <code>1440619048</code> is equivalent to <code>Mon,
+            Wed, 26 Aug 2015 19:57:28 GMT</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY temp_url_expires-RequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="temp_url_expires"
+    style="query" required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The date and time in <link
+            xlink:href="https://en.wikipedia.org/wiki/Unix_time">UNIX Epoch
+            time stamp format</link> when the signature for temporary URLs
+            expires.
+        </para>
+        <para>
+            For example, <code>1440619048</code> is equivalent to <code>Mon,
+            Wed, 26 Aug 2015 19:57:28 GMT</code>.
+        </para>
+        <para>
+            For more information about temporary URLs, see <link
+            xlink:href="http://docs.openstack.org/developer/swift/api/temporary_url_middleware.html">Temporary
+            URL middleware</link>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY X-Delete-At-RequestHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="X-Delete-At" style="header" required="false"
+    type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The date and time in <link
+            xlink:href="https://en.wikipedia.org/wiki/Unix_time">UNIX Epoch
+            time stamp format</link> when the system removes the object.
+        </para>
+        <para>
+            For example, <code>1440619048</code> is equivalent to <code>Mon,
+            Wed, 26 Aug 2015 19:57:28 GMT</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY X-Delete-After-RequestHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="X-Delete-After"
+    style="header" required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The number of seconds after which the system removes the object.
+            Internally, the Object Storage system stores this value in the
+            <code>X-Delete-At</code> metadata item.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- response parameters -->
+<!ENTITY X-Copied-From-Last-Modified-ResponseHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="X-Copied-From-Last-Modified"
+    style="header" required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            For a copied object, the date and time in <link
+            xlink:href="https://en.wikipedia.org/wiki/Unix_time">UNIX Epoch
+            time stamp format</link> when the container and object name
+            from which the new object was copied was last modified.
+        </para>
+        <para>
+            For example, <code>1440619048</code> is equivalent to <code>Mon,
+            Wed, 26 Aug 2015 19:57:28 GMT</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY X-Delete-At-ResponseHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="X-Delete-At"
+    style="header" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            If set, the date and time in <link
+            xlink:href="https://en.wikipedia.org/wiki/Unix_time">UNIX Epoch
+            time stamp format</link> when the system deletes the object.
+        </para>
+        <para>
+            For example, <code>1440619048</code> is equivalent to <code>Mon,
+            Wed, 26 Aug 2015 19:57:28 GMT</code>.
+        </para>
+        <para>
+            If not set, this header is not returned by this operation.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY X-Timestamp-ResponseHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="X-Timestamp" style="header" required="true"
+    type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The date and time in <link
+            xlink:href="https://en.wikipedia.org/wiki/Unix_time">UNIX Epoch
+            time stamp format</link> when the account, container, or object
+            was initially created as a current version.
+        </para>
+        <para>
+            For example, <code>1440619048</code> is equivalent to <code>Mon,
+            Wed, 26 Aug 2015 19:57:28 GMT</code>.
         </para>
     </wadl:doc>
 </param>'>
