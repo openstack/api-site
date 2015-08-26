@@ -8,51 +8,38 @@
    <resources base="https://servers.api.openstack.com"
       xml:id="os-availability-zone-v2">
       <resource id="version" type="#VersionDetails" path="//v2">
-         <resource id="Servers" path="servers">
-            <method href="#addAvailabilityZone"/>
-         </resource>
-         <resource path="os-availability-zone" id="os-availability-zone">
-            <method href="#getAvailabilityZone"/>
-            <resource path="detail" id="detail">
-               <method href="#getAvailabilityZoneDetails"/>
+         <resource id="tenant_id" path="{tenant_id}">
+            <param name="tenant_id" style="template"
+                    type="xsd:string">
+               <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Tenant ID">
+                  <para>
+                     The ID for the tenant or account in a multi-tenancy cloud.
+                  </para>
+               </wadl:doc>
+            </param>
+            <resource id="Servers" path="servers">
+               <method href="#addAvailabilityZone"/>
+            </resource>
+            <resource id="os-availability-zone" path="os-availability-zone">
+               <method href="#listAvailabilityZones"/>
+               <resource path="detail" id="detail">
+                  <method href="#listAvailabilityZonesDetailed"/>
+               </resource>
+               <resource path="{availability_zone_id}" id="availability_zone_id">
+                  <param name="availability_zone_id" style="template" type="csapi:UUID">
+                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                           The ID associated with an availability zone.
+                        </para>
+                     </wadl:doc>
+                  </param>
+                  <method href="#showAvailabilityZone"/>
+               </resource>
             </resource>
          </resource>
       </resource>
    </resources>
-   <method name="GET" id="getAvailabilityZone">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-         title="Get availability zone information">
-         <para role="shortdesc">Gets availability zone information.</para>
-      </wadl:doc>
-      <response status="200">
-         <representation mediaType="application/json">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-               xml:lang="EN"
-               title="Get availability zone information: JSON response">
-               <xsdxt:code
-                  href="../api_samples/os-availability-zone/availability-zone-resp.json"
-                  />
-            </wadl:doc>
-         </representation>
-      </response>
-   </method>
-   <method name="GET" id="getAvailabilityZoneDetails">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-         title="Get detailed availability zone information">
-         <para role="shortdesc">Gets detailed availability zone information.</para>
-      </wadl:doc>
-      <response status="200">
-         <representation mediaType="application/json">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-               xml:lang="EN"
-               title="Get detailed availability zone information: JSON response">
-               <xsdxt:code
-                  href="../api_samples/os-availability-zone/availability-zone-detail-resp.json"
-                  />
-            </wadl:doc>
-         </representation>
-      </response>
-   </method>
    <method name="POST" id="addAvailabilityZone">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
          title="Create server with availability zone">
@@ -76,6 +63,57 @@
                title="Create server with availability zone: JSON response">
                <xsdxt:code
                   href="../api_samples/os-availability-zone/availability-zone-post-resp.json"
+                  />
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="listAvailabilityZones">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="List availability zones">
+         <para role="shortdesc">Lists all availability zones.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN"
+               title="List availability zones: JSON response">
+               <xsdxt:code
+                  href="../api_samples/os-availability-zone/availability-zone-list-resp.json"
+                  />
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="listAvailabilityZonesDetailed">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="List availability zones with details">
+         <para role="shortdesc">Lists all availability zones with details.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN"
+               title="List availability zones with details: JSON response">
+               <xsdxt:code
+                  href="../api_samples/os-availability-zone/availability-zone-detail-resp.json"
+                  />
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="showAvailabilityZone">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="Show availability zone information">
+         <para role="shortdesc">Shows information for a specified availability zone.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN"
+               title="Show availability zone information: JSON response">
+               <xsdxt:code
+                  href="../api_samples/os-availability-zone/availability-zone-resp.json"
                   />
             </wadl:doc>
          </representation>
