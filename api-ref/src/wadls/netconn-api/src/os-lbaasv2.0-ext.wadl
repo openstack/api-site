@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -225,9 +225,9 @@
             than their own.</para>
             <para><emphasis role="bold">Example: Create a load balancer</emphasis></para>
             <itemizedlist>
-                <listitem><para><code>tenant_id</code>: only required if the caller has an administrative role and wants to create a load balancer for another tenant.</para></listitem>
+                <listitem><para><code>tenant_id</code>. only required if the caller has an administrative role and wants to create a load balancer for another tenant.</para></listitem>
                 <listitem><para>
-                    <code>vip_subnet_id</code>: The network on which to
+                    <code>vip_subnet_id</code>. The network on which to
                     allocate the VIP address for the load balancer. A tenant can
                     only create load balancer VIPs on networks that are authorized by the
                     policy, such as her own networks or shared or provider
@@ -236,14 +236,35 @@
             </itemizedlist>
             <para>Some attributes receive default values if not specified in the request:</para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
-                <listitem><para><code>name</code>: The default is an empty string.</para></listitem>
-                <listitem><para><code>description</code>: The default is an empty string.</para></listitem>
+                <listitem><para><code>admin_state_up</code>. The default is true.</para></listitem>
+                <listitem><para><code>name</code>. The default is an empty string.</para></listitem>
+                <listitem><para><code>description</code>. The default is an empty string.</para></listitem>
             </itemizedlist>
-            <para>If the request cannot be fulfilled due to insufficient or invalid data, an HTTP 400 (Bad Request) error response is returned with information regarding the nature of the failure in the response body. Failures in the validation process are non-recoverable and require the caller to correct the cause of the failure and POST the request again.</para>
-            <para>You can configure all documented features of the load balancer at creation time by specifying the additional elements or attributes in the request.</para>
-            <para>Users with an administrative role can create load balancers on behalf of other tenants by specifying a <code>tenant_id</code> attribute that is different than their own.</para>
-            <para>A user can supply a <code>vip_address</code> field if she owns the subnet on which the load balancer's VIP will be created. If a <code>vip_address</code> is not specified in the payload, the LBaaS service allocates one from the load balancer VIP's subnet.</para>
+            <para>
+                If the request cannot be fulfilled due to insufficient data or
+                data that is not valid, an HTTP 400 (Bad Request) error
+                response is returned with information about the nature of the
+                failure in the response body. Failures in the validation
+                process are non-recoverable and require the caller to correct
+                the cause of the failure and &POST; the request again.
+            </para>
+            <para>
+                You can configure all documented features of the load balancer
+                at creation time by specifying the additional elements or
+                attributes in the request.
+            </para>
+            <para>
+                Users with an administrative role can create load balancers on
+                behalf of other tenants by specifying a <code>tenant_id</code>
+                attribute that is different than their own.
+            </para>
+            <para>
+                A user can supply a <code>vip_address</code> field if she owns
+                the subnet on which the load balancer's VIP will be created.
+                If a <code>vip_address</code> is not specified in the payload,
+                the LBaaS service allocates one from the load balancer VIP's
+                subnet.
+            </para>
             <para>Example: Create a load balancer</para>
         </wadl:doc>
         <request>
@@ -262,21 +283,33 @@
     <method name="PUT" id="updateLoadBalancer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update load balancer">
             <para role="shortdesc">Updates a specified load balancer.</para>
-            <para>This operation updates the attributes of the specified load
-            balancer. Upon successful validation of the request, the service
-            returns a 202 (Accepted) response code. A caller should check
-            that the load balancer provisioning_status has changed to ACTIVE
-            to confirm that the update has taken effect. If the load balancer
-            <code>provisioning_status</code> is <code>PENDING_UPDATE</code>, the caller can poll
-            the load balancer object by using a GET operation to wait for the
-            changes to be applied.</para>
-            <para>The update operation allows the caller to change one or more of the following load balancer attributes:</para>
+            <para>
+                This operation updates the attributes of the specified load
+                balancer. Upon successful validation of the request, the
+                service returns a 202 (Accepted) response code. A caller
+                should check that the load balancer provisioning_status has
+                changed to ACTIVE to confirm that the update has taken effect.
+                If the load balancer <code>provisioning_status</code> is
+                <code>PENDING_UPDATE</code>, the caller can poll the load
+                balancer object by using a &GET; operation to wait for the
+                changes to be applied.
+            </para>
+            <para>
+                The update operation allows the caller to change one or more
+                of the following load balancer attributes:
+            </para>
             <itemizedlist>
                 <listitem><para><code>name</code></para></listitem>
                 <listitem><para><code>description</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
             </itemizedlist>
-            <para>This operation returns the updated load balancer object. The <code>provisioning_status</code> of the load balancer in the response can take one of the following values: <code>ACTIVE</code>, <code>PENDING_UPDATE</code>, or <code>ERROR</code>.</para>
+            <para>
+                This operation returns the updated load balancer object. The
+                <code>provisioning_status</code> of the load balancer in the
+                response can take one of the following values:
+                <code>ACTIVE</code>, <code>PENDING_UPDATE</code>, or
+                <code>ERROR</code>.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -292,7 +325,12 @@
     <method name="DELETE" id="deleteLoadBalancer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove load balancer">
             <para role="shortdesc">Removes a specified load balancer.</para>
-            <para>This operation removes the specified load balancer and its associated configuration from the tenant account. Any and all configuration data is immediately purged and cannot be recovered.</para>
+            <para>
+                This operation removes the specified load balancer and its
+                associated configuration from the tenant account. Any and all
+                configuration data is immediately purged and cannot be
+                recovered.
+            </para>
             <para>This operation does not require a request body.</para>
             <para>This operation does not return a response body.</para>
             <para>Example: Delete a load balancer</para>
@@ -302,26 +340,112 @@
     <method name="POST" id="createListener">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create listener">
             <para role="shortdesc">Creates a listener.</para>
-            <para>This operation provisions a new listener based on the configuration defined in the request object. After the request is validated and progress has started on the provisioning process, a response object is returned. The object contains a unique identifier.</para>
-            <para>The caller of this operation must specify these listener attributes, at a minimum:</para>
+            <para>
+                This operation provisions a new listener based on the
+                configuration defined in the request object. After the request
+                is validated and progress has started on the provisioning
+                process, a response object is returned. The object contains a
+                unique identifier.
+            </para>
+            <para>
+                The caller of this operation must specify these listener
+                attributes, at a minimum:
+            </para>
             <itemizedlist>
-                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a listener for another tenant.</para></listitem>
-                <listitem><para><code>loadbalancer_id</code>: The load balancer on which this listener is provisioned. A tenant can only create listeners on load balancers authorized by policy (for example, her own load balancers).</para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>protocol</code>: The protocol the front end listens for. Must be TCP, HTTP, or HTTPS.</para></listitem>
-                <listitem><para><code>protocol_port</code>: The port on which the front end listens. Must be an integer in the range from 1 to 65535.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>. Required only if the caller
+                        has an administrative role and wants to create a
+                        listener for another tenant.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>loadbalancer_id</code>. The load balancer on
+                        which this listener is provisioned. A tenant can only
+                        create listeners on load balancers authorized by
+                        policy. For example, her own load balancers.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>. The load balancer description.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol</code>. The protocol for which the front end
+                        listens. Must be TCP, HTTP, or HTTPS.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol_port</code>. The port on which the
+                        front end listens. Must be an integer from 1 to 65535.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>default_tls_container_ref</code>. The reference
+                        to a container that holds TLS secrets. If you also specify
+                        <code>sni_container_refs</code>, this container will be the default.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>sni_container_refs</code>. A list of references
+                        to containers that hold TLS secrets that are used for Server
+                        Name Indication (SNI).
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Some attributes receive default values if not specified in the request:</para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
-                <listitem><para><code>name</code>: The default is an empty string.</para></listitem>
-                <listitem><para><code>description</code>: The default is an empty string.</para></listitem>
-                <listitem><para><code>connection_limit</code>: The default is -1, indicating an infinite limit.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>. The default is <code>true</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>. The default is an empty string.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>. The default is an empty string.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>connection_limit</code>. The default is
+                        <code>-1</code>, which indicates an infinite limit.
+                    </para>
+                </listitem>
             </itemizedlist>
-            <para>If the request cannot be fulfilled due to insufficient or invalid data, an HTTP 400 (Bad Request) error response is returned with information regarding the nature of the failure in the response body. Failures in the validation process are non-recoverable and require the caller to correct the cause of the failure and POST the request again.</para>
-            <para>You can configure all documented features of the listener at creation time by specifying the additional elements or attributes in the request.</para>
-            <para>Users with an administrative role can create listeners on behalf of other tenants by specifying a <code>tenant_id</code> attribute different than their own.</para>
-            <para>A listener cannot be updated if the load balancer that it is attempting to be attached to does not have a <code>provisioning_status</code> of <code>ACTIVE</code>.</para>
+            <para>
+                If the request cannot be fulfilled due to insufficient or
+                invalid data, an HTTP 400 (Bad Request) error response is
+                returned with information regarding the nature of the failure
+                in the response body. Failures in the validation process are
+                non-recoverable and require the caller to correct the cause of
+                the failure and POST the request again.
+            </para>
+            <para>
+                You can configure all documented features of the listener at
+                creation time by specifying the additional elements or
+                attributes in the request.
+            </para>
+            <para>
+                Users with an administrative role can create listeners on
+                behalf of other tenants by specifying a <code>tenant_id</code>
+                attribute different than their own.
+            </para>
+            <para>
+                A listener cannot be updated if the load balancer that it is
+                attempting to be attached to does not have a
+                <code>provisioning_status</code> of <code>ACTIVE</code>.
+            </para>
             <para>Example: Create a listener</para>
         </wadl:doc>
         <request>
@@ -342,7 +466,7 @@
             <para role="shortdesc">Lists listeners.</para>
             <para>This operation lists all listeners associated with your tenant account.</para>
             <para>This operation does not require a request body.</para>
-            <para>This operation returns a response body. It returns a (potentially empty) list. Each element in the list is a listener that can contain the following attributes:</para>
+            <para>This operation returns a response body. It returns a (potentially empty) list. Each list element is a listener that can contain the following attributes:</para>
             <itemizedlist><listitem><para><code>id</code></para></listitem>
                 <listitem><para><code>tenant_id</code></para></listitem>
                 <listitem><para><code>name</code></para></listitem>
@@ -353,6 +477,8 @@
                 <listitem><para><code>default_pool_id</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
                 <listitem><para><code>loadbalancers</code></para></listitem>
+                <listitem><para><code>default_tls_container_ref</code></para></listitem>
+                <listitem><para><code>sni_container_refs</code></para></listitem>
             </itemizedlist>
             <para>Example: List listeners</para>
         </wadl:doc>
@@ -380,6 +506,8 @@
                 <listitem><para><code>default_pool_id</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
                 <listitem><para><code>loadbalancers</code></para></listitem>
+                <listitem><para><code>default_tls_container_ref</code></para></listitem>
+                <listitem><para><code>sni_container_refs</code></para></listitem>
             </itemizedlist>
             <para>Example: Show listener details</para>
         </wadl:doc>
@@ -400,6 +528,8 @@
                 <listitem><para><code>description</code></para></listitem>
                 <listitem><para><code>admin_state_up</code></para></listitem>
                 <listitem><para><code>connection_limit</code></para></listitem>
+                <listitem><para><code>default_tls_container_ref</code></para></listitem>
+                <listitem><para><code>sni_container_refs</code></para></listitem>
             </itemizedlist>
             <para>Example: Update a listener</para>
             <para>Note: You cannot update these listener
@@ -442,23 +572,23 @@
             <para>This operation provisions a new pool based on the configuration defined in the request object. After the request is validated and progress has started on the provisioning process, a response object is returned. The object contains a unique identifier.</para>
             <para>The caller of this operation must specify these pool attributes, at a minimum:</para>
             <itemizedlist>
-                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
-                <listitem><para><code>protocol</code>: The protocol this pool and its members listen for. Must be one of TCP, HTTP, or HTTPS</para></listitem>
+                <listitem><para><code>tenant_id</code>. Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
+                <listitem><para><code>protocol</code>. The protocol this pool and its members listen for. Must be one of TCP, HTTP, or HTTPS</para></listitem>
                 <listitem><para>
-                    <code>lb_method</code>: The load-balancer algorithm, which
+                    <code>lb_method</code>. The load-balancer algorithm, which
                     is round-robin, least-connections, and so on, that is used to distribute
                     traffic to the pool members. This value, which must be supported, is dependent
                     on the load-balancer provider. The round-robin algorithm must be supported.
                 </para></listitem>
-                <listitem><para><code>protocol_port</code>: The port on which the front end listens. Must be an integer in the range from 1 to 65535.</para></listitem>
-                <listitem><para><code>listener_id</code>: The listener in which this pool becomes the default pool. There can only be on default pool for a listener.</para></listitem>
+                <listitem><para><code>protocol_port</code>. The port on which the front end listens. Must be an integer in the range from 1 to 65535.</para></listitem>
+                <listitem><para><code>listener_id</code>. The listener in which this pool becomes the default pool. There can only be on default pool for a listener.</para></listitem>
             </itemizedlist>
             <para>Some attributes receive default values if not specified in the request:</para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
-                <listitem><para><code>name</code>: The default is an empty string.</para></listitem>
-                <listitem><para><code>description</code>: The default is an empty string.</para></listitem>
-                <listitem><para><code>session_persistence</code>: The default is an empty dictionary.</para></listitem>
+                <listitem><para><code>admin_state_up</code>. The default is true.</para></listitem>
+                <listitem><para><code>name</code>. The default is an empty string.</para></listitem>
+                <listitem><para><code>description</code>. The default is an empty string.</para></listitem>
+                <listitem><para><code>session_persistence</code>. The default is an empty dictionary.</para></listitem>
             </itemizedlist>
             <para>If the request cannot be fulfilled due to insufficient or
             invalid data, an HTTP 400 (Bad Request) error response is returned
@@ -591,14 +721,14 @@
             contains a unique identifier.</para>
             <para>The caller of this operation must specify the following pool attributes, at a minimum:</para>
             <itemizedlist>
-                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
-                <listitem><para><code>address</code>: The IP Address of the member to receive traffic from the load balancer.</para></listitem>
+                <listitem><para><code>tenant_id</code>. Only required if the caller has an administrative role and wants to create a pool for another tenant.</para></listitem>
+                <listitem><para><code>address</code>. The IP Address of the member to receive traffic from the load balancer.</para></listitem>
                 <listitem><para><code>protocol_port</code> The port that the member is listening to receive traffic.</para></listitem>
             </itemizedlist>
             <para>Some attributes receive default values if not specified in the request:</para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
-                <listitem><para><code>weight</code>: The default is 1.</para></listitem>
+                <listitem><para><code>admin_state_up</code>. The default is true.</para></listitem>
+                <listitem><para><code>weight</code>. The default is 1.</para></listitem>
             </itemizedlist>
             <para>
                 If you omit the <code>subnet_id</code> parameter, LBaaS
@@ -732,19 +862,19 @@
             <para>This operation provisions a new health monitor based on the configuration defined in the request object. After the request is validated and progress has started on the provisioning process, a response object is returned. The object contains a unique identifier.</para>
             <para>The caller of this operation must specify these health monitor attributes, at a minimum:</para>
             <itemizedlist>
-                <listitem><para><code>tenant_id</code>: Only required if the caller has an administrative role and wants to create a health monitor for another tenant.</para></listitem>
-                <listitem><para><code>type</code>: The type of health monitor. Must be one of TCP, HTTP, HTTPS</para></listitem>
-                <listitem><para><code>delay</code>: The interval in seconds between health checks.</para></listitem>
-                <listitem><para><code>timeout</code>: The time in seconds that a health check times out.</para></listitem>
-                <listitem><para><code>max_retries</code>: Number of failed health checks before marked as OFFLINE.</para></listitem>
-                <listitem><para><code>pool_id</code>: The pool that this health monitor will monitor.</para></listitem>
+                <listitem><para><code>tenant_id</code>. Only required if the caller has an administrative role and wants to create a health monitor for another tenant.</para></listitem>
+                <listitem><para><code>type</code>. The type of health monitor. Must be one of TCP, HTTP, HTTPS</para></listitem>
+                <listitem><para><code>delay</code>. The interval in seconds between health checks.</para></listitem>
+                <listitem><para><code>timeout</code>. The time in seconds that a health check times out.</para></listitem>
+                <listitem><para><code>max_retries</code>. Number of failed health checks before marked as OFFLINE.</para></listitem>
+                <listitem><para><code>pool_id</code>. The pool that this health monitor will monitor.</para></listitem>
             </itemizedlist>
             <para>Some attributes will receive default values if not specified in the request and are only useful when health monitor type of HTTP(S) is specified:</para>
             <itemizedlist>
-                <listitem><para><code>http_method</code>: The default is GET.</para></listitem>
-                <listitem><para><code>url_path</code>: The default is <code>/</code>.</para></listitem>
-                <listitem><para><code>expected_codes</code>: The expected http status codes to get from a successful health check. Default is 200.</para></listitem>
-                <listitem><para><code>admin_state_up</code>: The default is true.</para></listitem>
+                <listitem><para><code>http_method</code>. The default is GET.</para></listitem>
+                <listitem><para><code>url_path</code>. The default is <code>/</code>.</para></listitem>
+                <listitem><para><code>expected_codes</code>. The expected http status codes to get from a successful health check. Default is 200.</para></listitem>
+                <listitem><para><code>admin_state_up</code>. The default is true.</para></listitem>
             </itemizedlist>
             <para>If the request cannot be fulfilled due to insufficient or invalid data, an HTTP 400 (Bad Request) error response will be returned with information regarding the nature of the failure in the response body. Failures in the validation process are non-recoverable and require the caller to correct the cause of the failure and POST the request again.</para>
             <para>You can configure all documented features of the health monitor at creation time by specifying the additional elements or attributes in the request.</para>
