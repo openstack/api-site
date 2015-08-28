@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE application [<!ENTITY % common  SYSTEM "common.ent">
-%common;]>
-<!-- (C) 2012-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
-<!--     You can resolve the entites with xmllint          -->
+<!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent os-compute-2.wadl               -->
+<!--        xmllint -noent os-telemetry-api-2.0.wadl       -->
 <!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -21,6 +25,13 @@
                 <method href="#listAlarms"/>
                 <method href="#createAlarm"/>
                 <resource path="{alarm_id}" id="alarm_id">
+                    <param name="alarm_id" required="true"
+                        style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN">
+                            <para>The UUID of the alarm.</para>
+                        </wadl:doc>
+                    </param>
                     <method href="#showAlarm"/>
                     <method href="#updateAlarm"/>
                     <method href="#deleteAlarm"/>
@@ -36,22 +47,43 @@
             <resource path="meters" id="meters">
                 <method href="#listMeters"/>
                 <resource path="{meter_name}" id="meter_name">
-                    <method href="#showMeter"/>
+                    <param name="meter_name" required="true"
+                        style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN">
+                            <para>The name of the meter.</para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#listSamplesforMeter"/>
                     <method href="#createMeter"/>
                     <resource path="statistics" id="statistics">
-                        <method href="#showMeterStatistics"/>
+                        <method href="#listSamplesStatistics"/>
                     </resource>
                 </resource>
             </resource>
             <resource path="samples" id="samples">
                 <method href="#listSamples"/>
                 <resource path="{sample_id}" id="sample_id">
+                    <param name="sample_id" required="true"
+                        style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN">
+                            <para>The UUID of the sample.</para>
+                        </wadl:doc>
+                    </param>
                     <method href="#showSample"/>
                 </resource>
             </resource>
             <resource path="resources" id="resources">
                 <method href="#listResources"/>
                 <resource path="{resource_id}" id="resource_id">
+                    <param name="resource_id" required="true"
+                        style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN">
+                            <para>The UUID of the resource.</para>
+                        </wadl:doc>
+                    </param>
                     <method href="#showResource"/>
                 </resource>
             </resource>
@@ -120,20 +152,9 @@
     <method id="showResource" name="GET">
         <wadl:doc title="Show resource information" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets details for a specified
-                resource.</para>
+            <para role="shortdesc">Shows information for a specified
+                resource, by resource ID.</para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/xml">
-                <param name="resource_id" required="false"
-                    style="query" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The UUID of the resource.</para>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -182,11 +203,11 @@
             </representation>
         </response>
     </method>
-    <method id="showMeter" name="GET">
-        <wadl:doc title="Show meter" xml:lang="EN"
+    <method id="listSamplesforMeter" name="GET">
+        <wadl:doc title="List samples for meter" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets samples for a specified
-                meter.</para>
+            <para role="shortdesc">Lists samples for a specified
+                meter, by meter ID.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -198,14 +219,7 @@
                             returned.</para>
                     </wadl:doc>
                 </param>
-                <param name="limit" required="false" style="query"
-                    type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Maximum number of samples to
-                            return.</para>
-                    </wadl:doc>
-                </param>
+                &limitMarkerReqParameter;
             </representation>
         </request>
         <response status="200">
@@ -256,11 +270,13 @@
             </representation>
         </response>
     </method>
-    <method id="showMeterStatistics" name="GET">
+    <method id="listSamplesStatistics" name="GET">
         <wadl:doc title="Show meter statistics" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Computes the statistics of the
-                samples in a specified time range.</para>
+            <para role="shortdesc">
+                Computes and lists statistics for samples in a specified
+                time range.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -283,9 +299,10 @@
                     type="xsd:int">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Returned result will be an array of
-                            statistics for a period long of that
-                            number of seconds.</para>
+                        <para>
+                            The period, in seconds, for which you want
+                            statistics.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -342,20 +359,10 @@
     <method id="showSample" name="GET">
         <wadl:doc title="Show sample" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets sample for the specified
-                id.</para>
+            <para role="shortdesc">
+                Shows information for a specified sample, by sample ID.
+            </para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/xml">
-                <param name="sample_id" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The id of the sample.</para>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
@@ -440,7 +447,7 @@
         <wadl:doc title="Show alarm" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Shows information for a specified
-                alarm.</para>
+                alarm, by alarm ID.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -492,8 +499,8 @@
     <method id="showAlarmHistory" name="GET">
         <wadl:doc title="Show alarm history" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Assembles the history for a
-                specified alarm.</para>
+            <para role="shortdesc">Assembles and shows the history for a
+                specified alarm, by alarm ID.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -521,10 +528,11 @@
                     type="xsd:dict">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>An alarm state within the request body.
-                            Valid values are <code>ok</code>,
-                                <code>alarm</code>, or
-                                <code>insufficient data</code>.</para>
+                        <para>
+                            An alarm state within the request body. A valid
+                            value is <code>ok</code>, <code>alarm</code>, or
+                            <code>insufficient data</code>.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -534,8 +542,8 @@
     <method id="showAlarmState" name="GET">
         <wadl:doc title="Show alarm state" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets the state of a specified
-                alarm.</para>
+            <para role="shortdesc">Shows the state for a specified
+                alarm, by alarm ID.</para>
         </wadl:doc>
         <request/>
         <response status="200"/>
@@ -543,7 +551,7 @@
     <method id="deleteAlarm" name="DELETE">
         <wadl:doc title="Delete alarm" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Deletes a specified alarm.</para>
+            <para role="shortdesc">Deletes a specified alarm, by alarm ID.</para>
         </wadl:doc>
         <response status="204"/>
     </method>
