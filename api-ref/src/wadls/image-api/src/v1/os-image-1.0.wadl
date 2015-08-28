@@ -43,18 +43,7 @@
                 <resource path="detail" type="#DetailImageList"
                     id="detail"/>
                 <resource path="{image_id}" id="image_id">
-                    <param
-                        xmlns="http://wadl.dev.java.net/2009/02"
-                        name="image_id" style="template"
-                        type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xml:lang="EN" title="Image ID"
-                               ><para>Image ID stored through the
-                               image API. Typically a
-                            UUID.</para></wadl:doc>
-                    </param>
+                    &image_idRequestParameter;
                     <method href="#getImage-v1"/>
                     <method href="#getImageHeaders-v1"/>
                     <method href="#updateImage-v1"/>
@@ -62,17 +51,7 @@
                     <resource id="members" path="members">
                         <method href="#replaceMember-v1"/>
                         <resource path="{owner_id}" id="owner-id">
-                            <param
-                               xmlns="http://wadl.dev.java.net/2009/02"
-                               name="owner_id" style="template"
-                               type="xsd:string">
-                               <wadl:doc
-                               xmlns="http://docbook.org/ns/docbook"
-                               xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                               xml:lang="EN" title="Owner ID"
-                               ><para>Owner ID, which is the
-                               tenant ID.</para></wadl:doc>
-                            </param>
+                            &owner_idRequestParameter;
                             <method href="#addMember-v1"/>
                             <method href="#removeMember-v1"/>
                         </resource>
@@ -80,19 +59,8 @@
                 </resource>
             </resource>
             <resource id="shared-images" path="shared-images">
-                <resource path="{owner}" id="owner-2">
-                    <param
-                        xmlns="http://wadl.dev.java.net/2009/02"
-                        name="owner" style="plain" required="true"
-                        type="csapi:uuid">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xml:lang="EN" title="Image ID">
-                            <para>Owner ID. The owner ID is the
-                               tenant ID.</para>
-                        </wadl:doc>
-                    </param>
+                <resource path="{owner_id}" id="owner-2">
+                    &owner_idRequestParameter;
                     <method href="#getSharedImages-v1"/>
                 </resource>
             </resource>
@@ -493,41 +461,16 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List shared images">
-            <para role="shortdesc">Lists the VM images shared with a
-                specified owner. The owner ID is the tenant ID.</para>
+            <para role="shortdesc">
+                Lists the VM images that are shared with a specified owner.
+                The owner ID is the tenant ID.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/xml"
                 element="imageapi:images">
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="image_id" style="plain" type="xsd:anyURI"
-                    required="true"
-                    path="/common:version/atom:link[@rel='self']/@href">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN" title="Image ID">
-                        <para>The ID of the image that is shared with
-                            the specified owner. The owner ID is the
-                            tenant ID.</para>
-                    </wadl:doc>
-                    <link resource_type="#getSharedImages" rel="self"
-                    />
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="can_share" style="plain" type="xsd:anyURI"
-                    required="true"
-                    path="/common:version/atom:link[@rel='self']/@href">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN" title="Can Share Flag">
-                        <para>If the owner is authorized to further
-                            share the image, the can_share field is
-                            set to true. The owner ID is the tenant
-                            ID.</para>
-                    </wadl:doc>
-                    <link resource_type="#getSharedImages" rel="self"
-                    />
-                </param>
+                &image_idRequestParameter;
+                &can_shareRequestParameter;
             </representation>
             <representation mediaType="application/json"
                 element="imageapi:images">
@@ -615,11 +558,12 @@
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Add member">
             <para role="shortdesc">Adds a member to an image.</para>
-            <para>If you omit the request body from this call, this
-                request adds the membership to the image, leaves the
-                existing memberships unmodified, and sets the
-                    <code>can_share</code> attribute to false for new
-                memberships.</para>
+            <para>
+                If you omit the request body, this call adds the membership to
+                the image, leaves the existing memberships unmodified, and
+                sets the <code>can_share</code> attribute to
+                <code>false</code> for new memberships.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
@@ -629,17 +573,7 @@
                     xml:lang="EN">
                     <xsdxt:code href="samples/imagememberships.json"/>
                 </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="can_share" style="plain" required="true"
-                    type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN" title="can_share">
-                        <para>To give an owner access to a private
-                            image, set to true. The owner ID is the
-                            tenant ID.</para>
-                    </wadl:doc>
-                </param>
+                &can_shareRequestParameter;
             </representation>
         </request>
         <response status="204"/>
@@ -656,9 +590,7 @@
                 element="image">
                 <param xmlns="http://wadl.dev.java.net/2009/02"
                     name="memberships" style="plain" required="true"/>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="can_share" style="plain" required="true"
-                    type="ImageForCreate"/>
+                &can_shareRequestParameter;
                 <xsdxt:code href="samples/imagemembershiplist.json"/>
             </representation>
         </request>
