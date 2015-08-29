@@ -27,126 +27,121 @@
    <!--             All Resources                             -->
    <!--*******************************************************-->
    <resources base="https://servers.api.openstack.com" xml:id="os-compute-v2">
-      <resource id="versions" path="//v2">
-         <method href="#listVersionsv2"/>
-      </resource>
-      <resource id="tenant_id" path="{tenant_id}">
-         <param name="tenant_id" style="template" type="csapi:UUID">
-         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-            <para>The tenant ID in a multi-tenancy cloud.</para>
-         </wadl:doc>
-         </param>
-         <resource id="extensions" type="#ExtensionList" path="extensions">
-            <resource id="extension" path="{alias}">
-               <param required="true" xmlns="http://wadl.dev.java.net/2009/02" name="alias"
-                  style="template" type="xsd:string">
-               <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                  <para>An alias, which is a name for a pointer to a resource. For
-                     example, a named extension.
-                  </para>
-               </wadl:doc>
+      <resource id="versions" path="/">
+         <method href="#listVersionsv2" />
+         <resource id="version" path="v2">
+            <resource id="tenant_id" path="{tenant_id}">
+               <param name="tenant_id" style="template" type="csapi:UUID">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                     <para>The tenant ID in a multi-tenancy cloud.</para>
+                  </wadl:doc>
                </param>
-               <method href="#getExtensionv2"/>
-            </resource>
-         </resource>
-         <resource id="limits" path="limits">
-            <method href="#listLimits"/>
-         </resource>
-         <resource id="Servers" type="#ServerList" path="servers">
-            <method href="#createServer"/>
-            <resource id="server_detail" path="detail" type="#DetailServerList"/>
-            <resource id="server_id" path="{server_id}">
-               <param xmlns="http://wadl.dev.java.net/2009/02" name="server_id"
-                  style="template" type="csapi:UUID">
-               <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                  <para>The UUID for the server.</para>
-               </wadl:doc>
-               </param>
-               <method href="#getServer"/>
-               <method href="#updateServer"/>
-               <method href="#deleteServer"/>
+               <resource id="extensions" type="#ExtensionList" path="extensions">
+                  <resource id="extension" path="{alias}">
+                     <param required="true" name="alias" style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>An alias, which is a name for a pointer to a resource. For
+                           example, a named extension.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getExtensionv2" />
+                  </resource>
                </resource>
-            <resource id="ips" path="ips">
-               <method href="#getServerAddresses"/>
-               <resource id="Network_label" path="{network_label}"
-                  type="#NetworkAddressList">
-                  <param xmlns="http://wadl.dev.java.net/2009/02" name="network_label" style="template"
-                     type="xsd:string">
-                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="network_label">
-                        <para>The network label, such as <literal>public</literal> or
-                           <literal>private</literal>.</para>
+               <resource id="limits" path="limits">
+                  <method href="#listLimits" />
+               </resource>
+               <resource id="Servers" type="#ServerList" path="servers">
+                  <method href="#createServer" />
+                  <resource id="server_detail" path="detail" type="#DetailServerList" />
+                  <resource id="server_id" path="{server_id}">
+                     <param name="server_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The UUID for the server.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getServer" />
+                     <method href="#updateServer" />
+                     <method href="#deleteServer" />
+                  </resource>
+                  <resource id="ips" path="ips">
+                     <method href="#getServerAddresses" />
+                     <resource id="Network_label" path="{network_label}" type="#NetworkAddressList">
+                        <param name="network_label" style="template" type="xsd:string">
+                           <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="network_label">
+                              <para>
+                                 The network label, such as
+                                 <literal>public</literal>
+                                 or
+                                 <literal>private</literal>
+                                 .
+                              </para>
+                           </wadl:doc>
+                        </param>
+                     </resource>
+                     <method href="#getNetworkAddresses" />
+                  </resource>
+                  <resource id="server_metadata" path="metadata" type="#ServerMetadataDetails">
+                     <resource id="ServerMetadataKey" path="{key}">
+                        <param name="key" style="template" type="csapi:MetadataKey">
+                           <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Server metadata item key">
+                              <para>A string. Maximum length is 255 characters.</para>
+                           </wadl:doc>
+                        </param>
+                        <method href="#getServerMetadataItem" />
+                        <method href="#setServerMetadataItem" />
+                        <method href="#deleteServerMetadataItem" />
+                     </resource>
+                  </resource>
+                  <resource id="action" path="action">
+                     <method href="#changePassword" />
+                     <method href="#rebootServer" />
+                     <method href="#rebuildServer" />
+                     <method href="#resizeServer" />
+                     <method href="#confirmServer" />
+                     <method href="#revertServer" />
+                     <method href="#associateSecGroup" />
+                     <method href="#createImage" />
+                  </resource>
+               </resource>
+            </resource>
+            <resource id="Images" type="#ImageList" path="images">
+               <resource id="image_detail" path="detail" type="#DetailImageList" />
+               <resource id="image_id" path="{image_id}">
+                  <param name="image_id" style="template" type="csapi:UUID">
+                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="image_id">
+                        <para>The UUID for the image.</para>
                      </wadl:doc>
                   </param>
-               </resource>
-                  <method href="#getNetworkAddresses"/>
-               </resource>
-            <resource id="server_metadata" path="metadata" type="#ServerMetadataDetails">
-                  <resource id="ServerMetadataKey" path="{key}">
-                     <param xmlns="http://wadl.dev.java.net/2009/02" name="key"
-                        style="template" type="csapi:MetadataKey">
-                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-                        title="Server metadata item key">
-                        <para>A string. Maximum length is 255 characters.</para>
-                     </wadl:doc>
-                     </param>
-                     <method href="#getServerMetadataItem"/>
-                     <method href="#setServerMetadataItem"/>
-                     <method href="#deleteServerMetadataItem"/>
-                  </resource>
-               </resource>
-               <resource id="action" path="action">
-                  <method href="#changePassword"/>
-                  <method href="#rebootServer"/>
-                  <method href="#rebuildServer"/>
-                  <method href="#resizeServer"/>
-                  <method href="#confirmServer"/>
-                  <method href="#revertServer"/>
-                  <method href="#associateSecGroup"/>
-                  <method href="#createImage"/>
-               </resource>
-            </resource>
-         </resource>
-         <resource id="Images" type="#ImageList" path="images">
-            <resource id="image_detail" path="detail" type="#DetailImageList"/>
-            <resource id="image_id" path="{image_id}">
-               <param name="image_id" style="template" type="csapi:UUID">
-               <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-                  title="image_id">
-                  <para>The UUID for the image.</para>
-               </wadl:doc>
-               </param>
-               <method href="#getImage"/>
-               <method href="#deleteImage"/>
-               <resource id="image_metadata" path="metadata" type="#ImageMetadataDetails">
-                  <resource id="imageMetadataKey" path="{key}">
-                     <param xmlns="http://wadl.dev.java.net/2009/02" name="key"
-                        style="template" type="csapi:imageMetadataKey">
-                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-                        title="Metadata item key">
-                        <para>A string. Maximum length is 255 characters.</para>
-                     </wadl:doc>
-                     </param>
-                     <method href="#getImageMetadataItem"/>
-                     <method href="#setImageMetadataItem"/>
-                     <method href="#deleteImageMetadataItem"/>
+                  <method href="#getImage" />
+                  <method href="#deleteImage" />
+                  <resource id="image_metadata" path="metadata" type="#ImageMetadataDetails">
+                     <resource id="imageMetadataKey" path="{key}">
+                        <param name="key" style="template" type="csapi:imageMetadataKey">
+                           <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Metadata item key">
+                              <para>A string. Maximum length is 255 characters.</para>
+                           </wadl:doc>
+                        </param>
+                        <method href="#getImageMetadataItem" />
+                        <method href="#setImageMetadataItem" />
+                        <method href="#deleteImageMetadataItem" />
+                     </resource>
                   </resource>
                </resource>
             </resource>
-         </resource>
-         <resource id="Flavors" type="#FlavorList" path="flavors">
-            <resource id="flavor_detail" path="detail" type="#DetailFlavorList"/>
-            <resource id="flavor_id" path="{flavor_id}">
-               <param name="flavor_id" style="template" type="csapi:UUID">
-               <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-                  title="flavor_id">
-                  <para>UUID for the specific flavor (combination of memory, disk
-                     size, and CPUs).
-                  </para>
-               </wadl:doc>
-               </param>
-               <method href="#getFlavor"/>
+            <resource id="Flavors" type="#FlavorList" path="flavors">
+               <resource id="flavor_detail" path="detail" type="#DetailFlavorList" />
+               <resource id="flavor_id" path="{flavor_id}">
+                  <param name="flavor_id" style="template" type="csapi:UUID">
+                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="flavor_id">
+                        <para>UUID for the specific flavor (combination of memory, disk
+                                    size, and CPUs).</para>
+                     </wadl:doc>
+                  </param>
+                  <method href="#getFlavor" />
+               </resource>
             </resource>
          </resource>
+      </resource>
    </resources>
    <!--*******************************************************-->
    <!--               Resource Types                          -->
