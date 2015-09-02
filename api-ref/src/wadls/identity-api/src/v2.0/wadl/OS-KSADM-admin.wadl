@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2011-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2011-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -29,176 +29,150 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:35357"
-        xml:id="OS-KSADM-admin-v2.0">
-        <resource id="version-v2.0" path="//v2.0">
-            <param name="X-Auth-Token" style="header"
-                type="xsd:string" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>A valid authentication token
-                        for an administrative user.</para></wadl:doc>
-            </param>
-            <resource id="users-v2.0" path="users">
-                <method href="#listUsers"/>
-                <method href="#createUser"/>
-                <resource id="userById-v2.0" path="{userId}">
-                    <param name="userId" style="template"
-                        required="true" type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The ID of the user for
-                                which you want to perform the
-                                request.</para></wadl:doc>
+    <resources base="http://localhost:35357" xml:id="OS-KSADM-admin-v2.0">
+      <resource id="version-v2.0" path="//v2.0">
+         <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <para>A valid authentication token for an administrative user.</para>
+            </wadl:doc>
+         </param>
+         <resource id="users-v2.0" path="users">
+            <method href="#listUsers" />
+            <method href="#createUser" />
+            <resource id="userById-v2.0" path="{userId}">
+               <param name="userId" style="template" required="true" type="xsd:string">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                     <para>The ID of the user for which to perform the request.</para>
+                  </wadl:doc>
+               </param>
+               <method href="#updateUser" />
+               <method href="#deleteUser" />
+               <resource id="user-OS-KSADM-v2.0" path="OS-KSADM">
+                  <resource id="enableUser-v2.0" path="enabled">
+                    <param name="user" style="plain" required="true" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                            <para>A <code>user</code> object.</para>
+                        </wadl:doc>
                     </param>
-                    <method href="#updateUser"/>
-                    <method href="#deleteUser"/>
-                    <resource id="user-OS-KSADM-v2.0"
-                              path="OS-KSADM">
-                        <resource id="setUserEnabled-v2.0"
-                                  path="enabled">
-                          <method href="#setUserEnabled"/>
-                        </resource>
-                    </resource>
-                    <resource id="userRoles-v2.0" path="roles">
-                        <param name="serviceId" style="query"
-                            required="false" type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The service
-                                   ID.</para></wadl:doc>
-                        </param>
-                        <method href="#listUserRoles"/>
-                        <resource id="user-roles-OS-KSADM-v2.0"
-                            path="OS-KSADM">
-                            <resource id="userRoleById-v2.0"
-                                path="{roleId}">
-                                <param name="roleId" style="template"
-                                   type="xsd:int">
-                                   <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The ID of the
-                                   role that you want to create or
-                                   delete.</para></wadl:doc>
-                                </param>
-                                <method href="#grantGlobalRoleToUser"/>
-                                <method href="#revokeGlobalRoleFromUser"/>
-                            </resource>
-                        </resource>
-                    </resource>
-                </resource>
-            </resource>
-            <resource id="tenants-v2.0" path="tenants">
-                <method href="#createTenant"/>
-                <resource id="tenantById-v2.0" path="{tenantId}">
-                    <param name="tenantId" style="template"
-                        type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The tenant
-                            ID.</para></wadl:doc>
+                    <param name="enabled" style="plain" required="true" type="xsd:boolean">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                            <para>
+                                Set to <code>true</code> to enable the user.
+                            </para>
+                        </wadl:doc>
                     </param>
-                    <method href="#updateTenant"/>
-                    <method href="#deleteTenant"/>
-                    <resource id="usersForTenant-v2.0" path="users">
-                        <method href="#listUsersForTenant"/>
-                        <resource id="userForTenant-v2.0"
-                            path="{userId}">
-                            <param name="userId" style="template"
-                                type="xsd:string">
-                                <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The user
-                                   ID.</para></wadl:doc>
-                            </param>
-                            <resource id="userRolesForTenant-v2.0"
-                                path="roles">
-                                <resource
-                                   id="tenant-user-role-OS-KSADM-v2.0"
-                                   path="OS-KSADM">
-                                   <resource
-                                   id="userSpecificRoleForTenant-v2.0"
-                                   path="{roleId}">
-                                   <param name="roleId"
-                                   style="template" type="xsd:string">
-                                   <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The role
-                                   ID.</para></wadl:doc>
-                                   </param>
-                                   <method
-                                   href="#grantRoleToUserOnTenant"/>
-                                   <method
-                                   href="#revokeRoleFromUserOnTenant"
-                                   />
-                                   </resource>
-                                </resource>
-                            </resource>
+                    <method href="#enableUser" />
+                  </resource>
+               </resource>
+               <resource id="userRoles-v2.0" path="roles">
+                  <param name="serviceId" style="query" required="false" type="xsd:string">
+                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>The service ID.</para>
+                     </wadl:doc>
+                  </param>
+                  <method href="#listUserRoles" />
+                  <resource id="user-roles-OS-KSADM-v2.0" path="OS-KSADM">
+                     <resource id="userRoleById-v2.0" path="{roleId}">
+                        <param name="roleId" style="template" type="xsd:int">
+                           <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                              <para>The role ID.</para>
+                           </wadl:doc>
+                        </param>
+                        <method href="#grantGlobalRoleToUser" />
+                        <method href="#revokeGlobalRoleFromUser" />
+                     </resource>
+                  </resource>
+               </resource>
+            </resource>
+         </resource>
+         <resource id="tenants-v2.0" path="tenants">
+            <method href="#createTenant" />
+            <resource id="tenantById-v2.0" path="{tenantId}">
+               <param name="tenantId" style="template" type="xsd:string">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                     <para>The tenant ID.</para>
+                  </wadl:doc>
+               </param>
+               <method href="#updateTenant" />
+               <method href="#deleteTenant" />
+               <resource id="usersForTenant-v2.0" path="users">
+                  <method href="#listUsersForTenant" />
+                  <resource id="userForTenant-v2.0" path="{userId}">
+                     <param name="userId" style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The user ID.</para>
+                        </wadl:doc>
+                     </param>
+                     <resource id="userRolesForTenant-v2.0" path="roles">
+                        <resource id="tenant-user-role-OS-KSADM-v2.0" path="OS-KSADM">
+                           <resource id="userSpecificRoleForTenant-v2.0" path="{roleId}">
+                              <param name="roleId" style="template" type="xsd:string">
+                                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                    <para>The role ID.</para>
+                                 </wadl:doc>
+                              </param>
+                              <method href="#grantRoleToUserOnTenant" />
+                              <method href="#revokeRoleFromUserOnTenant" />
+                           </resource>
                         </resource>
-                    </resource>
-                </resource>
+                     </resource>
+                  </resource>
+               </resource>
             </resource>
-            <resource id="role-service-OS-KSADM-v2.0" path="OS-KSADM">
-                <resource id="roles-v2.0" path="roles">
-                    <param name="name" style="plain" type="xsd:string"
-                        required="true">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The role
-                            name.</para></wadl:doc>
-                    </param>
-                    <method href="#getRoleByName"/>
-                    <resource id="roles_list-v2.0">
-                        <param name="serviceId" style="plain"
-                            required="false" type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The service
-                                   ID.</para></wadl:doc>
-                        </param>
-                        <method href="#listRoles"/>
-                    </resource>
-                    <method href="#createRole"/>
-                    <resource id="roleId-v2.0" path="{roleId}">
-                        <param name="roleId" style="template"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The role
-                                   ID.</para></wadl:doc>
-                        </param>
-                        <method href="#getRole"/>
-                        <method href="#deleteRole"/>
-                    </resource>
-                </resource>
-                <resource id="services-v2.0" path="services">
-                    <method href="#listServices"/>
-                    <method href="#createService"/>
-                    <resource id="serviceName-v2.0">
-                        <param name="name" style="query"
-                            type="xsd:string" required="true">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The service
-                                   name.</para></wadl:doc>
-                        </param>
-                        <method href="#getServiceByName"/>
-                    </resource>
-                    <resource id="serviceId-v2.0" path="{serviceId}">
-                        <param name="serviceId" style="template"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The service
-                                   ID.</para></wadl:doc>
-                        </param>
-                        <method href="#getService"/>
-                        <method href="#deleteService"/>
-                    </resource>
-                </resource>
-            </resource>
-        </resource>
-    </resources>
-
+         </resource>
+         <resource id="role-service-OS-KSADM-v2.0" path="OS-KSADM">
+            <resource id="roles-v2.0" path="roles">
+              <resource id="name" path="{role_name}">
+                 <param name="name" style="template" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                       <para>The role name.</para>
+                    </wadl:doc>
+                 </param>
+                 <method href="#showRoleByName" />
+               </resource>
+             </resource>
+             <resource id="roleId-v2.0" path="{roleId}">
+                <param name="roleId" style="template" type="xsd:string">
+                   <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                      <para>The role ID.</para>
+                   </wadl:doc>
+                </param>
+                <method href="#showRoleByID" />
+                <method href="#deleteRole" />
+             </resource>
+             <resource id="roles_list-v2.0">
+                <param name="serviceId" style="plain" required="false" type="xsd:string">
+                   <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                      <para>The service ID.</para>
+                   </wadl:doc>
+                </param>
+                <method href="#listRoles" />
+             </resource>
+             <method href="#createRole" />
+          </resource>
+          <resource id="services-v2.0" path="services">
+             <method href="#listServices" />
+             <method href="#createService" />
+             <resource id="serviceName-v2.0" path="{serviceName}">
+                <param name="name" style="template" type="xsd:string" required="true">
+                   <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                      <para>The service name.</para>
+                   </wadl:doc>
+                </param>
+                <method href="#showServiceByName" />
+             </resource>
+             <resource id="serviceId-v2.0" path="{serviceId}">
+                <param name="serviceId" style="template" type="xsd:string">
+                   <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                      <para>The service ID.</para>
+                   </wadl:doc>
+                </param>
+                <method href="#showServiceByID" />
+                <method href="#deleteService" />
+             </resource>
+          </resource>
+       </resource>
+   </resources>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
@@ -207,7 +181,7 @@
     <method name="POST" id="createTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create tenant">
-            <para role="shortdesc">Creates a tenant.</para>
+            <para role="shortdesc">Creates a specified tenant.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -231,8 +205,7 @@
     <method name="POST" id="updateTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update tenant">
-            <para role="shortdesc">
-                Updates a tenant.</para>
+            <para role="shortdesc">Updates a specified tenant.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -255,14 +228,15 @@
     <method name="DELETE" id="deleteTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete tenant">
-            <para role="shortdesc"> Deletes a tenant.</para>
+            <para role="shortdesc">Deletes a specified tenant.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
     <method name="GET" id="listUsersForTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List users for a tenant">
-            <para role="shortdesc">Lists all users for a
-                tenant.</para>
+            title="List users on a tenant">
+            <para role="shortdesc">
+              Lists all users for a specified tenant.
+            </para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -279,8 +253,8 @@
     <method name="PUT" id="grantRoleToUserOnTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Grant roles to user on tenant">
-            <para role="shortdesc">Grants a specified role to a user for
-                a tenant.</para>
+            <para role="shortdesc">Grants a specified role to a specified user for
+                a specified tenant.</para>
         </wadl:doc>
         <response status="201"/> &commonFaults; &postPutFaults;
         &getFaults; </method>
@@ -288,14 +262,14 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Revoke role from user on tenant">
             <para role="shortdesc">Revokes a specified role from a
-                user on a tenant.</para>
+                specified user for a specified tenant.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
     <!-- User Operations -->
     <method name="GET" id="listUsers">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List users">
-            <para role="shortdesc">Lists users.</para>
+            <para role="shortdesc">Lists all users.</para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -335,7 +309,7 @@
     <method name="PUT" id="updateUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update user">
-            <para role="shortdesc">Updates a user.</para>
+            <para role="shortdesc">Updates a specified user.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -356,28 +330,13 @@
     <method name="DELETE" id="deleteUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete user">
-            <para role="shortdesc">Deletes a user.</para>
+            <para role="shortdesc">Deletes a specified user.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
-    <method name="PUT" id="setUserEnabled">
+    <method name="PUT" id="enableUser">
         <wadl:doc xml:lang="EN" title="Enable user"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Enables a specified user.</para>
-            <table rules="all">
-                <caption>Enable User Request Attributes</caption>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>user</td>
-                        <td>string</td>
-                        <td>Required. The user name.</td></tr>
-                </tbody></table>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -421,23 +380,22 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Grant global role to user">
             <para role="shortdesc">Grants a specified global role to a
-                user.</para>
+                specified user.</para>
         </wadl:doc>
         <response status="201"/> &commonFaults; &postPutFaults;
         &getFaults; </method>
-
     <method name="DELETE" id="revokeGlobalRoleFromUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete global role from user">
             <para role="shortdesc">Deletes a specified global role from
-                a user.</para>
+                a specified user.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
     <!-- Roles -->
     <method name="GET" id="listRoles">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List roles">
-            <para role="shortdesc">Lists roles.</para>
+            <para role="shortdesc">Lists all roles.</para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -452,7 +410,7 @@
                 <param name="roles" style="plain" required="true"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Role
+                        xml:lang="EN"><para>A <code>roles</code>
                         object.</para></wadl:doc>
                 </param> &roleResponse; <param name="roles_links"
                     style="plain" required="true" type="xsd:dict">
@@ -462,7 +420,6 @@
                 </param>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-
     <method name="POST" id="createRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create role">
@@ -477,7 +434,6 @@
             </representation>
         </request>
         <response status="201">
-
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -490,10 +446,10 @@
                 </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
-    <method name="GET" id="getRoleByName">
+    <method name="GET" id="showRoleByName">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get role information by name">
-            <para role="shortdesc">Gets a role by name.</para>
+            title="Show role information by name">
+            <para role="shortdesc">Shows information for a specified role, by name.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
@@ -507,12 +463,11 @@
                 </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
-
-    <method name="GET" id="getRole">
+    <method name="GET" id="showRoleByID">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get role information">
-            <para role="shortdesc">Gets information for a specified
-                role.</para>
+            title="Show role information by ID">
+            <para role="shortdesc">Shows information for a specified
+                role, by ID.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
@@ -526,19 +481,17 @@
                 </param>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
-
     <method name="DELETE" id="deleteRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete role">
-            <para role="shortdesc">Deletes a role.</para>
+            <para role="shortdesc">Deletes a specified role.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
-
     <!-- Service Operations -->
     <method name="GET" id="listServices">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List services">
-            <para role="shortdesc">Lists services.</para>
+            <para role="shortdesc">Lists all services.</para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -552,12 +505,11 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getServiceByName">
+    <method name="GET" id="showServiceByName">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get service by name">
-            <para role="shortdesc">Gets a service by name.</para>
+            title="Show service information by name">
+            <para role="shortdesc">Shows information for a specified service, by name.</para>
         </wadl:doc>
-
         <response status="200 203">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -567,10 +519,10 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getService">
+    <method name="GET" id="showServiceByID">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get service">
-            <para role="shortdesc">Gets a service.</para>
+            title="Shows service information by ID">
+            <para role="shortdesc">Shows information for a specified service, by ID.</para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json">
@@ -612,7 +564,7 @@
     <method name="DELETE" id="deleteService">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete service">
-            <para role="shortdesc">Deletes a service.</para>
+            <para role="shortdesc">Deletes a specified service.</para>
         </wadl:doc>
         <response status="204"/> &commonFaults; &getFaults; </method>
 </application>
