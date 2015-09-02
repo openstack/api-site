@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 Hewlett-Packard Development Co., All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent os-subnetpools.wadl             -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/"
+        xml:id="os-subnetpools-v2">
+        <resource id="version" type="#VersionDetails" path="//v2.0">
+            <resource id="SubnetPools" type="#SubnetPoolList"
+                path="subnetpools">
+                <method href="#listSubnetPools"/>
+                <method href="#createSubnetPool"/>
+                <resource path="{subnetpool_id}" id="subnetpool_id">
+                    <param name="subnetpool_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Subnet Pool ID">
+                            <para>
+                                The UUID for the subnet pool of
+                                interest to you.
+                           </para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#showSubnetPool"/>
+                    <method href="#updateSubnetPool"/>
+                    <method href="#removeSubnetPool"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="GET" id="listSubnetPools">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List subnet pools">
+            <para role="shortdesc">
+                Lists subnet pools to which the specified tenant has access.
+            </para>
+            <para>
+                Default policy settings returns exclusively subnet pools owned by
+                the tenant submitting the request, unless the request is submitted
+                by a user with administrative rights.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnetpools-get-resp.json"/>
+                </wadl:doc>
+                &subnetpoolsObjectParameter;
+                &subnetpoolRespParameters;
+            </representation>
+        </response> &fault401;
+    </method>
+    <method name="POST" id="createSubnetPool">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create subnet pool">
+            <para role="shortdesc">
+                Creates a subnet pool.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnetpool-create-req.json"/>
+                </wadl:doc>
+                &subnetpoolObjectParameter;
+                &subnetpoolCreateReqParameters;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnetpool-create-resp.json"/>
+                </wadl:doc>
+                &subnetpoolObjectParameter;
+                &subnetpoolRespParameters;
+            </representation>
+        </response> &fault400; &fault401; &fault403; &fault404;
+    </method>
+    <method name="GET" id="showSubnetPool">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show subnet pool">
+            <para role="shortdesc">
+                Shows information for a specified subnet pool.
+            </para>
+            <para>
+                Use the <code>fields</code> query parameter to filter the results.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnetpool-show-resp.json"/>
+                </wadl:doc>
+                &subnetpoolObjectParameter;
+                &subnetpoolRespParameters;
+            </representation>
+        </response> &fault401; &fault404;
+    </method>
+    <method name="PUT" id="updateSubnetPool">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update subnet pool">
+            <para role="shortdesc">
+                Updates a specified subnet pool.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnetpool-update-req.json"/>
+                </wadl:doc>
+                &subnetpoolObjectParameter;
+                &subnetpoolUpdateReqParameters;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/subnetpool-update-resp.json"/>
+                </wadl:doc>
+                &subnetpoolObjectParameter;
+                &subnetpoolRespParameters;
+            </representation>
+        </response> &fault400; &fault401; &fault403; &fault404;
+    </method>
+    <method name="DELETE" id="removeSubnetPool">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete subnet pool">
+            <para role="shortdesc">
+                Deletes a specified subnet pool.
+            </para>
+            <para>
+                The operation fails if any subnets allocated from the subnet
+                pool are still in use.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+        &fault401; &fault404;
+    </method>
+</application>
