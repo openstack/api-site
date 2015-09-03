@@ -429,6 +429,36 @@
                     <method href="#deletePolicy"/>
                 </resource>
             </resource>
+            <resource id="regions" path="regions"> &authTokenHeader;
+                <method href="#listRegions"/>
+                <method href="#createRegion"/>
+                <resource id="region_id" path="{region_id}">
+                    <param name="region_id" style="template"
+                        type="capi:uuid" required="true"
+                        xmlns="http://wadl.dev.java.net/2009/02">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                            xml:lang="EN"><para>The region
+                            ID.</para></wadl:doc>
+                    </param>
+                    <method href="#getRegion"/>
+                    <method href="#updateRegion"/>
+                    <method href="#deleteRegion"/>
+                </resource>
+                <resource id="user_defined_region_id" path="{user_defined_region_id}">
+                    <param name="user_defined_region_id" style="template"
+                        type="xsd:string" required="true"
+                        xmlns="http://wadl.dev.java.net/2009/02">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                            xml:lang="EN"><para>A user-defined region
+                            ID.</para></wadl:doc>
+                    </param>
+                    <method href="#createRegionWithID"/>
+                </resource>
+            </resource>
         </resource>
     </resources>
     <!--*******************************************************-->
@@ -476,8 +506,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Authenticate">
-            <para role="shortdesc">Authenticates and generates a
-                token.</para>
+            <para role="shortdesc">
+                Authenticates and generates a token.
+            </para>
             <para>
                 Each REST request against the Identity Service requires the
                 <code>X-Auth-Token</code> header. Clients obtain this token
@@ -513,8 +544,10 @@
                 scoped by domain ID or name, user ID and password scoped by
                 project ID or name with or without domain scope, or token.
             </para>
-            <para>The following examples demonstrate authentication
-                requests with different types of credentials.</para>
+            <para>
+                The following examples demonstrate authentication requests
+                with different types of credentials.
+            </para>
             <note>
                 <para>
                     If <code>scope</code> is included, <code>project id</code>
@@ -524,8 +557,10 @@
                     <code>domain ID</code> or a <code>domain name</code>.
                 </para>
             </note>
-            <para>If the authentication token has expired, this call returns the HTTP
-                    <code>401</code> status code.</para>
+            <para>
+                If the authentication token has expired, this call returns the
+                HTTP <code>401</code> status code.
+            </para>
             <para>If the subject token has expired, this call returns
                 the HTTP <code>404</code> status code.</para>
             <para>The Identity API treats expired tokens as no longer valid
@@ -536,30 +571,38 @@
                 response to an authentication request returns the
                 token ID in the <code>X-Subject-Token</code> header
                 instead of in the token data.</para>
-            <para>If the call has no explicit authorization scope, the
-                response does not contain the <code>catalog</code>,
-                    <code>project</code>, <code>domain</code>, or
-                    <code>roles</code> fields. However, the response
-                still uniquely identifies the user.</para>
-            <para>A token scoped to a <code>project</code> also has
-                both a service <code>catalog</code> and the user's
-                roles applicable to the <code>project</code>.</para>
+            <para>
+                If the call has no explicit authorization scope, the response
+                does not contain the <code>catalog</code>,
+                <code>project</code>, <code>domain</code>, or
+                <code>roles</code> fields. However, the response still
+                uniquely identifies the user.
+            </para>
+            <para>
+                A token scoped to a <code>project</code> also has both a
+                service <code>catalog</code> and the user's roles applicable
+                to the <code>project</code>.
+            </para>
             <para>A token scoped to a <code>domain</code> also has
                 both a service <code>catalog</code> and the user's
                 roles applicable to the <code>project</code>.</para>
-            <para>Optionally, The Identity API implementation might
-                return an <code>authentication</code> attribute to
-                indicate the supported authentication methods.
-                </para><para>For authentication processes that require
-                multiple round trips, The Identity API implementation
-                might return an <code>HTTP 401 Unauthorized</code>
-                error with additional information for the next
-                authentication step.</para>
-            <para>The following examples illustrate several possible
-                HTTP 401 Unauthorized authentication errors. Other
-                errors like HTTP <errorcode>403</errorcode>
-                <returnvalue>Forbidden</returnvalue> are also
-                possible.</para>
+            <para>
+                Optionally, the Identity API implementation might return an
+                <code>authentication</code> attribute to indicate the
+                supported authentication methods.
+            </para>
+            <para>
+                For authentication processes that require multiple round
+                trips, The Identity API implementation might return an HTTP
+                <code>Unauthorized (401)</code> status code with additional
+                information for the next authentication step.
+            </para>
+            <para>
+                The following examples illustrate several possible HTTP
+                <code>Unauthorized (401)</code> authentication errors. Other
+                errors, like HTTP <code>Forbidden (403)</code>, are also
+                possible.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -694,12 +737,15 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Validate token">
-            <para role="shortdesc">Validates a specified token.</para>
-            <para>Pass your own token in the <code>X-Auth-Token</code>
-                header and the token to be validated in the
-                    <code>X-Subject-Token</code> header. The Identity
-                API returns the same response as when the subject
-                token was issued by <code>POST /auth/tokens</code>.
+            <para role="shortdesc">
+                Validates a specified token.
+            </para>
+            <para>
+                Pass your own token in the <code>X-Auth-Token</code> header.
+                Pass the token to be validated in the <code>X-Subject-Token</code>
+                header. The Identity API returns the same
+                response as when the subject token was issued by <code>POST
+                /auth/tokens</code>.
             </para>
         </wadl:doc>
         <request>
@@ -735,18 +781,22 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Check token">
-            <para role="shortdesc">Validates a specified token.</para>
-            <para>This call is similar to <code>GET
-                    /auth/tokens</code>, but no response body is
-                provided, even in the <code>X-Subject-Token</code>
-                header.</para>
+            <para role="shortdesc">
+                Validates a specified token.
+            </para>
+            <para>
+                This call is similar to <code>GET /auth/tokens</code> but no
+                response body is provided even in the <code>X-Subject-Token</code>
+                header.
+            </para>
             <important>
-                <para>The Identity API returns the same response as
-                    when the subject token was issued by <code>POST
-                        /auth/tokens</code>, even if an error occurs
-                    because the token is not valid. A 204 response
-                    indicates that the <code>X-Subject-Token</code> is
-                    valid.</para>
+                <para>
+                    The Identity API returns the same response as when the
+                    subject token was issued by <code>POST /auth/tokens</code>
+                    even if an error occurs because the token is not valid. An
+                    HTTP <code>204</code> status code indicates that the
+                    <code>X-Subject-Token</code> is valid.
+                </para>
             </important>
         </wadl:doc>
         <request>
@@ -767,13 +817,16 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Revoke token">
-            <para role="shortdesc">Revokes a specified token.</para>
-            <para>This call is similar to <code>HEAD
-                    /auth/tokens</code>, except that the
-                    <code>X-Subject-Token</code> token is immediately
-                not valid (regardless of the <code>expires_at</code>
-                attribute). An additional <code>X-Auth-Token</code> is
-                not required.</para>
+            <para role="shortdesc">
+                Revokes a specified token.
+            </para>
+            <para>
+                This call is similar to <code>HEAD /auth/tokens</code> except
+                that the <code>X-Subject-Token</code> token is immediately not
+                valid, regardless of the <code>expires_at</code> attribute
+                value. An additional <code>X -Auth-Token</code> is not
+                required.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -791,8 +844,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List revoked tokens">
-            <para role="shortdesc">Lists revoked PKI tokens.</para>
-            <para>This call shows revoked tokens.</para>
+            <para role="shortdesc">
+                Lists revoked PKI tokens.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -825,7 +879,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List services">
-            <para role="shortdesc">Lists services.</para>
+            <para role="shortdesc">
+                Lists services.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -855,7 +911,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create service">
-            <para role="shortdesc">Creates a service.</para>
+            <para role="shortdesc">
+                Creates a service.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -892,8 +950,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show service details">
-            <para role="shortdesc">Shows details for a specified
-                service.</para>
+            <para role="shortdesc">
+                Shows details for a specified service.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -917,7 +976,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update service">
-            <para role="shortdesc">Updates a specified service.</para>
+            <para role="shortdesc">
+                Updates a specified service.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -947,11 +1008,15 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete service">
-            <para role="shortdesc">Deletes a specified service.</para>
+            <para role="shortdesc">
+                Deletes a specified service.
+            </para>
             <warning>
-                <para>Deleting a service when endpoints exist should
-                    either (1) delete all associated endpoints or (2)
-                    fail until endpoints are deleted.</para>
+                <para>
+                    If you try to delete a service when endpoints exist, this
+                    call either deletes all associated endpoints or fails
+                    until all endpoints are deleted.
+                </para>
             </warning>
         </wadl:doc>
         <!--No request body is provided-->
@@ -961,7 +1026,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List endpoints">
-            <para role="shortdesc">Lists available endpoints.</para>
+            <para role="shortdesc">
+                Lists available endpoints.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -997,7 +1064,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create endpoint">
-            <para role="shortdesc">Creates an endpoint.</para>
+            <para role="shortdesc">
+                Creates an endpoint.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1032,8 +1101,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update endpoint">
-            <para role="shortdesc">Updates a specified
-                endpoint.</para>
+            <para role="shortdesc">
+                Updates a specified endpoint.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1068,8 +1138,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete endpoint">
-            <para role="shortdesc">Deletes a specified
-                endpoint.</para>
+            <para role="shortdesc">
+                Deletes a specified endpoint.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1078,7 +1149,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List domains">
-            <para role="shortdesc">Lists domains.</para>
+            <para role="shortdesc">
+                Lists domains.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -1104,7 +1177,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create domain">
-            <para role="shortdesc">Creates a domain.</para>
+            <para role="shortdesc">
+                Creates a domain.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1138,8 +1213,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show domain details">
-            <para role="shortdesc">Shows details for a specified
-                domain.</para>
+            <para role="shortdesc">
+                Shows details for a specified domain.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1159,7 +1235,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update domain">
-            <para role="shortdesc">Updates a specified domain.</para>
+            <para role="shortdesc">
+                Updates a specified domain.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1191,17 +1269,22 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete domain">
-            <para role="shortdesc">Deletes a specified domain.</para>
-            <para>To minimize the risk of accidentally deleting a
-                domain, you must first disable the domain by using the
-                update domain API. If you try to delete an enabled
-                domain, the call returns an <code>HTTP 403
-                    Forbidden</code> response.</para>
+            <para role="shortdesc">
+                Deletes a specified domain.
+            </para>
+            <para>
+                To minimize the risk of accidentally deleting a domain, you
+                must first disable the domain by using the update domain method.
+                If you try to delete an enabled domain, this call returns an
+                HTTP <code>Forbidden (403)</code> status code.
+            </para>
             <warning>
-                <para>Deleting a domain deletes all entities owned by
-                    it, such as users, groups, and projects, as well
-                    as any credentials and granted roles that relate
-                    to those entities.</para>
+                <para>
+                    When you delete a domain, this call also deletes all
+                    entities owned by it, such as users, groups, and projects,
+                    and any credentials and granted roles that relate to those
+                    entities.
+                </para>
             </warning>
         </wadl:doc>
         <!--No request body is provided-->
@@ -1210,11 +1293,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List roles for domain user">
-            <para role="shortdesc">Lists roles for a user on a
-                domain.</para>
+            <para role="shortdesc">
+                Lists roles for a user on a domain.
+            </para>
         </wadl:doc>
-
-        <!--No request body is provided-->
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -1231,8 +1313,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Grant role to domain user">
-            <para role="shortdesc">Grants a role to a specified domain
-                user.</para>
+            <para role="shortdesc">
+                Grants a role to a specified domain user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1240,8 +1323,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Check role for domain user">
-            <para role="shortdesc">Validates that a user has a role on
-                a domain.</para>
+            <para role="shortdesc">
+                Validates that a specified user has a specified role on a
+                domain.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1249,8 +1334,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Revoke role from domain user">
-            <para role="shortdesc">Revokes a role from a specified
-                domain user.</para>
+            <para role="shortdesc">
+                Revokes a role from a specified domain user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1258,8 +1344,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List roles for domain group">
-            <para role="shortdesc">Lists roles for a specified domain
-                group.</para>
+            <para role="shortdesc">
+                Lists roles for a specified domain group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1287,8 +1374,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Check role for domain group">
-            <para role="shortdesc">Validates that a group has a role
-                on a domain.</para>
+            <para role="shortdesc">
+                Validates that a specified group has a specified role on a
+                domain.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1296,8 +1385,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Revoke role from domain group">
-            <para role="shortdesc">Revokes a role from a group on a
-                domain.</para>
+            <para role="shortdesc">
+                Revokes a role from a group on a domain.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1332,7 +1422,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create project">
-            <para role="shortdesc">Creates a project.</para>
+            <para role="shortdesc">
+                Creates a project.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1364,8 +1456,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show project details">
-            <para role="shortdesc">Shows details for a specified
-                project.</para>
+            <para role="shortdesc">
+                Shows details for a specified project.
+            </para>
         </wadl:doc>
 
         <!--No request body is provided-->
@@ -1385,7 +1478,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update project">
-            <para role="shortdesc">Updates a specified project.</para>
+            <para role="shortdesc">
+                Updates a specified project.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1415,7 +1510,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete project">
-            <para role="shortdesc">Deletes a specified project.</para>
+            <para role="shortdesc">
+                Deletes a specified project.
+            </para>
         </wadl:doc>
         <!--No request body is accepted -->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1423,8 +1520,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List roles for project user">
-            <para role="shortdesc">Lists roles for a user in a
-                project.</para>
+            <para role="shortdesc">
+                Lists roles for a specified user in a project.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1443,8 +1541,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Grant role to project user">
-            <para role="shortdesc">Grants a role to a user on a
-                project.</para>
+            <para role="shortdesc">
+                Grants a role to a specified user in a
+                project.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1452,8 +1552,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Check role for project user">
-            <para role="shortdesc">Validates that a user has a
-                specified role on a project.</para>
+            <para role="shortdesc">
+                Validates that a specified user has a
+                specified role in a project.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1461,8 +1563,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Revoke role from project user">
-            <para role="shortdesc">Revokes a role from a project
-                user.</para>
+            <para role="shortdesc">
+                Revokes a role from a specified project
+                user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1470,8 +1574,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List roles for project group">
-            <para role="shortdesc">Lists roles for a project
-                group.</para>
+            <para role="shortdesc">
+                Lists roles for a specified project
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1490,8 +1596,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Grant role to project group">
-            <para role="shortdesc">Grants a role to a project
-                group.</para>
+            <para role="shortdesc">
+                Grants a specified role to a specified project
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1499,8 +1607,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Check role for project group">
-            <para role="shortdesc">Validates that a project group has
-                a role.</para>
+            <para role="shortdesc">
+                Validates that a specified project group has
+                a specified role.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1508,8 +1618,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Revoke role from project group">
-            <para role="shortdesc">Revokes a role from a project
-                group.</para>
+            <para role="shortdesc">
+                Revokes a specified role from a specified project
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1518,7 +1630,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List users">
-            <para role="shortdesc">Lists users.</para>
+            <para role="shortdesc">
+                Lists users.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -1542,7 +1656,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create user">
-            <para role="shortdesc">Creates a user.</para>
+            <para role="shortdesc">
+                Creates a user.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1573,8 +1689,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show user details">
-            <para role="shortdesc">Shows details for a specified
-                user.</para>
+            <para role="shortdesc">
+                Shows details for a specified
+                user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1592,11 +1710,15 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update user">
-            <para role="shortdesc">Updates the password for or enables
-                or disables a specified user.</para>
-            <para>This operation might return the HTTP <code>501 Not
-                    Implemented</code> code if the back-end driver
-                does not allow this functionality.</para>
+            <para role="shortdesc">
+                Updates the password for or enables
+                or disables a specified user.
+            </para>
+            <para>
+                If the back-end driver does not allow this functionality, this
+                call might return the HTTP <code>Not Implemented (501)</code>
+                status code.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1625,7 +1747,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete user">
-            <para role="shortdesc">Deletes a specified user.</para>
+            <para role="shortdesc">
+                Deletes a specified user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1633,8 +1757,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List projects for user">
-            <para role="shortdesc">List projects for a specified
-                user.</para>
+            <para role="shortdesc">
+                List projects for a specified user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1653,8 +1778,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List groups for user">
-            <para role="shortdesc">Lists groups for a specified
-                user.</para>
+            <para role="shortdesc">
+                Lists groups for a specified user.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1674,7 +1800,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List groups">
-            <para role="shortdesc">Lists groups.</para>
+            <para role="shortdesc">
+                Lists groups.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request> &domain_idQueryParam;
@@ -1700,7 +1828,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create group">
-            <para role="shortdesc">Creates a group.</para>
+            <para role="shortdesc">
+                Creates a group.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1731,8 +1861,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show group details">
-            <para role="shortdesc">Shows details for a specified
-                group.</para>
+            <para role="shortdesc">
+                Shows details for a specified
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1752,11 +1884,13 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update group">
-            <para role="shortdesc">Updates a specified group.</para>
-            <para>Use this operation to update the name or description
-                of a group. This operation might return the HTTP
-                    <code>501 Not Implemented</code> code if the
-                back-end driver does not allow this functionality.
+            <para role="shortdesc">
+                Updates a specified group.
+            </para>
+            <para>
+                If the back-end driver does not allow this functionality, this
+                operation might return the HTTP <code>Not Implemented
+                (501)</code> status code.
             </para>
         </wadl:doc>
         <request>
@@ -1787,7 +1921,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete group">
-            <para role="shortdesc">Deletes a specified group.</para>
+            <para role="shortdesc">
+                Deletes a specified group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1795,8 +1931,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Assign user to group">
-            <para role="shortdesc">Assigns a specified user to a specified
-                group.</para>
+            <para role="shortdesc">
+                Assigns a specified user to a specified
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1804,7 +1942,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Remove user from group">
-            <para role="shortdesc">Removes a user from a group.</para>
+            <para role="shortdesc">
+                Removes a specified user from a specified group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1812,8 +1952,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Check user membership in group">
-            <para role="shortdesc">Validates that a user is in a
-                group.</para>
+            <para role="shortdesc">
+                Validates that a specified user is in a specified
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1821,8 +1963,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List users in group">
-            <para role="shortdesc">Lists the users in a specified
-                group.</para>
+            <para role="shortdesc">
+                Lists the users in a specified
+                group.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -1849,7 +1993,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List credentials">
-            <para role="shortdesc">Lists credentials.</para>
+            <para role="shortdesc">
+                Lists credentials.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -1875,7 +2021,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create credential">
-            <para role="shortdesc">Creates a credential.</para>
+            <para role="shortdesc">
+                Creates a credential.
+            </para>
             <para>
                 The following example shows how to create an EC2-style
                 credential. The credential blob is a string that contains a
@@ -1914,8 +2062,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show credential details">
-            <para role="shortdesc">Shows details for a specified
-                credential.</para>
+            <para role="shortdesc">
+                Shows details for a specified credential.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -1934,8 +2083,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update credential">
-            <para role="shortdesc">Updates a specified
-                credential.</para>
+            <para role="shortdesc">
+                Updates a specified credential.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1965,8 +2115,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete credential">
-            <para role="shortdesc">Deletes a specified
-                credential.</para>
+            <para role="shortdesc">
+                Deletes a specified credential.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -1975,7 +2126,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List roles">
-            <para role="shortdesc">Lists roles.</para>
+            <para role="shortdesc">
+                Lists roles.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -1998,7 +2151,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create role">
-            <para role="shortdesc">Creates a role.</para>
+            <para role="shortdesc">
+                Creates a role.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -2028,8 +2183,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show role details">
-            <para role="shortdesc">Shows details for a specified
-                role.</para>
+            <para role="shortdesc">
+                Shows details for a specified
+                role.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -2047,7 +2204,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update role">
-            <para role="shortdesc">Updates a specified role.</para>
+            <para role="shortdesc">
+                Updates a specified role.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -2076,7 +2235,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete role">
-            <para role="shortdesc">Deletes a specified role.</para>
+            <para role="shortdesc">
+                Deletes a specified role.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
@@ -2084,40 +2245,57 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List role assignments">
-            <para role="shortdesc">Lists role assignments.</para>
-            <para>The list of all role assignments can be long. To
-                filter the list, use the query parameters.</para>
-            <para>Some typical examples are:</para>
-            <para><code>GET /role_assignments?user.id={user_id}</code>
-                lists all role assignments for the specified
-                user.</para>
-            <para><code>GET
-                    /role_assignments?scope.project.id={project_id}</code>
-                lists all role assignments for the specified
-                project.</para>
-            <para>Each role assignment entity in the collection
-                contains a link to the assignment that created this
-                entity.</para>
-            <para>Use the <code>effective</code> query parameter to
-                list effective assignments at the user, project, and
-                domain level. This parameter allows for the effects of
-                group membership. The group role assignment entities
-                themselves are not returned in the collection. This
-                represents the effective role assignments that would
-                be included in a scoped token. You can use the other
-                query parameters with the <code>effective</code>
-                parameter.</para>
-            <para>For example, to determine what a user can actually
-                do, issue this request: <code>GET
-                    /role_assignments?user.id={user_id}&amp;effective</code></para>
-            <para>To return the equivalent set of role assignments
-                that would be included in the token response of a
-                project-scoped token, issue: <code>GET
-                    /role_assignments?user.id={user_id}&amp;scope.project.id={project_id}&amp;effective</code></para>
-            <para>In the response, the entity <code>links</code>
-                section for entities that are included by virtue of
-                group members also contains a url that you can use to
-                access the membership of the group.</para>
+            <para role="shortdesc">
+                Lists role assignments.
+            </para>
+            <para>
+                Because the role assignments list can be long, use the query
+                parameters to filter the list.
+            </para>
+            <para>
+                Some typical examples are:
+            </para>
+            <para>
+                <code>GET /role_assignments?user.id={user_id}</code> lists
+                role assignments for the specified user.
+            </para>
+            <para>
+                <code>GET
+                /role_assignments?scope.project.id={project_id}</code>
+                lists role assignments for the specified project.
+            </para>
+            <para>
+                Each role assignment entity in the collection contains a link
+                to the assignment that created this entity.
+            </para>
+            <para>
+                Use the <code>effective</code> query parameter to list
+                effective assignments at the user, project, and domain level.
+                This parameter allows for the effects of group membership. The
+                group role assignment entities themselves are not returned in
+                the collection. This represents the effective role assignments
+                that would be included in a scoped token. You can use the
+                other query parameters with the <code>effective</code>
+                parameter.
+            </para>
+            <para>
+                For example, to determine what a user can actually do, issue
+                the <code>GET
+                /role_assignments?user.id={user_id}&amp;effective</code>
+                request.
+            </para>
+            <para>
+                To return the equivalent set of role assignments that would be
+                included in the token response of a project-scoped token,
+                issue the <code>GET /role_assignments?user.id={user_id}&amp;s
+                cope.project.id={project_id}&amp;effective</code> request.
+            </para>
+            <para>
+                In the response, the <code>links</code> entity section for
+                entities that are included by virtue of group members also
+                contains a URL that you can use to access the membership of
+                the group.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -2156,7 +2334,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List policies">
-            <para role="shortdesc">Lists policies.</para>
+            <para role="shortdesc">
+                Lists policies.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <request>
@@ -2182,7 +2362,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create policy">
-            <para role="shortdesc">Creates a policy.</para>
+            <para role="shortdesc">
+                Creates a policy.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -2215,8 +2397,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show policy details">
-            <para role="shortdesc">Shows details for a specified
-                policy.</para>
+            <para role="shortdesc">
+                Shows details for a specified
+                policy.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="200">
@@ -2236,7 +2420,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Update policy">
-            <para role="shortdesc">Updates a specified policy.</para>
+            <para role="shortdesc">
+                Updates a specified policy.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -2268,8 +2454,212 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Delete policy">
-            <para role="shortdesc">Deletes a specified policy.</para>
+            <para role="shortdesc">
+                Deletes a specified policy.
+            </para>
         </wadl:doc>
         <!--No request body is provided-->
         <response status="204"/> &commonFaults; &getFaults; </method>
+    <!-- REGIONS -->
+    <method name="POST" id="createRegion">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Create region">
+            <para role="shortdesc">
+                Creates a region.
+            </para>
+            <para>
+                If you try to add a region with a parent region ID that does
+                not exist, this call returns the HTTP <code>Not Found
+                (404)</code> status code.
+            </para>
+            <para>
+                If you try to add a region with a parent region ID that would
+                form a circular relationship, this call returns the HTTP
+                <code>Conflict (409)</code> status code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionCreateRequest.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &regionObjectRequestParam;
+                &region_descriptionRequestParam;
+                &parent_region_idRequestParam;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionCreateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc> &regionObjectRequestParam; &RegionsResponseParams; </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="PUT" id="createRegionWithID">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Create region with user-defined ID">
+            <para role="shortdesc">
+                Creates a region with a user-defined region ID.
+            </para>
+            <para>
+                The user-defined region ID must be unique to the OpenStack
+                deployment. If not, this call returns the HTTP <code>Conflict
+                (409)</code> status code. You must URL-encode the user-defined
+                region ID if it contains characters that are not allowed in an
+                URI.
+            </para>
+            <para>
+                If you try to add a region with a parent region ID that does
+                not exist, this call returns the HTTP <code>Not Found
+                (404)</code> status code.
+            </para>
+            <para>
+                If you try to add a region with a parent region ID that would
+                form a circular relationship, this call returns the HTTP
+                <code>Conflict (409)</code> status code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionCreateRequest.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &regionObjectRequestParam;
+                &region_descriptionRequestParam;
+                &parent_region_idRequestParam;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionCreateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc> &regionObjectRequestParam; &RegionsResponseParams; </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="GET" id="listRegions">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="List regions">
+            <para role="shortdesc">
+                Lists regions.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &parent_region_idQueryParam;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionsListResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &regionsObjectRequestParam;
+                &RegionsResponseParams;
+                &RegionLinksResponseParam;
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="GET" id="getRegion">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Show region details">
+            <para role="shortdesc">
+                Shows details for a specified region, by ID.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionGetResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc> &regionObjectRequestParam;
+                &RegionsResponseParams; </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="PATCH" id="updateRegion">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Update region">
+            <para role="shortdesc">
+                Updates a specified region.
+            </para>
+            <para>
+                If you try to update a region with a parent region ID that
+                does not exist, this call returns the HTTP <code>Not Found
+                (404)</code> status code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionUpdateRequest.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &regionObjectRequestParam;
+                &region_descriptionRequestParam;
+                &parent_region_idRequestParam;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/RegionUpdateResponse.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &regionObjectRequestParam; &RegionsResponseParams;
+            </representation>
+        </response> &commonFaults; &getFaults; </method>
+    <method name="DELETE" id="deleteRegion">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Delete region">
+            <para role="shortdesc">
+                Deletes a specified region.
+            </para>
+            <warning>
+                <para>
+                    If you try to delete a region that has child regions, this
+                    call returns the HTTP <code>Conflict (409)</code> status
+                    code.
+                </para>
+            </warning>
+        </wadl:doc>
+        <response status="204"/> &commonFaults; &getFaults;
+    </method>
 </application>
