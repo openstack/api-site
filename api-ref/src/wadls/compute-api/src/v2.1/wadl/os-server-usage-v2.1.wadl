@@ -17,13 +17,12 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
                 <resource id="servers" path="servers">
-                    <method href="#listServers"/>
                     <resource id="detail" path="detail">
-                        <method href="#returnListDetailServers"/>
+                        <method href="#listServersWithDetails"/>
                     </resource>
                     <resource id="server_id" path="{server_id}">
                         &serverIdRequestParameter;
-                        <method href="#returngetServer"/>
+                        <method href="#showServer"/>
                     </resource>
                 </resource>
             </resource>
@@ -32,37 +31,11 @@
     <!-- *******************************************************-->
     <!--      OS Server Usage            -->
     <!--*******************************************************-->
-    <method name="GET" id="listServers">
-        <wadl:doc xml:lang="EN" title="List servers"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists IDs, names, and links for
-                all servers.</para>
-            <para>
-              Specify the <code>status</code> query parameters
-              to filter the results. For example:
-            </para>
-            <programlisting language="json">GET /v2.1/{tenant_id}/servers?status=ACTIVE&amp;status=ERROR</programlisting>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &serverListParameters;
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/os-server-usage/servers-list-resp.json"
-                    />
-                </wadl:doc> &x-openstack-request-idHeader;
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="returngetServer">
+    <method name="GET" id="showServer">
         <wadl:doc xml:lang="EN" title="Show server details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Shows details for a specified
-                server.</para>
+                server. Includes server usage information.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -76,11 +49,11 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="returnListDetailServers">
-        <wadl:doc xml:lang="EN" title="List details for servers"
+    <method name="GET" id="listServersWithDetails">
+        <wadl:doc xml:lang="EN" title="List servers with details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Lists details for servers.
+                Lists servers. Includes server usage details.
             </para>
         </wadl:doc>
         <request>
