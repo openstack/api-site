@@ -18,39 +18,40 @@
     <resources base="https://servers.api.openstack.com/"
         xml:id="security-groups-v2.0">
         <resource id="version" path="//v2.0">
-                <resource id="security_groups" path="security-groups">
-                    <method href="#listSecGroups"/>
-                    <method href="#createSecGroup"/>
-                    <resource id="security_group_id"
-                        path="{security_group_id}">
-                        <param name="security_group_id"
-                            style="template" type="csapi:uuid">
-                            <wadl:doc
-                                xmlns="http://www.w3.org/1999/xhtml"
-                                xml:lang="EN">The unique identifier of
-                                the security group.</wadl:doc>
-                        </param>
-                        <method href="#getSecGroup"/>
-                        <method href="#deleteSecGroup"/>
-                    </resource>
+            <resource id="security_groups" path="security-groups">
+                <method href="#listSecGroups"/>
+                <method href="#createSecGroup"/>
+                <resource id="security_group_id"
+                    path="{security_group_id}">
+                    <param name="security_group_id"
+                        style="template" type="csapi:uuid">
+                        <wadl:doc
+                            xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN">The unique identifier of
+                            the security group.</wadl:doc>
+                    </param>
+                    <method href="#getSecGroup"/>
+                    <method href="#updateSecGroup"/>
+                    <method href="#deleteSecGroup"/>
                 </resource>
-                <resource id="security_groups_rules"
-                    path="security-group-rules">
-                    <method href="#listSecGroupRules"/>
-                    <method href="#createSecGroupRule"/>
-                    <resource path="{rules-security-groups-id}"
-                        id="rules-security-groups-id">
-                        <param name="rules-security-groups-id"
-                            style="template" type="csapi:uuid">
-                            <wadl:doc
-                                xmlns="http://www.w3.org/1999/xhtml"
-                                xml:lang="EN">The unique identifier of
-                                the security group rule.</wadl:doc>
-                        </param>
-                        <method href="#getSecGroupRule"/>
-                        <method href="#deleteSecGroupRule"/>
-                    </resource>
+            </resource>
+            <resource id="security_groups_rules"
+                path="security-group-rules">
+                <method href="#listSecGroupRules"/>
+                <method href="#createSecGroupRule"/>
+                <resource path="{rules-security-groups-id}"
+                    id="rules-security-groups-id">
+                    <param name="rules-security-groups-id"
+                        style="template" type="csapi:uuid">
+                        <wadl:doc
+                            xmlns="http://www.w3.org/1999/xhtml"
+                            xml:lang="EN">The unique identifier of
+                            the security group rule.</wadl:doc>
+                    </param>
+                    <method href="#getSecGroupRule"/>
+                    <method href="#deleteSecGroupRule"/>
                 </resource>
+            </resource>
         </resource>
     </resources>
     <method name="GET" id="listSecGroups">
@@ -157,6 +158,49 @@
             </representation>
         </response> &fault401; &fault404;
     </method>
+    <method name="PUT" id="updateSecGroup">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update security group">
+         <para role="shortdesc">
+            Updates a specified security group.
+         </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN" title="Update security group: JSON request">
+               <xsdxt:code href="api_samples/security-groups-update-req.json" />
+            </wadl:doc>
+            <param name="name" style="plain" type="xsd:string"
+               required="true">
+               <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN" title="Security group name">
+                  <para>
+                     The security group name.
+                  </para>
+               </wadl:doc>
+            </param>
+            <param name="description" style="plain" type="xsd:string"
+               required="false">
+               <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN" title="Security group description">
+                  <para>
+                     Security group description.
+                  </para>
+               </wadl:doc>
+            </param>
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN" title="Update security group: JSON response">
+               <xsdxt:code href="api_samples/security-groups-update-resp.json" />
+            </wadl:doc>
+            &securityGroupObjectParameter;
+            &securityGroupResponseParameters;
+         </representation>
+      </response> &commonFaults; &getFaults;
+   </method>
     <method name="DELETE" id="deleteSecGroup">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Delete security group">
