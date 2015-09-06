@@ -3,9 +3,9 @@
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
-<!--     You can resolve the entities with xmllint          -->
+<!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent os-image-2.2.wadl               -->
+<!--        xmllint -noent os-image-v2.wadl                -->
 <!--*******************************************************-->
 <!DOCTYPE application [
    <!ENTITY % common  SYSTEM "common.ent">
@@ -118,30 +118,28 @@
          <para role="shortdesc">Lists public virtual machine (VM)
             images. (Since Image API v2.0.)
          </para>
-         <para>Returns a subset of the larger collection of images
-            and a link that you can use to get the next set of
-            images. You should always check for the presence of a
-            <code>next</code> link and use it as the URI in a
-            subsequent HTTP GET request. You should follow this
-            pattern until a <code>next</code> link is no longer
-            provided. The next link preserves any query parameters
-            that you send in your initial request. You can use the
-            <code>first</code> link to jump back to the first
-            page of the collection. If you prefer to paginate
-            through images manually, use the <code>limit</code>
-            and <code>marker</code> parameters.
+         <para>
+            Returns a subset of the larger collection of images and a link
+            that you can use to get the next set of images. You should always
+            check for the presence of a <code>next</code> link and use it as
+            the URI in a subsequent HTTP GET request. You should follow this
+            pattern until a <code>next</code> link is no longer provided. The
+            next link preserves any query parameters that you send in your
+            initial request. You can use the <code>first</code> link to jump
+            back to the first page of the collection. If you prefer to
+            paginate through images manually, use the <code>limit</code> and
+            <code>marker</code> parameters.
          </para>
-         <para>The list operation accepts several types of query
-            parameters that let you filter the results of the
-            returned collection.
+         <para>
+            The list operation accepts several types of query parameters that
+            let you filter the results of the returned collection.
          </para>
-         <para>A client can provide direct comparison filters using
-            most image attributes, such as
-            <code>name=Ubuntu</code>,
-            <code>visibility=public</code>, and so on. A
-            client cannot filter on tags or anything defined as a
-            <code>link</code> in the json-schema, such as
-            self, file, or schema.
+         <para>
+            A client can provide direct comparison filters using most image
+            attributes, such as <code>name=Ubuntu</code>,
+            <code>visibility=public</code>, and so on. A client cannot filter
+            on tags or anything defined as a <code>link</code> in the json-
+            schema, such as self, file, or schema.
          </para>
          <para>You can use the <code>size_min</code> and
             <code>size_max</code> query parameters to perform
@@ -170,12 +168,16 @@
                   is provided as the <code>sort_key</code>.
                </para>
             </listitem>
-            <listitem><para><code>sort_dir</code>. Sorts in a specified sort direction.</para></listitem>
+            <listitem>
+               <para>
+                  <code>sort_dir</code>. Sorts in a specified sort direction.
+               </para>
+            </listitem>
             <listitem>
                <para>
                   <code>sort</code>. Sorts by one or more sets of attribute
                   and sort direction combinations. If you omit the sort direction in a set,
-                  default is <code>desc</code>.
+                  the default is <code>desc</code>.
                </para>
             </listitem>
          </itemizedlist>
@@ -533,6 +535,7 @@
             &fileParameter; &image_schemaParameter;
          </representation>
       </response>
+      &getFaults;
    </method>
    <method name="POST" id="reactivateImage-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
@@ -648,7 +651,7 @@
          </itemizedlist>
       </wadl:doc>
       <response status="204"/>
-      <response status="403"/>
+      &fault403;
    </method>
    <!-- images/{image_id}/file methods -->
    <method name="PUT" id="storeImageFile-v2">
@@ -744,8 +747,8 @@
          <para>
             The response body contains the raw binary data that represents the
             actual virtual disk. The <code>Content-Type</code> header contains
-            the value <code>application/octet-stream</code>. The <code>Content-MD5</code>
-            header contains an MD5 checksum of the image
+            the value <code>application/octet-stream</code>. The <code
+            >Content-MD5</code> header contains an MD5 checksum of the image
             data. Clients are encouraged to verify the integrity of the image
             data they receive by using this checksum.
          </para>
@@ -765,13 +768,13 @@
                </para>
             </listitem>
             <listitem>
-               <para>If image data exists, you receive the
-                  HTTP 200 status code.
+               <para>If image data exists, the call returns the
+                  HTTP <code>200</code> status code.
                </para>
             </listitem>
             <listitem>
-               <para>If no image data exists, you receive
-                  the HTTP 204 status code.
+               <para>If no image data exists, the call returns
+                  the HTTP <code>204</code> status code.
                </para>
             </listitem>
          </itemizedlist>
@@ -781,7 +784,7 @@
             &Content-RangeParameter;
          </representation>
       </request>
-      <response status="200 204"/>
+      <response status="200 204"/> &fault403;
    </method>
    <!-- images/{image_id}/tags/{tag} methods -->
    <method name="PUT" id="addImageTag-v2">
