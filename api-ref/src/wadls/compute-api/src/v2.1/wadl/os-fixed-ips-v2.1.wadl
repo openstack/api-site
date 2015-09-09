@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+   <!ENTITY % common  SYSTEM "../common.ent">
+   %common;
+   <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+   %common_project;
+   ]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-fixed-ips-v2.1">
+        <resource id="version" type="#VersionDetails" path="//v2.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN"><para>The ID for the tenant or
+                            account in a multi-tenancy
+                        cloud.</para></wadl:doc>
+                </param>
+                <resource id="os-fixed-ips" path="os-fixed-ips">
+                    <resource path="{fixed_ip}" id="fixed_ip">
+                        <param name="fixed_ip" style="template"
+                            type="xsd:string" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN"><para>The fixed IP of
+                                   interest to you.</para></wadl:doc>
+                        </param>
+                        <method href="#showIP"/>
+                        <resource path="action" id="action">
+                            <method href="#reserveIP"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="showIP">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show fixed IP information">
+            <para role="shortdesc">Shows information for a specified
+                fixed IP address.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-fixed-ips/fixedips-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="POST" id="reserveIP">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Reserve or release a fixed IP">
+            <para role="shortdesc">Reserves or releases a fixed
+                IP.</para>
+            <para>To reserve a fixed IP address, specify
+                    <code>reserve</code> in the request body. To
+                release a fixed IP address, specify
+                    <code>unreserve</code> in the request body.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-fixed-ips/fixedip-post-req.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202"/> &commonFaults; &postPutFaults;
+    </method>
+</application>
