@@ -21,6 +21,7 @@
                     <method href="#createKeypair"/>
                     <resource path="{keypair_name}" id="keypair_name">
                         &keypairNameRequestParameter;
+                        &keypairQueryRequestParameter;
                         <method href="#deleteKeypair"/>
                         <method href="#showKeypair"/>
                     </resource>
@@ -31,9 +32,15 @@
     <method name="GET" id="getKeypair">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List keypairs">
-            <para role="shortdesc">Lists keypairs that are associated
-                with the account.</para>
+            <para role="shortdesc">
+                Lists keypairs that are associated with the account.
+            </para>
         </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &keypairQueryRequestParameter;
+            </representation>
+        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -48,8 +55,9 @@
     <method name="GET" id="showKeypair">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show keypair information">
-            <para role="shortdesc">Shows a keypair associated with the
-                account.</para>
+            <para role="shortdesc">
+                Shows a keypair that is associated with the account.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -65,15 +73,18 @@
     <method name="DELETE" id="deleteKeypair">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete keypair">
-            <para role="shortdesc">Deletes a keypair.</para>
+            <para role="shortdesc">
+                Deletes a specified keypair.
+            </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="POST" id="createKeypair">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create or import keypair">
-            <para role="shortdesc">Generates or imports a
-                keypair.</para>
+            <para role="shortdesc">
+                Generates or imports a keypair.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -87,10 +98,12 @@
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The name to associate with the
-                            keypair.</para></wadl:doc>
+                        <para>
+                            The name to associate with the keypair.
+                        </para>
+                    </wadl:doc>
                 </param>
-                <param name="type" style="plain" required="true"
+                <param name="type" style="plain" required="false"
                     type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
@@ -100,10 +113,22 @@
                     type="xsd:string" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>The public ssh key to import. If not
-                            provided, a key is generated.
-                       </para></wadl:doc>
+                        <para>
+                            The public ssh key to import. If you omit this
+                            value, a key is generated.
+                       </para>
+                   </wadl:doc>
                 </param>
+                <param name="user_id" style="plain"
+                    type="xsd:string" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The user ID of the user who runs the operation.
+                        </para>
+                    </wadl:doc>
+                </param>
+                &keypairQueryRequestParameter;
             </representation>
         </request>
         <response status="201">
