@@ -21,7 +21,7 @@
 
   trc.util.yui : contains methods for working with the YUI toolkit.
 
-  All methods/properties prepended with an underscore (_) are meant
+  All methods/properties pre-pended with an underscore (_) are meant
   for internal use.
 **/
 
@@ -83,12 +83,13 @@ trc.util.browser = {
     // Adds a function that should be executed when the dom is
     // loaded.
     //
-    addInitFunction : function(init, /*Function to call after dom
-                                         * is loaded*/
+    addInitFunction : function(init, /* The function to call after dom
+                                      * is loaded.*/
 
-                               order /* An optional it specifing
-                                      * order.  The bigger the int the
-                                      * later it will run. Default is
+                               order /* An optional int value that specifies
+                                      * the order in which the function runs.
+                                      * The greater the int value, the
+                                      * later the function runs. Default is
                                       * 1.*/
                               ) {
         if (arguments.length < 2)
@@ -143,7 +144,7 @@ trc.util.dom = {
     },
 
     //
-    //  Adds a new stylesheet to the current DOM.
+    //  Adds a new style sheet to the current DOM.
     //
     addStyle : function (src /* Stylesheet href */)
     {
@@ -174,7 +175,7 @@ trc.util.dom = {
     },
 
     //
-    // Dumb utility function for setting the class name of an
+    // Utility function for setting the class name of an
     // element.  Eventually we'll move completely to XHTML, but
     // this will never work in IE 6, so for now we need this
     // method for setting the class name.
@@ -208,7 +209,7 @@ trc.util.text = {
     tabs      : new RegExp ("\t","g"),  /* All tabs */
 
     //
-    // We need this because microsoft browsers before IE 7, connot
+    // We need this because Microsoft browsers before IE 7 cannot
     // display pre-formatted text correctly win unix style line
     // endings.
     //
@@ -328,7 +329,7 @@ trc.util.text = {
         }
 
         //
-        //  This implys all line are blank...can't indent.
+        //  This implies that all line are blank...can't indent.
         //
         if (origIndent == Number.MAX_VALUE)
         {
@@ -478,14 +479,14 @@ trc.util.net = {
 
 trc.util.yui = {
     //
-    // A list of dependecies to be passed to the YUI loader.  This is
+    // A list of dependencies to be passed to the YUI loader. This is
     // essentially a hash set: dep->dep.
     //
     _deps : new Object(),
 
     //
     // An array of callback functions, these should be called when all
-    // dependecies are loaded.
+    // dependencies are loaded.
     //
     _callbacks : new Array(),
 
@@ -517,7 +518,7 @@ trc.util.yui = {
         }
 
         //
-        // Load YUI dependecies...
+        // Load YUI dependencies...
         //
 	var loader = new YAHOO.util.YUILoader({
 	    require: required,
@@ -533,11 +534,11 @@ trc.util.yui = {
     },
 
     //
-    // Called after all dependecies have been loaded
+    // Called after all dependencies are loaded
     //
     _depsLoaded : function() {
         //
-        //  Dependecies are loaded let everyone know.
+        //  Dependencies are loaded - let everyone know.
         //
         for (var i=0;i<this._callbacks.length;i++)
         {
@@ -546,10 +547,10 @@ trc.util.yui = {
     },
 
     //
-    //  Request that one or more YUI dependecies are loaded.
+    //  Request that one or more YUI dependencies are loaded.
     //
-    loadYUIDeps : function (deps,     /*An array of dep strings */
-                            callback  /*A function to call when deps are loaded*/
+    loadYUIDeps : function (deps,     /* An array of dep strings.*/
+                            callback  /* A function to call when dependencies are loaded.*/
                            )
     {
         for (var i=0;i<deps.length;i++)
