@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+   <!ENTITY % common  SYSTEM "../common.ent">
+   %common;
+   <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+   %common_project;
+   ]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:atom="http://www.w3.org/2005/Atom">
+    <resources base="https://volume.example.com/"
+        xml:id="os-volumes-v2.1">
+        <resource id="version" path="//v2.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The unique identifier of the tenant or
+                            account.</para>
+                    </wadl:doc>
+                </param>
+                <resource id="os-volumes" path="os-volumes">
+                    <method href="#getVolumesSimple"/>
+                    <method href="#createVolume"/>
+                    <resource path="detail" id="detail">
+                        <method href="#getVolumesDetail"/>
+                    </resource>
+                    <resource path="{volume_id}" id="volume_id">
+                        <param name="volume_id" style="template"
+                            required="true" type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The unique identifier for a
+                                   volume.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getVolume"/>
+                        <method href="#deleteVolume"/>
+                    </resource>
+                </resource>
+                <resource id="os-volume-types" path="os-volume-types">
+                    <method href="#getVolumeTypes"/>
+                    <resource path="{volume_type_id}"
+                        id="volume_type_id">
+                        <param name="volume_type_id" style="template"
+                            required="true" type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The unique identifier for a
+                                   volume type.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getVolumeType"/>
+                    </resource>
+                </resource>
+                <resource id="os-snapshots" path="os-snapshots">
+                    <method href="#createSnapshot"/>
+                    <method href="#getSnapshotsSimple"/>
+                    <resource path="detail" id="detail-snapshot">
+                        <method href="#getSnapshotsDetail"/>
+                    </resource>
+                    <resource path="{snapshot_id}" id="snapshot_id">
+                        <param name="snapshot_id" style="template"
+                            required="false" type="xsd:string">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>The unique identifier for a
+                                   snapshot.</para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getSnapshot"/>
+                        <method href="#deleteSnapshot"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="createVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create volume">
+            <para role="shortdesc">Creates a volume.</para>
+        </wadl:doc>
+        <request>
+
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_create.json"
+                    />
+                </wadl:doc>
+                <param name="display_name" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The volume name.</para>
+                    </wadl:doc>
+                </param>
+                <param name="display_description" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The volume description.</para>
+                    </wadl:doc>
+                </param>
+                <param name="size" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The size of the volume, in gigabytes (GB).</para>
+                    </wadl:doc>
+                </param>
+                <param name="volume_type" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The unique identifier for a volume type.</para>
+                    </wadl:doc>
+                </param>
+                <param name="metadata" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>One or more metadata key and value pairs to associate with the volume.</para>
+                    </wadl:doc>
+                </param>
+                <param name="availability_zone" style="plain" required="false"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The availability zone.</para>
+                    </wadl:doc>
+                </param>
+                <param name="snapshot_id" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The unique identifier for a
+                           snapshot.</para>
+                    </wadl:doc>
+                 </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_show.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getVolumesSimple">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List volumes">
+            <para role="shortdesc">Lists the volumes associated with
+                the account.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_list_simple.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getVolumesDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List details for volumes">
+            <para role="shortdesc">Lists details for all volumes.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_list_simple.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show volume information">
+            <para role="shortdesc">Shows information for a specified
+                volume.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_show.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="DELETE" id="deleteVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete volume">
+            <para role="shortdesc">Deletes a specified volume.</para>
+        </wadl:doc>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_delete-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getVolumeTypes">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List volume types">
+            <para role="shortdesc">Lists volume types.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_type_list.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getVolumeType">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show volume type">
+            <para role="shortdesc">Shows information for a specified
+                volume type.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/volume_type_show.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="POST" id="createSnapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create snapshot">
+            <para role="shortdesc">Creates a snapshot.</para>
+        </wadl:doc>
+        <request>
+
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/snapshot-create-resp.json"
+                    />
+                </wadl:doc>
+                <param name="snapshot" style="plain" required="true"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>A partial representation of a snapshot
+                            that is used to create a snapshot.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/snapshots-show-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getSnapshotsSimple">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List snapshots">
+            <para role="shortdesc">Lists snapshots.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/snapshots-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getSnapshotsDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List details for snapshots">
+            <para role="shortdesc">Lists details for all snapshots.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/snapshots-list-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="getSnapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show snapshot">
+            <para role="shortdesc">Shows information for a specified
+                snapshot.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/snapshots-show-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="DELETE" id="deleteSnapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete snapshot">
+            <para role="shortdesc">Deletes a specified snapshot from
+                the account.</para>
+            <para>This operation is asynchronous. You must list
+                snapshots repeatedly to determine whether the snapshot
+                was deleted.</para>
+        </wadl:doc>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-volumes/snapshot_delete-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+</application>
