@@ -1176,8 +1176,9 @@ OpenStack contribution process.
 
    domain
 
-      In the Identity service, provides isolation between projects
-      and users.
+      An Identity API v3 entity. Represents a collection of
+      projects, groups and users that defines administrative boundaries for
+      managing OpenStack Identity entities.
       On the Internet, separates a website from other sites. Often,
       the domain name has two or more parts that are separated by dots.
       For example, yahoo.com, usa.gov, harvard.edu, or
@@ -1608,6 +1609,11 @@ OpenStack contribution process.
       OpenStack. The design summit took place in
       San Diego, California, US and Grizzly is an element of the state flag of
       California.
+
+   Group
+
+      An Identity v3 API entity. Represents a collection of users that is
+      owned by a specific domain.
 
    guest OS
 
@@ -2760,8 +2766,9 @@ OpenStack contribution process.
 
    project
 
-      A logical grouping of users within Compute; defines quotas and
-      access to VM images.
+      Projects represent the base unit of “ownership” in OpenStack,
+      in that all resources in OpenStack should be owned by a specific project.
+      In OpenStack Identity, a project must be owned by a specific domain.
 
    project ID
 
@@ -3547,9 +3554,9 @@ OpenStack contribution process.
 
    user
 
-      In Identity, each user is associated with one or more
-      tenants, and in Compute can be associated with roles, projects, or
-      both.
+      In OpenStack Identity,  entities represent individual API
+      consumers and are owned by a specific domain. In OpenStack Compute,
+      a user can be associated with roles, projects, or both.
 
    user data
 
