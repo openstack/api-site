@@ -318,12 +318,11 @@
     <section xml:id="share-actions">
         <title>Share actions</title>
         <para>
-            Use share actions to grant or deny access to a specified share,
-            list the permissions for a specified share, and explicitly update
-            the state of a share.
+            Grants or revokes share access, lists the permissions for a
+            specified share, and explicitly updates the state of a share.
         </para>
         <para>
-            To grant or deny access to a share, specify one of these supported
+            To grant or revoke share access, specify one of these supported
             share access levels:
         </para>
         <itemizedlist>
@@ -400,13 +399,13 @@
         </itemizedlist>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#action">
-                <wadl:method href="#allowAccess"/>
-                <wadl:method href="#denyAccess"/>
-                <wadl:method href="#listAccessRules"/>
-                <wadl:method href="#resetShareState"/>
-                <wadl:method href="#force-deleteShare"/>
-                <wadl:method href="#extendShare"/>
-                <wadl:method href="#shrinkShare"/>
+                <wadl:method href="#grantAccess" />
+                <wadl:method href="#revokeAccess" />
+                <wadl:method href="#listAccessRules" />
+                <wadl:method href="#resetShareState" />
+                <wadl:method href="#force-deleteShare" />
+                <wadl:method href="#extendShare" />
+                <wadl:method href="#shrinkShare" />
             </wadl:resource>
         </wadl:resources>
     </section>
@@ -492,7 +491,8 @@
         </itemizedlist>
         <para>
             For more information about supported plug-ins for share networks, see <link
-            xlink:type="simple" xlink:href="http://docs.openstack.org/developer/manila/adminref/network_plugins.html">Manila
+            xlink:type="simple"
+            xlink:href="http://docs.openstack.org/developer/manila/adminref/network_plugins.html">Manila
             Network Plugins</link>.
         </para>
         <para>
@@ -818,7 +818,7 @@
         <para>
             The scheduler uses the special <code>capabilities</code> prefix
             for filtering. The scheduler can only create a share on a back end
-            that reports capabilities that match the un-scoped extra-spec keys
+            that reports capabilities that match the unscoped extra-spec keys
             for the share type. For details, see <link
             xlink:type="simple" xlink:href="http://docs.openstack.org/developer/manila/devref/capabilities_and_extra_specs.html">Capabilities and Extra-Specs</link>.
         </para>
@@ -870,6 +870,97 @@
             </wadl:resource>
             <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#detail-pools">
                 <wadl:method href="#getPoolsDetails"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-services" xmlns="http://docbook.org/ns/docbook">
+        <title>Services</title>
+        <para>
+            Lists services. Services include <code>manila-share</code> and <code
+            >manila-scheduler</code> and their binaries, hosts, availability
+            zones, current statuses, and states (<code>up</code> or
+            <code>down</code>).
+        </para>
+        <para>
+            Administrators can also enable or disable a specified service.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#os-services">
+                <wadl:method href="#getServices"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#enable-service">
+                <wadl:method href="#enableService"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#disable-service">
+                <wadl:method href="#disableService"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-os-availability-zone" xmlns="http://docbook.org/ns/docbook">
+        <title>Availability zones</title>
+        <para>
+            Describes availability zones.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#os-availability-zone">
+                <wadl:method href="#getAvailabilityZones"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-os-share-manage" xmlns="http://docbook.org/ns/docbook">
+        <title>Manage share</title>
+        <para>
+            Configures Shared File Systems to manage a specified share.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#os-share-manage">
+                <wadl:method href="#manageShare"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-os-share-unmanage" xmlns="http://docbook.org/ns/docbook">
+        <title>Unmanage share</title>
+        <para>
+            Configures Shared File Systems to unmanage a specified share.
+        </para>
+         <para>
+            The share unmanage operation is not supported for shares that are
+            created on top of share servers (created with share networks).
+         </para>
+        <para>
+            You can unmanage a share that has no dependent snapshots.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#unmanage">
+                <wadl:method href="#unmanageShare"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-os-quota-sets" xmlns="http://docbook.org/ns/docbook">
+        <title>Quota sets</title>
+        <para>
+            Provides quotas management support.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#tenant_id_quota">
+                <wadl:method href="#getQuota"/>
+                <wadl:method href="#share-updateQuota"/>
+                <wadl:method href="#share-deleteQuotas"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#quota-defaults">
+                <wadl:method href="#getDefaultQuotas"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-os-quota-class-sets" xmlns="http://docbook.org/ns/docbook">
+        <title>Quota classes</title>
+        <para>
+            Provides quota classes management support.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2.wadl#quota-class_name">
+                <wadl:method href="#getQuotaClassQuotas"/>
+                <wadl:method href="#updateQuotaClassQuotas"/>
             </wadl:resource>
         </wadl:resources>
     </section>

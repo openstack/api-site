@@ -56,15 +56,17 @@
                   <resource path="{share_id}" id="share_id">
                      <param name="share_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing share.</para>
+                           <para>
+                            The ID of the share.
+                          </para>
                         </wadl:doc>
                      </param>
                      <method href="#getShare" />
                      <method href="#updateShare" />
                      <method href="#deleteShare" />
                      <resource id="action" path="action">
-                        <method href="#allowAccess" />
-                        <method href="#denyAccess" />
+                        <method href="#grantAccess" />
+                        <method href="#revokeAccess" />
                         <method href="#listAccessRules" />
                         <method href="#resetShareState" />
                         <method href="#force-deleteShare" />
@@ -95,7 +97,9 @@
                   <resource path="{snapshot_id}" id="snapshot_id">
                      <param name="snapshot_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing snapshot.</para>
+                           <para>
+                            The ID of the snapshot.
+                          </para>
                         </wadl:doc>
                      </param>
                      <method href="#share-getSnapshot" />
@@ -116,7 +120,9 @@
                   <resource path="{share_network_id}" id="share_network_id">
                      <param name="share_network_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing share network.</para>
+                           <para>
+                            The ID of the share network.
+                          </para>
                         </wadl:doc>
                      </param>
                      <method href="#getShareNetwork" />
@@ -137,7 +143,7 @@
                   <resource path="{security_service_id}" id="security_service_id">
                      <param name="security_service_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing security service.</para>
+                           <para>The ID of the security service.</para>
                         </wadl:doc>
                      </param>
                      <method href="#getSecurityService" />
@@ -150,7 +156,7 @@
                   <resource path="{share_server_id}" id="share_server_id">
                      <param name="share_server_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing share server.</para>
+                           <para>The ID of the share server.</para>
                         </wadl:doc>
                      </param>
                      <method href="#getShareServer" />
@@ -169,7 +175,7 @@
                   <resource path="{share_type_id}" id="share_type_id">
                      <param name="share_type_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing share type.</para>
+                           <para>The ID of the share type.</para>
                         </wadl:doc>
                      </param>
                      <method href="#share-deleteShareType" />
@@ -199,7 +205,7 @@
                   <resource path="{share_instance_id}" id="share_instance_id">
                      <param name="share_instance_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The ID of an existing share instance.</para>
+                           <para>The ID of the share instance.</para>
                         </wadl:doc>
                      </param>
                      <method href="#getShareInstance" />
@@ -208,6 +214,86 @@
                         <method href="#force-deleteShareInstance" />
                      </resource>
                   </resource>
+               </resource>
+               <resource id="os-services" path="os-services">
+                  <method href="#getServices" />
+                  <resource id="enable-service" path="enable">
+                     <method href="#enableService" />
+                  </resource>
+                  <resource id="disable-service" path="disable">
+                     <method href="#disableService" />
+                  </resource>
+               </resource>
+               <resource id="os-share-manage" path="os-share-manage">
+                  <method href="#manageShare" />
+               </resource>
+               <resource id="os-share-unmanage" path="os-share-unmanage">
+                  <resource id="_share_id" path="{share_id}">
+                     <param name="share_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of a share.</para>
+                        </wadl:doc>
+                     </param>
+                     <resource id="unmanage" path="unmanage">
+                        <method href="#unmanageShare" />
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="os-quota-sets" path="os-quota-sets">
+                    <resource id="tenant_id_quota" path="{tenant_id}" >
+                        <param name="tenant_id" style="template"
+                            type="csapi:UUID" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Project ID">
+                                <para>
+                                  The ID for the tenant for which you want to
+                                  show, update, or delete  quotas. This ID is
+                                  different from the first tenant ID that you
+                                  specify in the URI: That ID is for the admin
+                                  tenant.
+                                 </para>
+                            </wadl:doc>
+                        </param>
+                        <param name="user_id" style="query"
+                            type="csapi:UUID" required="false">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Project ID">
+                                <para>
+                                  The user ID. If you specify this query
+                                  parameter, you update the quotas for this
+                                  user in the specified tenant. If you omit
+                                  this parameter, you update the quotas for
+                                  the specified project.
+                                 </para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getQuota"/>
+                        <method href="#share-updateQuota"/>
+                        <method href="#share-deleteQuotas"/>
+                        <resource path="defaults" id="quota-defaults">
+                           <method href="#getDefaultQuotas"/>
+                        </resource>
+                    </resource>
+               </resource>
+               <resource id="os-quota-class-sets" path="os-quota-class-sets">
+                  <resource path="{class_name}" id="quota-class_name">
+                     <param name="class_name" style="template"
+                            type="xsd:string" required="true">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN" title="Project ID">
+                                <para>The name of the quota class for which you
+                                   want to manage quotas.</para>
+                            </wadl:doc>
+                     </param>
+                     <method href="#getQuotaClassQuotas" />
+                     <method href="#updateQuotaClassQuotas" />
+                  </resource>
+               </resource>
+               <resource id="os-availability-zone" path="os-availability-zone">
+                  <method href="#getAvailabilityZones" />
                </resource>
             </resource>
          </resource>
@@ -302,14 +388,14 @@
          <itemizedlist>
             <listitem>
                 <para>
-                    <code>display_name</code>, which also changes the
-                    <code>name</code> of the share.
+                  <code>display_name</code>, which also changes the
+                  <code>name</code> of the share.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    <code>display_description</code>, which also changes the
-                    <code>description</code> of the share.
+                  <code>display_description</code>, which also changes the
+                  <code>description</code> of the share.
                </para>
             </listitem>
             <listitem>
@@ -318,8 +404,10 @@
                </para>
             </listitem>
          </itemizedlist>
-         <para>If you try to update other attributes, they retain their
-                previous values.</para>
+         <para>
+          If you try to update other attributes, they retain their
+          previous values.
+        </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -412,37 +500,37 @@
       </wadl:doc>
       <response status="200" />
    </method>
-   <method name="POST" id="allowAccess">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Allow access">
+   <method name="POST" id="grantAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Grant access">
          <para role="shortdesc">Grants access to a specified share.</para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-share-actions-allow-access-request.json" />
+               <xsdxt:code href="samples/manila-share-actions-grant-access-request.json" />
             </wadl:doc>
-            &allowAccessRequestParameters;
+            &grantAccessRequestParameters;
          </representation>
       </request>
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-share-actions-allow-access-response.json" />
+               <xsdxt:code href="samples/manila-share-actions-grant-access-response.json" />
             </wadl:doc>
-            &allowAccessResponseParameters;
+            &grantAccessResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="POST" id="denyAccess">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Deny access">
-         <para role="shortdesc">Denies access to a specified share.</para>
+   <method name="POST" id="revokeAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Revoke access">
+         <para role="shortdesc">Revokes access from a specified share.</para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-share-actions-deny-access-request.json" />
+               <xsdxt:code href="samples/manila-share-actions-revoke-access-request.json" />
             </wadl:doc>
-            &denyAccessRequestParameters;
+            &revokeAccessRequestParameters;
          </representation>
       </request>
       <response status="202" />
@@ -470,8 +558,14 @@
    </method>
    <method name="POST" id="resetShareState">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Reset share state">
-         <para role="shortdesc">Administrator only. Explicitly updates the state of a specified share.</para>
-         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+         <para role="shortdesc">
+          Administrator only. Explicitly updates the state of a specified
+          share.
+        </para>
+        <para>
+          Use the <code>policy.json</code> file to grant permissions for this
+          action to other roles.
+        </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -485,8 +579,13 @@
    </method>
    <method name="POST" id="force-deleteShare">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Force-delete share">
-         <para role="shortdesc">Administrator only. Force-deletes a specified share in any state.</para>
-         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+         <para role="shortdesc">
+          Administrator only. Force-deletes a specified share in any state.
+        </para>
+         <para>
+          Use the <code>policy.json</code> file to grant permissions for this
+          action to other roles.
+        </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -1076,7 +1175,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-share-type-access-add-request.json" />
+               <xsdxt:code href="samples/manila-share-type-grant-access-request.json" />
             </wadl:doc>
             &addShareTypeAccessRequestParameter;
          </representation>
@@ -1091,7 +1190,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-share-type-access-remove-request.json" />
+               <xsdxt:code href="samples/manila-share-type-revoke-access-request.json" />
             </wadl:doc>
             &removeShareTypeAccessRequestParameter;
          </representation>
@@ -1191,6 +1290,208 @@
                <xsdxt:code href="samples/manila-list-pools-detailed-response.json" />
             </wadl:doc>
             &getPoolsDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getServices">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List services">
+         <para role="shortdesc">Lists services.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-services-list-response.json" />
+            </wadl:doc>
+            &getServicesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="enableService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Enable service">
+         <para role="shortdesc">Enables a specified service.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-services-enable-request.json" />
+            </wadl:doc>
+            &enableServiceRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-services-enable-response.json" />
+            </wadl:doc>
+            &enableServiceResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="disableService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Disable service">
+         <para role="shortdesc">Disables a specified service.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-services-disable-request.json" />
+            </wadl:doc>
+            &disableServiceRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-services-disable-response.json" />
+            </wadl:doc>
+            &disableServiceResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getAvailabilityZones">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List availability zones">
+         <para role="shortdesc">Lists all availability zones.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-availability-zones-list-response.json" />
+            </wadl:doc>
+            &getAvailabilityZonesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="manageShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Manage share">
+         <para role="shortdesc">Configures Shared File Systems to manage a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-manage-request.json" />
+            </wadl:doc>
+            &shareObjectParameter;
+            &manageShareRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-manage-response.json" />
+            </wadl:doc>
+            &shareObjectParameter;
+            &manageShareResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="unmanageShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Unmanage share">
+         <para role="shortdesc">Configures Shared File Systems to stop managing a specified share.</para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="GET" id="getQuota">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show quotas">
+         <para role="shortdesc">Shows quotas for a specified tenant.</para>
+         <para>
+            If you specify the optional <code>user_id</code> query parameter,
+            you get the quotas for this user in the specified tenant. If you
+            omit this parameter, you get the quotas for the specified project.
+         </para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-show-response.json" />
+            </wadl:doc>
+            &getQuotaResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getDefaultQuotas">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show default quotas">
+         <para role="shortdesc">Shows default quotas for a specified tenant.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-show-response.json" />
+            </wadl:doc>
+            &getQuotaResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="share-updateQuota">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update quotas">
+         <para role="shortdesc">Updates quotas for a specified tenant.</para>
+         <para>
+            If you specify the optional <code>user_id</code> query parameter,
+            you update the quotas for this user in the specified tenant. If you
+            omit this parameter, you update the quotas for the specified project.
+         </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-update-request.json" />
+            </wadl:doc>
+            &updateQuotaRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-update-response.json" />
+            </wadl:doc>
+            &QuotaResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="share-deleteQuotas">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete quotas">
+         <para role="shortdesc">
+            Deletes quotas for a specified tenant.
+            The quota will revert back to default.
+         </para>
+         <para>
+            If you specify the optional <code>user_id</code> query parameter,
+            you delete the quotas for this user in the specified tenant. If you
+            omit this parameter, you delete the quotas for the specified project.
+         </para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="GET" id="getQuotaClassQuotas">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show quotas for a quota class">
+         <para role="shortdesc">Shows the quotas for a specified quota class.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-class-quota-show-response.json" />
+            </wadl:doc>
+            &getQuotaClassQuotasResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="updateQuotaClassQuotas">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update quotas for a quota class">
+         <para role="shortdesc">Updates the quotas for a specified for a quota class.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-class-quota-update-request.json" />
+            </wadl:doc>
+            &updateQuotaClassQuotasRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-quota-class-quota-update-response.json" />
+            </wadl:doc>
+            &QuotaResponseParameters;
          </representation>
       </response>
    </method>
