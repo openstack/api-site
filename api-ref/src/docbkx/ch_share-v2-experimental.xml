@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter [
+   <!ENTITY % common_project  SYSTEM "../wadls/common_project.ent">
+   %common_project;
+   ]>
+<chapter xmlns="http://docbook.org/ns/docbook"
+   xmlns:xi="http://www.w3.org/2001/XInclude"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:linkend="http://www.w3.org/1999/linkend"
+   xmlns:xref="http://www.w3.org/1999/xref"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   version="5.0-extension RackBook-2.0"
+   xml:id="share-api-v2-experimental"
+   role="api-reference">
+    <title>Shared File Systems API v2 (EXPERIMENTAL)</title>
+    <para>
+        Contributors can change or remove the experimental part of the Shared
+        File Systems API without maintaining backward compatibility.
+    </para>
+    <section xml:id="consistency-groups">
+        <title>Consistency groups (since API v2.4)</title>
+        <para>
+            Consistency groups enable you to create snapshots at the exact
+            same point in time from multiple file system shares. For example,
+            a database might place its tables, logs, and configuration on
+            separate shares. To restore this database from a previous point
+            in time, it makes sense to restore the logs, tables, and
+            configuration together from the exact same point in time.
+        </para>
+        <para>
+            As an administrator, you can also reset the state of a consistency
+            group and force-delete a specified consistency group in any state.
+            Use the <code>policy.json</code> file to grant permissions for
+            these actions to other roles.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#consistency-groups">
+                <wadl:method href="#createConsistencyGroup"/>
+                <wadl:method href="#getConsistencyGroups"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#detail-consistency-groups">
+                <wadl:method href="#getConsistencyGroupsDetails"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#consistency_group_id">
+                <wadl:method href="#getConsistencyGroup"/>
+                <wadl:method href="#updateConsistencyGroup"/>
+                <wadl:method href="#deleteConsistencyGroup"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#consistency-groups-action">
+                <wadl:method href="#resetConsistencyGroupState"/>
+                <wadl:method href="#force-deleteConsistencyGroup"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="consistency-group-snapshots">
+        <title>Consistency group snapshots (since API v2.4)</title>
+        <para>
+            You can create snapshots of consistency groups. To create a
+            snapshot, you specify the ID of the consistency group that you
+            want to snapshot. After you create a consistency group snapshot,
+            you can create a consistency group from it.
+        </para>
+        <para>
+            A consistency group snapshot can have member shares. To add a
+            member share, include the <code>consistency_group_id</code>
+            parameter in the create share request. This ID must match the ID
+            of the consistency group from which the consistency group snapshot
+            was created. Then, when you use consistency group snapshots to
+            restore data, you can easily determine which shares belong to a
+            specified consistency group.
+        </para>
+        <para>
+            As an administrator, you can also reset the state of a consistency
+            group snapshot and force-delete a specified consistency group
+            snapshot in any state. Use the <code>policy.json</code> file to
+            grant permissions for these actions to other roles.
+        </para>
+        <para></para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#cgsnapshots">
+                <wadl:method href="#createConsistencyGroupSnapshot"/>
+                <wadl:method href="#getConsistencyGroupSnapshots"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#detail-cgsnapshots">
+                <wadl:method href="#getConsistencyGroupSnapshotsDetails"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#cgsnapshot_id">
+                <wadl:method href="#getConsistencyGroupSnapshot"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#cgsnapshot-members">
+                <wadl:method href="#getConsistencyGroupSnapshotMembers"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#cgsnapshot_id">
+                <wadl:method href="#updateConsistencyGroupSnapshot"/>
+                <wadl:method href="#deleteConsistencyGroupSnapshot"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/os-share-v2-experimental.wadl#cgsnapshots-action">
+                <wadl:method href="#resetConsistencyGroupSnapshotState"/>
+                <wadl:method href="#force-deleteConsistencyGroupSnapshot"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+</chapter>
