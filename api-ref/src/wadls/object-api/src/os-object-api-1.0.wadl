@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application [
     <!ENTITY % common  SYSTEM "common.ent">
     %common;
-    <!ENTITY % common  SYSTEM "../common_project.ent">
+    <!ENTITY % common_project  SYSTEM "../../common_project.ent">
     %common_project;
 ]>
-<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -14,58 +14,54 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
-    <resources base="https://storage.swiftdrive.com/"
-        xml:id="object-v1">
+    <resources base="https://storage.swiftdrive.com/" xml:id="object-v1">
+        <resource id="info" path="//info">
+            <method href="#infoDiscoverability"/>
+        </resource>
         <resource id="version" path="//v1">
             <resource id="endpoints" path="endpoints">
                 <method href="#listEndpoints"/>
             </resource>
-            <resource id="account" path="{account}"
-                type="#AccountDetails">
-                <param name="account" style="template"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The unique name for the account. An
-                            account is also known as the project or
-                            tenant.</para></wadl:doc>
+            <resource id="account" path="{account}" type="#AccountDetails">
+                <param name="account" style="template" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The unique name for the account. An account is
+                            also known as the project or tenant.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <method href="#showAccountMeta"/>
                 <method href="#updateAccountMeta"/>
-                <resource id="container" path="{container}"
-                    type="#ContainerDetails">
-                    <param name="container" style="template"
-                        type="xsd:string">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                  xml:lang="EN">
-                           <para>
-                            The unique name for the container.
-                           </para>
-                           <para>
-                            The container name must be from 1 to 256
-                            characters long and can start with any character
-                            and contain any pattern. Character set must be
-                            UTF-8. The container name cannot contain a slash
-                            (<code>/</code>) character because this character
-                            delimits the container
-                            and object name. For example,
-                            <code>/account/container/object</code>.
-                          </para>
+                <resource id="container" path="{container}" type="#ContainerDetails">
+                    <param name="container" style="template" type="xsd:string">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                            <para>
+                                The unique name for the container.
+                            </para>
+                            <para>
+                                The container name must be from 1 to 256
+                                characters long and can start with any
+                                character and contain any pattern. Character
+                                set must be UTF-8. The container name cannot
+                                contain a slash (<code>/</code>) character
+                                because this character delimits the container
+                                and object name. For example,
+                                <code>/account/container/object</code>.
+                            </para>
                         </wadl:doc>
                     </param>
                     <method href="#createContainer"/>
                     <method href="#deleteContainer"/>
                     <method href="#updateContainerMeta"/>
                     <method href="#showContainerMeta"/>
-                    <resource id="object" path="{object}"
-                        type="#ObjectDetails">
-                        <param name="object" style="template"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">
-                                <para>The unique name for the
-                                   object.</para></wadl:doc>
+                    <resource id="object" path="{object}" type="#ObjectDetails">
+                        <param name="object" style="template" type="xsd:string">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                <para>
+                                    The unique name for the object.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <method href="#createOrReplaceObject"/>
                         <method href="#copyObject"/>
@@ -75,9 +71,6 @@
                     </resource>
                 </resource>
             </resource>
-        </resource>
-        <resource id="info" path="//info">
-            <method href="#infoDiscoverability"/>
         </resource>
     </resources>
     <!--*******************************************************-->
@@ -106,9 +99,8 @@
             </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
-                &info-requestParameter;
-            </representation>
+            &info-requestParameter;
+            &swiftinfo_expires-QueryParameter;
         </request>
         <!--No request body is provided-->
         <response status="200">
@@ -124,7 +116,6 @@
             </representation>
         </response>
     </method>
-    <!--*******************************************************-->
     <method name="GET" id="listEndpoints">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
@@ -271,10 +262,10 @@
                 &account-bytes-used-responseHeader;
                 &account-container-count-responseHeader;
                 &account-meta-name-responseHeader;
-                &account-timestamp-responseHeader;
+                &X-Timestamp-ResponseHeader;
                 &account-meta-temp-url-key-responseHeader;
                 &account-meta-temp-url-key-2-responseHeader;
-                &trans-id-responseHeader; &date-responseHeader;
+                &trans-id-responseHeader; &Date-ResponseHeader;
                 &name-responseField; &count-responseField;
                 &bytes-responseField; </representation>
         </response>
@@ -352,9 +343,9 @@ Date: Fri, 17 Jan 2014 16:08:15 GMT</programlisting></para></listitem>
             &content-type-requestHeader;
             &detect-content-type-requestHeader; </request>
         <response status="204"> &content-length-responseHeader-OP;
-            &content-type-responseHeader-OP;  &account-timestamp-responseHeader;
+            &content-type-responseHeader-OP;  &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &date-responseHeader; </response>
+            &Date-ResponseHeader; </response>
     </method>
     <method name="HEAD" id="showAccountMeta">
         <!-- show account metadata -->
@@ -403,13 +394,15 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
             &account-container-count-responseHeader;
             &account-bytes-used-responseHeader;
             &account-meta-name-responseHeader;
-            &account-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &account-meta-temp-url-key-responseHeader;
             &account-meta-temp-url-key-2-responseHeader;
             &content-length-responseHeader-OP;
             &content-type-responseHeader-OP; &trans-id-responseHeader;
-            &date-responseHeader;</response> &fault401; </method>
-
+            &Date-ResponseHeader;
+        </response>
+        &fault401;
+    </method>
     <!--*******************************************************-->
     <!--               Container-level operations              -->
     <!--*******************************************************-->
@@ -501,13 +494,13 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
                 &container-object-count-responseHeader;
                 &accept-ranges-responseHeader;
                 &container-meta-name-responseHeader;
-                &container-timestamp-responseHeader;
+                &X-Timestamp-ResponseHeader;
                 &container-bytes-used-responseHeader;
                 &content-type-responseHeader-NAMES;
-                &trans-id-responseHeader; &date-responseHeader;
+                &trans-id-responseHeader; &Date-ResponseHeader;
                 &name-responseField; &hash-responseField;
                 &bytes-responseField; &content-type-responseField;
-                &last-modified-responseField; </representation>
+                &last_modified-ResponseParameter; </representation>
         </response> &fault404; </method>
     <method name="PUT" id="createContainer">
         <!-- create container -->
@@ -555,9 +548,9 @@ Date: Tue, 14 Jan 2014 19:25:43 GMT</programlisting></para></listitem>
             &detect-content-type-requestHeader;
             &if-none-match-requestHeader;</request>
         <response status="201 204"> &content-length-responseHeader-OP;
-            &content-type-responseHeader-OP; &container-timestamp-responseHeader;
+            &content-type-responseHeader-OP; &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &date-responseHeader; </response>
+            &Date-ResponseHeader; </response>
     </method>
     <method name="POST" id="updateContainerMeta">
         <!-- create, update, delete container metadata -->
@@ -646,9 +639,9 @@ Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting></para>
             &detect-content-type-requestHeader; </request>
         <response status="204"> &content-length-responseHeader-OP;
             &content-type-responseHeader-OP;
-            &container-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &date-responseHeader; </response>
+            &Date-ResponseHeader; </response>
     </method>
     <method name="HEAD" id="showContainerMeta">
         <!-- show container metadata -->
@@ -681,7 +674,7 @@ Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting></para>
             &container-object-count-responseHeader;
             &accept-ranges-responseHeader;
             &container-meta-name-responseHeader;
-            &container-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &container-meta-quota-bytesHeader;
             &container-meta-quota-countHeader;
             &container-bytes-used-responseHeader;
@@ -691,7 +684,7 @@ Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting></para>
             &container-sync-key-responseHeader;
             &versions-location-responseHeader;
             &content-type-responseHeader-OP; &trans-id-responseHeader;
-            &date-responseHeader; </response>
+            &Date-ResponseHeader; </response>
     </method>
     <method name="DELETE" id="deleteContainer">
         <!-- delete containers -->
@@ -732,9 +725,13 @@ Date: Thu, 16 Jan 2014 18:05:31 GMT
         <request> &auth-token-requestHeader-required; </request>
         <response status="204"> &content-length-responseHeader-OP;
             &content-type-responseHeader-OP;
-            &container-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &date-responseHeader; </response> &fault404; &fault409; </method>
+            &Date-ResponseHeader;
+        </response>
+        &fault404; &fault409;
+    </method>
+    <!--*******************************************************-->
     <!--*******************************************************-->
     <!--               Object-level operations                 -->
     <!--*******************************************************-->
@@ -793,7 +790,7 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
         </wadl:doc>
         <request> &auth-token-requestHeader-optional;
             &newest-requestHeader; &temp_url_sig-requestParameter;
-            &temp_url_expires-requestParameter; &filename-requestParameter;
+            &temp_url_expires-RequestParameter; &filename-requestParameter;
             &multipart-manifest-get-requestParameter;
             &range-requestHeader; &if-match-requestHeader;
             &if-none-match-requestHeader;
@@ -801,17 +798,17 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
             &if-unmodified-since-requestHeader; </request>
         <response status="200"> &content-length-responseHeader;
             &accept-ranges-responseHeader;
-            &last-modified-responseHeader;
-            &object-timestamp-responseHeader;
+            &Last-Modified-ResponseHeader;
+            &X-Timestamp-ResponseHeader;
             &ETag-responseHeader;
             &content-type-responseHeader;
             &content-encoding-responseHeader;
             &content-disposition-responseHeader;
-            &delete-at-responseHeader;
+            &X-Delete-At-ResponseHeader;
             &object-meta-name-responseHeader;
             &object-manifest-responseHeader;
             &static-large-object-responseHeader;
-            &trans-id-responseHeader; &date-responseHeader;
+            &trans-id-responseHeader; &Date-ResponseHeader;
         </response> &fault404; </method>
     <method name="PUT" id="createOrReplaceObject">
         <!-- create, replace object -->
@@ -876,7 +873,7 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para></listitem>
                 code.</para>
         </wadl:doc>
         <request> &multipart-manifest-put-requestParameter;
-            &temp_url_sig-requestParameter; &temp_url_expires-requestParameter;
+            &temp_url_sig-requestParameter; &temp_url_expires-RequestParameter;
             &filename-requestParameter;
             &object-manifest-requestHeader;
             &auth-token-requestHeader-optional;
@@ -886,15 +883,15 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para></listitem>
             &detect-content-type-requestHeader;
             &copy-from-requestHeader; &ETag-requestHeader;
             &content-disposition-requestHeader;
-            &content-encoding-requestHeader; &delete-at-requestHeader;
-            &delete-after-requestHeader;
+            &content-encoding-requestHeader; &X-Delete-At-RequestHeader;
+            &X-Delete-After-RequestHeader;
             &object-meta-name-requestHeader;
             &if-none-match-requestHeader;</request>
-        <response status="201"> &last-modified-responseField;
+        <response status="201"> &last_modified-ResponseParameter;
             &content-length-responseHeader-OP;
             &ETag-responseHeader-PUT; &content-type-responseHeader;
-            &object-timestamp-responseHeader;
-            &trans-id-responseHeader; &date-responseHeader;
+            &X-Timestamp-ResponseHeader;
+            &trans-id-responseHeader; &Date-ResponseHeader;
         </response> &fault408; &fault411; &fault422; </method>
     <method name="COPY" id="copyObject">
         <!-- copy object -->
@@ -989,13 +986,13 @@ Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para>
             &object-meta-name-requestHeader;
             &fresh-metadata-requestHeader; </request>
         <response status="201"> &content-length-responseHeader-OP;
-            &copied-from-last-modified-responseHeader;
+            &X-Copied-From-Last-Modified-ResponseHeader;
             &copied-from-responseHeader;
-            &last-modified-responseHeader; &ETag-responseHeader-COPY;
+            &Last-Modified-ResponseHeader; &ETag-responseHeader-COPY;
             &content-type-responseHeader;
-            &object-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &object-meta-name-responseHeader;
-            &trans-id-responseHeader; &date-responseHeader;
+            &trans-id-responseHeader; &Date-ResponseHeader;
         </response>
     </method>
     <method name="DELETE" id="deleteObject">
@@ -1039,9 +1036,9 @@ Date: Wed, 15 Jan 2014 21:29:16 GMT</programlisting></para></listitem></itemized
             &auth-token-requestHeader-optional; </request>
         <response> &content-length-responseHeader-OP;
             &content-type-responseHeader;
-            &object-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &date-responseHeader; </response>
+            &Date-ResponseHeader; </response>
     </method>
     <method name="HEAD" id="showObjectMeta">
         <!-- show object metadata -->
@@ -1074,22 +1071,22 @@ Date: Thu, 16 Jan 2014 21:13:19 GMT</programlisting></para>
                     <returnvalue>204</returnvalue> status code.</para>
         </wadl:doc>
         <request> &auth-token-requestHeader-required;
-            &temp_url_sig-requestParameter; &temp_url_expires-requestParameter;
+            &temp_url_sig-requestParameter; &temp_url_expires-RequestParameter;
             &filename-requestParameter;
             &newest-requestHeader; </request>
-        <response status="204"> &last-modified-responseHeader;
+        <response status="204"> &Last-Modified-ResponseHeader;
             &content-length-responseHeader;
             &content-length-responseHeader-HEAD;
             &content-type-responseHeader;
-            &object-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &ETag-responseHeader;
             &content-encoding-responseHeader;
             &content-disposition-responseHeader;
-            &delete-at-responseHeader;
+            &X-Delete-At-ResponseHeader;
             &object-manifest-responseHeader;
             &object-meta-name-responseHeader;
             &static-large-object-responseHeader;
-            &trans-id-responseHeader; &date-responseHeader;</response>
+            &trans-id-responseHeader; &Date-ResponseHeader;</response>
     </method>
     <method name="POST" id="updateObjectMeta">
         <!-- create, update object metadata -->
@@ -1176,15 +1173,15 @@ Date: Thu, 16 Jan 2014 21:18:28 GMT
             </itemizedlist>
         </wadl:doc>
         <request> &auth-token-requestHeader-optional;
-            &object-meta-name-requestHeader; &delete-at-requestHeader;
+            &object-meta-name-requestHeader; &X-Delete-At-RequestHeader;
             &content-disposition-requestHeader;
             &content-encoding-requestHeader;
-            &delete-after-requestHeader; &content-type-requestHeader;
+            &X-Delete-After-RequestHeader; &content-type-requestHeader;
             &detect-content-type-requestHeader; </request>
         <response status="202"> &content-length-responseHeader-OP;
             &content-type-responseHeader;
-            &object-timestamp-responseHeader;
+            &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &date-responseHeader; </response>
+            &Date-ResponseHeader; </response>
     </method>
 </application>
