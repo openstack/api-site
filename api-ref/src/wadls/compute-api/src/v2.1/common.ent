@@ -135,7 +135,7 @@
 <option value="SERVER"/>
 <option value="ALL"/>
    </param>'>
-<!-- Server Create Parameters -->
+<!-- Server Create Request Parameters -->
 <!ENTITY serverCreateParameters '
 <param xmlns="http://wadl.dev.java.net/2009/02"
    name="security_group" style="query" required="true"
@@ -178,22 +178,71 @@
 <wadl:doc xmlns="http://docbook.org/ns/docbook"
    xmlns:wadl="http://wadl.dev.java.net/2009/02"
    xml:lang="EN" title="server">
-   <para>server.</para>
+   <para>A <code>server</code> object.</para>
 </wadl:doc>
 </param>
-<param name="imageRef" style="plain" required="true"
+<param name="imageRef" style="plain" required="false"
    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
    xmlns="http://wadl.dev.java.net/2009/02"
    type="csapi:string">
-<wadl:doc xmlns="http://docbook.org/ns/docbook"
-   xmlns:wadl="http://wadl.dev.java.net/2009/02"
-   xml:lang="EN" title="imageRef">
-   <para>The image reference for the desired image
-      for your server instance.
-   </para>
-   <para>Specify as an ID or full URL.
-   </para>
-</wadl:doc>
+   <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN" title="imageRef">
+      <para>
+        Required if you define a block device mapping.
+      </para>
+      <para>
+        The image reference as an ID or full URL for the image for your server
+        instance.
+      </para>
+   </wadl:doc>
+</param>
+<param name="block_device_mapping_v2" style="plain" required="false"
+   xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="csapi:string">
+   <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN" title="block_device_mapping_v2">
+      <para>
+        The block device mapping information. Mutually exclusive with
+        <code>block_device_mapping</code>.
+      </para>
+   </wadl:doc>
+</param>
+<param name="block_device_mapping" style="plain" required="false"
+   xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="csapi:string">
+   <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN" title="block_device_mapping">
+      <para>
+        The block device mapping information. Mutually exclusive with
+        <code>block_device_mapping_v2</code>.
+      </para>
+   </wadl:doc>
+</param>
+<param name="delete_on_termination" style="plain" required="false"
+   xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:boolean">
+   <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN" title="delete_on_termination">
+      <para>
+        Defines whether to delete or keep the attached volume when the server
+        is deleted.
+      </para>
+      <para>
+        Set to <code>True</code> to delete the attached volume when the server
+        is deleted. Set to <code>False</code> to keep the attached volume when
+        the server is deleted.
+      </para>
+      <para>
+        Part of a block device mapping definition.
+      </para>
+   </wadl:doc>
 </param>
 <param name="flavorRef" style="plain" required="true"
    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
@@ -246,6 +295,40 @@
       maximum limit refers to the number of bytes in the decoded data
       and not the number of characters in the encoded data.
    </para>
+</wadl:doc>
+</param>'>
+<!ENTITY serverCreateResponseParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+   name="server" style="plain" required="true"
+   type="csapi:ServerForCreate" path="/csapi:server">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN" title="server">
+   <para>A <code>server</code> object.</para>
+</wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+   name="adminPass" style="plain" required="true" type="csapi:string">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02"
+   xml:lang="EN" title="adminPass">
+   <para>The administrative password for the server.</para>
+</wadl:doc>
+</param>
+<param name="id" style="plain" type="csapi:UUID" required="true"
+  xmlns="http://wadl.dev.java.net/2009/02">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+   xml:lang="EN"
+   xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <para>The server ID.</para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  name="links" style="plain" required="true" type="xsd:string">
+<wadl:doc xmlns="http://docbook.org/ns/docbook"
+  xmlns:wadl="http://wadl.dev.java.net/2009/02"
+  xml:lang="EN">
+  <para>Server links.</para>
 </wadl:doc>
 </param>'>
 <!-- tenantIdRequestParameter -->
@@ -787,7 +870,7 @@
 </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02"
-  name="links"  style="plain" required="true" type="xsd:string">
+  name="links" style="plain" required="true" type="xsd:string">
 <wadl:doc xmlns="http://docbook.org/ns/docbook"
   xmlns:wadl="http://wadl.dev.java.net/2009/02"
   xml:lang="EN">
