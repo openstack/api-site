@@ -159,6 +159,11 @@ are no longer working, remove them and re-create something new.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+        :language: ruby
         :start-after: step-1
         :end-before: step-2
 
@@ -180,6 +185,11 @@ required security groups.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+        :language: ruby
         :start-after: step-2
         :end-before: step-3
 
@@ -200,6 +210,11 @@ reaching your Floating IP quota too quickly.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+        :language: ruby
         :start-after: step-3
         :end-before: step-4
 
@@ -222,6 +237,11 @@ between the services.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+        :language: ruby
         :start-after: step-4
         :end-before: step-5
 
@@ -246,6 +266,11 @@ multiple API services:
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+        :language: ruby
         :start-after: step-5
         :end-before: step-6
 
@@ -281,6 +306,11 @@ To increase the overall capacity, we will now add 3 workers:
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+        :language: ruby
         :start-after: step-6
         :end-before: step-7
 
@@ -439,6 +469,10 @@ and run the code as a single script.
 
 Before you run this script, confirm that you have set your authentication
 information, the flavor ID, and image ID.
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/scaling_out.rb
+       :language: ruby
 
 .. only:: shade
 

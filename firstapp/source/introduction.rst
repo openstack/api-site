@@ -14,7 +14,7 @@ particular. It also describes some commands in the previous section.
 
 .. only:: fog
 
-    .. warning:: This section has not yet been completed for the fog SDK.
+    .. highlight:: ruby
 
 .. only:: jclouds
 
@@ -203,6 +203,12 @@ do not need to execute these commands again.)
         :start-after: step-1
         :end-before: step-2
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-1
+        :end-before: step-2
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -250,6 +256,12 @@ your cloud provider to confirm the user name.
 
     .. literalinclude:: ../samples/shade/introduction.py
         :language: python
+        :start-after: step-2
+        :end-before: step-3
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
         :start-after: step-2
         :end-before: step-3
 
@@ -307,6 +319,12 @@ port 22):
         :start-after: step-3
         :end-before: step-4
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-3
+        :end-before: step-4
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -332,6 +350,12 @@ You can list available security groups with:
         :start-after: step-4
         :end-before: step-5
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-4
+        :end-before: step-5
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -353,6 +377,12 @@ Once you have created a rule or group, you can also delete it:
         :start-after: step-5
         :end-before: step-6
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-5
+        :end-before: step-6
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -371,6 +401,12 @@ To see which security groups apply to an instance, you can:
 
     .. literalinclude:: ../samples/shade/introduction.py
         :language: python
+        :start-after: step-6
+        :end-before: step-7
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
         :start-after: step-6
         :end-before: step-7
 
@@ -417,6 +453,27 @@ then associate it to your instance's network interface.
     Allocating a floating IP address to an instance does not change
     the IP address of the instance, it causes OpenStack to establish
     the network translation rules to allow an *additional* IP address.
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-7
+        :end-before: step-8
+
+    If you have no free floating IPs that have been previously allocated
+    for your project, first select a floating IP pool offered by your
+    provider. In this example, we have selected the first one and assume
+    that it has available IP addresses.
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-8
+        :end-before: step-9
+
+    Now request that an address from this pool be allocated to your project.
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-9
+        :end-before: step-10
 
 .. only:: libcloud
 
@@ -478,6 +535,12 @@ project, attach it to an instance.
         :start-after: step-10
         :end-before: step-11
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-10
+        :end-before: step-11
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -529,6 +592,12 @@ Parameter  Description            Values
         :start-after: step-11
         :end-before: step-12
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+        :start-after: step-11
+        :end-before: step-12
+
 .. only:: libcloud
 
 
@@ -554,6 +623,12 @@ Next, start a second instance, which will be the worker instance:
 
     .. literalinclude:: ../samples/shade/introduction.py
         :language: python
+        :start-after: step-12
+        :end-before: step-13
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
         :start-after: step-12
         :end-before: step-13
 
@@ -602,6 +677,12 @@ address of the worker:
 
     .. literalinclude:: ../samples/shade/introduction.py
         :language: python
+        :start-after: step-13
+        :end-before: step-14
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
         :start-after: step-13
         :end-before: step-14
 
@@ -744,6 +825,11 @@ information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/shade/introduction.py
        :language: python
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/introduction.rb
+       :language: ruby
 
 .. only:: libcloud
 
