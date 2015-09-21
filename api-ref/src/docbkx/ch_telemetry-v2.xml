@@ -39,24 +39,149 @@
     <section xml:id="meters">
         <title>Meters</title>
         <para>
-            Creates, lists all, and lists samples for meters. Computes and
-            lists statistics for samples in a specified time range.
-        </para>
-        <para>
-            For list operations, if you do not explicitly set the
+            Lists all meters, adds samples to meters, and lists samples for
+            meters. For list operations, if you do not explicitly set the
             <code>limit</code> query parameter, a default limit is applied.
             The default limit is the <code>default_api_return_limit</code>
             configuration option value.
         </para>
+        <para>
+            Also, computes and lists statistics for samples in a specified
+            time range. You can use the <code>aggregate</code> query parameter
+            in the <code>statistics</code> URI to explicitly select the
+            <code>stddev</code>, <code>cardinality</code>, or any other
+            standard function. For example:
+        </para>
+<programlisting>GET /v2/meters/METER_NAME/statistics?aggregate.func=NAME&amp;aggregate.param=VALUE</programlisting>
+        <para>
+            The <code>aggregate.param</code> parameter value is optional for
+            all functions except the <code>cardinality</code> function.
+        </para>
+        <para>
+            The API silently ignores any duplicate aggregate function and
+            parameter pairs.
+        </para>
+        <para>
+            The API accepts and storage drivers support duplicate functions
+            with different parameter values. In this example, the
+            <code>cardinality</code> function is accepted twice with two
+            different parameter values:
+        </para>
+<programlisting>GET /v2/meters/METER_NAME/statistics?aggregate.func=cardinality&amp;aggregate.param=resource_id
+        &amp;aggregate.func=cardinality&amp;aggregate.param=project_id</programlisting>
+        <para><emphasis role="bold">Examples:</emphasis></para>
+        <para>
+            Use the <code>stddev</code> function to request the standard
+            deviation of CPU utilization:
+        </para>
+<programlisting>GET /v2/meters/cpu_util/statistics?aggregate.func=stddev</programlisting>
+        <para>
+            The response looks like this:
+        </para>
+<programlisting language="json">[
+    {
+        "aggregate": {
+            "stddev": 0.6858829
+        },
+        "duration_start": "2014-01-30T11:13:23",
+        "duration_end": "2014-01-31T16:07:13",
+        "duration": 104030,
+        "period": 0,
+        "period_start": "2014-01-30T11:13:23",
+        "period_end": "2014-01-31T16:07:13",
+        "groupby": null,
+        "unit": "%"
+    }
+]</programlisting>
+        <para>
+            Use the <code>cardinality</code> function with the project ID to
+            return the number of distinct tenants with images:
+        </para>
+<programlisting>GET /v2/meters/image/statistics?aggregate.func=cardinality&amp;aggregate.param=project_id</programlisting>
+        <para>
+            The following, more complex, example determines:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    The number of distinct instances (<code>cardinality</code>)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    The total number of instance samples (<code>count</code>)
+                    for a specified tenant in 15-minute intervals (<code>period</code> and
+                    <code>groupby</code> options)
+                </para>
+            </listitem>
+        </itemizedlist>
+<programlisting>GET /v2/meters/instance/statistics?aggregate.func=cardinality&amp;aggregate.param=resource_id
+        &amp;aggregate.func=count&amp;groupby=project_id&amp;period=900</programlisting>
+        <para>
+            The response looks like this:
+        </para>
+<programlisting language="json">[
+    {
+        "count": 19,
+        "aggregate": {
+            "count": 19,
+            "cardinality/resource_id": 3
+        },
+        "duration": 328.47803,
+        "duration_start": "2014-01-31T10:00:41.823919",
+        "duration_end": "2014-01-31T10:06:10.301948",
+        "period": 900,
+        "period_start": "2014-01-31T10:00:00",
+        "period_end": "2014-01-31T10:15:00",
+        "groupby": {
+            "project_id": "061a5c91811e4044b7dc86c6136c4f99"
+        },
+        "unit": "instance"
+    },
+    {
+        "count": 22,
+        "aggregate": {
+            "count": 22,
+            "cardinality/resource_id": 4
+        },
+        "duration": 808.00385,
+        "duration_start": "2014-01-31T10:15:15",
+        "duration_end": "2014-01-31T10:28:43.003840",
+        "period": 900,
+        "period_start": "2014-01-31T10:15:00",
+        "period_end": "2014-01-31T10:30:00",
+        "groupby": {
+            "project_id": "061a5c91811e4044b7dc86c6136c4f99"
+        },
+        "unit": "instance"
+    },
+    {
+        "count": 2,
+        "aggregate": {
+            "count": 2,
+            "cardinality/resource_id": 2
+        },
+        "duration": 0,
+        "duration_start": "2014-01-31T10:35:15",
+        "duration_end": "2014-01-31T10:35:15",
+        "period": 900,
+        "period_start": "2014-01-31T10:30:00",
+        "period_end": "2014-01-31T10:45:00",
+        "groupby": {
+            "project_id": "061a5c91811e4044b7dc86c6136c4f99"
+        },
+        "unit": "instance"
+    }
+]</programlisting>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource
+             <wadl:resource
                 href="../wadls/telemetry-api/src/v2/os-telemetry-api-2.0.wadl#meters">
                 <wadl:method href="#listMeters"/>
             </wadl:resource>
             <wadl:resource
                 href="../wadls/telemetry-api/src/v2/os-telemetry-api-2.0.wadl#meter_name">
+                <wadl:method href="#addSamplesToMeter"/>
                 <wadl:method href="#listSamplesforMeter"/>
-                <wadl:method href="#createMeter"/>
             </wadl:resource>
             <wadl:resource
                 href="../wadls/telemetry-api/src/v2/os-telemetry-api-2.0.wadl#statistics">

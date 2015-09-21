@@ -57,7 +57,7 @@
                         </wadl:doc>
                     </param>
                     <method href="#listSamplesforMeter"/>
-                    <method href="#createMeter"/>
+                    <method href="#addSamplesToMeter"/>
                     <resource path="statistics" id="statistics">
                         <method href="#listSamplesStatistics"/>
                     </resource>
@@ -70,7 +70,9 @@
                         style="template" type="xsd:string">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook"
                             xml:lang="EN">
-                            <para>The UUID of the sample.</para>
+                            <para>
+                                The UUID of the sample.
+                            </para>
                         </wadl:doc>
                     </param>
                     <method href="#showSample"/>
@@ -83,7 +85,9 @@
                         style="template" type="xsd:string">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook"
                             xml:lang="EN">
-                            <para>The UUID of the resource.</para>
+                            <para>
+                                The UUID of the resource.
+                            </para>
                         </wadl:doc>
                     </param>
                     <method href="#showResource"/>
@@ -121,17 +125,21 @@
     <method id="listResources" name="GET">
         <wadl:doc title="List resources" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists definitions for all
-                resources.</para>
+            <para role="shortdesc">
+                Lists definitions for all resources.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
+                &qQueryParameter;
+                <param name="meter_links" required="false" style="query"
+                    type="xsd:int">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>Filter rules for the resources to be
-                            returned.</para>
+                        <para>
+                            Set <code>?meter_links=1</code> to return a self
+                            link and related meter links.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -148,14 +156,16 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/list_resource.xml"/>
                 </wadl:doc>
+                &resourceParameters; &userIdParameter;
             </representation>
         </response>
     </method>
     <method id="showResource" name="GET">
         <wadl:doc title="Show resource information" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Shows information for a specified
-                resource, by resource ID.</para>
+            <para role="shortdesc">
+                Shows information for a specified resource, by resource ID.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -163,6 +173,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/resource.json"/>
                 </wadl:doc>
+                &resourceParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -175,20 +186,14 @@
     <method id="listMeters" name="GET">
         <wadl:doc title="List meters" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists meters, based on the data
-                recorded so far.</para>
+            <para role="shortdesc">
+                Lists meters, based on the data recorded so far.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Filter rules for the meters to be
-                            returned.</para>
-                    </wadl:doc>
-                </param>
-                &limitMarkerReqParameter;
+                &qQueryParameter;
+                &limitReqParameter;
             </representation>
         </request>
         <response status="200">
@@ -197,6 +202,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/list_meter.json"/>
                 </wadl:doc>
+                &meterParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -209,20 +215,14 @@
     <method id="listSamplesforMeter" name="GET">
         <wadl:doc title="List samples for meter" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists samples for a specified
-                meter, by meter name.</para>
+            <para role="shortdesc">
+                Lists samples for a specified meter, by meter name.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Filter rules for the data to be
-                            returned.</para>
-                    </wadl:doc>
-                </param>
-                &limitMarkerReqParameter;
+                &qQueryParameter;
+                &limitReqParameter;
             </representation>
         </request>
         <response status="200">
@@ -231,6 +231,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/list_sample.json"/>
                 </wadl:doc>
+                &meterSamplesParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -240,22 +241,46 @@
             </representation>
         </response>
     </method>
-    <method id="createMeter" name="POST">
-        <wadl:doc title="Create meter" xml:lang="EN"
+    <method id="addSamplesToMeter" name="POST">
+        <wadl:doc title="Add samples to meter" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Adds a list of samples to the
-                specified meter, by meter name.</para>
+            <para role="shortdesc">
+                Adds samples to the specified meter, by meter name.
+            </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/new_sample.json"/>
+                </wadl:doc>
+                <param name="direct" required="false" style="query"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Indicates whether the samples are &POST;ed
+                            directly to storage. Set <code>?direct=True</code>
+                            to post the samples directly to storage.
+                        </para>
+                    </wadl:doc>
+                </param>
                 <param name="samples" required="false" style="query"
                     type="xsd:list">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>A list of samples within the request
-                            body.</para>
+                        <para>
+                            A list of samples.
+                        </para>
                     </wadl:doc>
                 </param>
+                &meterSamplesParameters;
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code href="./samples/new_sample.xml"/>
+                </wadl:doc>
             </representation>
         </request>
         <response status="200">
@@ -264,6 +289,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/list_sample.json"/>
                 </wadl:doc>
+                &meterSamplesParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -283,41 +309,226 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Filter rules for the data to be
-                            returned.</para>
-                    </wadl:doc>
-                </param>
-                <param name="groupby" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Fields for group by aggregation</para>
-                    </wadl:doc>
-                </param>
-                <param name="period" required="false" style="query"
-                    type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            The period, in seconds, for which you want
-                            statistics.
-                        </para>
-                    </wadl:doc>
-                </param>
-                &limitMarkerReqParameter;
+                &qQueryParameter;
+                &groupbyQueryParameter;
+                &periodQueryParameter;
+                &aggregateQueryParameter;
+                &limitReqParameter;
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_statistics.json"
-                    />
+                    <xsdxt:code href="./samples/list_statistics.json"/>
                 </wadl:doc>
+                <param name="aggregate" required="false" style="plain"
+                    type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            If you set the <code>aggregate</code> query
+                            parameter in the URI, a set of one or more
+                            selectable aggregate values as a dictionary of key
+                            (string) and value (float) pairs.
+                        </para>
+                        <para>
+                            For example, the <code>stddev</code> function
+                            returns output like this:
+                        </para>
+                        <programlisting language="json">[
+    {
+        "aggregate": {
+            "stddev": 0.6858829
+        },
+        "duration_start": "2014-01-30T11:13:23",
+        "duration_end": "2014-01-31T16:07:13",
+        "duration": 104030,
+        "period": 0,
+        "period_start": "2014-01-30T11:13:23",
+        "period_end": "2014-01-31T16:07:13",
+        "groupby": null,
+        "unit": "%"
+    }
+]</programlisting>
+                    </wadl:doc>
+                </param>
+                <param name="avg" required="true" style="plain"
+                    type="xsd:float">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The average of all volume values in the data.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="count" required="true" style="plain"
+                    type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The number of samples seen.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="duration" required="true" style="plain"
+                    type="xsd:float">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The number of seconds between the oldest and
+                            newest date and time stamp.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="duration_end" required="true" style="plain"
+                    type="xsd:datetime">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The date and time in UTC format of the query end time.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="duration_start" required="true" style="plain"
+                    type="xsd:datetime">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The date and time in UTC format of the query start time.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="groupby" required="false" style="plain"
+                    type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            If you set the <code>groupby</code> query
+                            parameter in the URI to request statistics, a
+                            dictionary of field names for group.
+                        </para>
+                        <para>
+                            For example:
+                        </para>
+                        <programlisting language="json">[
+    {
+        "count": 19,
+        "aggregate": {
+            "count": 19,
+            "cardinality/resource_id": 3
+        },
+        "duration": 328.47803,
+        "duration_start": "2014-01-31T10:00:41.823919",
+        "duration_end": "2014-01-31T10:06:10.301948",
+        "period": 900,
+        "period_start": "2014-01-31T10:00:00",
+        "period_end": "2014-01-31T10:15:00",
+        "groupby": {
+            "project_id": "061a5c91811e4044b7dc86c6136c4f99"
+        },
+        "unit": "instance"
+    },
+    {
+        "count": 22,
+        "aggregate": {
+            "count": 22,
+            "cardinality/resource_id": 4
+        },
+        "duration": 808.00385,
+        "duration_start": "2014-01-31T10:15:15",
+        "duration_end": "2014-01-31T10:28:43.003840",
+        "period": 900,
+        "period_start": "2014-01-31T10:15:00",
+        "period_end": "2014-01-31T10:30:00",
+        "groupby": {
+            "project_id": "061a5c91811e4044b7dc86c6136c4f99"
+        },
+        "unit": "instance"
+    },
+    {
+        "count": 2,
+        "aggregate": {
+            "count": 2,
+            "cardinality/resource_id": 2
+        },
+        "duration": 0,
+        "duration_start": "2014-01-31T10:35:15",
+        "duration_end": "2014-01-31T10:35:15",
+        "period": 900,
+        "period_start": "2014-01-31T10:30:00",
+        "period_end": "2014-01-31T10:45:00",
+        "groupby": {
+            "project_id": "061a5c91811e4044b7dc86c6136c4f99"
+        },
+        "unit": "instance"
+    }
+]</programlisting>
+                    </wadl:doc>
+                </param>
+                <param name="max" required="true" style="plain"
+                    type="xsd:float">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The maximum volume seen in the data.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="min" required="true" style="plain"
+                    type="xsd:float">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The minimum volume seen in the data.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="period" required="true" style="plain"
+                    type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The number of seconds between the period start and
+                            end date and time stamps.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="period_end" required="true" style="plain"
+                    type="xsd:datetime">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The period end date and time in UTC format.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="period_start" required="true" style="plain"
+                    type="xsd:datetime">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The period start date and time in UTC format.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sum" required="true" style="plain"
+                    type="xsd:float">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The total of all of the volume values seen in the
+                            data.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="unit" required="true" style="plain"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The unit type of the data set.
+                        </para>
+                    </wadl:doc>
+                </param>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -336,15 +547,8 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Filter rules for the samples to be
-                            returned.</para>
-                    </wadl:doc>
-                </param>
-                &limitMarkerReqParameter;
+                &qQueryParameter;
+                &limitReqParameter;
             </representation>
         </request>
         <response status="200">
@@ -353,6 +557,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/list_samples.json"/>
                 </wadl:doc>
+                &meterSamplesParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -375,6 +580,7 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="./samples/new_sample.json"/>
                 </wadl:doc>
+                &meterSamplesParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
@@ -392,14 +598,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Filter rules for the alarms to be
-                            returned.</para>
-                    </wadl:doc>
-                </param>
+                &qQueryParameter;
             </representation>
         </request>
         <response status="200">
@@ -429,7 +628,9 @@
                     xmlns="http://wadl.dev.java.net/2009/02">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>An alarm within the request body.</para>
+                        <para>
+                            An alarm within the request body.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -452,8 +653,9 @@
     <method id="showAlarm" name="GET">
         <wadl:doc title="Show alarm" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Shows information for a specified
-                alarm, by alarm ID.</para>
+            <para role="shortdesc">
+                Shows information for a specified alarm, by alarm ID.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -473,7 +675,9 @@
     <method id="updateAlarm" name="PUT">
         <wadl:doc title="Update alarm" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Updates a specified alarm.</para>
+            <para role="shortdesc">
+                Updates a specified alarm.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -482,7 +686,9 @@
                     xmlns="http://wadl.dev.java.net/2009/02">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
-                        <para>An alarm within the request body.</para>
+                        <para>
+                            An alarm within the request body.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -512,14 +718,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
-                <param name="q" required="false" style="query"
-                    type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>Filter rules for the changes to be
-                            described.</para>
-                    </wadl:doc>
-                </param>
+                &qQueryParameter;
             </representation>
         </request>
         <response status="200"/>
@@ -527,8 +726,9 @@
     <method id="updateAlarmState" name="PUT">
         <wadl:doc title="Update alarm state" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Sets the state of a specified
-                alarm.</para>
+            <para role="shortdesc">
+                Sets the state of a specified alarm.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
