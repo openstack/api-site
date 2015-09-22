@@ -1,6 +1,6 @@
-=================
-Making it durable
-=================
+===============
+Make it durable
+===============
 
 .. todo:: https://github.com/apache/libcloud/pull/492
 
@@ -11,66 +11,59 @@ Making it durable
 .. todo:: Large object support in Swift
           http://docs.openstack.org/developer/swift/overview_large_objects.html
 
-This section introduces object storage. `OpenStack Object Storage
-<http://www.openstack.org/software/openstack-storage/>`_ (code-named
-swift) is open source software for creating redundant, scalable data
-storage using clusters of standardized servers to store petabytes of
-accessible data. It is a long-term storage system for large amounts
-of static data that can be retrieved, leveraged, and updated. Access
-is via an API, not through a file-system like more traditional
-storage.
+This section introduces object storage.
 
-There are a two key concepts to understand in the Object Storage
-API. The Object Storage API is organized around two types of entities:
+`OpenStack Object Storage <http://www.openstack.org/software/openstack-storage/>`_
+(code-named swift) is open-source software that enables you to create
+redundant, scalable data storage by using clusters of standardized servers to
+store petabytes of accessible data. It is a long-term storage system for large
+amounts of static data that you can retrieve, leverage, and update. Unlike
+more traditional storage systems that you access through a file system, you
+access Object Storage through an API.
 
-* Objects
-* Containers
+The Object Storage API is organized around objects and containers.
 
-Similar to the Unix programming model, an object is a "bag of bytes"
-that contains data, such as documents and images. Containers are used
-to group objects. You can make many objects inside a container, and
-have many containers inside your account.
+Similar to the UNIX programming model, an object, such as a document or an
+image, is a "bag of bytes" that contains data. You use containers to group
+objects. You can place many objects inside a container, and your account can
+have many containers.
 
-If you think about how you traditionally make what you store durable,
-very quickly you should come to the conclusion that keeping multiple
-copies of your objects on separate systems is a good way to do
-that. However, keeping track of multiple copies of objects is a pain,
-and building that into an app requires a lot of logic. OpenStack
-Object Storage does this automatically for you behind-the-scenes -
-replicating each object at least twice before returning 'write
-success' to your API call. It will always work to ensure that there
-are three copies of your objects (by default) at all times -
-replicating them around the system in case of hardware failure,
-maintenance, network outage or any other kind of breakage. This is
-very convenient for app creation - you can just dump objects into
-object storage and not have to care about any of this additional work
-to keep them safe.
+If you think about how you traditionally make what you store durable, you
+quickly conclude that keeping multiple copies of your objects on separate
+systems is a good way strategy. However, keeping track of those multiple
+copies is difficult, and building that into an app requires complicated logic.
+
+OpenStack Object Storage automatically replicates each object at least twice
+before returning 'write success' to your API call. A good strategy is to keep
+three copies of objects, by default, at all times, replicating them across the
+system in case of hardware failure, maintenance, network outage, or another
+kind of breakage. This strategy is very convenient for app creation. You can
+just dump objects into object storage and not worry about the additional work
+that it takes to keep them safe.
 
 
-Using Object Storage to store fractals
---------------------------------------
+Use Object Storage to store fractals
+------------------------------------
 
-The Fractals app currently uses the local file system on the instance
-to store the images it generates. This is not scalable or durable, for
-a number of reasons.
+The Fractals app currently uses the local file system on the instance to store
+the images that it generates. For a number of reasons, this approach is not
+scalable or durable.
 
-Because the local file system is ephemeral storage, if the instance is
-terminated, the fractal images will be lost along with the instance.
-Block based storage, which we will discuss in :doc:`/block_storage`,
-avoids that problem, but like local file systems, it requires
-administration to ensure that it does not fill up, and immediate
-attention if disks fail.
+Because the local file system is ephemeral storage, the fractal images are
+lost along with the instance when the instance is terminated. Block-based
+storage, which the :doc:`/block_storage` section discusses, avoids that
+problem, but like local file systems, it requires administration to ensure
+that it does not fill up, and immediate attention if disks fail.
 
-The Object Storage service manages many of these tasks that normally
-would require the application owner to manage them, and presents a
-scalable and durable API that you can use for the fractals app,
-without having to be concerned with the low level details of how the
-objects are stored and replicated, and growing the storage pool. In
-fact, Object Storage handles replication intrinsically, storing multiple
-copies of each object and returning one of them on demand using the
-API.
+The Object Storage service manages many of the tasks normally managed by the
+application owner. The Object Storage service provides a scalable and durable
+API that you can use for the fractals app, eliminating the need to be aware of
+the low level details of how objects are stored and replicated, and how to
+grow the storage pool. Object Storage handles replication for you. It stores
+multiple copies of each object. You can use the Object Storage API to return
+an object, on demand.
 
-First, let's learn how to connect to the Object Storage endpoint:
+First, learn how to connect to the Object Storage endpoint:
 
 .. only:: dotnet
 
@@ -78,7 +71,10 @@ First, let's learn how to connect to the Object Storage endpoint:
 
 .. only:: fog
 
-    .. warning:: This section has not yet been completed for the fog SDK.
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-1
+        :end-before: step-2
+
 
 .. only:: jclouds
 
@@ -123,6 +119,18 @@ First, let's learn how to connect to the Object Storage endpoint:
 To begin to store objects, we must first make a container.
 Call yours :code:`fractals`:
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-2
+        :end-before: step-3
+
+    You should see output such as:
+
+    .. code-block:: ruby
+
+        TBC
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
@@ -137,6 +145,18 @@ Call yours :code:`fractals`:
 
 You should now be able to see this container appear in a listing of
 all containers in your account:
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-3
+        :end-before: step-4
+
+    You should see output such as:
+
+    .. code-block:: ruby
+
+        TBC
 
 .. only:: libcloud
 
@@ -154,6 +174,12 @@ The next logical step is to upload an object. Find a photo of a goat
 on line, name it :code:`goat.jpg`, and upload it to your
 :code:`fractals` container:
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-4
+        :end-before: step-5
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
@@ -163,6 +189,34 @@ on line, name it :code:`goat.jpg`, and upload it to your
 List objects in your :code:`fractals` container to see if the upload
 was successful. Then, download the file to verify that the md5sum is
 the same:
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-5
+        :end-before: step-6
+
+    ::
+
+       TBC
+
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-6
+        :end-before: step-7
+
+    ::
+
+        TBC
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-7
+        :end-before: step-8
+
+    ::
+
+        7513986d3aeb22659079d1bf3dc2468b
+
 
 .. only:: libcloud
 
@@ -192,8 +246,13 @@ the same:
         7513986d3aeb22659079d1bf3dc2468b
 
 
+Finally, clean up by deleting the test object:
 
-Finally, let's clean up by deleting our test object:
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-8
+        :end-before: step-9
 
 .. only:: libcloud
 
@@ -201,9 +260,9 @@ Finally, let's clean up by deleting our test object:
         :start-after: step-8
         :end-before: step-9
 
-    .. note:: You need to pass in objects to the delete commands, not object names.
+    .. note:: You must pass in objects and not object names to the delete commands.
 
-    Now there should be no more objects be available in the container :code:`fractals`.
+    Now, no more objects are available in the :code:`fractals` container.
 
     .. literalinclude:: ../samples/libcloud/durability.py
         :start-after: step-9
@@ -213,14 +272,19 @@ Finally, let's clean up by deleting our test object:
 
         []
 
-Backup the Fractals from the database on the Object Storage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Back up the Fractals from the database on the Object Storage
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-So let's now use the knowledge from above to backup the images of the
-Fractals app, stored inside the database right now, on the Object
-Storage.
+Back up the Fractals app images, which are currently stored inside the
+database, on Object Storage.
 
-Use the :code:`fractals`' container from above to put the images in:
+Place the images in the :code:`fractals`' container:
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-10
+        :end-before: step-11
 
 .. only:: libcloud
 
@@ -228,8 +292,16 @@ Use the :code:`fractals`' container from above to put the images in:
         :start-after: step-10
         :end-before: step-11
 
-Next, we backup all of our existing fractals from the database to our
-swift container. A simple for loop takes care of that:
+Next, back up all existing fractals from the database to the swift container.
+A simple `for` loop takes care of that:
+
+.. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-11
+        :end-before: step-12
 
 .. only:: libcloud
 
@@ -264,9 +336,14 @@ Extra features
 Delete containers
 ~~~~~~~~~~~~~~~~~
 
-One call we did not cover and that you probably need to know is how
-to delete a container. Ensure that you have removed all objects from
-the container before running this script. Otherwise, the script fails:
+To delete a container, make sure that you have removed all objects from the
+container before running this script. Otherwise, the script fails:
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-12
+        :end-before: step-13
 
 .. only:: libcloud
 
@@ -279,13 +356,18 @@ the container before running this script. Otherwise, the script fails:
 Add metadata to objects
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also do advanced things like uploading an object with
-metadata, such as in following example. For more information, see the
-documentation for your SDK. This option also uses a bit stream to
-upload the file, iterating bit by bit over the file and passing those
-bits to Object Storage as they come. Compared to loading the entire
-file in memory and then sending it, this method is more efficient,
-especially for larger files.
+You can complete advanced tasks such as uploading an object with metadata, as
+shown in following example. For more information, see the documentation for
+your SDK. This option also uses a bit stream to upload the file, iterating bit
+by bit over the file and passing those bits to Object Storage as they come.
+Compared to loading the entire file in memory and then sending it, this method
+is more efficient, especially for larger files.
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-13
+        :end-before: step-14
 
 .. only:: libcloud
 
@@ -298,18 +380,22 @@ especially for larger files.
 Large objects
 ~~~~~~~~~~~~~
 
-For efficiency, most Object Storage installations treat large objects
-(say, :code:`> 5GB`) differently than smaller objects.
+For efficiency, most Object Storage installations treat large objects,
+:code:`> 5GB`, differently than smaller objects.
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-14
+        :end-before: step-15
 
 .. only:: libcloud
 
-    If you are working with large objects, use the
-    :code:`ex_multipart_upload_object` call instead of the simpler
-    :code:`upload_object` call. Behind the scenes, the call splits the
-    large object into chunks and creates a special manifest so that
-    the chunks can be recombined on download. Alter the
-    :code:`chunk_size` parameter (in bytes) according to what your
-    cloud can accept.
+    If you work with large objects, use the :code:`ex_multipart_upload_object`
+    call instead of the simpler :code:`upload_object` call. The call splits
+    the large object into chunks and creates a manifest so that the chunks can
+    be recombined on download. Change the :code:`chunk_size` parameter, in
+    bytes, to a value that your cloud can accept.
 
     .. literalinclude:: ../samples/libcloud/durability.py
         :start-after: step-14
@@ -322,11 +408,15 @@ Next steps
 You should now be fairly confident working with Object Storage. You
 can find more information about the Object Storage SDK calls at:
 
+.. only:: fog
+
+    https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/storage.md
+
 .. only:: libcloud
 
     https://libcloud.readthedocs.org/en/latest/storage/api.html
 
-Or, try one of these steps in the tutorial:
+Or, try one of these tutorial steps:
 
 * :doc:`/block_storage`: Migrate the database to block storage, or use
   the database-as-a-service component.
