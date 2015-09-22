@@ -24,25 +24,34 @@
         </wadl:resources>
     </section>
     <section xml:id="volume-api-v2-extensions">
-        <title>API extensions</title>
+        <title>API extensions (extensions)</title>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#extensions">
                 <wadl:method href="#listExtensions-cinder-v2"/>
             </wadl:resource>
         </wadl:resources>
     </section>
+    <section xml:id="os-limits-v2">
+        <title>Limits (limits)</title>
+        <para>Shows absolute limits for a tenant.</para>
+        <para>
+            An absolute limit value of <code>-1</code> indicates that the
+            absolute limit for the item is infinite.
+        </para>
+        <wadl:resources href="../wadls/volume-api/src/v2/os-limits-v2.wadl"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+    </section>
     <section xml:id="volume-api-v2-volumes">
-        <title>Volumes</title>
+        <title>Volumes (volumes)</title>
         <para>
             A volume is a detachable block storage device similar to a USB
             hard drive. You can attach a volume to one instance at a time.
         </para>
         <para>
-          The <code>snapshot_id</code> and <code>source_volid</code>
-          parameters specify the ID of the snapshot or volume from which
-          this volume originates.
-          If the volume was not created from a snapshot or source volume,
-          these values are null.
+            The <code>snapshot_id</code> and <code>source_volid</code>
+            parameters specify the ID of the snapshot or volume from which this
+            volume originates. If the volume was not created from a snapshot or
+            source volume, these values are null.
         </para>
         <para>When you create, list, update, or delete volumes, the possible status
             values are:</para>
@@ -111,6 +120,7 @@
                 </tr>
             </tbody>
         </table>
+        <para></para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#volumes">
                 <wadl:method href="#createVolume"/>
@@ -126,8 +136,27 @@
             </wadl:resource>
         </wadl:resources>
     </section>
+    <section xml:id="os-volume-type-access-v2">
+        <title>Volume type access (volumes)</title>
+        <para>
+            Creates private volumes.
+        </para>
+        <para>
+            By default, volumes are public. To create a private volume, set
+            the <code>is_public</code> boolean field to <code>false</code> at
+            volume creation time. To control access to a private volume, you
+            add a project to or remove a project from the volume. Private
+            volume types without projects are only accessible by users with the
+            administrative role and context.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/volume-api/src/v2/os-volume-type-access-v2.wadl#volumes">
+                    <wadl:method href="#createVolumeTypeAccessExt"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
     <section xml:id="volume-api-v2-volumes-actions">
-        <title>Volume actions</title>
+        <title>Volume actions (volumes, action)</title>
         <para>
             Performs actions for a specified volume. Extends the size, resets
             statuses for, sets image metadata, or removes image metadata from
@@ -143,162 +172,15 @@
             </wadl:resource>
         </wadl:resources>
     </section>
-    <section xml:id="volume-api-v2-types">
-        <title>Volume types</title>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#types">
-                <wadl:method href="#getVolumeTypes"/>
-            </wadl:resource>
-            <wadl:resource
-                href="../wadls/volume-api/src/v2/volume-api-v2.wadl#types">
-                <wadl:method href="#createVolumeType"/>
-            </wadl:resource>
-            <wadl:resource
-                href="../wadls/volume-api/src/v2/volume-api-v2.wadl#volume_type_id">
-                <wadl:method href="#updateVolumeType"/>
-                <wadl:method href="#updateVolumeTypeExtraSpecs"/>
-                <wadl:method href="#getVolumeType"/>
-                <wadl:method href="#deleteVolumeType"/>
-            </wadl:resource>
-        </wadl:resources>
-    </section>
-    <section xml:id="volume-api-v2-snapshots">
-        <title>Snapshots</title>
-        <para>A snapshot is a point-in-time copy of the data that a
-            volume contains.</para>
-        <para>When you create, list, or delete snapshots, these status
-            values are possible:</para>
-        <table rules="all" frame="border">
-          <caption>Snapshot statuses</caption>
-            <col width="30%"/>
-            <col width="70%"/>
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <para>creating</para></td>
-                    <td><para>The snapshot is being created.</para></td>
-                </tr>
-                <tr>
-                    <td>
-                        <para>available</para></td>
-                    <td><para>The snapshot is ready to be used.</para></td>
-                </tr>
-                <tr>
-                    <td>
-                        <para>deleting</para></td>
-                    <td><para>The snapshot is being deleted.</para></td>
-                </tr>
-                <tr>
-                    <td>
-                        <para>error</para></td>
-                    <td><para>An error occurred during snapshot
-                        creation.</para></td>
-                </tr>
-                <tr>
-                    <td>
-                        <para>error_deleting</para></td>
-                    <td><para>An error occurred during snapshot
-                        deletion.</para></td>
-                </tr>
-            </tbody>
-        </table>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshots">
-                <wadl:method href="#createSnapshot"/>
-                <wadl:method href="#getSnapshotsSimple"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#detail-snapshot">
-                <wadl:method href="#getSnapshotsDetail"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshot_id">
-                <wadl:method href="#getSnapshot"/>
-                <wadl:method href="#updateSnapshot"/>
-                <wadl:method href="#deleteSnapshot"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshot-metadata">
-                <wadl:method href="#showSnapshotMetadata"/>
-                <wadl:method href="#updateSnapshotMetadata"/>
-            </wadl:resource>
-        </wadl:resources>
-    </section>
-    <section xml:id="os-qos-v2-qos-specs">
-        <title>Quality of service (QoS) specifications (qos-specs)</title>
-        <para>Administrators only, depending on policy settings.</para>
-        <para>
-            Creates, lists, shows details for, associates, disassociates, sets keys,
-            unsets keys, and deletes quality of service (QoS) specifications.
-        </para>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#qos-specs">
-                <wadl:method href="#createQoSSpec"/>
-                <wadl:method href="#listQoSSpecs"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#qos_id"/>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#associate">
-                <wadl:method href="#associateQoSSpec"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#disassociate">
-                <wadl:method href="#disassociateQoSSpec"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#disassociate_all">
-                <wadl:method href="#disassociateQoSSpecAll"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#associations">
-                <wadl:method href="#getQoSAssociations"/>
-            </wadl:resource>
-        </wadl:resources>
-    </section>
-    <section xml:id="os-quota-sets-v2">
-        <title>Quota sets extension (os-quota-sets)</title>
-        <para>Administrators only, depending on policy settings.
-        </para>
-        <para>
-            Shows, updates, and deletes quotas for a tenant.
-        </para>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#tenant_id_cinder_v2">
-                <wadl:method href="#showQuota"/>
-                <wadl:method href="#updateQuota"/>
-                <wadl:method href="#deleteQuotas"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#defaults-cinder-v2">
-                <wadl:method href="#getDefaults"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#user_id-cinder-v2">
-                <wadl:method href="#showQuotaUser"/>
-                <wadl:method href="#updateQuotaUser"/>
-                <wadl:method href="#deleteQuotasUser"/>
-            </wadl:resource>
-            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#user_id-detail-cinder-v2">
-                <wadl:method href="#showQuotaDetailUser"/>
-            </wadl:resource>
-        </wadl:resources>
-    </section>
-    <section xml:id="os-limits-v2">
-        <title>Limits extension (limits)</title>
-        <para>Shows absolute limits for a tenant.</para>
-        <para>
-            An absolute limit value of <code>-1</code> indicates that the
-            absolute limit for the item is infinite.
-        </para>
-        <wadl:resources href="../wadls/volume-api/src/v2/os-limits-v2.wadl"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-    </section>
     <section xml:id="ext-backups-v2">
-        <title>Backups</title>
+        <title>Backups (backups)</title>
         <para>
             A backup is a full copy of a volume stored in an external service.
-            The service can be configured. The only supported service for now
-            is Object Storage. A backup can subsequently be restored from the
+            The service can be configured. The only supported service is
+            Object Storage. A backup can subsequently be restored from the
             external service to either the same volume that the backup was
-            originally taken from, or to a new volume. Backup and restore
-            operations can only be carried out on volumes which are in an
+            originally taken from or to a new volume. Backup and restore
+            operations can only be carried out on volumes that are in an
             unattached and available state.
         </para>
         <para>When you create, list, or delete backups, these status
@@ -350,6 +232,7 @@
                 </tr>
             </tbody>
         </table>
+        <para></para>
         <para>In the event of an error, more information about the error
             can be found in the <literal>fail_reason</literal> field for
             the backup.</para>
@@ -371,13 +254,162 @@
         </wadl:resources>
     </section>
     <section xml:id="ext-backups-actions-v2">
-        <title>Backup actions</title>
+        <title>Backup actions (backups, action)</title>
         <para>
             Force-deletes a backup.
         </para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/volume-api/src/v2/volume-backups-api-v2.wadl#action">
                 <wadl:method href="#forceDeleteBackup"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="os-backend-capabilities-v2">
+        <title>Capabilities for storage back ends (capabilities)</title>
+        <para>
+            Shows capabilities for a storage back end.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/volume-api/src/v2/os-backend-capabilities-v2.wadl#hostname">
+                    <wadl:method href="#getBackendCapabilities"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="os-quota-sets-v2">
+        <title>Quota sets extension (os-quota-sets)</title>
+        <para>Administrators only, depending on policy settings.
+        </para>
+        <para>
+            Shows, updates, and deletes quotas for a tenant.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#tenant_id_cinder_v2">
+                <wadl:method href="#showQuota"/>
+                <wadl:method href="#updateQuota"/>
+                <wadl:method href="#deleteQuotas"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#defaults-cinder-v2">
+                <wadl:method href="#getDefaults"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#user_id-cinder-v2">
+                <wadl:method href="#showQuotaUser"/>
+                <wadl:method href="#updateQuotaUser"/>
+                <wadl:method href="#deleteQuotasUser"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-quota-sets-v2.wadl#user_id-detail-cinder-v2">
+                <wadl:method href="#showQuotaDetailUser"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="os-qos-v2-qos-specs">
+        <title>Quality of service (QoS) specifications (qos-specs)</title>
+        <para>Administrators only, depending on policy settings.</para>
+        <para>
+            Creates, lists, shows details for, associates, disassociates, sets keys,
+            unsets keys, and deletes quality of service (QoS) specifications.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#qos-specs">
+                <wadl:method href="#createQoSSpec"/>
+                <wadl:method href="#listQoSSpecs"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#qos_id"/>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#associate">
+                <wadl:method href="#associateQoSSpec"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#disassociate">
+                <wadl:method href="#disassociateQoSSpec"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#disassociate_all">
+                <wadl:method href="#disassociateQoSSpecAll"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/os-qos-v2.wadl#associations">
+                <wadl:method href="#getQoSAssociations"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="volume-api-v2-types">
+        <title>Volume types (types)</title>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#types">
+                <wadl:method href="#getVolumeTypes"/>
+            </wadl:resource>
+            <wadl:resource
+                href="../wadls/volume-api/src/v2/volume-api-v2.wadl#types">
+                <wadl:method href="#createVolumeType"/>
+            </wadl:resource>
+            <wadl:resource
+                href="../wadls/volume-api/src/v2/volume-api-v2.wadl#volume_type_id">
+                <wadl:method href="#updateVolumeType"/>
+                <wadl:method href="#updateVolumeTypeExtraSpecs"/>
+                <wadl:method href="#getVolumeType"/>
+                <wadl:method href="#deleteVolumeType"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="volume-api-v2-snapshots">
+        <title>Volume snapshots (snapshots)</title>
+        <para>A snapshot is a point-in-time copy of the data that a
+            volume contains.</para>
+        <para>When you create, list, or delete snapshots, these status
+            values are possible:</para>
+        <table rules="all" frame="border">
+          <caption>Snapshot statuses</caption>
+            <col width="30%"/>
+            <col width="70%"/>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <para>creating</para></td>
+                    <td><para>The snapshot is being created.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>available</para></td>
+                    <td><para>The snapshot is ready to be used.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>deleting</para></td>
+                    <td><para>The snapshot is being deleted.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>error</para></td>
+                    <td><para>An error occurred during snapshot
+                        creation.</para></td>
+                </tr>
+                <tr>
+                    <td>
+                        <para>error_deleting</para></td>
+                    <td><para>An error occurred during snapshot
+                        deletion.</para></td>
+                </tr>
+            </tbody>
+        </table>
+        <para></para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshots">
+                <wadl:method href="#createSnapshot"/>
+                <wadl:method href="#getSnapshotsSimple"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#detail-snapshot">
+                <wadl:method href="#getSnapshotsDetail"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshot_id">
+                <wadl:method href="#getSnapshot"/>
+                <wadl:method href="#updateSnapshot"/>
+                <wadl:method href="#deleteSnapshot"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/volume-api/src/v2/volume-api-v2.wadl#snapshot-metadata">
+                <wadl:method href="#showSnapshotMetadata"/>
+                <wadl:method href="#updateSnapshotMetadata"/>
             </wadl:resource>
         </wadl:resources>
     </section>
@@ -395,24 +427,5 @@
             Shows image metadata that is associated with a specified volume.
         </para>
         <wadl:resources href="../wadls/volume-api/src/v2/os-vol-image-meta-v2.wadl"/>
-    </section>
-    <section xml:id="os-volume-type-access-v2">
-        <title>Volume type access (volumes)</title>
-        <para>
-            Creates private volumes.
-        </para>
-        <para>
-            By default, volumes are public. To create a private volume, set
-            the <code>is_public</code> boolean field to <code>false</code> at
-            volume creation time. To control access to a private volume, you
-            add a project to or remove a project from the volume. Private
-            volume types without projects are only accessible by users with the
-            administrative role and context.
-        </para>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/volume-api/src/v2/os-volume-type-access-v2.wadl#volumes">
-                    <wadl:method href="#createVolumeTypeAccessExt"/>
-            </wadl:resource>
-        </wadl:resources>
     </section>
 </chapter>
