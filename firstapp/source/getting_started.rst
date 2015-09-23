@@ -189,6 +189,7 @@ to run code snippets in your language of choice.
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-1
         :end-before: step-2
 
@@ -289,6 +290,7 @@ To list the images that are available in your cloud, run some API calls:
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-2
         :end-before: step-3
 
@@ -382,6 +384,7 @@ You can also get information about available flavors:
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-3
         :end-before: step-4
 
@@ -499,6 +502,7 @@ image that you picked in the previous section:
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-4
         :end-before: step-5
 
@@ -580,6 +584,7 @@ Next, choose which flavor you want to use:
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-5
         :end-before: step-6
 
@@ -682,6 +687,7 @@ Create the instance.
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-6
         :end-before: step-7
 
@@ -745,6 +751,7 @@ If you list existing instances:
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-7
         :end-before: step-8
 
@@ -892,6 +899,7 @@ money. Destroy cloud resources to avoid unexpected expenses.
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-8
         :end-before: step-9
 
@@ -952,7 +960,14 @@ instance:
 
 .. only:: fog
 
-    .. warning:: This section has not been completed.
+    In the following example, :code:`pub_key_file` should be set to
+    the location of your public SSH key file.
+
+    .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
+        :start-after: step-9
+        :end-before: step-10
+
 
 .. only:: libcloud
 
@@ -993,6 +1008,7 @@ instance:
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
         :start-after: step-10
         :end-before: step-11
 
@@ -1021,7 +1037,10 @@ instance:
 
 .. only:: fog
 
-    .. warning:: This section has not been completed.
+    .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
+        :start-after: step-11
+        :end-before: step-12
 
 .. only:: libcloud
 
@@ -1051,7 +1070,10 @@ request the instance, wait for it to build.
 
 .. only:: fog
 
-    .. warning:: This section has not been completed.
+    .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
+        :start-after: step-12
+        :end-before: step-13
 
 .. only:: libcloud
 
@@ -1091,7 +1113,18 @@ address to your instance.
 
 .. only:: fog
 
-    .. warning:: This section has not been completed.
+    .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
+        :start-after: step-13
+        :end-before: step-14
+
+    This will get an ip address that you can assign to your instance
+    with:
+
+    .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
+        :start-after: step-14
+        :end-before: step-15
 
 .. only:: libcloud
 
@@ -1155,6 +1188,12 @@ time. Consider enjoying a cup of coffee while you wait. After the application
 deploys, you can visit the awesome graphic interface at the following link
 by using your preferred browser.
 
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/getting_started.rb
+        :language: ruby
+        :start-after: step-15
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
@@ -1205,6 +1244,11 @@ as a single script.
 
 Before you run this script, confirm that you have set your authentication
 information, the flavor ID, and image ID.
+
+.. only:: fog
+
+    .. literalinclude:: ../samples/fog/getting_started.rb
+       :language: ruby
 
 .. only:: libcloud
 
