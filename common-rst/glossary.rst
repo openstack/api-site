@@ -1459,7 +1459,7 @@ OpenStack contribution process.
       implemented in Compute using iptables, arptables, ip6tables, and
       etables.
 
-   Firewall-as-a-Service (FWaaS)
+   FWaaS
 
       A Networking extension that provides perimeter firewall
       functionality.
@@ -2172,7 +2172,7 @@ OpenStack contribution process.
       The process of spreading client requests between two or more
       nodes to improve performance and availability.
 
-   Load-Balancer-as-a-Service (LBaaS)
+   LBaaS
 
       Enables Networking to distribute incoming requests evenly
       between designated instances.
@@ -2382,10 +2382,11 @@ OpenStack contribution process.
       connectivity. In Networking terminology, a network is always a layer-2
       network.
 
-   Network Address Translation (NAT)
+   NAT
 
-      The process of modifying IP address information while in
-      transit. Supported by Compute and Networking.
+      Network Address Translation; Process of modifying IP address
+      information while in transit. Supported by Compute and
+      Networking.
 
    network controller
 
@@ -2417,10 +2418,11 @@ OpenStack contribution process.
       Represents a virtual, isolated OSI layer-2 subnet in
       Networking.
 
-   Network Time Protocol (NTP)
+   NTP
 
-      A method of keeping a clock for a host or node correct through
-      communications with a trusted, accurate time source.
+      Network Time Protocol; Method of keeping a clock for a host or
+      node correct via communication with a trusted, accurate time
+      source.
 
    network UUID
 
@@ -3158,6 +3160,12 @@ OpenStack contribution process.
       pieces. The re-assembled object is called a concatenated
       object.
 
+   self-service
+
+      For IaaS, ability for a regular (non-privileged) account to
+      manage a virtual infrastructure component such as networks without
+      involving an administrator.
+
    SELinux
 
       Linux kernel security module that provides the mechanism for
@@ -3592,7 +3600,7 @@ OpenStack contribution process.
       One of the VM image disk formats supported by Image
       service.
 
-   virtual extensible LAN (VXLAN)
+   VXLAN
 
       A network virtualization technology that attempts to reduce the
       scalability problems associated with large cloud computing
