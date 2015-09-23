@@ -237,7 +237,7 @@ create snapshots of volumes (handy for backups):
     .. code-block:: python
 
 *      snapshot_name = 'test_backup_1'
-        connnection.create_volume_snapshot('test', name='test backup 1')
+        connection.create_volume_snapshot('test', name='test backup 1')
 
     .. todo:: Do we need a note here to mention that 'test' is the
               volume name and not the volume object?
