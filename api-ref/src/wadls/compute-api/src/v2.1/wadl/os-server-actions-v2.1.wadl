@@ -10,7 +10,8 @@
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-server-actions-v2.1">
         <resource id="v2.1" path="//v2.1">
@@ -31,6 +32,7 @@
                             <method href="#stop"/>
                             <method href="#attachVolume"/>
                             <method href="#rescue"/>
+                            <method href="#unrescue"/>
                         </resource>
                     </resource>
                 </resource>
@@ -110,12 +112,12 @@
                 action in the request body.
             </para>
             <para>
-                A successfully resized server shows a status of
-                <code>VERIFY_RESIZE</code>, a vm_status of
-                <code>RESIZED</code>, and a migration_status of
-                <code>finished</code>. If you set the auto_confirm option of
-                the Compute service to <code>True</code>, the Compute service
-                automatically confirms the resize operation.
+                A successfully resized server shows a
+                <code>VERIFY_RESIZE</code> status, <code>RESIZED</code> VM
+                status, and <code>finished</code> migration status. If you set
+                the <code>auto_confirm</code> option of the Compute service to
+                <code>True</code>, the Compute service automatically confirms
+                the resize operation.
             </para>
             <para>Preconditions</para>
                 <itemizedlist>
@@ -303,12 +305,16 @@
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                  <listitem><para>If the server status does not change
-                  to <code>ACTIVE</code>, the start operation failed. Ensure
-                  that you meet the preconditions and run the request again.
-                  If the request fails again, investigate whether another
-                  operation is running that causes a race condition.
-                  </para></listitem>
+                  <listitem>
+                    <para>
+                        If the server status does not change to
+                        <code>ACTIVE</code>, the start operation failed.
+                        Ensure that you meet the preconditions and run the
+                        request again. If the request fails again, investigate
+                        whether another operation is running that causes a
+                        race condition.
+                  </para>
+              </listitem>
             </itemizedlist>
         </wadl:doc>
         <request>
@@ -463,25 +469,44 @@
                 If you omit an image reference, the base image reference is
                 used by default.
             </para>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        After you successfully rescue a server and make a
+                        <code>GET
+                        /v2.1/​{tenant_id}​/servers/​{server_id}​</code>
+                        request, its status changes to <code>UNRESCUE</code>.</para>
+                </listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Rescue server: JSON request">
                     <xsdxt:code
-                        href="../api_samples/servers/server-rescue-req.json"
+                        href="../api_samples/os-rescue/server-rescue-req.json"
+                    />
+                </wadl:doc>
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Rescue server with image: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/os-rescue/server-rescue-req-with-image-ref.json"
                     />
                 </wadl:doc>
                 <param name="rescue" style="plain" type="xsd:string"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="Rescue action"
-                            ><para>Specify the <code>rescue</code>
-                            action in the request
-                        body.</para></wadl:doc>
+                            >
+                        <para>
+                            Specify the <code>rescue</code> action in the
+                            request body.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="adminPass" style="plain"
-                    type="csapi:string">
+                    type="csapi:string" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="Admin password">
                         <para>
@@ -492,7 +517,7 @@
                     </wadl:doc>
                 </param>
                 <param name="rescue_image_ref" style="plain"
-                    type="csapi:string">
+                    type="csapi:string" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="Image reference for rescue">
                         <para>
@@ -513,10 +538,68 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Extended rescue server: JSON response">
                     <xsdxt:code
-                        href="../api_samples/servers/server-get-resp-rescue.json"
+                        href="../api_samples/os-rescue/server-rescue.json"
                     />
                 </wadl:doc>
+                <param name="adminPass" style="plain"
+                    type="csapi:string" required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Admin password">
+                        <para>
+                            The password that enables the administrator to
+                            access the rescued instance.
+                        </para>
+                    </wadl:doc>
+                </param>
             </representation>
         </response>
+    </method>
+    <method name="POST" id="unrescue">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Unrescue server">
+            <para role="shortdesc">
+                Unrescues a specified server. Changes status to
+                <code>ACTIVE</code>.
+            </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+                <listitem><para>You can only unrescue a server
+                when its status is <code>RESCUE</code>.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        After you successfully unrescue a server and make a
+                        <code>GET
+                        /v2.1/​{tenant_id}​/servers/​{server_id}​</code>
+                        request, its status changes to <code>ACTIVE</code>.</para>
+                </listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN"
+                    title="Unrescue server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/os-rescue/server-unrescue-req.json"
+                    />
+                </wadl:doc>
+                <param name="unrescue" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Unrescue action"
+                            >
+                        <para>
+                            Specify the <code>unrescue</code>
+                            action in the request body.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202"/>
     </method>
 </application>
