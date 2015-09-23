@@ -70,7 +70,7 @@ conn.search_security_groups(sec_group_name)
 #step-11
 ex_userdata = '''#!/usr/bin/env bash
 
-curl -L -s https://git.openstack.org/cgit/stackforge/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
 -i faafo -i messaging -r api -r worker -r demo
 '''
 
