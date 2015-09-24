@@ -2690,18 +2690,7 @@ router.</para>
         </para>
     </wadl:doc>
 </param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="max_retries" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>
-          The number of allowed connection failures before changing the status
-          of the member to <code>INACTIVE</code>. A valid value is from 1 to
-          10.
-        </para>
-    </wadl:doc>
-</param>
+&max_retriesRequestParameter;
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="http_method" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -2835,12 +2824,29 @@ router.</para>
     </wadl:doc>
 </param>' >
 <!ENTITY hmUpdateRequestParams '
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="delay" style="plain" type="xsd:int">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
         <para>The time, in seconds, between sending probes to members.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="timeout" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The maximum number of seconds for a monitor to wait for a connection to be established before it times out. This value must be less than the delay value.</para>
+    </wadl:doc>
+</param>
+&max_retriesRequestParameter;
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="http_method" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The HTTP method that the monitor uses for requests.</para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
@@ -2850,6 +2856,21 @@ router.</para>
         <para>The HTTP path of the request sent by the monitor to test
             the health of a member. A valid value is a string that
             begins with a forward slash (/).</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="expected_codes" style="plain" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>The list of HTTP status codes expected in response from the member to declare it healthy. A valid value is a single value such as 200, a list such as 200, 202, or a range such as 200-204.</para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="admin_state_up" style="plain" type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>The administrative state of the health monitor. A valid value is true (UP) or false (DOWN).</para>
     </wadl:doc>
 </param>' >
 <!-- members -->
@@ -3627,20 +3648,14 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The maximum number of seconds for a monitor to wait for a connection to be established before it times out. This value must be less than the delay value.</para>
-    </wadl:doc>
-</param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="max_retries" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
         <para>
-          Number of allowed connection failures before changing the status of
-          the member to INACTIVE. A valid value is from 1 to 10.
+          The maximum number of seconds for a monitor to wait for a connection
+          to be established before it times out. This value must be less than
+          the delay value.
         </para>
     </wadl:doc>
 </param>
+&max_retriesRequestParameter;
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="http_method" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -3724,14 +3739,7 @@ router.</para>
         <para>The maximum number of seconds for a monitor to wait for a connection to be established before it times out. This value must be less than the delay value.</para>
     </wadl:doc>
 </param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="max_retries" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>Number of allowed connection failures before changing the status of the member to INACTIVE. A valid value is from 1 to 10.</para>
-    </wadl:doc>
-</param>
+&max_retriesRequestParameter;
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="http_method" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -3745,7 +3753,11 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The HTTP path of the request sent by the monitor to test the health of a member. A valid value is a string that begins with a forward slash (/).</para>
+        <para>
+          The HTTP path of the request sent by the monitor to test the health
+          of a member. A valid value is a string that begins with a forward
+          slash (/).
+        </para>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
@@ -3753,18 +3765,27 @@ router.</para>
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The list of HTTP status codes expected in response from the
-        member to declare it healthy. A valid value is a single value such as
-        200, a list such as 200, 202, or a range such as 200-204.</para>
+        <para>
+          The list of HTTP status codes expected in response from the member
+          to declare it healthy. Specify one of the following values:
+        </para>
+        <itemizedlist>
+          <listitem><para>A single value, such as 200.</para></listitem>
+          <listitem><para>A list, such as 200, 202.</para></listitem>
+          <listitem><para>A range, such as 200-204.</para></listitem>
+        </itemizedlist>
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="admin_state_up" style="plain" type="xsd:boolean">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The administrative state of the health monitor. A valid value is true (UP) or false (DOWN).</para>
+        <para>
+          The administrative state of the health monitor. A valid value is
+          true (UP) or false (DOWN).
+        </para>
     </wadl:doc>
-</param>' >
+</param>'>
 <!ENTITY hmUpdateRequestParams '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="delay" style="plain" type="xsd:int">
@@ -3782,14 +3803,7 @@ router.</para>
         <para>The maximum number of seconds for a monitor to wait for a connection to be established before it times out. This value must be less than the delay value.</para>
     </wadl:doc>
 </param>
-<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
-    name="max_retries" style="plain" type="xsd:int">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xml:lang="EN">
-        <para>Number of allowed connection failures before changing the status of the member to INACTIVE. A valid value is from 1 to 10.</para>
-    </wadl:doc>
-</param>
+&max_retriesRequestParameter;
 <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
     name="http_method" style="plain" type="xsd:string">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -5932,4 +5946,17 @@ router.</para>
        The tenant.
     </para>
  </wadl:doc>
+</param>'>
+<!ENTITY max_retriesRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="max_retries" style="plain" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+          The number of allowed connection failures before changing the status
+          of the member to <code>INACTIVE</code>. A valid value is from 1 to
+          10.
+        </para>
+    </wadl:doc>
 </param>'>
