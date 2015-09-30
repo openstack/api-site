@@ -58,18 +58,19 @@
                             required="false" type="xsd:string">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>Validates that a
-                                   token has the specified tenant in
-                                   scope, for performance. Valid
-                                   tokens are in the
-                                   <code>/tokens/{tokenId}</code>
-                                   path. An itemNotFound
-                                   (<code>404</code>) fault is
-                                   returned for a token that is not
-                                   valid.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                    Validates that a token has the specified
+                                    tenant in scope, for performance. Valid
+                                    tokens are in the
+                                    <code>/tokens/{tokenId}</code> path. If
+                                    the token is not valid, this call throws
+                                    the <code> itemNotFound (404)</code>
+                                    fault.
+                                </para>
+                            </wadl:doc>
                         </param>
-                        <param name="HP-IDM-serviceId" style="query"
-                            type="xsd:string" required="false"/>
+                        &serviceIdQueryParameter;
                         <method href="#validateToken"/>
                         <method href="#checkToken"/>
                     </resource>
@@ -91,18 +92,7 @@
                                    authentication
                                 token.</para></wadl:doc>
                         </param>
-                        <param name="HP-IDM-serviceId" style="query"
-                            type="xsd:string" required="false">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>A comma-separated
-                                   string of service IDs. Checks the
-                                   roles against the specified service
-                                   IDs. If a service ID is not valid
-                                   or if no roles are associated with
-                                   a service ID, a 401 fault is
-                                   returned.</para></wadl:doc>
-                        </param>
+                        &serviceIdQueryParameter;
                         <method href="#listEndpointsForToken"/>
                     </resource>
                 </resource>
@@ -118,21 +108,24 @@
     <method name="GET" id="validateToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Validate token">
-            <para role="shortdesc">Checks that a token is valid and
-                that it belongs to a specified tenant and service IDs.
-                Returns the permissions for a particular
-                client.</para>
-            <para>Behavior is similar to
-                    <code>/tokens/{tokenId}</code>. An itemNotFound
-                    (<code>404</code>) fault is returned for a token
-                that is not valid.</para>
-            <para>This extension might decrypt
-                    <code>X-Subject-Token</code> header and internally
-                call the normal validation for Identity, passing in
-                all headers and query parameters. It should therefore
-                support all existing calls on
-                    <code>/tokens/{tokenId}</code>, including
-                extensions such as HP-IDM.</para>
+            <para role="shortdesc">
+                Checks that a token is valid and that it belongs to a
+                specified tenant and any specified service IDs. Returns the
+                permissions for a particular client.
+            </para>
+            <para>
+                Behavior is similar to <code>/tokens/{tokenId}</code>. If the
+                token is not valid, the call throws the <code>itemNotFound
+                (404)</code> fault.
+            </para>
+            <para>
+                This extension might decrypt the <code>X-Subject-Token</code>
+                header and internally call and pass in all headers and query
+                parameters to the normal validation code for Identity.
+                Consequently, this extension must support all existing
+                <code>/tokens/{tokenId}</code> calls including extensions such
+                as HP-IDM.
+            </para>
         </wadl:doc>
         <response status="200 203">
             <representation mediaType="application/json" element="identity:access">
@@ -147,27 +140,30 @@
     <method name="HEAD" id="checkToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Check token">
-            <para role="shortdesc">Checks that a token is valid and
-                that it belongs to a specified tenant and service IDs,
-                for performance.</para>
-            <para>Behavior is similar to
-                    <code>/tokens/{tokenId}</code>. An itemNotFound
-                    (<code>404</code>) fault is returned for a token
-                that is not valid.</para>
-            <para>This extension might decrypt
-                    <code>X-Subject-Token</code> header and internally
-                call the normal validation for Identity, passing in
-                all headers and query parameters. It should therefore
-                support all existing calls on
-                    <code>/tokens/{tokenId}</code>, including
-                extensions such as HP-IDM.</para>
+            <para role="shortdesc">
+                Checks that a token is valid and that it belongs to a
+                specified tenant and any specified service IDs, for performance.
+            </para>
+            <para>
+                Behavior is similar to <code>/tokens/{tokenId}</code>. If the
+                token is not valid, the call throws the <code>itemNotFound
+                (404)</code> fault.
+            </para>
+            <para>
+                This extension might decrypt the <code>X-Subject-Token</code>
+                header and internally call and pass in all headers and query
+                parameters to the normal validation code for Identity.
+                Consequently, this extension must support all existing
+                <code>/tokens/{tokenId}</code> calls including extensions such
+                as HP-IDM.
+            </para>
         </wadl:doc>
         <response status="200 203"/> &commonFaults; &getFaults; </method>
     <method name="GET" id="listEndpointsForToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List endpoints for token">
             <para role="shortdesc">Lists endpoints associated with a
-                specific token.</para>
+                specified token.</para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
