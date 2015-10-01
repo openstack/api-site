@@ -1,0 +1,1210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application[
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:common="http://docs.openstack.org/common/api/v1.0"
+    xmlns:csapi="http://docs.openstack.org/share/api/v1.0"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+   <resources base="https://share_server_id.example.com/" xml:id="os-share-v1.0">
+      <resource id="versions" path="/">
+         <param name="X-Openstack-Manila-Api-Version" style="header" type="xsd:string">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <para>The HTTP header to specify a valid Shared File Systems API
+                  micro-version. For example,
+                  <code>"X-Openstack-Manila-Api-Version: 2.6"</code>.
+                  If you omit this header, the default micro-version is 2.0.
+               </para>
+            </wadl:doc>
+         </param>
+         <method href="#share-listVersions" />
+         <resource id="version" path="v2">
+            <resource id="tenant_id" path="{tenant_id}">
+               <param name="tenant_id" style="template" type="csapi:UUID">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                     <para>The tenant ID in a multi-tenancy cloud.</para>
+                  </wadl:doc>
+               </param>
+               <resource id="extensions" path="extensions">
+                  <method href="#getExtensions" />
+               </resource>
+               <resource id="limits" path="limits">
+                  <method href="#getLimits" />
+               </resource>
+               <resource id="scheduler-stats" path="scheduler-stats">
+                  <resource id="pools" path="pools">
+                     <method href="#getPools" />
+                     <resource id="detail-pools" path="detail">
+                        <method href="#getPoolsDetails" />
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="shares" path="shares">
+                  <method href="#createShare" />
+                  <method href="#getShares" />
+                  <resource path="detail" id="detail-share">
+                     <method href="#getSharesDetails" />
+                  </resource>
+                  <resource path="{share_id}" id="share_id">
+                     <param name="share_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing share.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getShare" />
+                     <method href="#updateShare" />
+                     <method href="#deleteShare" />
+                     <resource id="action" path="action">
+                        <method href="#allowAccess" />
+                        <method href="#denyAccess" />
+                        <method href="#listAccessRules" />
+                        <method href="#resetShareState" />
+                        <method href="#force-deleteShare" />
+                        <method href="#extendShare" />
+                        <method href="#shrinkShare" />
+                        <method href="#migrateShare" />
+                     </resource>
+                     <resource path="metadata" id="metadata-share">
+                        <method href="#getShareMetadata" />
+                        <method href="#updateShareMetadata" />
+                        <method href="#setShareMetadata" />
+                        <resource path="{key}" id="metadata_key">
+                           <param name="metadata_key" style="template" type="csapi:string">
+                              <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                 <para>The metadata key.</para>
+                              </wadl:doc>
+                           </param>
+                           <method href="#unSetShareMetadata" />
+                        </resource>
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="snapshots" path="snapshots">
+                  <method href="#share-createSnapshot" />
+                  <method href="#share-getSnapshots" />
+                  <resource path="detail" id="detail-snapshot">
+                     <method href="#share-getSnapshotsDetails" />
+                  </resource>
+                  <resource path="{snapshot_id}" id="snapshot_id">
+                     <param name="snapshot_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing snapshot.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#share-getSnapshot" />
+                     <method href="#share-updateSnapshot" />
+                     <method href="#share-deleteSnapshot" />
+                     <resource id="snapshot-action" path="action">
+                        <method href="#resetSnapshotState" />
+                        <method href="#forceshare-deleteSnapshot" />
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="share-networks" path="share-networks">
+                  <method href="#createShareNetwork" />
+                  <method href="#getShareNetworks" />
+                  <resource path="detail" id="detail-share-network">
+                     <method href="#getShareNetworksDetails" />
+                  </resource>
+                  <resource path="{share_network_id}" id="share_network_id">
+                     <param name="share_network_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing share network.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getShareNetwork" />
+                     <method href="#updateShareNetwork" />
+                     <method href="#deleteShareNetwork" />
+                     <resource id="share-network-action" path="action">
+                        <method href="#addSecurityService" />
+                        <method href="#removeSecurityService" />
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="security-services" path="security-services">
+                  <method href="#createSecurityService" />
+                  <method href="#getSecurityServices" />
+                  <resource path="detail" id="detail-security-service">
+                     <method href="#getSecurityServicesDetails" />
+                  </resource>
+                  <resource path="{security_service_id}" id="security_service_id">
+                     <param name="security_service_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing security service.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getSecurityService" />
+                     <method href="#updateSecurityService" />
+                     <method href="#deleteSecurityService" />
+                  </resource>
+               </resource>
+               <resource id="share-servers" path="share-servers">
+                  <method href="#getShareServers" />
+                  <resource path="{share_server_id}" id="share_server_id">
+                     <param name="share_server_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing share server.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getShareServer" />
+                     <resource path="details" id="detail-share-server">
+                        <method href="#getShareServerDetails" />
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="share-type" path="types">
+                  <method href="#share-createShareType" />
+                  <method href="#share-getShareTypes" />
+                  <resource path="default" id="default-share-type">
+                     <method href="#getDefaultShareTypes" />
+                  </resource>
+                  <resource path="{share_type_id}" id="share_type_id">
+                     <param name="share_type_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing share type.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#share-deleteShareType" />
+                     <resource path="extra_specs" id="extra-specs-share-type">
+                        <method href="#getExtraSpecsShareType" />
+                        <method href="#setExtraSpecShareType" />
+                        <resource path="{key}" id="extra-spec-key">
+                           <param name="extra-spec-key" style="template" type="csapi:string">
+                              <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                                 <para>The extra specification key.</para>
+                              </wadl:doc>
+                           </param>
+                           <method href="#unsetExtraSpecShareType" />
+                        </resource>
+                     </resource>
+                     <resource id="share-type-action" path="action">
+                        <method href="#addShareTypeAccess" />
+                        <method href="#removeShareTypeAccess" />
+                     </resource>
+                     <resource id="os-share-type-access" path="os-share-type-access">
+                        <method href="#listShareTypeAccess" />
+                     </resource>
+                  </resource>
+               </resource>
+               <resource id="share-instances" path="share_instances">
+                  <method href="#getShareInstances" />
+                  <resource path="{share_instance_id}" id="share_instance_id">
+                     <param name="share_instance_id" style="template" type="csapi:UUID">
+                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                           <para>The ID of an existing share instance.</para>
+                        </wadl:doc>
+                     </param>
+                     <method href="#getShareInstance" />
+                     <resource id="share-instances-action" path="action">
+                        <method href="#resetShareInstanceState" />
+                        <method href="#force-deleteShareInstance" />
+                     </resource>
+                  </resource>
+               </resource>
+            </resource>
+         </resource>
+      </resource>
+   </resources>
+   <method name="GET" id="share-listVersions">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List versions">
+         <para role="shortdesc">Lists all Shared File Systems API versions.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-versions-response.json" />
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="createShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create share">
+         <para role="shortdesc">Creates a share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-create-request.json" />
+            </wadl:doc>
+            &createShareRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-create-response.json" />
+            </wadl:doc>
+            &createShareResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShares">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List shares">
+         <para role="shortdesc">Lists shares.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            &getSharesRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-list-response.json" />
+            </wadl:doc>
+            &getSharesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getSharesDetails">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List shares (detailed)">
+         <para role="shortdesc">Lists shares with details.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            &getSharesRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-list-detailed-response.json" />
+            </wadl:doc>
+            &getSharesDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share">
+         <para role="shortdesc">Shows information about a specified share.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-show-response.json" />
+            </wadl:doc>
+            &getSharesDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="updateShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update share">
+         <para role="shortdesc">Updates a specified share.</para>
+         <para>You can update these attributes:</para>
+         <itemizedlist>
+            <listitem>
+                <para>
+                    <code>display_name</code>, which also changes the
+                    <code>name</code> of the share.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>display_description</code>, which also changes the
+                    <code>description</code> of the share.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  <code>is_public</code>. Changes the level of visibility.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>If you try to update other attributes, they retain their
+                previous values.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-update-request.json" />
+            </wadl:doc>
+            &updateShareRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-update-response.json" />
+            </wadl:doc>
+            &getSharesDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="deleteShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete share">
+         <para role="shortdesc">Deletes a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            &deleteShareRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="GET" id="getShareMetadata">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share metadata">
+         <para role="shortdesc">Shows the metadata for a specified share.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-show-metadata-response.json" />
+            </wadl:doc>
+            &shareMetadataResponseParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="updateShareMetadata">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update share metadata">
+         <para role="shortdesc">Updates the metadata for a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-update-metadata-request.json" />
+            </wadl:doc>
+            &shareMetadataRequestParameter;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-update-metadata-response.json" />
+            </wadl:doc>
+            &shareMetadataResponseParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="setShareMetadata">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Set share metadata">
+         <para role="shortdesc">Sets the metadata on a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-set-metadata-request.json" />
+            </wadl:doc>
+            &shareMetadataRequestParameter;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-set-metadata-response.json" />
+            </wadl:doc>
+            &shareMetadataResponseParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="unSetShareMetadata">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Unset share metadata">
+         <para role="shortdesc">Unsets the metadata on a specified share.</para>
+         <para>To unset a metadata key value, specify only the key name in
+                the URI.</para>
+      </wadl:doc>
+      <response status="200" />
+   </method>
+   <method name="POST" id="allowAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Allow access">
+         <para role="shortdesc">Grants access to a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-allow-access-request.json" />
+            </wadl:doc>
+            &allowAccessRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-allow-access-response.json" />
+            </wadl:doc>
+            &allowAccessResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="denyAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Deny access">
+         <para role="shortdesc">Denies access to a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-deny-access-request.json" />
+            </wadl:doc>
+            &denyAccessRequestParameters;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="listAccessRules">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List access rules">
+         <para role="shortdesc">Lists access rules for a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-list-access-rules-request.json" />
+            </wadl:doc>
+            &listAccessRulesRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-list-access-rules-response.json" />
+            </wadl:doc>
+            &listAccessRulesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="resetShareState">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Reset share state">
+         <para role="shortdesc">Administrator only. Explicitly updates the state of a specified share.</para>
+         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-reset-state-request.json" />
+            </wadl:doc>
+            &resetShareStateRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="force-deleteShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Force-delete share">
+         <para role="shortdesc">Administrator only. Force-deletes a specified share in any state.</para>
+         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-force-delete-request.json" />
+            </wadl:doc>
+            &force-deleteShareRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="extendShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Extend share">
+         <para role="shortdesc">Increases the size of a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-extend-request.json" />
+            </wadl:doc>
+            &extendShareRequestParameters;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="shrinkShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Shrink share">
+         <para role="shortdesc">Shrinks the size of a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-shrink-request.json" />
+            </wadl:doc>
+            &shrinkShareRequestParameters;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="migrateShare">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Migrate share">
+         <para role="shortdesc">
+            Migrates a specified share from one back end to another. (Since API v2.5.)</para>
+         <para>
+            You can migrate a specified share from one back end to another but
+            both back ends must set the
+            <code>driver_handles_share_servers</code> parameter to
+            <code>False</code>. This action is not supported if one of the
+            back ends is handled by a share driver. You can configure a back
+            end in the <code>manila.conf</code> file.
+         </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-actions-mirate-request.json" />
+            </wadl:doc>
+            &migrateShareRequestParameters;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="share-createSnapshot">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create share snapshot">
+         <para role="shortdesc">Creates a snapshot from a specified share.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-create-request.json" />
+            </wadl:doc>
+            &share-createSnapshotRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-create-response.json" />
+            </wadl:doc>
+            &share-createSnapshotResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="share-getSnapshots">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share snapshots">
+         <para role="shortdesc">Lists all share snapshots.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-list-response.json" />
+            </wadl:doc>
+            &share-getSnapshotsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="share-getSnapshotsDetails">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share snapshots (detailed)">
+         <para role="shortdesc">Lists all share snapshots with details.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-list-detailed-response.json" />
+            </wadl:doc>
+            &share-getSnapshotResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="share-getSnapshot">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share snapshot details">
+         <para role="shortdesc">Shows information for a specified share snapshot.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-show-response.json" />
+            </wadl:doc>
+            &share-getSnapshotResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="share-updateSnapshot">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update share snapshot">
+         <para role="shortdesc">Updates a specified share snapshot.</para>
+         <para>You can update these attributes:</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  <code>display_name</code>, which also changes the
+                  <code>name</code>
+                  of the share snapshot.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  <code>display_description</code>, which also changes the
+                  <code>description</code> of the share snapshot.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  <code>is_public</code>. Changes the level of visibility.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>If you try to update other attributes, they retain their
+                previous values.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-update-request.json" />
+            </wadl:doc>
+            &updateSnapshotRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-update-response.json" />
+            </wadl:doc>
+            &share-getSnapshotResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="share-deleteSnapshot">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete share snapshot">
+         <para role="shortdesc">Deletes a specified share snapshot.</para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="POST" id="resetSnapshotState">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Reset share snapshot state">
+         <para role="shortdesc">Administrator only. Explicitly updates the state of a specified share snapshot.</para>
+         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-actions-reset-state-request.json" />
+            </wadl:doc>
+            &resetSnapshotStateRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="forceshare-deleteSnapshot">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Force-delete share snapshot">
+         <para role="shortdesc">Administrator only. Force-deletes a specified share snapshot in any state.</para>
+         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-snapshot-actions-force-delete-request.json" />
+            </wadl:doc>
+            &forceshare-deleteSnapshotRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="createShareNetwork">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create share network">
+         <para role="shortdesc">Creates a share network.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-create-request.json" />
+            </wadl:doc>
+            &createShareNetworkRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-create-response.json" />
+            </wadl:doc>
+            &createShareNetworkResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareNetworks">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share networks">
+         <para role="shortdesc">Lists all share networks.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-list-response.json" />
+            </wadl:doc>
+            &getShareNetworksResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareNetworksDetails">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share networks with details">
+         <para role="shortdesc">Lists all share networks with details.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-list-detailed-response.json" />
+            </wadl:doc>
+            &getShareNetworksDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareNetwork">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share network">
+         <para role="shortdesc">Shows information for a specified share network.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-show-response.json" />
+            </wadl:doc>
+            &getShareNetworksDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="updateShareNetwork">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update share network">
+         <para role="shortdesc">Updates a specified share network.</para>
+         <para>
+            Note that if specified share network is used by any share server,
+            you can update only the <code>name</code> and
+            <code>description</code> attributes.
+         </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-update-request.json" />
+            </wadl:doc>
+            &updateShareNetworkRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-update-response.json" />
+            </wadl:doc>
+            &getShareNetworksDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="deleteShareNetwork">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete share network">
+         <para role="shortdesc">Deletes a specified share network.</para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="POST" id="addSecurityService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Add security service to share network">
+         <para role="shortdesc">Add security service to a specified share network.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-add-security-service-request.json" />
+            </wadl:doc>
+            &addSecurityServiceRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-add-security-service-response.json" />
+            </wadl:doc>
+            &getShareNetworksDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="removeSecurityService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove security service from share network">
+         <para role="shortdesc">Remove security service from a specified share network.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-remove-security-service-request.json" />
+            </wadl:doc>
+            &removeSecurityServiceRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-network-remove-security-service-response.json" />
+            </wadl:doc>
+            &getShareNetworksDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="createSecurityService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create security service">
+         <para role="shortdesc">Creates a security service.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-create-request.json" />
+            </wadl:doc>
+            &createSecurityServiceRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-create-response.json" />
+            </wadl:doc>
+            &createSecurityServiceResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getSecurityServices">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List security services">
+         <para role="shortdesc">Lists all security services.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-list-response.json" />
+            </wadl:doc>
+            &getSecurityServicesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getSecurityServicesDetails">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List security services with details">
+         <para role="shortdesc">Lists all security services with details.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-list-detailed-response.json" />
+            </wadl:doc>
+            &getSecurityServicesDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getSecurityService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show security service">
+         <para role="shortdesc">Shows information for a specified security service.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-show-response.json" />
+            </wadl:doc>
+            &getSecurityServicesDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="PUT" id="updateSecurityService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update security service">
+         <para role="shortdesc">Updates a specified security service.</para>
+         <para>
+            If the security service is in <code>active</code> state, you
+            can update only the <code>name</code> and <code>description</code>
+            attributes. A security service in <code>active</code> state is
+            attached to a share network with an associated share server.
+         </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-update-request.json" />
+            </wadl:doc>
+            &updateSecurityServiceRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-security-service-update-response.json" />
+            </wadl:doc>
+            &getSecurityServicesDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="deleteSecurityService">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete security service">
+         <para role="shortdesc">Deletes a specified security service.</para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="GET" id="getShareServers">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share servers">
+         <para role="shortdesc">Lists all share servers.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-server-list-response.json" />
+            </wadl:doc>
+            &getShareServersResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareServer">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share server">
+         <para role="shortdesc">Shows information for a specified share server.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-server-show-response.json" />
+            </wadl:doc>
+            &getShareServerResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareServerDetails">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share server details">
+         <para role="shortdesc">Shows the details for a specified share server.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-server-show-detailes-response.json" />
+            </wadl:doc>
+            &getShareServerDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getLimits">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get share limits">
+         <para role="shortdesc">Gets share limits.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-limits-response.json" />
+            </wadl:doc>
+            &getLimitsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getExtensions">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List extensions">
+         <para role="shortdesc">Lists extensions.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-extensions-list-response.json" />
+            </wadl:doc>
+            &getExtensionsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="share-createShareType">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create share type">
+         <para role="shortdesc">Creates a share type.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-create-request.json" />
+            </wadl:doc>
+            &share-createShareTypeRequestParameters;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-create-response.json" />
+            </wadl:doc>
+            &share-createShareTypeResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="share-getShareTypes">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share types">
+         <para role="shortdesc">Lists all share types.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-list-response.json" />
+            </wadl:doc>
+            &share-createShareTypeResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getDefaultShareTypes">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List default share types">
+         <para role="shortdesc">Lists default share types.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-list-default-response.json" />
+            </wadl:doc>
+            &share-createShareTypeResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="share-deleteShareType">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete share type">
+         <para role="shortdesc">Deletes a specified share type.</para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="POST" id="setExtraSpecShareType">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Set extra spec">
+         <para role="shortdesc">Sets an extra specification of the share type.</para>
+         <para>
+            It is up to each driver implementation what extra specification
+            keys to use. For details, see <link xlink:type="simple"
+            xlink:href="http://docs.openstack.org/developer/manila/devref/capabilities_and_extra_specs.html">
+            Capabilities and Extra-Specs</link> and documentation for a
+            specified driver.
+        </para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-set-request.json" />
+            </wadl:doc>
+            &setExtraSpecShareTypeRequestParameter;
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-set-response.json" />
+            </wadl:doc>
+            &setExtraSpecShareTypeRequestParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getExtraSpecsShareType">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List extra specs">
+         <para role="shortdesc">Lists the extra specifications for the specified share type.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-list-extra-specs-response.json" />
+            </wadl:doc>
+            &getExtraSpecsShareTypeResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="DELETE" id="unsetExtraSpecShareType">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Unset a specified extra spec">
+         <para role="shortdesc">Unsets an extra specification of the share type.</para>
+      </wadl:doc>
+      <response status="202" />
+   </method>
+   <method name="POST" id="addShareTypeAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Add share type access">
+         <para role="shortdesc">Adds share type access for a specified project.</para>
+         <para>You can add access to private share types only.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-access-add-request.json" />
+            </wadl:doc>
+            &addShareTypeAccessRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="removeShareTypeAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove share type access">
+         <para role="shortdesc">Removes share type access from a specified project.</para>
+         <para>You can remove access from private share types only.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-access-remove-request.json" />
+            </wadl:doc>
+            &removeShareTypeAccessRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="GET" id="listShareTypeAccess">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share type access">
+         <para role="shortdesc">Shows access information for a specified share type.</para>
+         <para>You can view access information for private share types only.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-type-access-list-response.json" />
+            </wadl:doc>
+            &listShareTypeAccessResponseParameter;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareInstances">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List share instances">
+         <para role="shortdesc">Lists all share instances.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-instance-list-response.json" />
+            </wadl:doc>
+            &getShareInstancesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getShareInstance">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show share instance">
+         <para role="shortdesc">Shows information about a specified share instance.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-show-instance-response.json" />
+            </wadl:doc>
+            &getShareInstancesResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="POST" id="resetShareInstanceState">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Reset share instance state">
+         <para role="shortdesc">Administrator only. Explicitly updates the state of a specified share instance.</para>
+         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-instance-actions-reset-state-request.json" />
+            </wadl:doc>
+            &resetShareInstanceStateRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="POST" id="force-deleteShareInstance">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Force-delete share instance">
+         <para role="shortdesc">Administrator only. Force-deletes a specified share instance.</para>
+         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-share-instance-actions-force-delete-request.json" />
+            </wadl:doc>
+            &force-deleteShareInstanceRequestParameter;
+         </representation>
+      </request>
+      <response status="202" />
+   </method>
+   <method name="GET" id="getPools">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List back-end storage pools">
+         <para role="shortdesc">Lists all back-end storage pools.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-list-pools-response.json" />
+            </wadl:doc>
+            &getPoolsResponseParameters;
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="getPoolsDetails">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List back-end storage pools with details">
+         <para role="shortdesc">Lists all storage pools for the specified back end, with details.</para>
+      </wadl:doc>
+      <response status="200">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="samples/manila-list-pools-detailed-response.json" />
+            </wadl:doc>
+            &getPoolsDetailsResponseParameters;
+         </representation>
+      </response>
+   </method>
+</application>
