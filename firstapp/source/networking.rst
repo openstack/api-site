@@ -12,7 +12,7 @@ In this section of the tutorial, we introduce the Networking API.
 This will enable us to build networking topologies that separate
 public traffic accessing the application from traffic between the API
 and the worker components.  We also introduce load balancing for
-resilience, and create a secure backend network for communication between
+resilience, and create a secure back-end network for communication between
 the database, webserver, file storage, and worker components.
 
 .. warning:: This section assumes your cloud provider has implemented the
@@ -503,7 +503,7 @@ Neutron LbaaS API
 The OpenStack Networking API provides support for creating
 loadbalancers, which can be used to scale the Fractal app web
 service. In the following example, we create two compute instances via
-the Compute API, then instantiate a loadbalancer that will use a
+the Compute API, then instantiate a load balancer that will use a
 virtual IP (VIP) for accessing the web service offered by the two
 compute nodes. The end result will be the following network topology:
 
@@ -685,8 +685,8 @@ You should be able to see them in the member list:
     | f3ba0605-4926-4498-b86d-51002892e93a | 203.0.113.22 |            80 |      1 | True           | ACTIVE |
     +--------------------------------------+--------------+---------------+--------+----------------+--------+
 
-Now let's create a healthmonitor that will ensure that members of the
-loadbalancer pool are active and able to respond to requests. If a
+Now let's create a health monitor that will ensure that members of the
+load balancer pool are active and able to respond to requests. If a
 member in the pool dies or is unresponsive, the member is removed from
 the pool so that client requests are routed to another active member.
 
@@ -755,7 +755,7 @@ Now let's look at the big picture.
 Final result
 ~~~~~~~~~~~~
 
-With the addition of the loadbalancer, the Fractal app's networking
+With the addition of the load balancer, the Fractal app's networking
 topology now reflects the modular nature of the application itself.
 
 
@@ -794,7 +794,7 @@ topology now reflects the modular nature of the application itself.
 Next steps
 ~~~~~~~~~~
 
-You should now be fairly confident working with Network API. There
+You should now be fairly confident working with the Network API. There
 are several calls we did not cover. To see these and more, refer to
 the volume documentation of your SDK, or try a different step in the
 tutorial, including:
