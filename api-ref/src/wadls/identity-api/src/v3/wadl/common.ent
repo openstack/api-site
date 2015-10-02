@@ -1,1265 +1,309 @@
-
-     <!--
-         A collection of common faults, these are pretty much expected
-         in every request.
-     -->
+<!-- ************************************ -->
+<!-- FAULTS                               -->
+<!-- ************************************ -->
+<!-- A collection of common faults, these are pretty much expected in every request. -->
 <!ENTITY fault400 '
 <response status="400" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Bad Request">
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Bad Request">
     <representation mediaType="application/xml" element="identity:badRequest"/>
     <representation mediaType="application/json"/>
 </response>'>
 <!ENTITY fault401 '
 <response status="401" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Unauthorized">
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Unauthorized">
     <representation mediaType="application/xml" element="identity:unauthorized"/>
     <representation mediaType="application/json"/>
 </response>'>
 <!ENTITY fault403 '
 <response status="403" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Forbidden">
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Forbidden">
     <representation mediaType="application/xml" element="identity:forbidden"/>
     <representation mediaType="application/json"/>
 </response>'>
-<!ENTITY fault405 '
-<response status="405" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Method Not Allowed">
-    <representation mediaType="application/xml" element="identity:badMethod"/>
-    <representation mediaType="application/json"/>
-</response>'>
-<!ENTITY fault413 '
-<response status="413" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Request Entity Too Large">
-    <representation mediaType="application/xml" element="identity:overLimit"/>
-    <representation mediaType="application/json"/>
-</response>'>
-<!ENTITY fault503 '
-<response status="503" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Service Unavailable">
-    <representation mediaType="application/xml" element="identity:serviceUnavailable"/>
-    <representation mediaType="application/json"/>
-</response>'>
-<!ENTITY commonFaults '
-&fault400; &fault401; &fault403; &fault405; &fault413; &fault503;'>
-<!--
-          Faults on GET
- -->
-<!ENTITY getFaults '
+<!ENTITY fault404 '
 <response status="404" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Not Found">
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Not Found">
     <representation mediaType="application/xml"
         element="identity:itemNotFound"/>
     <representation mediaType="application/json"/>
 </response>'>
-<!--
-          Faults on POST/PUT
--->
-<!ENTITY postPutFaults '
+<!ENTITY fault405 '
+<response status="405" xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Method Not Allowed">
+    <representation mediaType="application/xml" element="identity:badMethod"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault409 '
+<response status="409" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml"
+        element="csapi:conflict"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault413 '
+<response status="413" xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Request Entity Too Large">
+    <representation mediaType="application/xml" element="identity:overLimit"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault415 '
 <response status="415" xmlns="http://wadl.dev.java.net/2009/02"
-        xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Unsupported Media Type">
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Unsupported Media Type">
     <representation mediaType="application/xml"
         element="identity:badMediaType"/>
     <representation mediaType="application/json"/>
 </response>'>
+<!ENTITY fault503 '
+<response status="503" xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Service Unavailable">
+    <representation mediaType="application/xml" element="identity:serviceUnavailable"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!-- ************************************** -->
+<!-- Faults on GET - includes common faults -->
+<!-- ************************************** -->
+<!ENTITY getFaults '
+&fault400;
+&fault401;
+&fault403;
+&fault404;
+&fault405;
+&fault413;
+&fault503;'>
+<!-- ******************************************* -->
+<!-- Faults on POST/PUT - includes common faults -->
+<!-- ******************************************* -->
+<!ENTITY postPutDeleteFaults '
+&fault400;
+&fault401;
+&fault403;
+&fault404;
+&fault405;
+&fault409;
+&fault413;
+&fault415;
+&fault503;'>
+<!-- *************************************** -->
+<!-- REQUEST HEADERS                         -->
+<!-- *************************************** -->
+<!ENTITY AcceptRequestHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="Accept"
+    style="header" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A list of one or more representation schemes that are accepted in
+            the response to this request. Use the semicolon (<code>;</code>) character to
+            separate multiple schemes. See <link
+            xlink:href="http://www.w3.org/Protocols/HTTP/HTRQ_Headers.html#z3">Accept</link>.
+        </para>
+        <para>
+            (Since v3.3) If the <code>Accept</code> request header value is
+            <code>application/json-home</code>, the call returns a <link
+            xlink:href="http://tools.ietf.org/html/draft-nottingham-json-home-00">JSON
+            Home document</link>. The JSON Home document includes all core
+            components and the resources for any enabled extensions and excludes
+            the resources for disabled extensions.
+        </para>
+        <para>
+            Note that the client must check the <code>Content-Type</code>
+            header value in the response because earlier servers return a
+            normal JSON response rather than a JSON Home document.
+        </para>
+    </wadl:doc>
+</param>'>
 <!ENTITY authTokenHeader '
 <param name="X-Auth-Token" style="header"
     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
     required="true">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>A valid
-            authentication token for an administrative
-        user.</para></wadl:doc>
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A valid authentication token for an administrative user.
+        </para>
+    </wadl:doc>
 </param>'>
-<!ENTITY subjectTokenHeader '
+<!ENTITY subjectTokenRequestHeader '
+<param name="X-Subject-Token" style="header"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The authentication token for which you want to perform the
+            operation.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- RESPONSE HEADERS                     -->
+<!-- ************************************ -->
+<!ENTITY subjectTokenResponseHeader '
 <param name="X-Subject-Token" style="header"
     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
     required="true">
     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>The token
-            ID.</para></wadl:doc>
-</param>'>
-<!-- list services parameters -->
-<!ENTITY typeQueryParam '
-<param name="type" style="query" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>Filters
-            by service type. Service types include compute, ec2,
-            image, and identity.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY user_idQueryParam '
-<param name="user_id" style="query" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>Filters
-            on user_id.</para>
-    </wadl:doc>
-</param>'>
-<!-- listGroupsParams -->
-<!ENTITY domain_idQueryParam '
-<param name="domain_id" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>Filters
-            on domain_id.</para></wadl:doc>
-</param>'>
-<!ENTITY parent_idQueryParam '
-<param name="parent_id" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>Filters
-            on parent_id.</para></wadl:doc>
-</param>'>
-<!--<!ENTITY addPolicyParams '-->
-<!ENTITY blobRequestParam '
-<param name="blob" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            policy rule set itself, as a serialized blob.
-</para></wadl:doc>
-</param>'>
-<!ENTITY enabledServiceRequestParam '
-<param name="enabled" style="plain"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
         <para>
-            Enables or disables a service. If <code>true</code>, the service
-            is enabled. If <code>false</code>, the service is disabled.
-            Default is <code>true</code>.
+            The authentication token.
         </para>
-    </wadl:doc>
-</param>'>
-<!ENTITY typeRequestParam '
-<param name="type" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
         <para>
-            The MIME media type of the serialized policy blob. From the
-            perspective of the Identity API, a policy blob can be based on any
-            technology. In OpenStack, the <code>policy.json</code> blob
-            (<code>type="application/json"</code>) is the conventional
-            solution. However, you might want to use an alternative policy
-            engine that uses a different policy language type. For example,
-            <code>type="application/xacml+xml"</code>.
+            An authentication response returns the token ID in this header
+            rather than in the response body.
         </para>
     </wadl:doc>
 </param>'>
-<!ENTITY statusParam '
-<param name="status" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-        <para>The status of the version. For example,
-                <code>experimental</code> or
-            <code>stable</code>.</para></wadl:doc>
-</param>'>
-<!ENTITY versionParam '
-<param name="version" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-        <para>
-            A <code>version</code> object.
-        </para>
-    </wadl:doc>
-</param>'>
-<!ENTITY media-typesParam '
-<param name="media-types" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>A
-                <code>media-types</code> object, which shows the
-            supported media types.</para></wadl:doc>
-</param>'>
-<!ENTITY version-idParam '
-<param name="id" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            version ID, such as <code>v3.0</code>.</para></wadl:doc>
-</param>'>
-<!ENTITY version-linksParam '
-<param name="links" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            version links.</para></wadl:doc>
-</param>'>
-<!--<!ENTITY listPolicyParams '-->
-<!ENTITY blobResponseParam '
-<param name="blob" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            policy rule set itself, as a serialized blob.</para></wadl:doc>
-</param>'>
-<!ENTITY idResponseParam '
-<param name="id" style="plain" type="csapi:uuid"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            credential ID.</para></wadl:doc>
-</param>'>
-<!ENTITY linksResponseParam '
-<param name="links" style="plain" type="csapi:dict"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            ><para>Policy links.</para></wadl:doc>
-</param>'>
-<!ENTITY project_idRequestParam '
-<param name="project_id" style="plain" type="csapi:uuid"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            UUID for the project.</para></wadl:doc>
-</param>'>
-<!ENTITY project_idQueryParam '
-<param name="project_id" style="query" type="csapi:uuid"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Filters on the
-            UUID for a project.</para></wadl:doc>
-</param>'>
-<!ENTITY project_idResponseParam '
-<param name="project_id" style="plain" type="csapi:uuid"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            UUID for the project.</para></wadl:doc>
-</param>'>
-<!ENTITY typeRequestParam '
-<param name="type" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            MIME media type of the serialized policy
-        blob.</para></wadl:doc>
-</param>'>
-<!ENTITY typeResponseParam '
-<param name="type" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            MIME media type of the serialized policy
-        blob.</para></wadl:doc>
-</param>'>
-<!ENTITY user_idRequestParam '
-<param name="user_id" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            ID of the user who owns the credential.</para></wadl:doc>
-</param>'>
-<!ENTITY user_idResponseParam '
-<param name="user_id" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            ID of the user who owns the credential.</para></wadl:doc>
-</param>'>
-<!--<!ENTITY listEndpointsParams-->
-<!ENTITY interfaceQueryParam '
-<param name="interface" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook"><para>Filters by
-            interface.</para></wadl:doc>
-</param>'>
-<!ENTITY service_idQueryParam '    
-<param name="service_id" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook"><para>Filters by
-            service_id.</para></wadl:doc>
-</param>'>
-<!ENTITY descriptionResponseParam '
-<param name="description" style="plain"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>The
-            description.</para></wadl:doc>
-</param>'>
-<!ENTITY enabledResponseParam '
-<param name="enabled" style="plain"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>If <code>true</code>,
-            the domain is enabled. If <code>false</code>, the domain is
-            disabled.</para></wadl:doc>
-</param>'>
-<!ENTITY idResponseParam '
-<param name="id" style="plain" type="csapi:uuid"
-    xmlns="http://wadl.dev.java.net/2009/02" required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>The
-            ID for the resource.</para></wadl:doc>
-</param>'>
-<!ENTITY linksResponseParam '
-<param name="links" style="plain"
-    xmlns="http://wadl.dev.java.net/2009/02"
-    type="xsd:string" required="false">
+<!-- ************************************ -->
+<!-- TEMPLATE PARAMETERS                  -->
+<!-- ************************************ -->
+<!ENTITY credential_idTemplateParameter '
+<param name="credential_id" style="template"
+    type="capi:uuid" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
     <wadl:doc
         xmlns="http://docbook.org/ns/docbook"
         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        ><para>Links to the
-            resource.</para></wadl:doc>
-</param>'>
-<!ENTITY nameResponseParam '
-<param name="name" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>The
-            name of the resource.</para></wadl:doc>
-</param>'>
-<!ENTITY nameEndpointResponseParam '
-<param name="name" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>The
-            name of the endpoint.</para></wadl:doc>
-</param>'>
-<!ENTITY domain_idQueryParam '
-<param name="domain_id" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Filters on a domain_id.</para></wadl:doc>
-</param>'>
-<!ENTITY descriptionQueryParam '
-<param name="description" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Filters on a description.</para></wadl:doc>
-</param>'>
-<!ENTITY nameQueryParam '
-<param name="name" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Filters on a name.</para></wadl:doc>
-</param>'>
-<!ENTITY listRoleUsersParams '
-<param name="name" style="query" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
-            ><para>Filters on role name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY enabledQueryParam '
-<param name="enabled" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
-            ><para>Filters on enabled or disabled roles. Values are
-            <code>true</code> or <code>false</code>.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY emailQueryParam '
-<param name="email" style="query"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
-    required="false">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"
-            ><para>Filters on email.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY authRequestParam '
-<param name="auth" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-        <para>An <code>auth</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY identityRequestParam '
-<param name="identity" style="plain" type="xsd:string"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>An
-                <code>identity</code> object.</para></wadl:doc>
-</param>'>
-<!ENTITY methodsRequestParam '
-<param name="methods" style="plain" required="true"
- type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The authentication method, which is
-                <code>password</code> or <code>token</code>.</para>
-        <para>With password authentication, you can specify user ID
-            and password, user name and password scoped by domain ID
-            or name, or user ID and password scoped by project ID or
-            name with or without domain scope.</para>
-        <para>With token authentication, you specify the token
-            ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY passwordObjectRequestParam '
-<param name="password" style="plain" required="false"
-    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A <code>password</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY tokenRequestParam '
-<param name="token" style="plain" required="false" type="xsd:string"  xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        xml:lang="EN">
         <para>
-            A <code>token</code> object. With token authentication, the
-            <code>id</code> uniquely identifies the token. This method is
-            typically used in combination with a request to change
-            authorization scope.
+            The UUID for the credential.
         </para>
     </wadl:doc>
 </param>'>
-<!ENTITY idRequestParam '
-<param name="id" style="plain" required="false" type="xsd:string"  xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>With password authentication, <code>id</code> uniquely
-            identifies the user. However, <code>name</code> uniquely
-            identifies the user when used in conjunction with a domain
-                <code>id</code> or <code>name</code>.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY userRequestParam '
-<param name="user" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A <code>user</code> object. Specify <code>id</code> or <code>name</code> to uniquely
-            identify the user and <code>password</code>. Use
-                <code>name</code> only in conjunction with a domain
-                <code>id</code> or <code>name</code>.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domainRequestParam '
-<param name="domain" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Specify either <code>id</code> or <code>name</code> to
-            uniquely identify the domain.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY scopeRequestParam '
-<param name="scope" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>Token can be scoped for a domain or project. Specify
-            either an <code>id</code> or <code>name</code> to uniquely
-            identify the domain or project. Use project <code>name</code> only in
-            conjunction with a domain <code>id</code> or
-                <code>name</code>.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY tokenRequestParam '
-<param name="token" style="plain" required="false" type="capi:UUID" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A token ID. If you do not provide a token, you must
-            provide a user name and password.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY passwordRequestParam '
-<param name="password" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The password.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY service_idRequestParam '
-<param name="service_id" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY urlRequestParam '
-<param name="url" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service URL.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY regionRequestParam '
-<param name="region" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service region.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY regionIdRequestParam '
-<param name="region_id" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service region ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY nameRequestParam '
-<param name="name" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY serviceNameRequestParam '
-<param name="name" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY interfaceRequestParam '
-<param name="interface" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The interface type, which is <code>admin</code>, <code>public</code>, or <code>internal</code>.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY endpointRequestParam '
-<param name="endpoint" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>An <code>endpoint</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY endpointsResponseParam '
-<param name="endpoints" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>An <code>endpoints</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY enabledEndpointResponseParam '
-<param name="enabled" style="plain" required="true" type="xsd:boolean" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>If <code>true</code>,
-            the endpoint is enabled. If <code>false</code>, the endpoint is
-            disabled.</para></wadl:doc>
-</param>'>
-<!ENTITY idEndpointResponseParam '
-<param name="id" style="plain" required="true" type="csapi:uuid" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>The endpoint ID.</para></wadl:doc>
-</param>'>
-<!ENTITY linksEndpointResponseParam '
-<param name="links" style="plain" required="true" type="xsd:dict" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The endpoint links.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY service_idRequestParamOpt '
-<param name="service_id" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY urlRequestParamOpt '
-<param name="url" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service URL.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY regionRequestParamOpt '
-<param name="region" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service region.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY user-nameRequestParamOpt '
-<param name="name" style="plain" required="false" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The user name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY interfaceRequestParamOpt '
-<param name="interface" style="plain" required="false" type="xsd:string"
+<!ENTITY domain_idTemplateParameter '
+<param name="domain_id" style="template"
+    type="capi:uuid" required="true"
     xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The interface type, which is <code>admin</code>, <code>public</code>, or
-                <code>internal</code>.</para>
+        <para>
+            The domain ID.
+        </para>
     </wadl:doc>
 </param>'>
-<!ENTITY tokenResponseParam '
-<param name="token" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A <code>token</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domain-idResponseParam '
-<param name="id" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The domain ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domain-id-ForGroupsResponseParam '
-<param name="domain_id" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The domain ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domain-linksResponseParam '
-<param name="links" style="plain" required="true" type="xsd:dict" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The domain links.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domain-nameResponseParam '
-<param name="name" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The domain name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY user-idResponseParam '
-<param name="id" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The user ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY user-linksResponseParam '
-<param name="links" style="plain" required="true" type="xsd:dict" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The user links.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY user-nameResponseParam '
-<param name="name" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The user name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY serviceResponseParam '
-<param name="service" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A <code>service</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY servicesResponseParam '
-<param name="services" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>A <code>services</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY enabledServiceResponseParam '
-<param name="enabled" style="plain"
-    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean"
-    required="true">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN"><para>If <code>true</code>,
-            the service is enabled. If <code>false</code>, the service is
-            disabled.</para></wadl:doc>
-</param>'>
-<!ENTITY service_idResponseParam '
-<param name="id" style="plain" required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-        <para>The service ID.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY service_nameResponseParam '
-<param name="name" style="plain" required="true" type="xsd:string"
+<!ENTITY endpoint_idTemplateParameter '
+<param name="endpoint_id" style="template"
+    type="capi:uuid" required="true"
     xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The service name.</para>
+        <para>
+            The endpoint ID.
+        </para>
     </wadl:doc>
 </param>'>
-<!ENTITY service_typeResponseParam '
-<param name="type" style="plain" required="true" type="xsd:string"
+<!ENTITY group_idTemplateParameter '
+<param name="group_id" style="template"
+    type="capi:uuid" required="true"
     xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The service type.</para>
+        <para>
+            The group ID.
+        </para>
     </wadl:doc>
 </param>'>
-<!ENTITY service_typeRequestParam '
-<param name="type" style="plain" required="true" type="xsd:string"
+<!ENTITY domain-groupTemplateParameter '
+<param name="group" style="template"
+    type="capi:uuid" required="true"
     xmlns="http://wadl.dev.java.net/2009/02">
-    <wadl:doc xmlns="http://docbook.org/ns/docbook" xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The service type.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY service_linksResponseParam '
-<param name="links" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The service links.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domainsResponseParam '
-<param name="domains" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>A <code>domains</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domain_descriptionRequestParam '
-<param name="description" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The domain description.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY domain_enabledRequestParam '
-<param name="enabled" style="plain" type="xsd:boolean" xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>Enables or disables a domain.</para>
         <para>
-            Set to <code>true</code> to enable the domain or <code>false</code> to disable the
-            domain.
+            The group name, which is <code>ldap</code> or
+            <code>identity</code>.
         </para>
     </wadl:doc>
 </param>'>
-<!ENTITY domain_nameRequestParam '
-<param name="name" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The domain name.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a role parameter -->
-<!ENTITY role_nameRequestParam '
-<param name="name" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The role name.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY roleObjectResponseParam '
-<param name="role" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The <code>role</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY roleResponseParam '
-<param name="id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The role ID.</para>
-    </wadl:doc>
-</param>
-<param name="links" style="plain" type="xsd:dict"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The links for the role.</para>
-    </wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The role name.</para>
-    </wadl:doc>
-</param>'>
-<!-- list roles parameter -->
-<!ENTITY rolesObjectResponseParam '
-<param name="roles" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The <code>roles</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY rolesLinksResponseParam '
-<param name="links" style="plain" type="xsd:dict"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The links for the <code>roles</code> resource.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a group parameters -->
-<!ENTITY groupCreateRequestParams '
-<param name="description" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The group description.</para>
-    </wadl:doc>
-</param>
-<param name="domain_id" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the domain for the group.</para>
-    </wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The group name.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a group response parameters -->
-<!ENTITY groupObjectResponseParams '
-<param name="group" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The <code>group</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY groupResponseParams '
-<param name="group" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The <code>group</code> object.</para>
-    </wadl:doc>
-</param>
-<param name="description" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The group description.</para>
-    </wadl:doc>
-</param>
-<param name="domain_id" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the domain for the group.</para>
-    </wadl:doc>
-</param>
-<param name="id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The group ID.</para>
-    </wadl:doc>
-</param>
-<param name="links" style="plain" type="xsd:dict"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The links for the group.</para>
-    </wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The group name.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a project request parameters -->
-<!ENTITY projectCreateRequestParams '
-<param name="description" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The project description.</para>
-    </wadl:doc>
-</param>
-<param name="domain_id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the domain for the project.</para>
-    </wadl:doc>
-</param>
-<param name="parent_id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the parent project.</para>
-    </wadl:doc>
-</param>
-<param name="enabled" style="plain"
- type="xsd:boolean"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>Enables or disables a project.</para>
-        <para>
-            Set to <code>true</code> to enable the project or
-            <code>false</code> to disable the project. Default is
-            <code>true</code>.
-        </para>
-    </wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The project name.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a project response parameters -->
-<!ENTITY projectCreateResponseParams '
-<param name="description" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The project description.</para>
-    </wadl:doc>
-</param>
-<param name="domain_id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the domain for the project.</para>
-    </wadl:doc>
-</param>
-<param name="parent_id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the parent project.</para>
-    </wadl:doc>
-</param>
-<param name="enabled" style="plain"
- type="xsd:boolean"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
+<!ENTITY domain-group-optionTemplateParameter '
+<param name="option" style="template"
+    type="capi:uuid" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
         <para>
-            If set to <code>true</code>, project is enabled. If set to
-            <code>false</code>, project is disabled.
-        </para>
-    </wadl:doc>
-</param>
-<param name="id" style="plain" type="csapi:uuid"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            ID for the project.</para></wadl:doc>
-</param>
-<param name="links" style="plain" type="xsd:dict"
-    xmlns="http://wadl.dev.java.net/2009/02" required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-            project links.</para></wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The project name.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a user request parameters -->
-<!ENTITY userCreateRequestParams '
-<param name="user" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>A <code>user</code> object.</para>
-    </wadl:doc>
-</param>
-<param name="default_project_id" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The default tenant for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="description" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The user description.</para>
-    </wadl:doc>
-</param>
-<param name="domain_id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the domain for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="email" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The email address for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="enabled" style="plain" type="xsd:boolean"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>
-            Enables or disables the new user. To enable the user, set to
-            <code>true</code>. To disable the user, set to <code>false</code>.
-            Default is <code>true</code>.
-        </para>
-    </wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The user name.</para>
-    </wadl:doc>
-</param>
-<param name="password" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The user password. Required for some authentication back ends.</para>
-    </wadl:doc>
-</param>'>
-<!-- create a user response parameters -->
-<!ENTITY userCreateResponseParams '
-<param name="user" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>A <code>user</code> object.</para>
-    </wadl:doc>
-</param>
-<param name="default_project_id" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The default tenant for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="description" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The user description.</para>
-    </wadl:doc>
-</param>
-<param name="domain_id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID of the domain for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="email" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The email address for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="enabled" style="plain" type="xsd:boolean"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>
-            If the user is enabled, this value is <code>true</code>. If the
-            user is disabled, this value is <code>false</code>.
-        </para>
-    </wadl:doc>
-</param>
-<param name="name" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The user name.</para>
-    </wadl:doc>
-</param>
-<param name="id" style="plain" type="csapi:uuid"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The ID for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="links" style="plain" type="xsd:dict"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The links for the new user.</para>
-    </wadl:doc>
-</param>
-<param name="password" style="plain" type="xsd:string"
- xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-     xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The user password. Required for some authentication back ends.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY regionObjectRequestParam '
-<param name="region" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The <code>region</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY regionsObjectRequestParam '
-<param name="regions" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The <code>regions</code> object.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY region_descriptionRequestParam '
-<param name="description" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>The region description.</para>
-    </wadl:doc>
-</param>'>
-<!ENTITY parent_region_idRequestParam '
-<param name="parent_region_id" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
-        xml:lang="EN">
-        <para>
-            If the region is hierarchically a child of another region, set
-            this parameter to the ID of the parent region.
+            The option name. For the <code>ldap</code> group, a valid value is
+            <code>url</code> or <code>user_tree_dn</code>. For the
+            <code>identity</code> group, a valid value is <code>driver</code>.
         </para>
     </wadl:doc>
 </param>'>
-<!ENTITY region_idRequestParam '
-<param name="id" style="plain"
-type="xsd:string" required="false"
-xmlns="http://wadl.dev.java.net/2009/02">
-<wadl:doc
-    xmlns="http://docbook.org/ns/docbook"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xml:lang="EN">
-    <para>
-        The user-defined region ID.
-    </para>
-</wadl:doc>
+<!ENTITY policy_idTemplateParameter '
+<param name="policy_id" style="template"
+    type="xsd:string" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The policy ID.
+        </para>
+    </wadl:doc>
 </param>'>
-<!ENTITY user_defined_region_idRequestParam '
+<!ENTITY project_idTemplateParameter '
+<param name="project_id" style="template"
+    type="xsd:string" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The project ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY region_idTemplateParameter '
+<param name="region_id" style="template"
+    type="capi:uuid" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The region ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY role_idTemplateParameter '
+<param name="role_id" style="template"
+    type="capi:uuid" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+       xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+        <para>
+            The role ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service_idTemplateParameter '
+<param name="service_id" style="template"
+    type="capi:uuid" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The service ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user_defined_region_idTemplateParameter '
 <param name="user_defined_region_id" style="template"
-type="xsd:string" required="true"
-xmlns="http://wadl.dev.java.net/2009/02">
+    type="xsd:string" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
 <wadl:doc
     xmlns="http://docbook.org/ns/docbook"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -1280,52 +324,3084 @@ xmlns="http://wadl.dev.java.net/2009/02">
     </para>
 </wadl:doc>
 </param>'>
-<!ENTITY RegionsResponseParams '
-<param name="description" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
-    required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
+<!ENTITY user_idTemplateParameter '
+<param name="user_id" style="template"
+    type="capi:uuid" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
         xml:lang="EN">
-        <para>The region description.</para>
+        <para>
+            The user ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- QUERY PARAMETERS                     -->
+<!-- ************************************ -->
+<!ENTITY descriptionQueryParameter '
+<param name="description" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain_idQueryParameter '
+<param name="domain_id" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified domain ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY emailQueryParameter '
+<param name="email" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xml:lang="EN">
+        <para>
+            Filters the response by a specified email.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-enabledQueryParameter '
+<param name="enabled" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by either enabled (<code>true</code>) or
+            disabled (<code>false</code>) domains.
+        </para>
+        <para>
+            Users can authorize against an enabled domain and any of its
+            projects. Users that are owned by an enabled domain can
+            authenticate and receive additional authorization.
+        </para>
+        <para>
+            Users cannot authorize against a disabled domain or any of its
+            projects. Users that are owned by a disabled domain cannot
+            authenticate or receive additional authorization. All tokens that
+            are authorized for a disabled domain or its projects become no
+            longer valid. If you reenable the domain, these tokens are not
+            reenabled.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-enabledQueryParameter '
+<param name="enabled" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by either enabled (<code>true</code>) or
+            disabled (<code>false</code>) groups.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-enabledQueryParameter '
+<param name="enabled" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by either enabled (<code>true</code>) or
+            disabled (<code>false</code>) projects.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY role-enabledQueryParameter '
+<param name="enabled" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by either enabled (<code>true</code>) or
+            disabled (<code>false</code>) roles.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-enabledQueryParameter '
+<param name="enabled" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by either enabled (<code>true</code>) or
+            disabled (<code>false</code>) users.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY interfaceQueryParameter '
+<param name="interface" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook">
+        <para>
+            Filters the response by a specified interface.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-nameQueryParameter '
+<param name="name" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified domain name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-nameQueryParameter '
+<param name="name" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified group name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-nameQueryParameter '
+<param name="name" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified project name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY role-nameQueryParameter '
+<param name="name" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified role name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-nameQueryParameter '
+<param name="name" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified user name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY nocatalogQueryParameter '
+<param name="nocatalog" style="query" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Since v3.1) The authentication response excludes the service
+            catalog. By default, the response includes the service catalog.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY parent_idQueryParameter '
+<param name="parent_id" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Since v3.4) Filters the response by a specified parent ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY parent_region_idQueryParameter '
+<param name="parent_region_id" style="query"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Filters the response by a specified parent region, by ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project_idQueryParameter '
+<param name="project_id" style="query" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            Filters the response by a specified UUID for the project.
+         </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service_idQueryParameter '
+<param name="service_id" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook">
+        <para>
+            Filters the response by a specified service ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-typeQueryParameter '
+<param name="type" style="query" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified MIME media type for the
+            serialized policy blob. For example, <code>application/json</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-typeQueryParameter '
+<param name="type" style="query" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified service type. A valid value is
+            <code>compute</code>, <code>ec2</code>, <code>identity</code>,
+            <code>image</code>, <code>network</code>, or <code>volume</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user_idQueryParameter '
+<param name="user_id" style="query" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a specified user ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- VERSIONS                             -->
+<!-- ************************************ -->
+<!-- ************************************ -->
+<!-- VERSIONS RESPONSE PARAMETERS         -->
+<!-- ************************************ -->
+<!ENTITY common_versionResponseParameters '
+<param name="id" style="plain"
+    type="xsd:string" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The version, such as <code>v3.4</code>.
+        </para>
     </wadl:doc>
 </param>
-<param name="id" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+<param name="links" style="plain"
+    type="xsd:list" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A list of relational links.
+        </para>
+    </wadl:doc>
+</param>
+<param name="media-types" style="plain"
+    type="xsd:list" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A list of media types.
+        </para>
+    </wadl:doc>
+</param>
+<param name="status" style="plain"
+    type="xsd:string" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The current maturity level of the specification, which is
+            <code>stable</code> or <code>deprecated</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY versionResponseParameters '
+<param name="version" style="plain"
+    type="xsd:dict" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>version</code> object.
+        </para>
+    </wadl:doc>
+</param>
+&common_versionResponseParameters;'>
+<!ENTITY versionsResponseParameters '
+<param name="versions" style="plain"
+    type="xsd:dict" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>versions</code> object.
+        </para>
+    </wadl:doc>
+</param>
+<param name="values" style="plain"
+    type="xsd:dict" required="true"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A dictionary of values.
+        </para>
+    </wadl:doc>
+</param>
+&common_versionResponseParameters;'>
+<!-- ************************************ -->
+<!-- CREDENTIALS                          -->
+<!-- ************************************ -->
+<!-- CREDENTIALS REQUEST PARAMETERS       -->
+<!-- ************************************ -->
+<!ENTITY credentialObjectParameter '
+<param name="credential" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>credential</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credentialsObjectParameter '
+<param name="credentials" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>credentials</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-blobRequestParameter '
+<param name="blob" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The credential itself, as a serialized blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-project_idRequestParameter '
+<param name="project_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the associated project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-typeRequestParameter '
+<param name="type" style="plain" required="true" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The credential type, such as <code>ec2</code> or
+            <code>cert</code>. The implementation determines the list of
+            supported types.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-user_idRequestParameter '
+<param name="user_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the user who owns the credential.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- **************************************** -->
+<!-- CREDENTIALS OPTIONAL REQUEST PARAMETERS  -->
+<!-- **************************************** -->
+<!ENTITY credential-blobRequestOptParameter '
+<param name="blob" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The credential itself, as a serialized blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-project_idRequestOptParameter '
+<param name="project_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the associated project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-typeRequestOptParameter '
+<param name="type" style="plain" required="false" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The credential type, such as <code>ec2</code> or
+            <code>cert</code>. The implementation determines the list of
+            supported types.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-user_idRequestOptParameter '
+<param name="user_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the user who owns the credential.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- CREDENTIALS RESPONSE PARAMETERS      -->
+<!-- ************************************ -->
+<!ENTITY credential-blobResponseParameter '
+<param name="blob" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The credential itself, as a serialized blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-typeResponseParameter '
+<param name="type" style="plain" required="true" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The credential type, such as <code>ec2</code> or
+            <code>cert</code>. The implementation determines the list of
+            supported types.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-idResponseParameter '
+<param name="id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the credential.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
     required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>credential</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credentials-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>credentials</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-project_idResponseParameter '
+<param name="project_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the associated project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY credential-user_idResponseParameter '
+<param name="user_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the user who owns the credential.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- DOMAINS                              -->
+<!-- ************************************ -->
+<!-- ************************************ -->
+<!-- DOMAIN REQUEST PARAMETERS            -->
+<!-- ************************************ -->
+<!ENTITY domainObjectParameter '
+<param name="domain" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>domain</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domainsObjectParameter '
+<param name="domains" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>domains</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-descriptionRequestParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The domain description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-enabledRequestParameter '
+<param name="enabled" style="plain" type="xsd:boolean"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Enables or disables the domain.
+        </para>
+        <para>
+            Users can authorize against an enabled domain and any of its
+            projects. Users that are owned by an enabled domain can
+            authenticate and receive additional authorization.
+        </para>
+        <para>
+            Users cannot authorize against a disabled domain or any of its
+            projects. Users that are owned by a disabled domain cannot
+            authenticate or receive additional authorization. All tokens that
+            are authorized for a disabled domain or its projects become no
+            longer valid. If you reenable the domain, these tokens are not
+            reenabled.
+        </para>
+        <para>
+            To enable the domain, set to <code>true</code>. To disable the domain,
+            set to <code>false</code>. Default is <code>true</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-nameRequestParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The domain name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- DOMAIN RESPONSE PARAMETERS           -->
+<!-- ************************************ -->
+<!ENTITY domain-descriptionResponseParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The domain description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-enabledResponseParameter '
+<param name="enabled" style="plain" type="xsd:boolean"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Indicates whether the domain is enabled or disabled.
+        </para>
+        <para>
+            If set to <code>true</code>, the domain is enabled. Users can
+            authorize against an enabled domain and any of its projects. Users
+            that are owned by an enabled domain can authenticate and receive
+            additional authorization.
+        </para>
+        <para>
+            If set to <code>false</code>, the domain is disabled. Users cannot
+            authorize against a disabled domain or any of its projects. Users
+            that are owned by a disabled domain cannot authenticate or receive
+            additional authorization. All tokens that are authorized for a
+            disabled domain or its projects become no longer valid. If you
+            reenable the domain, these tokens are not reenabled.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-idResponseParameter '
+<param name="id" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The domain ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-linksResponseParameter '
+<param name="links" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The links for the <code>domain</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domains-linksResponseParameter '
+<param name="links" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The links for the <code>domains</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-nameResponseParameter '
+<param name="name" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The domain name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- DOMAIN CONFIGURATION                 -->
+<!-- ************************************ -->
+<!-- ************************************ -->
+<!-- DOMAIN CONFIG REQUEST PARAMETERS     -->
+<!-- ************************************ -->
+<!ENTITY domain-configObjectParameter '
+<param name="config" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>config</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-identityObjectParameter '
+<param name="identity" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            An <code>identity</code> object. Required to set the identity group configuration options.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-ldapObjectParameter '
+<param name="ldap" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            An <code>ldap</code> object. Required to set the LDAP group configuration options.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-driverRequestParameter '
+<param name="driver" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The Identity back-end driver.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-user_tree_dnRequestParameter '
+<param name="user_tree_dn" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The base distinguished name (DN) of LDAP, from where all users can
+            be reached. For example, <code>ou=Users,dc=root,dc=org</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-urlRequestParameter '
+<param name="url" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The LDAP URL.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- DOMAIN CONFIG RESPONSE PARAMETERS    -->
+<!-- ************************************ -->
+<!ENTITY domain-driverResponseParameter '
+<param name="driver" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The Identity back-end driver.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-user_tree_dnResponseParameter '
+<param name="user_tree_dn" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The base distinguished name (DN) of LDAP, from where all users can
+            be reached. For example, <code>ou=Users,dc=root,dc=org</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY domain-urlResponseParameter '
+<param name="url" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The LDAP URL.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- ENDPOINTS                            -->
+<!-- ************************************ -->
+<!-- ENDPOINT REQUEST PARAMETERS          -->
+<!-- ************************************ -->
+<!ENTITY endpointObjectParameter '
+<param name="endpoint" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            An <code>endpoint</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpointsObjectParameter '
+<param name="endpoints" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            An <code>endpoints</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-enabledRequestParameter '
+<param name="enabled" style="plain" required="false"
+ type="xsd:boolean" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Defines whether the endpoint appears in the service catalog:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <code>false</code>. The endpoint does not appear
+                    in the service catalog.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>true</code>. The endpoint appears in the service
+                    catalog.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Default is <code>true</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-interfaceRequestParameter '
+<param name="interface" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The interface type, which describes the visibility of the
+            endpoint.
+        </para>
+        <para>
+            A valid value is:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <code>public</code>. Visible by end users on a
+                    publicly available network interface.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>internal</code>. Visible by end users on
+                    an unmetered internal network interface.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>admin</code>. Visible by administrative users on a
+                    secure network interface.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-nameRequestParameter '
+<param name="name" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-regionRequestParameter '
+<param name="region" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Deprecated in v3.2) The geographic location of the service
+            endpoint.
+         </para>
+         <para>
+            Use the <code>region_id</code> parameter instead.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-region_idRequestParameter '
+<param name="region_id" style="plain" required="false"
+       type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Since v3.2) The ID of the region that contains the service
+            endpoint.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-service_idRequestParameter '
+<param name="service_id" style="plain" required="true"
+    type="csapi:uuid" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The UUID of the service to which the endpoint belongs.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-typeRequestParameter '
+<param name="type" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint type.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-urlRequestParameter '
+<param name="url" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint URL.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- ENDPOINT RESPONSE PARAMETERS         -->
+<!-- ************************************ -->
+<!ENTITY endpoint-enabledResponseParameter '
+<param name="enabled" style="plain" required="true"
+    type="xsd:boolean" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Indicates whether the endpoint appears in the service catalog:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <code>false</code>. The endpoint does not appear
+                    in the service catalog.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>true</code>. The endpoint appears in the service
+                    catalog.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-idResponseParameter '
+<param name="id" style="plain" required="true"
+ type="csapi:uuid" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint UUID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-interfaceResponseParameter '
+<param name="interface" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The interface type, which describes the visibility of the
+            endpoint.
+        </para>
+        <para>
+            Value is:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <code>public</code>. Visible by end users on a
+                    publicly available network interface.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>internal</code>. Visible by end users on
+                    an unmetered internal network interface.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>admin</code>. Visible by administrative users on a
+                    secure network interface.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>endpoint</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoints-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>endpoints</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-nameResponseParameter '
+<param name="name" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-regionResponseParameter '
+<param name="region" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Deprecated in v3.2) The geographic location of the service
+            endpoint.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-region_idResponseParameter '
+<param name="region_id" style="plain" required="true"
+       type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Since v3.2) The ID of the region that contains the service
+            endpoint.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-service_idResponseParameter '
+<param name="service_id" style="plain" required="true"
+    type="csapi:uuid" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The UUID of the service to which the endpoint belongs.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-typeResponseParameter '
+<param name="type" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint type.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint-urlResponseParameter '
+<param name="url" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The endpoint URL.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- GROUPS                               -->
+<!-- ************************************ -->
+<!-- ************************************ -->
+<!-- GROUP REQUEST PARAMETERS             -->
+<!-- ************************************ -->
+<!ENTITY groupObjectParameter '
+<param name="group" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>group</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY groupsObjectParameter '
+<param name="groups" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>groups</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-descriptionRequestParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The group description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-domain_idRequestParameter '
+<param name="domain_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the domain that owns the group.
+        </para>
+        <para>
+            If you omit the domain ID, defaults to the domain to which the
+            client token is scoped.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-nameRequestParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The group name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-nameRequestOptParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The group name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-project_idRequestParameter '
+<param name="project_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-user_idRequestParameter '
+<param name="user_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the user who owns the credential.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- GROUP RESPONSE PARAMETERS            -->
+<!-- ************************************ -->
+<!ENTITY group-descriptionResponseParameter '
+<param name="description" style="plain"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The group description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-domain_idResponseParameter '
+<param name="domain_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the domain for the group.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-enabledResponseParameter '
+<param name="enabled" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            If <code>true</code>, the domain is enabled. If
+            <code>false</code>, the domain is disabled.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-idResponseParameter '
+<param name="id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID for the group.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-linksResponseParameter '
+<param name="links" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The links for the <code>group</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY groups-linksResponseParameter '
+<param name="links" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    type="xsd:string" required="false">
+    <wadl:doc
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02">
+        <para>
+            Links to the <code>groups</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY group-nameResponseParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The name of the group.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- POLICIES                             -->
+<!-- ************************************ -->
+<!-- POLICY REQUEST PARAMETERS            -->
+<!-- ************************************ -->
+<!ENTITY policyObjectParameter '
+<param name="policy" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>policy</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policiesObjectParameter '
+<param name="policies" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>policies</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-blobRequestParameter '
+<param name="blob" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The policy rule set itself, as a serialized blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-mime-typeRequestParameter '
+<param name="type" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The MIME media type of the serialized policy blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-project_idRequestParameter '
+<param name="project_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the associated project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-typeRequestParameter '
+<param name="type" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The MIME media type of the serialized policy blob. From the
+            perspective of the Identity API, a policy blob can be based on any
+            technology. In OpenStack, the <code>policy.json</code> blob
+            (<code>type="application/json"</code>) is the conventional
+            solution. However, you might want to use an alternative policy
+            engine that uses a different policy language type. For example,
+            <code>type="application/xacml+xml"</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-user_idRequestParameter '
+<param name="user_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the user who owns the policy.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- POLICY RESPONSE PARAMETERS           -->
+<!-- ************************************ -->
+<!ENTITY policy-idResponseParameter '
+<param name="id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the policy.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-linksResponseParameter '
+<param name="links" style="plain" type="csapi:dict"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>policy</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policies-linksResponseParameter '
+<param name="links" style="plain" type="csapi:dict"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>policies</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-mime-typeResponseParameter '
+<param name="type" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The MIME media type of the serialized policy blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-project_idResponseParameter '
+<param name="project_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the associated project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-rule-blobResponseParameter '
+<param name="blob" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The policy rule itself, as a serialized blob.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policy-user_idResponseParameter '
+<param name="user_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID of the user who owns the policy.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- PROJECTS                             -->
+<!-- ************************************ -->
+<!-- ************************************ -->
+<!-- PROJECT REQUEST PARAMETERS           -->
+<!-- ************************************ -->
+<!ENTITY projectObjectParameter '
+<param name="project" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>project</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY projectsObjectParameter '
+<param name="projects" style="plain" type="xsd:dict"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>projects</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-descriptionRequestParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The project description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-domain_idRequestParameter '
+<param name="domain_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the domain for the project.
+        </para>
+        <para>
+            If you omit the domain ID, default is the domain to which your
+            token is scoped.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-enabledRequestParameter '
+<param name="enabled" style="plain"
+    type="xsd:boolean"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Enables or disables the project.
+        </para>
+        <para>
+            Users can authorize against an enabled project.
+        </para>
+        <para>
+            Users cannot authorize against a disabled project. All tokens that
+            are authorized for a disabled project become no longer valid. If
+            you reenable the project, these tokens are not reenabled.
+        </para>
+        <para>
+            To enable the project, set to <code>true</code>. To disable the project,
+            set to <code>false</code>. Default is <code>true</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-cascade-enabledRequestParameter '
+<param name="enabled" style="plain"
+    type="xsd:boolean"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Enables or disables the project and its subtree.
+        </para>
+        <para>
+            Users can authorize against an enabled project.
+        </para>
+        <para>
+            Users cannot authorize against a disabled project. All tokens that
+            are authorized for a disabled project become no longer valid. If
+            you reenable the project, these tokens are not reenabled.
+        </para>
+        <para>
+            To enable the project and its subtree, set to <code>true</code>.
+            To disable the project and its subtree, set to <code>false</code>.
+            Default is <code>true</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-is_domainRequestParameter '
+<param name="is_domain" style="plain" type="xsd:boolean"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            (Since v3.6) Indicates whether the project also acts as a domain.
+        </para>
+        <para>
+            Set to <code>true</code> to define this project as both a project
+            and domain. As a domain, the project provides a name space in
+            which you can create users, groups, and other projects.
+        </para>
+        <para>
+            Set to <code>false</code> to define this project as a regular
+            project that contains only resources.
+        </para>
+        <para>
+            Default is <code>false</code>.
+        </para>
+        <para>
+            You cannot update this parameter after you create the project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-nameRequestParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The project name, which must be unique within the owning domain.
+            The project can have the same name as its domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-nameRequestOptParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The project name, which must be unique within the owning domain.
+            The project can have the same name as its domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-parent_idRequestParameter '
+<param name="parent_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            (Since v3.4) The ID of the parent project.
+        </para>
+        <para>
+            If you omit the parent project ID, the project is a top-level
+            project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- PROJECT RESPONSE PARAMETERS          -->
+<!-- ************************************ -->
+<!ENTITY project-descriptionResponseParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The project description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-domain_idResponseParameter '
+<param name="domain_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the domain for the project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-enabledResponseParameter '
+<param name="enabled" style="plain"
+     type="xsd:boolean"
+     xmlns="http://wadl.dev.java.net/2009/02"
+     required="true">
+    <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            If set to <code>true</code>, project is enabled. If set to
+            <code>false</code>, project is disabled.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-idResponseParameter '
+<param name="id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The ID for the project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-is_domainResponseParameter '
+<param name="is_domain" style="plain" type="xsd:boolean"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            (Since v3.6) Indicates whether the project also acts as a domain.
+        </para>
+        <para>
+            If set to <code>true</code>, this project acts as both a project
+            and domain. As a domain, the project provides a name space in
+            which you can create users, groups, and other projects.
+        </para>
+        <para>
+            Otherwise, this field does not appear in the response and this
+            project behaves as a regular project that contains only resources.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>project</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY projects-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>projects</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-nameResponseParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The project name. The project can have the same name as its
+            domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY project-parent_idResponseParameter '
+<param name="parent_id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            (Since v3.4) The ID of the parent project. If <code>null</code>,
+            the project is a top-level project.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- REGIONS                              -->
+<!-- ************************************ -->
+<!-- REGION REQUEST PARAMETERS            -->
+<!-- ************************************ -->
+<!ENTITY regionObjectParameter '
+<param name="region" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>region</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY regionsObjectParameter '
+<param name="regions" style="plain" type="xsd:string"
+        xmlns="http://wadl.dev.java.net/2009/02"
+        required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>regions</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY region-descriptionRequestParameter '
+<param name="description" style="plain"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The region description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY region-idRequestParameter '
+<param name="id" style="plain"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A user-defined region ID.
+        </para>
+        <para>
+            If you include characters in the region ID that are not allowed in
+            a URI, you must URL-encode the ID. If you omit an ID, the API
+            assigns an ID to the region.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY region-parent_region_idRequestParameter '
+<param name="parent_region_id" style="plain"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            To make this region a child of another region, set this parameter
+            to the ID of the parent region.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- REGION RESPONSE PARAMETERS           -->
+<!-- ************************************ -->
+<!ENTITY region-descriptionResponseParameter '
+<param name="description" style="plain"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The region description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY region-idResponseParameter '
+<param name="id" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
         xml:lang="EN">
         <para>
             The ID for the region.
         </para>
     </wadl:doc>
-</param>
+</param>'>
+<!ENTITY region-linksResponseParameter '
 <param name="links" style="plain" type="xsd:string"
     xmlns="http://wadl.dev.java.net/2009/02" required="true">
     <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-         links for the region.</para></wadl:doc>
-</param>
-<param name="parent_region_id" style="plain" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>region</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY regions-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>regions</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY region-parent_region_idResponseParameter '
+<param name="parent_region_id" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
     required="true">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
         xml:lang="EN">
         <para>
-            The ID for the parent region.
+            If the region is a child of another region, the ID for the parent
+            region. Otherwise, this value is <code>null</code>.
         </para>
     </wadl:doc>
 </param>'>
-<!ENTITY parent_region_idQueryParam '
-<param name="parent_region_id" style="query" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+<!-- ************************************ -->
+<!-- ROLES                                -->
+<!-- ************************************ -->
+<!-- ************************************ -->
+<!-- ROLE REQUEST PARAMETERS              -->
+<!-- ************************************ -->
+<!ENTITY roleObjectParameter '
+<param name="role" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>role</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY rolesObjectParameter '
+<param name="roles" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>roles</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY role-nameRequestParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The role name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- ROLE RESPONSE PARAMETERS             -->
+<!-- ************************************ -->
+<!ENTITY role-idResponseParameter '
+<param name="id" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The role ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY role-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>role</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY roles-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>roles</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY role-nameResponseParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The role name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- SERVICES                             -->
+<!-- ************************************ -->
+<!-- SERVICE REQUEST PARAMETERS           -->
+<!-- ************************************ -->
+<!ENTITY serviceObjectParameter '
+<param name="service" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>service</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY servicesObjectParameter '
+<param name="services" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>services</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-descriptionRequestParameter '
+<param name="description" style="plain"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
     required="false">
-    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook"
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
         xml:lang="EN">
         <para>
-            Filters the results by a parent region, by ID.
+            The service description.
         </para>
     </wadl:doc>
 </param>'>
-<!ENTITY RegionLinksResponseParam '
+<!ENTITY service-enabledRequestParameter '
+<param name="enabled" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Defines whether the service and its endpoints appear in the
+            service catalog:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <code>false</code>. The service and its endpoints do not appear
+                    in the service catalog.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>true</code>. The service and its endpoints appear in the service
+                    catalog.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Default is <code>true</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-nameRequestParameter '
+<param name="name" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The service name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-region_idRequestParameter '
+<param name="region_id" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            (Since v3.2) The ID of the region that contains the service
+            endpoint.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-service_idRequestParameter '
+<param name="service_id" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The service ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-typeRequestParameter '
+<param name="type" style="plain" required="true" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The service type, which describes the API implemented by the
+            service.
+        </para>
+        <para>
+            A valid value is <code>compute</code>, <code>ec2</code>,
+            <code>identity</code>, <code>image</code>, <code>network</code>,
+            or <code>volume</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-urlRequestParameter '
+<param name="url" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The service URL.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- SERVICE RESPONSE PARAMETERS          -->
+<!-- ************************************ -->
+<!ENTITY service-descriptionResponseParameter '
+<param name="description" style="plain"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The service description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-enabledResponseParameter '
+<param name="enabled" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Defines whether the service and its endpoints appear in the
+            service catalog:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <code>false</code>. The service and its endpoints do not appear
+                    in the service catalog.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>true</code>. The service and its endpoints appear in the service
+                    catalog.
+                </para>
+            </listitem>
+        </itemizedlist>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-idResponseParameter '
+<param name="id" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID of the service.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-linksResponseParameter '
+<param name="links" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>service</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY services-linksResponseParameter '
 <param name="links" style="plain" type="xsd:string"
     xmlns="http://wadl.dev.java.net/2009/02" required="true">
     <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-        xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The
-             links for the regions resource.</para></wadl:doc>
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The links for the <code>services</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-nameResponseParameter '
+<param name="name" style="plain" required="true" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The service name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-regionResponseParameter '
+<param name="region" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The service region.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-region_idResponseParameter '
+<param name="region_id" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The service region ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY service-typeResponseParameter '
+<param name="type" style="plain" required="true" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The service type, which describes the API implemented by the
+            service. Value is <code>compute</code>, <code>ec2</code>,
+            <code>identity</code>, <code>image</code>, <code>network</code>,
+            or <code>volume</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- TOKENS                               -->
+<!-- ************************************ -->
+<!-- TOKEN REQUEST PARAMETERS             -->
+<!-- ************************************ -->
+<!ENTITY authObjectParameter '
+<param name="auth" style="plain" type="xsd:dict"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            An <code>auth</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-methods-tokenRequestParameter '
+<param name="methods" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The authentication method. For token authentication,
+            specify <code>token</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-methods-passwordRequestParameter '
+<param name="methods" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The authentication method. For password authentication,
+            specify <code>password</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-scopeRequestParameter '
+<param name="scope" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The authorization scope.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    Specify <code>project</code> to scope to a project, by ID
+                    or name. If you specify the project by name, you must also
+                    specify the project domain to uniquely identify the
+                    project. Because a project can have the same name as its
+                    owning domain, the scope is determined, as follows:
+                </para>
+                <itemizedlist>
+                    <listitem>
+                        <para>
+                            If the project name is truly unique, the token is
+                            scoped to the project.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            If a name clash exists between a project acting as a
+                            domain and a regular project within that domain, the token
+                            is scoped to the regular project.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            In a name-clash situation, if the user wants the token
+                            scoped to the project acting as the domain, you must
+                            either specify use the project ID to specify the scope or
+                            rename either the project acting as a domain or the
+                            regular project.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    Alternatively, you can use a domain name to uniquely
+                    identify the project.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Specify <code>domain</code> to scope to a domain, by ID
+                    or name with equivalent results to project scoping. The
+                    catalog returned from a domain-scoped request contains all
+                    endpoints of a project-scoped catalog, excluding ones that
+                    require a project ID as part of their URL.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            You cannot simultaneously scope a token to a project and domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-unscopedRequestParameter '
+<param name="scope" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The authorization scope.
+        </para>
+        <para>
+            (Since v3.4) Specify <code>unscoped</code> to make an explicit
+            unscoped token request, which returns an unscoped response without any
+            authorization. This request behaves the same as a token request with no scope
+            where the user has no default project defined.
+        </para>
+        <para>
+            If you do not make an explicit <code>unscoped</code> token request
+            and your role has a default project, the response might return a
+            project-scoped token. If a default project is not defined, a token
+            is issued without an explicit scope of authorization, which is the
+            same as asking for an explicit unscoped token.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY identityObjectParameter '
+<param name="identity" style="plain" type="xsd:dict"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            An <code>identity</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY passwordObjectParameter '
+<param name="password" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>password</code> object. If specified, the password
+            authentication method is used.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY passwordObjectRequestParameter '
+<param name="password" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>password</code> object. The password authentication method
+            is used.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY tokenObjectRequestParameter '
+<param name="token" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>token</code> object. The token authentication method is
+            used. This method is typically used in combination with a request
+            to change authorization scope.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY tokenObjectParameter '
+<param name="token" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>token</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY token-idRequestParameter '
+<param name="id" style="plain" required="false"
+ type="capi:UUID" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A token ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-passwordRequestParameter '
+<param name="password" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The password for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-user-idRequestParameter '
+<param name="id" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID of the user.
+        </para>
+        <para>
+            Required if you do not specify the user name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-user-nameRequestParameter '
+<param name="name" style="plain" required="false"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The user name.
+        </para>
+        <para>
+            Required if you do not specify the ID of the user.
+        </para>
+        <para>
+            If you specify the user name, you must also specify the domain, by
+            ID or name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-domainRequestParameter '
+<param name="domain" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>domain</code> object. Required if you specify a user name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-domain-idRequestParameter '
+<param name="id" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID of the domain.
+        </para>
+        <para>
+            If you specify a user name, you must specify
+            either a domain ID or domain name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-domain-nameRequestParameter '
+<param name="name" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The name of the domain.
+        </para>
+        <para>
+            If you specify a user name, you must specify
+            either a domain ID or domain name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-passwordRequestParameter '
+<param name="password" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user password.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- TOKEN RESPONSE PARAMETERS            -->
+<!-- ************************************ -->
+<!ENTITY auth-domainResponseParameter '
+<param name="domain" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Specify either <code>id</code> or <code>name</code> to uniquely
+            identify the domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-domain-idResponseParameter '
+<param name="id" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The domain ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-domain-linksResponseParameter '
+<param name="links" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The links for the <code>domain</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-domain-nameResponseParameter '
+<param name="name" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The domain name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-methodsResponseParameter '
+<param name="methods" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The authentication method, which is <code>password</code>,
+            <code>token</code>, or both methods.
+        </para>
+        <para>
+            Indicates the accumulated set of authentication methods that were
+            used to obtain the token. For example, if the token was obtained
+            by password authentication, it contains <code>password</code>.
+            Later, if the token is exchanged by using the token authentication
+            method one or more times, the subsequently created tokens contain
+            both <code>password</code> and <code>token</code> in their
+            <code>methods</code> attribute.
+        </para>
+        <para>
+            Unlike multifactor authentication, the <code>methods</code>
+            attribute merely indicates the methods that were used to
+            authenticate the user for a specified token. The client is
+            responsible for determining the total number of authentication
+            factors.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY catalogObjectParameter '
+<param name="catalog" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>catalog</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY rolesResponseParameter '
+<param name="roles" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>roles</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY roles-idResponseParameter '
+<param name="id" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID for the role.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY roles-nameResponseParameter '
+<param name="name" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The role name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-group-idResponseParameter '
+<param name="id" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The group ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-user-idResponseParameter '
+<param name="id" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The user ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-user-linksResponseParameter '
+<param name="links" style="plain" type="xsd:dict"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>user</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY auth-user-nameResponseParameter '
+<param name="name" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The user name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY tokenObjectParameter '
+<param name="token" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>token</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY extrasResponseParameter '
+<param name="extras" style="plain" required="true"
+    type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A set of metadata key and value pairs, if any.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY audit_idsResponseParameter '
+<param name="audit_ids" style="plain" required="true"
+    type="xsd:list" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A list of one or two audit IDs. An audit ID is a unique, randomly
+            generated, urlsafe string that you can use to track a token.
+        </para>
+        <para>
+            The first audit ID is the current audit ID for the token.
+        </para>
+        <para>
+            The second audit ID is present for only rescoped tokens and is the
+            audit ID from the token before it was rescoped. A rescoped token
+            is one that was exchanged for another token of the same or
+            different scope.
+        </para>
+        <para>
+            You can use these audit IDs to track the use of a token or chain
+            of tokens across multiple requests and endpoints without exposing
+            the token ID to non-privileged users.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-userResponseParameter '
+<param name="user" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>user</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-user-idResponseParameter '
+<param name="id" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID of the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-user-nameResponseParameter '
+<param name="name" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The user name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-domainResponseParameter '
+<param name="domain" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>domain</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-domain-idResponseParameter '
+<param name="id" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The ID of the domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY password-auth-domain-nameResponseParameter '
+<param name="name" style="plain" required="true"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The name of the domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- USERS                                -->
+<!-- ************************************ -->
+<!-- USER REQUEST PARAMETERS              -->
+<!-- ************************************ -->
+<!ENTITY userObjectParameter '
+<param name="user" style="plain" type="xsd:dict"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A <code>user</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY usersObjectParameter '
+<param name="users" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>users</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-default_project_idRequestParameter '
+<param name="default_project_id" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the default project for the user.
+        </para>
+        <para>
+            Setting this attribute does not grant any actual
+            authorization on the project, and is merely provided for
+            convenience. Therefore, the referenced project does not need to
+            exist within the user domain.
+        </para>
+        <para>
+            (Since v3.1) If the user does not have authorization to their
+            default project, the default project is ignored at token
+            creation.
+        </para>
+        <para>
+            (Since v3.1) Additionally, if your default project is
+            not valid, a token is issued without an explicit scope of
+            authorization.         
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-descriptionRequestParameter '
+<param name="description" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-domain_idRequestParameter '
+<param name="domain_id" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the domain for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-emailRequestParameter '
+<param name="email" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The email address for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-enabledRequestParameter '
+<param name="enabled" style="plain" type="xsd:boolean"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Enables or disables the user.
+        </para>
+        <para>
+            An enabled user can authenticate and receive authorization.
+        </para>
+        <para>
+            A disabled user cannot authenticate or receive authorization.
+            Additionally, all tokens that the user holds become no longer
+            valid. If you reenable this user, pre-existing tokens do not
+            become valid.
+        </para>
+        <para>
+            To enable the user, set to <code>true</code>. To disable the user,
+            set to <code>false</code>. Default is <code>true</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-nameRequestParameter '
+<param name="name" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user name, which must be unique within the owning domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-passwordRequestParameter '
+<param name="password" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user password.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- USER RESPONSE PARAMETERS             -->
+<!-- ************************************ -->
+<!ENTITY user-default_project_idResponseParameter '
+<param name="default_project_id" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the default project for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-descriptionResponseParameter '
+<param name="description" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-domain_idResponseParameter '
+<param name="domain_id" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID of the domain for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-emailResponseParameter '
+<param name="email" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The email address for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-enabledResponseParameter '
+<param name="enabled" style="plain" type="xsd:boolean"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            If the user is enabled, this value is <code>true</code>. If the
+            user is disabled, this value is <code>false</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-idResponseParameter '
+<param name="id" style="plain" type="csapi:uuid"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The ID for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-linksResponseParameter '
+<param name="links" style="plain" type="xsd:dict"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>user</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY users-linksResponseParameter '
+<param name="links" style="plain" type="xsd:dict"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The links for the <code>users</code> resource.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-nameResponseParameter '
+<param name="name" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user name. Must be unique withint the domain.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-passwordResponseParameter '
+<param name="password" style="plain" type="xsd:string"
+ xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+     xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The user password. Required for some authentication back ends.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-new-passwordRequestParameter '
+<param name="password" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The new password for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-old-passwordRequestParameter '
+<param name="original_password" style="plain" required="false"
+ type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The original password for the user.
+        </para>
+    </wadl:doc>
 </param>'>
