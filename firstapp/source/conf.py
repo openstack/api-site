@@ -62,9 +62,6 @@ master_doc = 'index'
 project = u'FirstApp'
 bug_tag = u'firstapp'
 copyright = u'2015, OpenStack contributors'
-# "giturl" contains the location of conf.py in Git. log-a-bug requires it to
-# automatically build a complete bug description.
-giturl = u'http://git.openstack.org/cgit/openstack/api-site/tree/firstapp/source'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -75,13 +72,16 @@ version = '0.1'
 # The full version, including alpha/beta/rc tags.
 release = '0.1'
 
-# We ask git for the SHA checksum
-# The git SHA checksum is used by "log-a-bug"
+# A few variables have to be set for the log-a-bug feature.
+#   giturl: The location of conf.py on Git. Must be set manually.
+#   gitsha: The SHA checksum of the bug description. Automatically extracted from git log.
+#   bug_tag: Tag for categorizing the bug. Must be set manually.
+#   pwd: source tree - this is needed only for openstackdocstheme <= 1.2.2
+# These variables are passed to the logabug code via html_context.
+giturl = u'http://git.openstack.org/cgit/openstack/api-site/tree/firstapp/source'
 git_cmd = "/usr/bin/git log | head -n1 | cut -f2 -d' '"
 gitsha = os.popen(git_cmd).read().strip('\n')
-# source tree
 pwd = os.popen("pwd").read().strip('\n')
-# html_context allows us to pass arbitrary values into the html template
 html_context = {"pwd": pwd, "gitsha": gitsha, "bug_tag": bug_tag,
                 "giturl": giturl}
 
