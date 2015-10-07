@@ -1457,7 +1457,7 @@ OpenStack contribution process.
 
       Used to restrict communications between hosts and/or nodes,
       implemented in Compute using iptables, arptables, ip6tables, and
-      etables.
+      ebtables.
 
    FWaaS
 
