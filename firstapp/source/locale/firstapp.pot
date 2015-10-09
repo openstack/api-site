@@ -1,0 +1,3304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015, OpenStack contributors
+# This file is distributed under the same license as the FirstApp package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: FirstApp 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-09 06:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../advice.rst:3
+msgid "Advice for developers new to operations"
+msgstr ""
+
+#: ../advice.rst:5
+msgid ""
+"In this section, we will introduce some operational concepts and tasks which "
+"may be new to developers who have not written cloud applications before."
+msgstr ""
+
+#: ../advice.rst:10
+msgid "Monitoring"
+msgstr ""
+
+#: ../advice.rst:12
+msgid ""
+"Monitoring is essential for cloud applications, especially if the "
+"application is to be 'scalable'. You must know how many requests are coming "
+"in, and what impact that has on the various services -- in other words, "
+"enough information to determine whether you should start another worker or "
+"API service as we did in :doc:`/scaling_out`."
+msgstr ""
+
+#: ../advice.rst:21
+msgid ""
+"Aside from this kind of monitoring, you should consider availability "
+"monitoring.  Does your application care about a worker going down? Maybe "
+"not. Does it care about a failed database server? Probably yes."
+msgstr ""
+
+#: ../advice.rst:25
+msgid ""
+"One great pattern to add this to your application is the `Health Endpoint "
+"Monitoring Pattern <https://msdn.microsoft.com/en-us/library/dn589789."
+"aspx>`, where a special API endpoint is introduced to your application for a "
+"basic health check."
+msgstr ""
+
+#: ../advice.rst:32
+msgid "Backups"
+msgstr ""
+
+#: ../advice.rst:34
+msgid ""
+"Where instances store information that is not reproducible (such as a "
+"database server, a file server, or even log files for an application), it is "
+"important to back up this information as you would a normal non-cloud "
+"server. It sounds simple, but just because it is 'in the cloud' does not "
+"mean it has any additional robustness or resilience when it comes to failure "
+"of the underlying hardware or systems."
+msgstr ""
+
+#: ../advice.rst:41
+msgid ""
+"OpenStack provides a couple of tools that make it easier to perform backups. "
+"If your provider runs OpenStack Object Storage, this is normally extremely "
+"robust and has several handy API calls and CLI tools for working with "
+"archive files."
+msgstr ""
+
+#: ../advice.rst:46
+msgid ""
+"It is also possible to create snapshots of running instances and persistent "
+"volumes using the OpenStack API. Refer to the documentation of your SDK for "
+"more."
+msgstr ""
+
+#: ../advice.rst:53
+msgid ""
+"While the technical action to perform backups can be straightforward, you "
+"should also think about your policies regarding what is backed up and how "
+"long each item should be retained."
+msgstr ""
+
+#: ../advice.rst:58
+msgid "Phoenix Servers"
+msgstr ""
+
+#: ../advice.rst:60
+msgid ""
+"Application developers and operators who employ `Phoenix Servers <http://"
+"martinfowler.com/bliki/PhoenixServer.html>`_ have built systems that start "
+"from a known baseline (sometimes just a specific version of an operating "
+"system) and have built tooling that will automatically build, install, and "
+"configure a system with no manual intervention."
+msgstr ""
+
+#: ../advice.rst:66
+msgid ""
+"Phoenix Servers, named for the mythological bird that would live its life, "
+"be consumed by fire, then rise from the ashes to live again, make it "
+"possible to easily \"start over\" with new instances."
+msgstr ""
+
+#: ../advice.rst:70
+msgid ""
+"If your application is automatically deployed on a regular basis, resolving "
+"outages and security updates are not special operations that require manual "
+"intervention.  If you suffer an outage, provision more resources in another "
+"region. If you have to patch security holes, provision more compute nodes "
+"that will be built with the updated/patched software, then terminate "
+"vulnerable nodes, with traffic automatically failing over to the new "
+"instances."
+msgstr ""
+
+#: ../advice.rst:79
+msgid "Security"
+msgstr ""
+
+#: ../advice.rst:81
+msgid ""
+"Security-wise, one thing to keep in mind is that if one instance of an "
+"application is compromised, all instances with the same image and "
+"configuration are likely to suffer the same vulnerability. In this case, it "
+"is safer to rebuild all of your instances (a task made easier by "
+"configuration management - see below)."
+msgstr ""
+
+#: ../advice.rst:88
+msgid "Configuration management"
+msgstr ""
+
+#: ../advice.rst:90
+msgid ""
+"Tools such as Ansible, Chef, and Puppet allow you to describe exactly what "
+"should be installed on an instance and how it should be configured. Using "
+"these descriptions, the tool implements any changes required to get to the "
+"desired state."
+msgstr ""
+
+#: ../advice.rst:95
+msgid ""
+"These tools vastly reduce the amount of effort it takes to work with large "
+"numbers of servers, and also improves the ability to recreate, update, move, "
+"or distribute applications."
+msgstr ""
+
+#: ../advice.rst:100
+msgid "Application deployment"
+msgstr ""
+
+#: ../advice.rst:102
+msgid ""
+"Related to configuration management is the question of how you deploy your "
+"application."
+msgstr ""
+
+#: ../advice.rst:105
+msgid "For example, do you:"
+msgstr ""
+
+#: ../advice.rst:107
+msgid "pull the latest code from a source control repository?"
+msgstr ""
+
+#: ../advice.rst:108
+msgid "make packaged releases that update infrequently?"
+msgstr ""
+
+#: ../advice.rst:109
+msgid ""
+"big-bang test in a development environment and deploy only after major "
+"changes?"
+msgstr ""
+
+#: ../advice.rst:112
+msgid ""
+"One of the latest trends in deploying scalable cloud applications is "
+"`continuous integration <http://en.wikipedia.org/wiki/"
+"Continuous_integration>`_ / `continuous deployment <http://en.wikipedia.org/"
+"wiki/Continuous_delivery>`_ (CI/CD).  Working in a CI/CD fashion means you "
+"are always testing your application and making frequent deployments to "
+"production."
+msgstr ""
+
+#: ../advice.rst:119
+msgid ""
+"In this tutorial, we have downloaded the latest version of our application "
+"from source and installed it on a standard image. Our magic install script "
+"also updates the standard image to have the latest dependencies we need to "
+"run the application."
+msgstr ""
+
+#: ../advice.rst:124
+msgid ""
+"Another approach to this is to create a 'gold' image - one that has your "
+"application and dependencies pre-installed. This means faster boot times and "
+"a higher degree of control over what is on the instance, however a process "
+"is needed to ensure that 'gold' images do not fall behind on security "
+"updates."
+msgstr ""
+
+#: ../advice.rst:130
+msgid "Fail fast"
+msgstr ""
+
+#: ../appendix.rst:3
+msgid "Appendix"
+msgstr ""
+
+#: ../appendix.rst:6
+msgid "Bootstrapping your network"
+msgstr ""
+
+#: ../appendix.rst:8
+msgid ""
+"Most cloud providers will provision all of the required network objects "
+"necessary to boot an instance.  An easy way to see if these have been "
+"created for you is to access the Network Topology section of the OpenStack "
+"dashboard."
+msgstr ""
+
+#: ../appendix.rst:21
+msgid "Specify a network during instance build"
+msgstr ""
+
+#: ../block_storage.rst:3
+msgid "Block Storage"
+msgstr ""
+
+#: ../block_storage.rst:8
+msgid ""
+"By default, data in OpenStack instances is stored on 'ephemeral' disks. "
+"These stay with the instance throughout its lifetime, but when the instance "
+"is terminated, that storage disappears -- along with all the data stored on "
+"it. Ephemeral storage is allocated to a single instance and cannot be moved "
+"to another instance."
+msgstr ""
+
+#: ../block_storage.rst:14
+msgid ""
+"In this section, we will introduce block storage. Block storage (sometimes "
+"referred to as volume storage) provides you with access to persistent "
+"storage devices. You interact with block storage by attaching volumes to "
+"running instances, just as you might attach a USB drive to a physical "
+"server. Volumes can be detached from one instance and re-attached to "
+"another, and the data remains intact. Block storage is implemented in "
+"OpenStack by the OpenStack Block Storage (cinder) project."
+msgstr ""
+
+#: ../block_storage.rst:23
+msgid ""
+"One component of the Fractal app that cannot be allowed to fail is the "
+"database server, which is used to keep track of all of the data about "
+"fractals that have been created, including their storage location. So while "
+"you may have configured the images to be stored in Object Storage in the "
+"previous section, without the database we lose track of where in Object "
+"Storage they are, and the parameters that were used to create them."
+msgstr ""
+
+#: ../block_storage.rst:31
+msgid ""
+"Advanced users should consider how to remove the database from the "
+"architecture altogether and replace it with metadata in the Object Storage "
+"(then contribute these steps to :doc:`craziness`). Others should read on to "
+"learn about how to work with block storage and move the Fractal app database "
+"server to use it."
+msgstr ""
+
+#: ../block_storage.rst:38
+msgid "Basics"
+msgstr ""
+
+#: ../block_storage.rst:40
+msgid ""
+"Later on, we'll use a volume from the block storage service to provide "
+"persistent storage for the Fractal app's database server, but first - let's "
+"cover the basics, such as creating and attaching a block storage device."
+msgstr ""
+
+#: ../block_storage.rst:47 ../durability.rst:77 ../introduction.rst:13
+msgid "This section has not yet been completed for the .NET SDK."
+msgstr ""
+
+#: ../block_storage.rst:51 ../durability.rst:81 ../introduction.rst:17
+msgid "This section has not yet been completed for the fog SDK."
+msgstr ""
+
+#: ../block_storage.rst:59 ../durability.rst:111 ../introduction.rst:25
+msgid "This section has not yet been completed for the pkgcloud SDK."
+msgstr ""
+
+#: ../block_storage.rst:71
+msgid "As always, connect to the API endpoint:"
+msgstr ""
+
+#: ../block_storage.rst:95
+msgid "To try it out, make a 1GB volume called :test'."
+msgstr ""
+
+#: ../block_storage.rst:108
+msgid "The parameter :code:`size` is in GigaBytes."
+msgstr ""
+
+#: ../block_storage.rst:110
+msgid "List all volumes to see if it was successful:"
+msgstr ""
+
+#: ../block_storage.rst:123
+msgid ""
+"Now that you have created a storage volume, let's attach it to an already "
+"running instance."
+msgstr ""
+
+#: ../block_storage.rst:128
+msgid "Using Block Storage for the Fractal database server"
+msgstr ""
+
+#: ../block_storage.rst:130
+msgid ""
+"Firstly, we're going to need a new server for our dedicated database. Start "
+"a new instance called :code:`app-database` using the image, flavor and "
+"keypair you have been using since :doc:`/getting_started`. We will also need "
+"a new security group to allow access to the database server (for mysql, port "
+"3306) from the network:"
+msgstr ""
+
+#: ../block_storage.rst:148
+msgid ""
+"Using the unique identifier (UUID) for the volume, make a new volume object, "
+"then use the server object from the previous snippet and attach the volume "
+"to it at :code:`/dev/vdb`:"
+msgstr ""
+
+#: ../block_storage.rst:159
+msgid "Log in to the server to be able to run the following steps."
+msgstr ""
+
+#: ../block_storage.rst:161
+msgid ""
+"Replace :code:`IP_SERVICES` with the IP address of the services instance and "
+"USERNAME to the appropriate username."
+msgstr ""
+
+#: ../block_storage.rst:164
+msgid "Now prepare the empty block device."
+msgstr ""
+
+#: ../block_storage.rst:176
+msgid ""
+"Stop the running MySQL database service and move the database files from :"
+"file:`/var/lib/mysql` onto the new volume (temporary mounted at :file:`/mnt/"
+"database`)."
+msgstr ""
+
+#: ../block_storage.rst:185
+msgid ""
+"Sync the filesystems and mount the new blockdevice now containing the "
+"database files to :file:`/var/lib/mysql`."
+msgstr ""
+
+#: ../block_storage.rst:196
+msgid ""
+"Finally start the previously stopped MySQL database service and check if "
+"everything is working like expected."
+msgstr ""
+
+#: ../block_storage.rst:205
+msgid "Extras"
+msgstr ""
+
+#: ../block_storage.rst:207
+msgid ""
+"You can detach the volume and re-attach it elsewhere, or destroy the volume "
+"with the below steps."
+msgstr ""
+
+#: ../block_storage.rst:211
+msgid "The following operations are destructive and will result in data loss."
+msgstr ""
+
+#: ../block_storage.rst:213
+msgid "To detach and destroy a volume:"
+msgstr ""
+
+#: ../block_storage.rst:229
+msgid ""
+":code:`detach_volume` and :code:`destroy_volume` take a volume object, not a "
+"name."
+msgstr ""
+
+#: ../block_storage.rst:232
+msgid ""
+"There are also many other useful features, such as the ability to create "
+"snapshots of volumes (handy for backups):"
+msgstr ""
+
+#: ../block_storage.rst:245
+msgid ""
+"You can find information about these calls and more in the `libcloud "
+"documentation <http://ci.apache.org/projects/libcloud/docs/compute/drivers/"
+"openstack.html>`_."
+msgstr ""
+
+#: ../block_storage.rst:251
+msgid "Working with the OpenStack Database service"
+msgstr ""
+
+#: ../block_storage.rst:253
+msgid ""
+"You created the database manually above, which is fine for a case with a "
+"single database you won't touch often like this. However, OpenStack also has "
+"a component code-named :code:`trove` that provides Database as a Service "
+"(DBaaS)."
+msgstr ""
+
+#: ../block_storage.rst:258
+msgid ""
+"This OpenStack Database service is not installed in many clouds right now, "
+"but if your cloud does support it, it can make your life a lot easier when "
+"working with databases."
+msgstr ""
+
+#: ../block_storage.rst:262
+msgid ""
+"SDKs don't generally support the service yet, but you can use the 'trove' "
+"commandline client to work with it instead."
+msgstr ""
+
+#: ../block_storage.rst:265
+msgid ""
+"Install the trove commandline client by following this guide: http://docs."
+"openstack.org/cli-reference/content/install_clients.html"
+msgstr ""
+
+#: ../block_storage.rst:268
+msgid ""
+"Then set up the necessary variables for your cloud in an :file:`openrc.sh` "
+"file using this guide: http://docs.openstack.org/cli-reference/content/"
+"cli_openrc.html"
+msgstr ""
+
+#: ../block_storage.rst:272
+msgid ""
+"Ensure you have an :file:`openrc.sh` file, source it and then check your "
+"trove client works: ::"
+msgstr ""
+
+#: ../block_storage.rst:287
+msgid ""
+"From there, you can find a good resource on what is supported and how to use "
+"in `these slides <http://www.slideshare.net/hastexo/hands-on-trove-database-"
+"as-a-service-in-openstack-33588994>`_. Steps to work with an existing "
+"database service installation start on slide 28."
+msgstr ""
+
+#: ../block_storage.rst:296 ../orchestration.rst:190
+msgid "Next Steps"
+msgstr ""
+
+#: ../block_storage.rst:298
+msgid ""
+"You should now be fairly confident working with Block Storage volumes. There "
+"are several calls we did not cover. To see these and more, refer to the "
+"volume documentation of your SDK, or try a different step in the tutorial, "
+"including:"
+msgstr ""
+
+#: ../block_storage.rst:303 ../durability.rst:330
+msgid ":doc:`/orchestration`: to automatically orchestrate the application"
+msgstr ""
+
+#: ../block_storage.rst:304 ../durability.rst:331
+msgid ":doc:`/networking`: to learn about more complex networking"
+msgstr ""
+
+#: ../block_storage.rst:305 ../durability.rst:332 ../networking.rst:802
+msgid ":doc:`/advice`: for advice for developers new to operations"
+msgstr ""
+
+#: ../craziness.rst:3
+msgid "Going crazy"
+msgstr ""
+
+#: ../craziness.rst:5
+msgid "This section explores options for expanding the sample application."
+msgstr ""
+
+#: ../craziness.rst:8
+msgid "Regions and geographic diversity"
+msgstr ""
+
+#: ../craziness.rst:10
+msgid ""
+"For more information about multi-site clouds, see the `Multi-Site chapter "
+"<http://docs.openstack.org/arch-design/content/multi_site.html>`_ in the "
+"Architecture Design Guide."
+msgstr ""
+
+#: ../craziness.rst:15
+msgid ""
+"OpenStack supports 'regions', which are geographically-separated "
+"installations that are connected to a single service catalog. This section "
+"explains how to expand the Fractal application to use multiple regions for "
+"high availability."
+msgstr ""
+
+#: ../craziness.rst:19 ../craziness.rst:32 ../craziness.rst:39
+#: ../craziness.rst:64
+msgid "This section is incomplete. Please help us finish it!"
+msgstr ""
+
+#: ../craziness.rst:22
+msgid "Multiple clouds"
+msgstr ""
+
+#: ../craziness.rst:24
+msgid ""
+"For more information about hybrid clouds, see the `Hybrid Cloud chapter "
+"<http://docs.openstack.org/arch-design/content/hybrid.html>`_ in the "
+"Architecture Design Guide."
+msgstr ""
+
+#: ../craziness.rst:29
+msgid ""
+"You might want to use multiple clouds such as a private cloud inside your "
+"organization and a public cloud. This section attempts to do exactly that."
+msgstr ""
+
+#: ../craziness.rst:35
+msgid "High availability"
+msgstr ""
+
+#: ../craziness.rst:37
+msgid "Using Pacemaker to look at the API."
+msgstr ""
+
+#: ../craziness.rst:42
+msgid "conf.d, etc.d"
+msgstr ""
+
+#: ../craziness.rst:44
+msgid "Use conf.d and etc.d."
+msgstr ""
+
+#: ../craziness.rst:46
+msgid ""
+"In earlier sections, the Fractal application used an installation script "
+"into which the metadata API passed parameters to bootstrap the cluster. "
+"`Etcd <https://github.com/coreos/etcd>`_ is \"a distributed, consistent key-"
+"value store for shared configuration and service discovery\" that you can "
+"use to store configurations. You can write updated versions of the Fractal "
+"worker component to connect to Etcd or use `Confd <https://github.com/"
+"kelseyhightower/confd>`_ to poll for changes from Etcd and write changes to "
+"a configuration file on the local file system, which the Fractal worker can "
+"use for configuration."
+msgstr ""
+
+#: ../craziness.rst:57
+msgid "Using Object Storage instead of a database"
+msgstr ""
+
+#: ../craziness.rst:59
+msgid ""
+"We haven't quite figured out how to do this yet, but the general steps "
+"involve changing the fractal upload code to store metadata with the object "
+"in swift, then changing the API code such as \"list fractals\" to query "
+"swift to get the metadata. If you do this, you should be able to stop using "
+"a database."
+msgstr ""
+
+#: ../craziness.rst:67 ../durability.rst:317 ../getting_started.rst:1222
+#: ../introduction.rst:560 ../networking.rst:795 ../scaling_out.rst:366
+msgid "Next steps"
+msgstr ""
+
+#: ../craziness.rst:69
+msgid ""
+"Wow! If you've made it through this section, you know more than the authors "
+"of this guide know about working with OpenStack clouds."
+msgstr ""
+
+#: ../craziness.rst:72
+msgid ""
+"Perhaps you can `contribute <https://wiki.openstack.org/wiki/Documentation/"
+"HowTo>`_?"
+msgstr ""
+
+#: ../durability.rst:3
+msgid "Making it durable"
+msgstr ""
+
+#: ../durability.rst:14
+msgid ""
+"This section introduces object storage.  `OpenStack Object Storage <http://"
+"www.openstack.org/software/openstack-storage/>`_ (code-named swift) is open "
+"source software for creating redundant, scalable data storage using clusters "
+"of standardized servers to store petabytes of accessible data.  It is a long-"
+"term storage system for large amounts of static data that can be retrieved, "
+"leveraged, and updated. Access is via an API, not through a file-system like "
+"more traditional storage."
+msgstr ""
+
+#: ../durability.rst:23
+msgid ""
+"There are a two key concepts to understand in the Object Storage API. The "
+"Object Storage API is organized around two types of entities:"
+msgstr ""
+
+#: ../durability.rst:26
+msgid "Objects"
+msgstr ""
+
+#: ../durability.rst:27
+msgid "Containers"
+msgstr ""
+
+#: ../durability.rst:29
+msgid ""
+"Similar to the Unix programming model, an object is a \"bag of bytes\" that "
+"contains data, such as documents and images. Containers are used to group "
+"objects.  You can make many objects inside a container, and have many "
+"containers inside your account."
+msgstr ""
+
+#: ../durability.rst:34
+msgid ""
+"If you think about how you traditionally make what you store durable, very "
+"quickly you should come to the conclusion that keeping multiple copies of "
+"your objects on separate systems is a good way to do that. However, keeping "
+"track of multiple copies of objects is a pain, and building that into an app "
+"requires a lot of logic. OpenStack Object Storage does this automatically "
+"for you behind-the-scenes - replicating each object at least twice before "
+"returning 'write success' to your API call. It will always work to ensure "
+"that there are three copies of your objects (by default) at all times - "
+"replicating them around the system in case of hardware failure, maintenance, "
+"network outage or any other kind of breakage. This is very convenient for "
+"app creation - you can just dump objects into object storage and not have to "
+"care about any of this additional work to keep them safe."
+msgstr ""
+
+#: ../durability.rst:51
+msgid "Using Object Storage to store fractals"
+msgstr ""
+
+#: ../durability.rst:53
+msgid ""
+"The Fractals app currently uses the local filesystem on the instance to "
+"store the images it generates. This is not scalable or durable, for a number "
+"of reasons."
+msgstr ""
+
+#: ../durability.rst:57
+msgid ""
+"Because the local filesystem is ephemeral storage, if the instance is "
+"terminated, the fractal images will be lost along with the instance. Block "
+"based storage, which we'll discuss in :doc:`/block_storage`, avoids that "
+"problem, but like local filesystems, it requires administration to ensure "
+"that it does not fill up, and immediate attention if disks fail."
+msgstr ""
+
+#: ../durability.rst:64
+msgid ""
+"The Object Storage service manages many of these tasks that normally would "
+"require the application owner to manage them, and presents a scalable and "
+"durable API that you can use for the fractals app, without having to be "
+"concerned with the low level details of how the objects are stored and "
+"replicated, and growing the storage pool. In fact, Object Storage handles "
+"replication intrinsically, storing multiple copies of each object and "
+"returning one of them on demand using the API."
+msgstr ""
+
+#: ../durability.rst:73
+msgid "First, let's learn how to connect to the Object Storage endpoint:"
+msgstr ""
+
+#: ../durability.rst:96
+msgid ""
+"Libcloud 0.16 and 0.17 are afflicted with a bug that means authentication to "
+"a swift endpoint can fail with `a Python exception <https://issues.apache."
+"org/jira/browse/LIBCLOUD-635>`_.  If you encounter this, you can upgrade "
+"your libcloud version, or apply a simple `2-line patch <https://github.com/"
+"fifieldt/libcloud/commit/ec58868c3344a9bfe7a0166fc31c0548ed22ea87>`_."
+msgstr ""
+
+#: ../durability.rst:104
+msgid ""
+"Libcloud uses a different connector for Object Storage to all other "
+"OpenStack services, so a conn object from previous sections won't work here "
+"and we have to create a new one named :code:`swift`."
+msgstr ""
+
+#: ../durability.rst:123
+msgid ""
+"To begin to store objects, we must first make a container. Call yours :code:"
+"`fractals`:"
+msgstr ""
+
+#: ../durability.rst:132 ../durability.rst:147
+msgid "You should see output such as:"
+msgstr ""
+
+#: ../durability.rst:138
+msgid ""
+"You should now be able to see this container appear in a listing of all "
+"containers in your account:"
+msgstr ""
+
+#: ../durability.rst:153
+msgid ""
+"The next logical step is to upload an object. Find a photo of a goat online, "
+"name it :code:`goat.jpg` and upload it to your container :code:`fractals`:"
+msgstr ""
+
+#: ../durability.rst:163
+msgid ""
+"List objects in your container :code:`fractals` to see if the upload was "
+"successful, then download the file to verify the md5sum is the same:"
+msgstr ""
+
+#: ../durability.rst:196
+msgid "Finally, let's clean up by deleting our test object:"
+msgstr ""
+
+#: ../durability.rst:204
+msgid "You need to pass in objects to the delete commands, not object names."
+msgstr ""
+
+#: ../durability.rst:206
+msgid ""
+"Now there should be no more objects be available in the container :code:"
+"`fractals`."
+msgstr ""
+
+#: ../durability.rst:217
+msgid "Backup the Fractals from the database on the Object Storage"
+msgstr ""
+
+#: ../durability.rst:219
+msgid ""
+"So let's now use the knowledge from above to backup the images of the "
+"Fractals app, stored inside the database right now, on the Object Storage."
+msgstr ""
+
+#: ../durability.rst:223
+msgid "Use the :code:`fractals`' container from above to put the images in:"
+msgstr ""
+
+#: ../durability.rst:231
+msgid ""
+"Next, we backup all of our existing fractals from the database to our swift "
+"container. A simple for loop takes care of that:"
+msgstr ""
+
+#: ../durability.rst:246
+msgid "Replace :code:`IP_API_1` with the IP address of the API instance."
+msgstr ""
+
+#: ../durability.rst:248
+msgid ""
+"The example code uses the awesome `Requests library <http://docs.python-"
+"requests.org/en/latest/>`_. Ensure that it is installed on your system "
+"before trying to run the script above."
+msgstr ""
+
+#: ../durability.rst:252
+msgid "Configure the Fractals app to use Object Storage"
+msgstr ""
+
+#: ../durability.rst:254
+msgid ""
+"Currently it is not possible to directly store generated images on the "
+"OpenStack Object Storage. Please revisit this section again in the future."
+msgstr ""
+
+#: ../durability.rst:259
+msgid "Extra features"
+msgstr ""
+
+#: ../durability.rst:262
+msgid "Delete containers"
+msgstr ""
+
+#: ../durability.rst:264
+msgid ""
+"One call we didn't cover above that you probably need to know is how to "
+"delete a container.  Ensure that you have removed all objects from the "
+"container before running this, otherwise it will fail:"
+msgstr ""
+
+#: ../durability.rst:274
+msgid "It is not possible to restore deleted objects. Be careful."
+msgstr ""
+
+#: ../durability.rst:277
+msgid "Add metadata to objects"
+msgstr ""
+
+#: ../durability.rst:279
+msgid ""
+"You can also do advanced things like uploading an object with metadata, such "
+"as in this below example, but for further information we'll refer you to the "
+"documentation for your SDK. This option also uses a bit stream to upload the "
+"file - iterating bit by bit over the file and passing those bits to swift as "
+"they come, compared to loading the entire file in memory and then sending "
+"it. This is more efficient, especially for larger files."
+msgstr ""
+
+#: ../durability.rst:296
+msgid "Large objects"
+msgstr ""
+
+#: ../durability.rst:298
+msgid ""
+"For efficiency, most Object Storage installations treat large objects (say, :"
+"code:`> 5GB`) differently than smaller objects."
+msgstr ""
+
+#: ../durability.rst:303
+msgid ""
+"If you are working with large objects, use the :code:"
+"`ex_multipart_upload_object` call instead of the simpler :code:"
+"`upload_object` call. How the upload works behind-the-scenes is by splitting "
+"the large object into chunks, and creating a special manifest so they can be "
+"recombined on download. Alter the :code:`chunk_size` parameter (in bytes) "
+"according to what your cloud can accept."
+msgstr ""
+
+#: ../durability.rst:319
+msgid ""
+"You should now be fairly confident working with Object Storage. You can find "
+"more about the Object Storage SDK calls at:"
+msgstr ""
+
+#: ../durability.rst:324
+msgid "https://libcloud.readthedocs.org/en/latest/storage/api.html"
+msgstr ""
+
+#: ../durability.rst:326
+msgid "Or try a different step in the tutorial, including:"
+msgstr ""
+
+#: ../durability.rst:328
+msgid ""
+":doc:`/block_storage`: to migrate the database to block storage, or use the "
+"database-as-as-service component"
+msgstr ""
+
+#: ../getting_started.rst:3
+msgid "Getting started"
+msgstr ""
+
+#: ../getting_started.rst:6
+msgid "Who should read this guide"
+msgstr ""
+
+#: ../getting_started.rst:8
+msgid ""
+"This guide is for software developers who want to deploy applications to "
+"OpenStack clouds."
+msgstr ""
+
+#: ../getting_started.rst:11
+msgid ""
+"We assume that you're an experienced programmer who has not created a cloud "
+"application in general or an OpenStack application in particular."
+msgstr ""
+
+#: ../getting_started.rst:14
+msgid ""
+"If you're familiar with OpenStack, this section teaches you how to program "
+"with its components."
+msgstr ""
+
+#: ../getting_started.rst:18
+msgid "What you will learn"
+msgstr ""
+
+#: ../getting_started.rst:20
+msgid ""
+"Deploying applications in a cloud environment can be very different from "
+"deploying them in a traditional IT environment. This guide teaches you how "
+"to deploy applications on OpenStack and some best practices for cloud "
+"application development."
+msgstr ""
+
+#: ../getting_started.rst:26
+msgid "A general overview"
+msgstr ""
+
+#: ../getting_started.rst:28
+msgid ""
+"This tutorial shows two applications. The first application is a simple "
+"fractal generator that uses mathematical equations to generate beautiful "
+"`fractal images <http://en.wikipedia.org/wiki/Fractal>`_. We show you this "
+"application in its entirety so that you can compare it to a second, more "
+"robust, application."
+msgstr ""
+
+#: ../getting_started.rst:34
+msgid "The second application is an OpenStack application that enables you to:"
+msgstr ""
+
+#: ../getting_started.rst:36
+msgid ""
+"Create and destroy compute resources. These resources are virtual machine "
+"instances where the Fractals application runs."
+msgstr ""
+
+#: ../getting_started.rst:38
+msgid ""
+"Make cloud-related architecture decisions such as turning functions into "
+"micro-services and modularizing them."
+msgstr ""
+
+#: ../getting_started.rst:40
+msgid "Scale available resources up and down."
+msgstr ""
+
+#: ../getting_started.rst:41
+msgid "Use Object and Block storage for file and database persistence."
+msgstr ""
+
+#: ../getting_started.rst:42
+msgid "Use Orchestration services to automatically adjust to the environment."
+msgstr ""
+
+#: ../getting_started.rst:43
+msgid "Customize networking for better performance and segregation."
+msgstr ""
+
+#: ../getting_started.rst:44
+msgid "Explore and apply advanced OpenStack cloud features."
+msgstr ""
+
+#: ../getting_started.rst:47
+msgid "Choose your OpenStack SDK"
+msgstr ""
+
+#: ../getting_started.rst:49
+msgid ""
+"Anyone with a programming background can easily read the code in this guide. "
+"Although this guide focuses on a particular SDK, you can use other languages "
+"and toolkits with the OpenStack cloud:"
+msgstr ""
+
+#: ../getting_started.rst:54 ../introduction.rst:404 ../introduction.rst:444
+msgid "Description"
+msgstr ""
+
+#: ../getting_started.rst:54
+msgid "Language"
+msgstr ""
+
+#: ../getting_started.rst:54
+msgid "Name"
+msgstr ""
+
+#: ../getting_started.rst:54
+msgid "URL"
+msgstr ""
+
+#: ../getting_started.rst:56
+msgid ""
+"A Python-based library managed by the Apache Foundation. This library "
+"enables you to work with multiple types of clouds."
+msgstr ""
+
+#: ../getting_started.rst:56
+msgid "Libcloud"
+msgstr ""
+
+#: ../getting_started.rst:56 ../getting_started.rst:58
+#: ../getting_started.rst:59
+msgid "Python"
+msgstr ""
+
+#: ../getting_started.rst:57
+msgid "https://libcloud.apache.org"
+msgstr ""
+
+#: ../getting_started.rst:58
+msgid "A Python-based library specifically developed for OpenStack."
+msgstr ""
+
+#: ../getting_started.rst:58
+msgid "OpenStack SDK"
+msgstr ""
+
+#: ../getting_started.rst:58
+msgid "https://github.com/stackforge/python-openstacksdk"
+msgstr ""
+
+#: ../getting_started.rst:59
+msgid ""
+"A Python-based library developed by OpenStack Infra team to operate multiple "
+"OpenStack clouds."
+msgstr ""
+
+#: ../getting_started.rst:59
+msgid "Shade"
+msgstr ""
+
+#: ../getting_started.rst:59
+msgid "https://github.com/openstack-infra/shade"
+msgstr ""
+
+#: ../getting_started.rst:61
+msgid ""
+"A Java-based library. Like Libcloud, it's also managed by the Apache "
+"Foundation and works with multiple types of clouds."
+msgstr ""
+
+#: ../getting_started.rst:61
+msgid "Java"
+msgstr ""
+
+#: ../getting_started.rst:61
+msgid "https://jclouds.apache.org"
+msgstr ""
+
+#: ../getting_started.rst:61
+msgid "jClouds"
+msgstr ""
+
+#: ../getting_started.rst:63
+msgid "A Ruby-based SDK for multiple clouds."
+msgstr ""
+
+#: ../getting_started.rst:63
+msgid "Ruby"
+msgstr ""
+
+#: ../getting_started.rst:63
+msgid "fog"
+msgstr ""
+
+#: ../getting_started.rst:63
+msgid ""
+"https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/"
+"getting_started.md"
+msgstr ""
+
+#: ../getting_started.rst:64
+msgid "A Node.js-based SDK for multiple clouds."
+msgstr ""
+
+#: ../getting_started.rst:64
+msgid "https://github.com/pkgcloud/pkgcloud"
+msgstr ""
+
+#: ../getting_started.rst:64
+msgid "node.js"
+msgstr ""
+
+#: ../getting_started.rst:64
+msgid "pkgcloud"
+msgstr ""
+
+#: ../getting_started.rst:65
+msgid "A library for developers using PHP to work with OpenStack clouds."
+msgstr ""
+
+#: ../getting_started.rst:65
+msgid "PHP"
+msgstr ""
+
+#: ../getting_started.rst:65
+msgid "http://php-opencloud.com/"
+msgstr ""
+
+#: ../getting_started.rst:65
+msgid "php-opencloud"
+msgstr ""
+
+#: ../getting_started.rst:66
+msgid ".NET Framework"
+msgstr ""
+
+#: ../getting_started.rst:66
+msgid ""
+"A .NET-based library enables you to write C++ or C# code for Microsoft "
+"applications."
+msgstr ""
+
+#: ../getting_started.rst:66
+msgid "OpenStack SDK for Microsoft .NET"
+msgstr ""
+
+#: ../getting_started.rst:66
+msgid "https://www.nuget.org/packages/openstack.net"
+msgstr ""
+
+#: ../getting_started.rst:71
+msgid ""
+"For a list of available SDKs, see `Software Development Kits <https://wiki."
+"openstack.org/wiki/SDKs>`_."
+msgstr ""
+
+#: ../getting_started.rst:73
+msgid ""
+"Other versions of this guide show you how to use the other SDKs and "
+"languages to complete these tasks. If you're a developer for another toolkit "
+"that you would like this guide to include, feel free to submit code "
+"snippets. You can contact `OpenStack Documentation team <https://wiki."
+"openstack.org/Documentation>`_ members for more information."
+msgstr ""
+
+#: ../getting_started.rst:80
+msgid "What you need"
+msgstr ""
+
+#: ../getting_started.rst:82
+msgid ""
+"We assume that you can already access an OpenStack cloud. You must have a "
+"project, also known as a tenant, with a minimum quota of six instances. "
+"Because the Fractals application runs in Ubuntu, Debian, Fedora-based, and "
+"openSUSE-based distributions, you must create instances that use one of "
+"these operating systems."
+msgstr ""
+
+#: ../getting_started.rst:88
+msgid "To interact with the cloud, you must also have"
+msgstr ""
+
+#: ../getting_started.rst:92
+msgid ""
+"`OpenStack Cloud SDK for Microsoft .NET 1.4.0.1 or later installed <https://"
+"www.nuget.org/packages/openstack.net>`_."
+msgstr ""
+
+#: ../getting_started.rst:97
+msgid ""
+"To install the OpenStack .NET SDK, use the NeGet Package Manager that is "
+"included with Visual Studio and Xamarin Studio. You simply add a package "
+"named 'openstack.net' and the NeGet Package Manager automatically installs "
+"the necessary dependencies."
+msgstr ""
+
+#: ../getting_started.rst:104
+msgid "This document has not yet been completed for the .NET SDK."
+msgstr ""
+
+#: ../getting_started.rst:108
+msgid ""
+"`fog 1.19 or higher installed <http://www.fogproject.org/wiki/index.php?"
+"title=FOGUserGuide#Installing_FOG>`_ and working with ruby gems 1.9."
+msgstr ""
+
+#: ../getting_started.rst:114
+msgid "This document has not yet been completed for the fog SDK."
+msgstr ""
+
+#: ../getting_started.rst:126
+msgid ""
+"`libcloud 0.15.1 or higher installed <https://libcloud.apache.org/getting-"
+"started.html>`_."
+msgstr ""
+
+#: ../getting_started.rst:131
+msgid ""
+"`pkgcloud 1.2 or higher installed <https://github.com/pkgcloud/"
+"pkgcloud#getting-started>`_."
+msgstr ""
+
+#: ../getting_started.rst:154
+msgid ""
+"`a recent version of shade library installed <https://pypi.python.org/pypi/"
+"shade/0.11.0>`_."
+msgstr ""
+
+#: ../getting_started.rst:156
+msgid "Before proceeding, install the latest version of shade."
+msgstr ""
+
+#: ../getting_started.rst:158
+msgid "Obtain the following information from your cloud provider:"
+msgstr ""
+
+#: ../getting_started.rst:160
+msgid "auth URL"
+msgstr ""
+
+#: ../getting_started.rst:161
+msgid "user name"
+msgstr ""
+
+#: ../getting_started.rst:162
+msgid "password"
+msgstr ""
+
+#: ../getting_started.rst:163
+msgid "project ID or name (projects are also known as tenants)"
+msgstr ""
+
+#: ../getting_started.rst:164
+msgid "cloud region"
+msgstr ""
+
+#: ../getting_started.rst:166
+msgid ""
+"You can also download the OpenStack RC file from the OpenStack Horizon "
+"dashboard. Log in to the dashboard and click :guilabel:`Project->Access & "
+"Security->API Access->Download OpenStack RC file`. If you use this method, "
+"be aware that the \"auth URL\" does not include the path. For example, if "
+"your :file:`openrc.sh` file shows:"
+msgstr ""
+
+#: ../getting_started.rst:176
+msgid "The actual auth URL is:"
+msgstr ""
+
+#: ../getting_started.rst:183
+msgid "How you'll interact with OpenStack"
+msgstr ""
+
+#: ../getting_started.rst:185
+msgid ""
+"In this tutorial, you interact with your OpenStack cloud through the SDK "
+"that you chose in \"Choose your OpenStack SDK.\" This guide assumes that you "
+"know how to run code snippets in your language of choice."
+msgstr ""
+
+#: ../getting_started.rst:198
+msgid ""
+"To try it, add the following code to a Python script (or use an interactive "
+"Python shell) by calling :code:`python -i`."
+msgstr ""
+
+#: ../getting_started.rst:216
+msgid ""
+"To try it, add the following code to a script (or use an interactive nodejs "
+"shell) by calling :code:`node`."
+msgstr ""
+
+#: ../getting_started.rst:225
+msgid ""
+"To use the OpenStack .NET SDK, add the following code in the required "
+"namespace section."
+msgstr ""
+
+#: ../getting_started.rst:234
+msgid ""
+"Because all service endpoints use the Identity Service for authentication "
+"and authorization, place the following code in the 'void Main()' entry-point "
+"function."
+msgstr ""
+
+#: ../getting_started.rst:245
+msgid ""
+"Because the tutorial reuses the :code:`conn` object, make sure that you "
+"always have one handy."
+msgstr ""
+
+#: ../getting_started.rst:250
+msgid ""
+"If you receive the :code:`libcloud.common.types.InvalidCredsError: 'Invalid "
+"credentials with the provider'` exception when you run one of these API "
+"calls, double-check your credentials."
+msgstr ""
+
+#: ../getting_started.rst:255
+msgid ""
+"If your provider does not support regions, try a blank string ('') for the "
+"`region_name`."
+msgstr ""
+
+#: ../getting_started.rst:260
+msgid ""
+"Use your credentials above to specify the cloud provider name, user name, "
+"password, project_name and region_name in the file :file:`~/.config/"
+"openstack/clouds.yml`."
+msgstr ""
+
+#: ../getting_started.rst:267
+msgid ""
+"If you do use a public cloud `known by shade <http://git.openstack.org/cgit/"
+"openstack/os-client-config/tree/os_client_config/vendors>`_, you can avoid "
+"specifying :code:`auth_url:` and instead specify :code:`profile: "
+"$PROVIDER_NAME` in the clouds.yml file."
+msgstr ""
+
+#: ../getting_started.rst:277
+msgid "Flavors and images"
+msgstr ""
+
+#: ../getting_started.rst:279
+msgid ""
+"To run your application, you must launch an instance. This instance serves "
+"as a virtual machine."
+msgstr ""
+
+#: ../getting_started.rst:282
+msgid ""
+"To launch an instance, you choose a flavor and an image. The flavor "
+"represents the size of the instance, including the number of CPUs and amount "
+"of RAM and disk space. An image is a prepared OS installation from which you "
+"clone your instance. When you boot instances in a public cloud, larger "
+"flavors can be more expensive than smaller ones in terms of resources and "
+"monetary cost."
+msgstr ""
+
+#: ../getting_started.rst:288
+msgid ""
+"To list the images that are available in your cloud, run some API calls:"
+msgstr ""
+
+#: ../getting_started.rst:303 ../getting_started.rst:316
+#: ../getting_started.rst:341 ../getting_started.rst:357
+#: ../getting_started.rst:397 ../getting_started.rst:413
+#: ../getting_started.rst:438 ../getting_started.rst:457
+#: ../getting_started.rst:515 ../getting_started.rst:527
+#: ../getting_started.rst:545 ../getting_started.rst:557
+#: ../getting_started.rst:597 ../getting_started.rst:609
+#: ../getting_started.rst:628 ../getting_started.rst:643
+#: ../getting_started.rst:700 ../getting_started.rst:723
+#: ../getting_started.rst:737
+msgid "This code returns output like this:"
+msgstr ""
+
+#: ../getting_started.rst:382
+msgid "You can also get information about available flavors:"
+msgstr ""
+
+#: ../getting_started.rst:483
+msgid "Your images and flavors will be different, of course."
+msgstr ""
+
+#: ../getting_started.rst:485
+msgid ""
+"Choose an image and flavor for your instance. You need about 1GB RAM, 1 CPU, "
+"and a 1GB disk. This example uses the Ubuntu image with a small flavor, "
+"which is a safe choice. In subsequent tutorial sections in this guide, you "
+"must change the image and flavor IDs to correspond to the image and flavor "
+"that you choose."
+msgstr ""
+
+#: ../getting_started.rst:491
+msgid ""
+"If the image that you want is not available in your cloud, you can usually "
+"upload one depending on your cloud's policy settings. For information about "
+"how to upload images, see `obtaining images <http://docs.openstack.org/image-"
+"guide/content/ch_obtaining_images.html>`_."
+msgstr ""
+
+#: ../getting_started.rst:496
+msgid ""
+"Set the image and size variables to appropriate values for your cloud. We'll "
+"use these variables in later sections."
+msgstr ""
+
+#: ../getting_started.rst:499
+msgid ""
+"First, tell the connection to get a specified image by using the ID of the "
+"image that you picked in the previous section:"
+msgstr ""
+
+#: ../getting_started.rst:582
+msgid "Next, choose which flavor you want to use:"
+msgstr ""
+
+#: ../getting_started.rst:636
+msgid ""
+"Because shade accepts either the ID or name in most API calls, specify the "
+"name for the flavor:"
+msgstr ""
+
+#: ../getting_started.rst:669
+msgid "Now, you're ready to launch the instance."
+msgstr ""
+
+#: ../getting_started.rst:672
+msgid "Launch an instance"
+msgstr ""
+
+#: ../getting_started.rst:674
+msgid "Use your selected image and flavor to create an instance."
+msgstr ""
+
+#: ../getting_started.rst:676
+msgid ""
+"The following instance creation example assumes that you have a single-"
+"tenant network. If you receive the 'Exception: 400 Bad Request Multiple "
+"possible networks found, use a Network ID to be more specific' error, you "
+"have multiple-tenant networks. You must add a `networks` parameter to the "
+"call that creates the server. See :doc:`/appendix` for details."
+msgstr ""
+
+#: ../getting_started.rst:683
+msgid "Create the instance."
+msgstr ""
+
+#: ../getting_started.rst:685
+msgid "Your SDK might call an instance a 'node' or 'server'."
+msgstr ""
+
+#: ../getting_started.rst:749
+msgid "If you list existing instances:"
+msgstr ""
+
+#: ../getting_started.rst:785
+msgid "The new instance appears."
+msgstr ""
+
+#: ../getting_started.rst:891
+msgid "Before you continue, you must do one more thing."
+msgstr ""
+
+#: ../getting_started.rst:894
+msgid "Destroy an instance"
+msgstr ""
+
+#: ../getting_started.rst:896
+msgid ""
+"Cloud resources such as running instances that you no longer use can cost "
+"money. Destroy cloud resources to avoid unexpected expenses."
+msgstr ""
+
+#: ../getting_started.rst:932
+msgid "If you list the instances again, the instance disappears."
+msgstr ""
+
+#: ../getting_started.rst:934
+msgid ""
+"Leave your shell open to use it for another instance deployment in this "
+"section."
+msgstr ""
+
+#: ../getting_started.rst:938
+msgid "Deploy the application to a new instance"
+msgstr ""
+
+#: ../getting_started.rst:940
+msgid ""
+"Now that you know how to create and destroy instances, you can deploy the "
+"sample application. The instance that you create for the application is "
+"similar to the first instance that you created, but this time, we'll briefly "
+"introduce a few extra concepts."
+msgstr ""
+
+#: ../getting_started.rst:945
+msgid ""
+"Internet connectivity from your cloud instance is required to download the "
+"application."
+msgstr ""
+
+#: ../getting_started.rst:948
+msgid ""
+"When you create an instance for the application, you'll want to give it a "
+"bit more information than you supplied to the bare instance that you just "
+"created and destroyed. We'll go into more detail in later sections, but for "
+"now, simply create the following resources so that you can feed them to the "
+"instance:"
+msgstr ""
+
+#: ../getting_started.rst:954
+msgid ""
+"A key pair. To access your instance, you must import an SSH public key into "
+"OpenStack to create a key pair. OpenStack installs this key pair on the new "
+"instance. Typically, your public key is written to :code:`.ssh/id_rsa.pub`. "
+"If you do not have an SSH public key file, follow `these instructions "
+"<https://help.github.com/articles/generating-ssh- keys/>`_ first. We'll "
+"cover these instructions in depth in :doc:`/introduction`."
+msgstr ""
+
+#: ../getting_started.rst:963 ../getting_started.rst:974
+#: ../getting_started.rst:987 ../getting_started.rst:996
+msgid ""
+"In the following example, :code:`pub_key_file` should be set to the location "
+"of your public SSH key file."
+msgstr ""
+
+#: ../getting_started.rst:1004
+msgid ""
+"Network access. By default, OpenStack filters all traffic. You must create a "
+"security group and apply it to your instance. The security group allows HTTP "
+"and SSH access. We'll go into more detail in :doc:`/introduction`."
+msgstr ""
+
+#: ../getting_started.rst:1033
+msgid ""
+"User data. During instance creation, you can provide user data to OpenStack "
+"to configure instances after they boot. The cloud-init service applies the "
+"user data to an instance. You must pre-install the cloud-init service on "
+"your chosen image. We'll go into more detail in :doc:`/introduction`."
+msgstr ""
+
+#: ../getting_started.rst:1063
+msgid "Now, you can boot and configure the instance."
+msgstr ""
+
+#: ../getting_started.rst:1066
+msgid "Boot and configure an instance"
+msgstr ""
+
+#: ../getting_started.rst:1068
+msgid ""
+"Use the image, flavor, key pair, and userdata to create an instance. After "
+"you request the instance, wait for it to build."
+msgstr ""
+
+#: ../getting_started.rst:1092
+msgid "The shade framework can select and assign a free floating IP quickly"
+msgstr ""
+
+#: ../getting_started.rst:1098
+msgid ""
+"When the instance boots, the `ex_userdata` variable value instructs the "
+"instance to deploy the Fractals application."
+msgstr ""
+
+#: ../getting_started.rst:1102
+msgid "Associate a floating IP for external connectivity"
+msgstr ""
+
+#: ../getting_started.rst:1104
+msgid "We'll cover networking in detail in :doc:`/networking`."
+msgstr ""
+
+#: ../getting_started.rst:1106
+msgid ""
+"To see the application running, you must know where to look for it. By "
+"default, your instance has outbound network access. To make your instance "
+"reachable from the Internet, you need an IP address. By default in some "
+"cases, your instance is provisioned with a publicly rout-able IP address. In "
+"this case, you'll see an IP address listed under `public_ips` or "
+"`private_ips` when you list the instances. If not, you must create and "
+"attach a floating IP address to your instance."
+msgstr ""
+
+#: ../getting_started.rst:1121
+msgid "This will get an ip address that you can assign to your instance with:"
+msgstr ""
+
+#: ../getting_started.rst:1131
+msgid ""
+"Use :code:`ex_list_floating_ip_pools()` and select the first floating IP "
+"address pool. Allocate this pool to your project and attach it to your "
+"instance."
+msgstr ""
+
+#: ../getting_started.rst:1139 ../getting_started.rst:1162
+msgid "This code returns the floating IP address:"
+msgstr ""
+
+#: ../getting_started.rst:1145 ../getting_started.rst:1168
+msgid "You can then attach it to the instance:"
+msgstr ""
+
+#: ../getting_started.rst:1154
+msgid ""
+"Use :code:`getFloatingIps` to check for unused addresses, selecting the "
+"first one if available, otherwise use :code:`allocateNewFloatingIp` to "
+"allocate a new Floating IP to your project from the default address pool."
+msgstr ""
+
+#: ../getting_started.rst:1181
+msgid "Run the script to start the deployment."
+msgstr ""
+
+#: ../getting_started.rst:1184
+msgid "Access the application"
+msgstr ""
+
+#: ../getting_started.rst:1186
+msgid ""
+"Deploying application data and configuration to the instance can take some "
+"time. Consider enjoying a cup of coffee while you wait. After the "
+"application deploys, you can visit the awesome graphic interface at the "
+"following link by using your preferred browser."
+msgstr ""
+
+#: ../getting_started.rst:1212
+msgid ""
+"If you do not use floating IPs, substitute another IP address as appropriate"
+msgstr ""
+
+#: ../getting_started.rst:1224
+msgid ""
+"Don't worry if these concepts are not yet completely clear. In :doc:`/"
+"introduction`, we explore these concepts in more detail."
+msgstr ""
+
+#: ../getting_started.rst:1227
+msgid ":doc:`/scaling_out`: Learn how to scale your application"
+msgstr ""
+
+#: ../getting_started.rst:1228
+msgid ""
+":doc:`/durability`: Learn how to use Object Storage to make your application "
+"durable"
+msgstr ""
+
+#: ../getting_started.rst:1229 ../introduction.rst:575 ../scaling_out.rst:383
+msgid ""
+":doc:`/block_storage`: Migrate the database to block storage, or use the "
+"database-as-a-service component"
+msgstr ""
+
+#: ../getting_started.rst:1231 ../scaling_out.rst:385
+msgid ":doc:`/orchestration`: Automatically orchestrate your application"
+msgstr ""
+
+#: ../getting_started.rst:1232 ../scaling_out.rst:386
+msgid ":doc:`/networking`: Learn about complex networking"
+msgstr ""
+
+#: ../getting_started.rst:1233 ../introduction.rst:579 ../scaling_out.rst:387
+msgid ":doc:`/advice`: Get advice about operations"
+msgstr ""
+
+#: ../getting_started.rst:1234 ../introduction.rst:580 ../scaling_out.rst:388
+msgid ""
+":doc:`/craziness`: Learn some crazy things that you might not think to do ;)"
+msgstr ""
+
+#: ../getting_started.rst:1239 ../introduction.rst:584 ../scaling_out.rst:392
+msgid "Complete code sample"
+msgstr ""
+
+#: ../getting_started.rst:1241 ../introduction.rst:586 ../scaling_out.rst:394
+msgid ""
+"The following file contains all of the code from this section of the "
+"tutorial. This comprehensive code sample lets you view and run the code as a "
+"single script."
+msgstr ""
+
+#: ../getting_started.rst:1245 ../introduction.rst:589 ../scaling_out.rst:398
+msgid ""
+"Before you run this script, confirm that you have set your authentication "
+"information, the flavor ID, and image ID."
+msgstr ""
+
+#: ../index.rst:3
+msgid "Writing your first OpenStack application"
+msgstr ""
+
+#: ../index.rst:6
+msgid "Contents"
+msgstr ""
+
+#: ../index.rst:26
+msgid "Search in this guide"
+msgstr ""
+
+#: ../index.rst:28
+msgid ":ref:`search`"
+msgstr ""
+
+#: ../introduction.rst:3
+msgid "Introduction to the fractals application architecture"
+msgstr ""
+
+#: ../introduction.rst:5
+msgid ""
+"This section introduces the application architecture and explains how it was "
+"designed to take advantage of cloud features in general and OpenStack in "
+"particular. It also describes some commands in the previous section."
+msgstr ""
+
+#: ../introduction.rst:38
+msgid "Cloud application architecture principles"
+msgstr ""
+
+#: ../introduction.rst:40
+msgid ""
+"Cloud applications typically share several design principles. These "
+"principles influenced the design of the Fractals application."
+msgstr ""
+
+#: ../introduction.rst:48
+msgid "Modularity and micro-services"
+msgstr ""
+
+#: ../introduction.rst:50
+msgid ""
+"`Micro-services <http://en.wikipedia.org/wiki/Microservices>`_ are an "
+"important design pattern that helps achieve application modularity. "
+"Separating logical application functions into independent services "
+"simplifies maintenance and re-use. Decoupling components also makes it "
+"easier to selectively scale individual components, as required. Further, "
+"application modularity is a required feature of applications that scale out "
+"well and are fault tolerant."
+msgstr ""
+
+#: ../introduction.rst:58
+msgid "Scalability"
+msgstr ""
+
+#: ../introduction.rst:60
+msgid ""
+"Cloud applications often use many small instances rather than a few large "
+"instances. Provided that an application is sufficiently modular, you can "
+"easily distribute micro-services across as many instances as required. This "
+"architecture enables an application to grow past the limit imposed by the "
+"maximum size of an instance. It's like trying to move a large number of "
+"people from one place to another; there's only so many people you can put on "
+"the largest bus, but you can use an unlimited number of buses or small cars, "
+"which provide just the capacity you need - and no more."
+msgstr ""
+
+#: ../introduction.rst:70
+msgid "Fault tolerance"
+msgstr ""
+
+#: ../introduction.rst:72
+msgid ""
+"In cloud programming, there's a well-known analogy known as \"cattle vs pets"
+"\". If you haven't heard it before, it goes like this:"
+msgstr ""
+
+#: ../introduction.rst:75
+msgid ""
+"When you're dealing with pets, you name them and care for them and if they "
+"get sick, you nurse them back to health. Nursing pets back to health can be "
+"difficult and very time consuming. When you're dealing with cattle, you "
+"attach a numbered tag to their ear and if they get sick you put them down "
+"and move on."
+msgstr ""
+
+#: ../introduction.rst:81
+msgid ""
+"That, as it happens, is the new reality of programming. Applications and "
+"systems used to be created on large, expensive servers, cared for by "
+"operations staff dedicated to keeping them healthy. If something went wrong "
+"with one of those servers, the staff's job was to do whatever it took to "
+"make it right again and save the server and the application."
+msgstr ""
+
+#: ../introduction.rst:88
+msgid ""
+"In cloud programming, it's very different. Rather than large, expensive "
+"servers, you're dealing with virtual machines that are literally disposable; "
+"if something goes wrong, you shut it down and spin up a new one. There's "
+"still operations staff, but rather than nursing individual servers back to "
+"health, their job is to monitor the health of the overall system."
+msgstr ""
+
+#: ../introduction.rst:95
+msgid ""
+"There are definite advantages to this architecture. It's easy to get a \"new"
+"\" server, without any of the issues that inevitably arise when a server has "
+"been up and running for months, or even years."
+msgstr ""
+
+#: ../introduction.rst:99
+msgid ""
+"As with classical infrastructure, failures of the underpinning cloud "
+"infrastructure (hardware, networks, and software) are unavoidable. When "
+"you're designing for the cloud, it's crucial that your application is "
+"designed for an environment where failures can happen at any moment. This "
+"may sound like a liability, but it's not; by designing your application with "
+"a high degree of fault tolerance, you're also making it resilient in the "
+"face of change, and therefore more adaptable."
+msgstr ""
+
+#: ../introduction.rst:108
+msgid "Fault tolerance is essential to the cloud-based application."
+msgstr ""
+
+#: ../introduction.rst:111
+msgid "Automation"
+msgstr ""
+
+#: ../introduction.rst:113
+msgid ""
+"If an application is meant to automatically scale up and down to meet "
+"demand, it is not feasible have any manual steps in the process of deploying "
+"any component of the application. Automation also decreases the time to "
+"recovery for your application in the event of component failures, increasing "
+"fault tolerance and resilience."
+msgstr ""
+
+#: ../introduction.rst:120
+msgid "Programmatic interfaces (APIs)"
+msgstr ""
+
+#: ../introduction.rst:122
+msgid ""
+"Like many cloud applications, the Fractals application has a `RESTful API "
+"<http://en.wikipedia.org/wiki/Representational_state_transfer>`_. You can "
+"connect to it directly and generate fractals, or you can integrate it as a "
+"component of a larger application. Any time a standard interface such as an "
+"API is available, automated testing becomes much more feasible, increasing "
+"software quality."
+msgstr ""
+
+#: ../introduction.rst:130
+msgid "Fractals application architecture"
+msgstr ""
+
+#: ../introduction.rst:132
+msgid ""
+"The Fractals application was designed with the principles of the previous "
+"subsection in mind. You'll note that in :doc:`getting_started`, we deployed "
+"the application in an all-in-one style, on a single virtual machine. This "
+"isn't good practice, but because the application uses micro-services to "
+"decouple logical application functions, we can change this easily."
+msgstr ""
+
+#: ../introduction.rst:140
+msgid ""
+"Message queues are used to facilitate communication between the Fractal "
+"application services. The Fractal application uses a `work queue <https://"
+"www.rabbitmq.com/tutorials/tutorial-two-python.html>`_ (or task queue) to "
+"distribute tasks to the worker services."
+msgstr ""
+
+#: ../introduction.rst:145
+msgid ""
+"Message queues work in a way similar to a queue (or a line, for those of us "
+"on the other side of the ocean) in a bank being served by multiple clerks. "
+"The message queue in our application provides a feed of work requests that "
+"can be taken one-at-a-time by worker services, whether there is a single "
+"worker service or hundreds of them."
+msgstr ""
+
+#: ../introduction.rst:151
+msgid ""
+"This is a `useful pattern <https://msdn.microsoft.com/en-us/library/dn568101."
+"aspx>`_ for many cloud applications that have long lists of requests coming "
+"in and a pool of resources from which to service them. This also means that "
+"a worker may crash and the tasks will be processed by other workers."
+msgstr ""
+
+#: ../introduction.rst:156
+msgid ""
+"The `RabbitMQ getting started tutorial <https://www.rabbitmq.com/getstarted."
+"html>`_ provides a great introduction to message queues."
+msgstr ""
+
+#: ../introduction.rst:162
+msgid ""
+"The worker service consumes messages from the work queue and then processes "
+"them to create the corresponding fractal image file."
+msgstr ""
+
+#: ../introduction.rst:165
+msgid ""
+"Of course there's also a web interface which offers a more human friendly "
+"way of accessing the API to view the created fractal images, and a simple "
+"command line interface."
+msgstr ""
+
+#: ../introduction.rst:177
+msgid ""
+"There are also multiple storage back ends (to store the generated fractal "
+"images) and a database component (to store the state of tasks), but we'll "
+"talk about those in :doc:`/durability` and :doc:`/block_storage` "
+"respectively."
+msgstr ""
+
+#: ../introduction.rst:183
+msgid "How the Fractals application interacts with OpenStack"
+msgstr ""
+
+#: ../introduction.rst:196
+msgid "The magic revisited"
+msgstr ""
+
+#: ../introduction.rst:198
+msgid ""
+"So what exactly was that request doing at the end of the previous section?  "
+"Let's look at it again. (Note that in this subsection, we're just explaining "
+"what you've already done in the previous section; you don't need to execute "
+"these commands again.)"
+msgstr ""
+
+#: ../introduction.rst:209
+msgid ""
+"We explained image and flavor in :doc:`getting_started`, so in the following "
+"sections, we will explain the other parameters in detail, including :code:"
+"`ex_userdata` (cloud-init) and :code:`ex_keyname` (key pairs)."
+msgstr ""
+
+#: ../introduction.rst:215
+msgid "Introduction to cloud-init"
+msgstr ""
+
+#: ../introduction.rst:217
+msgid ""
+"`cloud-init <https://cloudinit.readthedocs.org/en/latest/>`_ is a tool that "
+"performs instance configuration tasks during the boot of a cloud instance, "
+"and comes installed on most cloud images. :code:`ex_userdata`, which was "
+"passed to :code:`create_node`, is the configuration data passed to cloud-"
+"init."
+msgstr ""
+
+#: ../introduction.rst:223
+msgid ""
+"In this case, we are presenting a shell script as the `userdata <https://"
+"cloudinit.readthedocs.org/en/latest/topics/format.html#user-data-script>`_. "
+"When :code:`create_node` creates the instance, :code:`cloud-init` executes "
+"the shell script in the :code:`userdata` variable."
+msgstr ""
+
+#: ../introduction.rst:228
+msgid ""
+"When an SSH public key is provided during instance creation, cloud-init "
+"installs this key on a user account. (The user name varies between cloud "
+"images.)  See the `Obtaining Images <http://docs.openstack.org/image-guide/"
+"content/ch_obtaining_images.html>`_ section of the image guide for guidance "
+"about which user name you should use when SSHing. If you still have problems "
+"logging in, ask your cloud provider to confirm the user name."
+msgstr ""
+
+#: ../introduction.rst:242
+msgid ""
+"After the instance is created, cloud-init downloads and runs a script "
+"called :code:`install.sh`. This script installs the Fractals application. "
+"Cloud-init can consume bash scripts and a number of different types of data. "
+"You can even provide multiple types of data. You can find more information "
+"about cloud-init in the `official documentation <https://cloudinit."
+"readthedocs.org/en/latest/>`_."
+msgstr ""
+
+#: ../introduction.rst:249
+msgid "Introduction to key pairs"
+msgstr ""
+
+#: ../introduction.rst:251
+msgid ""
+"Security is important when it comes to your instances; you can't have just "
+"anyone accessing them. To enable logging into an instance, you must provide "
+"the public key of an SSH key pair during instance creation. In section one, "
+"you created and uploaded a key pair to OpenStack, and cloud-init installed "
+"it for the user account."
+msgstr ""
+
+#: ../introduction.rst:257
+msgid ""
+"Even with a key in place, however, you must have the appropriate security "
+"group rules in place to access your instance."
+msgstr ""
+
+#: ../introduction.rst:261
+msgid "Introduction to security groups"
+msgstr ""
+
+#: ../introduction.rst:263
+msgid ""
+"Security groups are sets of network access rules that are applied to an "
+"instance's networking. By default, only egress (outbound) traffic is "
+"allowed. You must explicitly enable ingress (inbound) network access by "
+"creating a security group rule."
+msgstr ""
+
+#: ../introduction.rst:268
+msgid ""
+"Removing the egress rule created by OpenStack will cause your instance "
+"networking to break."
+msgstr ""
+
+#: ../introduction.rst:271
+msgid ""
+"Start by creating a security group for the all-in-one instance and adding "
+"the appropriate rules, such as HTTP (TCP port 80) and SSH (TCP port 22):"
+msgstr ""
+
+#: ../introduction.rst:282
+msgid ""
+":code:`ex_create_security_group_rule()` takes ranges of ports as input. This "
+"is why ports 80 and 22 are passed twice."
+msgstr ""
+
+#: ../introduction.rst:286
+msgid "You can list available security groups with:"
+msgstr ""
+
+#: ../introduction.rst:295
+msgid "Once you've created a rule or group, you can also delete it:"
+msgstr ""
+
+#: ../introduction.rst:304
+msgid "To see which security groups apply to an instance, you can:"
+msgstr ""
+
+#: ../introduction.rst:315
+msgid ""
+"Once you've configured permissions, you'll need to know where to access the "
+"application."
+msgstr ""
+
+#: ../introduction.rst:319
+msgid "Introduction to Floating IPs"
+msgstr ""
+
+#: ../introduction.rst:321
+msgid ""
+"As in traditional IT, cloud instances are accessed through IP addresses that "
+"OpenStack assigns. How this is actually done depends on the networking setup "
+"for your cloud. In some cases, you will simply get an Internet rout-able IP "
+"address assigned directly to your instance."
+msgstr ""
+
+#: ../introduction.rst:326
+msgid ""
+"The most common way for OpenStack clouds to allocate Internet rout-able IP "
+"addresses to instances, however, is through the use of floating IPs. A "
+"floating IP is an address that exists as an entity unto itself, and can be "
+"associated to a specific instance network interface. When a floating IP "
+"address is associated to an instance network interface, OpenStack re-directs "
+"traffic bound for that address to the address of the instance's internal "
+"network interface address. Your cloud provider will generally offer pools of "
+"floating IPs for your use."
+msgstr ""
+
+#: ../introduction.rst:336
+msgid ""
+"To use a floating IP, you must first allocate an IP to your project, then "
+"associate it to your instance's network interface."
+msgstr ""
+
+#: ../introduction.rst:341
+msgid ""
+"Allocating a floating IP address to an instance does not change the IP "
+"address of the instance, it causes OpenStack to establish the network "
+"translation rules to allow an *additional* IP address."
+msgstr ""
+
+#: ../introduction.rst:352
+msgid ""
+"If you have no free floating IPs that have been previously allocated for "
+"your project, first select a floating IP pool offered by your provider. In "
+"this example, we have selected the first one and assume that it has "
+"available IP addresses."
+msgstr ""
+
+#: ../introduction.rst:363
+msgid ""
+"Now request that an address from this pool be allocated to your project."
+msgstr ""
+
+#: ../introduction.rst:371
+msgid ""
+"Now that you have an unused floating IP address allocated to your project, "
+"attach it to an instance."
+msgstr ""
+
+#: ../introduction.rst:380
+msgid ""
+"That brings us to where we ended up at the end of :doc:`/getting_started`. "
+"But where do we go from here?"
+msgstr ""
+
+#: ../introduction.rst:384
+msgid "Splitting services across multiple instances"
+msgstr ""
+
+#: ../introduction.rst:386
+msgid ""
+"We've talked about separating functions into different micro-services, and "
+"how that enables us to make use of the cloud architecture. Now let's see "
+"that in action."
+msgstr ""
+
+#: ../introduction.rst:390
+msgid ""
+"The rest of this tutorial won't reference the all-in-one instance you "
+"created in section one. Take a moment to delete this instance."
+msgstr ""
+
+#: ../introduction.rst:393
+msgid ""
+"It's easy to split out services into multiple instances. We will create a "
+"controller instance called :code:`app-controller`, which hosts the API, "
+"database, and messaging services. We'll also create a worker instance "
+"called :code:`app-worker-1`, which just generates fractals."
+msgstr ""
+
+#: ../introduction.rst:399
+msgid ""
+"The first step is to start the controller instance. The instance has the API "
+"service, the database, and the messaging service, as you can see from the "
+"parameters passed to the installation script."
+msgstr ""
+
+#: ../introduction.rst:404 ../introduction.rst:444
+msgid "Parameter"
+msgstr ""
+
+#: ../introduction.rst:404
+msgid "Values"
+msgstr ""
+
+#: ../introduction.rst:406
+msgid ":code:`-i`"
+msgstr ""
+
+#: ../introduction.rst:406
+msgid ""
+":code:`messaging` (install RabbitMQ) and :code:`faafo` (install the Faafo "
+"app)."
+msgstr ""
+
+#: ../introduction.rst:406
+msgid "Install a service"
+msgstr ""
+
+#: ../introduction.rst:407
+msgid ":code:`-r`"
+msgstr ""
+
+#: ../introduction.rst:407
+msgid ""
+":code:`api` (enable and start the API service), :code:`worker` (enable and "
+"start the worker service), and :code:`demo` (run the demo mode to request "
+"random fractals)."
+msgstr ""
+
+#: ../introduction.rst:407
+msgid "Enable/start something"
+msgstr ""
+
+#: ../introduction.rst:419
+msgid ""
+"Note that this time, when you create a security group, you're including a "
+"rule that only applies for instances that are part of the worker_group."
+msgstr ""
+
+#: ../introduction.rst:423
+msgid "Next, start a second instance, which will be the worker instance:"
+msgstr ""
+
+#: ../introduction.rst:434
+msgid ""
+"Notice that you've added this instance to the worker_group, so it can access "
+"the controller."
+msgstr ""
+
+#: ../introduction.rst:437
+msgid ""
+"As you can see from the parameters passed to the installation script, you "
+"are specifying that this is the worker instance, but you're also passing the "
+"address of the API instance and the message queue so the worker can pick up "
+"requests. The Fractals application installation script can take several "
+"parameters."
+msgstr ""
+
+#: ../introduction.rst:444
+msgid "Example"
+msgstr ""
+
+#: ../introduction.rst:446
+msgid ":code:`-e`"
+msgstr ""
+
+#: ../introduction.rst:446
+msgid "The endpoint URL of the API service."
+msgstr ""
+
+#: ../introduction.rst:446
+msgid "http://localhost/"
+msgstr ""
+
+#: ../introduction.rst:447
+msgid ":code:`-m`"
+msgstr ""
+
+#: ../introduction.rst:447
+msgid "The transport URL of the messaging service."
+msgstr ""
+
+#: ../introduction.rst:447
+msgid "amqp://guest:guest@localhost:5672/"
+msgstr ""
+
+#: ../introduction.rst:448
+msgid ":code:`-d`"
+msgstr ""
+
+#: ../introduction.rst:448
+msgid "The connection URL for the database (not used here)."
+msgstr ""
+
+#: ../introduction.rst:448
+msgid "sqlite:////tmp/sqlite.db"
+msgstr ""
+
+#: ../introduction.rst:451
+msgid ""
+"Now if you make a request for a new fractal, you connect to the controller "
+"instance, :code:`app-controller`, but the work will actually be performed by "
+"a separate worker instance - :code:`app-worker-1`."
+msgstr ""
+
+#: ../introduction.rst:457
+msgid "Login with SSH and use the Fractal app"
+msgstr ""
+
+#: ../introduction.rst:459
+msgid ""
+"Login to the worker instance, :code:`app-worker-1`, with SSH, using the "
+"previous added SSH key pair \"demokey\". Start by getting the IP address of "
+"the worker:"
+msgstr ""
+
+#: ../introduction.rst:469
+msgid "Now you can SSH into the instance:"
+msgstr ""
+
+#: ../introduction.rst:475
+msgid ""
+"Replace :code:`IP_WORKER_1` with the IP address of the worker instance and "
+"USERNAME to the appropriate user name."
+msgstr ""
+
+#: ../introduction.rst:478
+msgid ""
+"Once you've logged in, check to see whether the worker service process is "
+"running as expected.  You can find the logs of the worker service in the "
+"directory :code:`/var/log/supervisor/`."
+msgstr ""
+
+#: ../introduction.rst:487
+msgid ""
+"Open :code:`top` to monitor the CPU usage of the :code:`faafo-worker` "
+"process."
+msgstr ""
+
+#: ../introduction.rst:489
+msgid ""
+"Now log into the controller instance, :code:`app-controller`, also with SSH, "
+"using the previously added SSH key pair \"demokey\"."
+msgstr ""
+
+#: ../introduction.rst:496
+msgid ""
+"Replace :code:`IP_CONTROLLER` with the IP address of the controller instance "
+"and USERNAME to the appropriate user name."
+msgstr ""
+
+#: ../introduction.rst:499
+msgid ""
+"Check to see whether the API service process is running like expected. You "
+"can find the logs for the API service in the directory :file:`/var/log/"
+"supervisor/`."
+msgstr ""
+
+#: ../introduction.rst:508
+msgid ""
+"Now call the Fractal application's command line interface (:code:`faafo`) to "
+"request a few new fractals. The following command requests a few fractals "
+"with random parameters:"
+msgstr ""
+
+#: ../introduction.rst:517
+msgid ""
+"Watch :code:`top` on the worker instance. Right after calling :code:`faafo` "
+"the :code:`faafo-worker` process should start consuming a lot of CPU cycles."
+msgstr ""
+
+#: ../introduction.rst:526
+msgid ""
+"To show the details of a specific fractal use the subcommand :code:`show` of "
+"the Faafo CLI."
+msgstr ""
+
+#: ../introduction.rst:547
+msgid ""
+"There are more commands available; find out more details about them with :"
+"code:`faafo get --help`, :code:`faafo list --help`, and :code:`faafo delete "
+"--help`."
+msgstr ""
+
+#: ../introduction.rst:551
+msgid ""
+"The application stores the generated fractal images directly in the database "
+"used by the API service instance.  Storing image files in a database is not "
+"good practice. We're doing it here as an example only as an easy way to "
+"allow multiple instances to have access to the data. For best practice, we "
+"recommend storing objects in Object Storage, which is covered in :doc:"
+"`durability`."
+msgstr ""
+
+#: ../introduction.rst:562
+msgid ""
+"You should now have a basic understanding of the architecture of cloud-based "
+"applications. In addition, you have had practice starting new instances, "
+"automatically configuring them at boot, and even modularizing an application "
+"so that you may use multiple instances to run it. These are the basic steps "
+"for requesting and using compute resources in order to run your application "
+"on an OpenStack cloud."
+msgstr ""
+
+#: ../introduction.rst:570
+msgid ""
+"From here, you should go to :doc:`/scaling_out` to learn how to scale your "
+"application further. Alternatively, you may jump to any of these sections:"
+msgstr ""
+
+#: ../introduction.rst:574
+msgid ""
+":doc:`/durability`: Learn how to use Object Storage to make your application "
+"more durable"
+msgstr ""
+
+#: ../introduction.rst:577
+msgid ":doc:`/orchestration`: Automatically orchestrate the application"
+msgstr ""
+
+#: ../introduction.rst:578
+msgid ":doc:`/networking`: Learn about more complex networking"
+msgstr ""
+
+#: ../networking.rst:3
+msgid "Networking"
+msgstr ""
+
+#: ../networking.rst:8
+msgid ""
+"Prior to this chapter, all of the nodes that comprise the fractal "
+"application were attached to the same network."
+msgstr ""
+
+#: ../networking.rst:11
+msgid ""
+"In this section of the tutorial, we introduce the Networking API. This will "
+"enable us to build networking topologies that separate public traffic "
+"accessing the application from traffic between the API and the worker "
+"components.  We also introduce load balancing for resilience, and create a "
+"secure back-end network for communication between the database, webserver, "
+"file storage, and worker components."
+msgstr ""
+
+#: ../networking.rst:18
+msgid ""
+"This section assumes your cloud provider has implemented the OpenStack "
+"Networking API (neutron). Users of clouds which have implemented legacy "
+"networking (nova-network) will have access to networking via the Compute "
+"API. Log in to the Horizon dashboard and navigate to :guilabel:`Project-"
+">Access & Security->API Access`. If you see a service endpoint for the "
+"Network API, your cloud is most likely running the Networking API. If you "
+"are still in doubt, ask your cloud provider for more information."
+msgstr ""
+
+#: ../networking.rst:29
+msgid "This section has not yet been completed for the .NET SDK"
+msgstr ""
+
+#: ../networking.rst:33
+msgid ""
+"fog `supports <http://www.rubydoc.info/gems/fog/1.8.0/Fog/Network/"
+"OpenStack>`_ the OpenStack Networking API, but this section has not yet been "
+"completed."
+msgstr ""
+
+#: ../networking.rst:47
+msgid "Libcloud does not support the OpenStack Networking API."
+msgstr ""
+
+#: ../networking.rst:51
+msgid ""
+"Pkgcloud supports the OpenStack Networking API, but this section has not "
+"been completed."
+msgstr ""
+
+#: ../networking.rst:64
+msgid "Working with the CLI"
+msgstr ""
+
+#: ../networking.rst:66
+msgid ""
+"As SDKs don't currently fully support the OpenStack Networking API, this "
+"section uses the command-line clients."
+msgstr ""
+
+#: ../networking.rst:69
+msgid ""
+"Install the 'neutron' command-line client by following this guide: http://"
+"docs.openstack.org/cli-reference/content/install_clients.html"
+msgstr ""
+
+#: ../networking.rst:72
+msgid ""
+"Then set up the necessary variables for your cloud in an 'openrc' file using "
+"this guide: http://docs.openstack.org/cli-reference/content/cli_openrc.html"
+msgstr ""
+
+#: ../networking.rst:76
+msgid ""
+"Ensure you have an openrc.sh file, source it and then check your neutron "
+"client works: ::"
+msgstr ""
+
+#: ../networking.rst:92
+msgid "Networking segmentation"
+msgstr ""
+
+#: ../networking.rst:94
+msgid ""
+"In traditional datacenters, network segments are dedicated to specific types "
+"of network traffic."
+msgstr ""
+
+#: ../networking.rst:97
+msgid ""
+"The fractal application we are building contains three types of network "
+"traffic:"
+msgstr ""
+
+#: ../networking.rst:100
+msgid "public-facing web traffic"
+msgstr ""
+
+#: ../networking.rst:101
+msgid "API traffic"
+msgstr ""
+
+#: ../networking.rst:102
+msgid "internal worker traffic"
+msgstr ""
+
+#: ../networking.rst:104
+msgid ""
+"For performance reasons, it makes sense to have a network for each tier, so "
+"that traffic from one tier does not \"crowd out\" other types of traffic and "
+"cause the application to fail. In addition, having separate networks makes "
+"controlling access to parts of the application easier to manage, improving "
+"the overall security of the application."
+msgstr ""
+
+#: ../networking.rst:110
+msgid ""
+"Prior to this section, the network layout for the Fractal application would "
+"be similar to the following diagram:"
+msgstr ""
+
+#: ../networking.rst:133
+msgid ""
+"In this network layout, we are assuming that the OpenStack cloud in which "
+"you have been building your application has a public network and tenant "
+"router that was previously created by your cloud provider or by yourself, "
+"following the instructions in the appendix."
+msgstr ""
+
+#: ../networking.rst:138
+msgid ""
+"Many of the network concepts that are discussed in this section are already "
+"present in the diagram above. A tenant router provides routing and external "
+"access for the worker nodes, and floating IP addresses are associated with "
+"each node in the Fractal application cluster to facilitate external access."
+msgstr ""
+
+#: ../networking.rst:144
+msgid ""
+"At the end of this section, we will be making some slight changes to the "
+"networking topology by using the OpenStack Networking API to create a "
+"network to which the worker nodes will attach (10.0.1.0/24). We will use the "
+"API network (10.0.3.0/24) to attach the Fractal API servers. Webserver "
+"instances have their own network (10.0.2.0/24) and will be accessible by "
+"fractal aficionados worldwide, by allocating floating IPs from the public "
+"network."
+msgstr ""
+
+#: ../networking.rst:183
+msgid "Introduction to tenant networking"
+msgstr ""
+
+#: ../networking.rst:185
+msgid ""
+"With the OpenStack Networking API, the workflow for creating a network "
+"topology that separates the public-facing Fractals app API from the worker "
+"back end is as follows:"
+msgstr ""
+
+#: ../networking.rst:189
+msgid "Create a network and subnet for the web server nodes."
+msgstr ""
+
+#: ../networking.rst:191
+msgid ""
+"Create a network and subnet for the worker nodes. This is the private data "
+"network."
+msgstr ""
+
+#: ../networking.rst:193
+msgid "Create a router for the private data network."
+msgstr ""
+
+#: ../networking.rst:195
+msgid "Allocate floating ips and assign them to the web server nodes."
+msgstr ""
+
+#: ../networking.rst:198
+msgid "Creating networks"
+msgstr ""
+
+#: ../networking.rst:200
+msgid ""
+"Most cloud providers will make a public network accessible to you. We will "
+"attach a router to this public network to grant Internet access to our "
+"instances. After also attaching this router to our internal networks, we "
+"will allocate floating IPs from the public network for instances which need "
+"to be accessed from the Internet."
+msgstr ""
+
+#: ../networking.rst:206
+msgid ""
+"Let's just confirm that we have a public network by listing the networks our "
+"tenant has access to. The public network doesn't have to be named public - "
+"it could be 'external', 'net04_ext' or something else - the important thing "
+"is it exists and can be used to reach the internet."
+msgstr ""
+
+#: ../networking.rst:220
+msgid "Next, create a network and subnet for the workers."
+msgstr ""
+
+#: ../networking.rst:259
+msgid "Now, create a network and subnet for the webservers."
+msgstr ""
+
+#: ../networking.rst:299
+msgid "Next, create a network and subnet for the API servers."
+msgstr ""
+
+#: ../networking.rst:339
+msgid ""
+"Now that you've got the networks created, go ahead and create two Floating "
+"IPs, for web servers. Ensure that you replace 'public' with the name of the "
+"public/external network offered by your cloud provider."
+msgstr ""
+
+#: ../networking.rst:375
+msgid ""
+"The world is running out of IPv4 addresses. If you get an error like \"No "
+"more IP addresses available on network\", contact your cloud administrator. "
+"You may also want to ask about IPv6 :)"
+msgstr ""
+
+#: ../networking.rst:381
+msgid "Connecting to the Internet"
+msgstr ""
+
+#: ../networking.rst:383
+msgid ""
+"Most instances will need access to the Internet.  The instances in our "
+"Fractals App are no exception! We'll add routers to pass traffic between the "
+"various networks we are using."
+msgstr ""
+
+#: ../networking.rst:403
+msgid ""
+"We tell OpenStack which network should be used for Internet access by "
+"specifying an external gateway for our router."
+msgstr ""
+
+#: ../networking.rst:426
+msgid "Now, attach our router to the worker, api, and webserver subnets."
+msgstr ""
+
+#: ../networking.rst:440
+msgid "Booting a worker"
+msgstr ""
+
+#: ../networking.rst:442
+msgid ""
+"Now that you've prepared the networking infrastructure, you can go ahead and "
+"boot an instance on it. Ensure you use appropriate flavor and image values "
+"for your cloud - see :doc:`getting_started` if you've not already."
+msgstr ""
+
+#: ../networking.rst:485
+msgid "Load balancing"
+msgstr ""
+
+#: ../networking.rst:487
+msgid ""
+"After separating the Fractal worker nodes into their own network, the next "
+"logical step is to move the Fractal API service onto a load balancer, so "
+"that multiple API workers can handle requests. By using a load balancer, the "
+"API service can be scaled out in a similar fashion to the worker nodes."
+msgstr ""
+
+#: ../networking.rst:494
+msgid "Neutron LbaaS API"
+msgstr ""
+
+#: ../networking.rst:496
+msgid ""
+"This section is based on the Neutron LBaaS API version 1.0 http://docs."
+"openstack.org/admin-guide-cloud/networking_adv-features.html#basic-load-"
+"balancer-as-a-service-operations"
+msgstr ""
+
+#: ../networking.rst:503
+msgid ""
+"The OpenStack Networking API provides support for creating loadbalancers, "
+"which can be used to scale the Fractal app web service. In the following "
+"example, we create two compute instances via the Compute API, then "
+"instantiate a load balancer that will use a virtual IP (VIP) for accessing "
+"the web service offered by the two compute nodes. The end result will be the "
+"following network topology:"
+msgstr ""
+
+#: ../networking.rst:528
+msgid ""
+"libcloud support added 0.14: https://developer.rackspace.com/blog/libcloud-0-"
+"dot-14-released/"
+msgstr ""
+
+#: ../networking.rst:531
+msgid "Let's start by looking at what's already in place."
+msgstr ""
+
+#: ../networking.rst:543
+msgid "Now let's go ahead and create 2 instances."
+msgstr ""
+
+#: ../networking.rst:579
+msgid "Confirm that they were added:"
+msgstr ""
+
+#: ../networking.rst:591
+msgid "Now let's look at what ports are available:"
+msgstr ""
+
+#: ../networking.rst:605
+msgid ""
+"Next create additional floating IPs by specifying the fixed IP addresses "
+"they should point to and the ports they should use:"
+msgstr ""
+
+#: ../networking.rst:639
+msgid ""
+"All right, now you're ready to go ahead and create members for the load "
+"balancer pool, referencing the floating IPs:"
+msgstr ""
+
+#: ../networking.rst:676
+msgid "You should be able to see them in the member list:"
+msgstr ""
+
+#: ../networking.rst:688
+msgid ""
+"Now let's create a health monitor that will ensure that members of the load "
+"balancer pool are active and able to respond to requests. If a member in the "
+"pool dies or is unresponsive, the member is removed from the pool so that "
+"client requests are routed to another active member."
+msgstr ""
+
+#: ../networking.rst:715
+msgid ""
+"Now create a virtual IP that will be used to direct traffic between the "
+"various members of the pool:"
+msgstr ""
+
+#: ../networking.rst:742
+msgid "And confirm it's in place:"
+msgstr ""
+
+#: ../networking.rst:753
+msgid "Now let's look at the big picture."
+msgstr ""
+
+#: ../networking.rst:756
+msgid "Final result"
+msgstr ""
+
+#: ../networking.rst:758
+msgid ""
+"With the addition of the load balancer, the Fractal app's networking "
+"topology now reflects the modular nature of the application itself."
+msgstr ""
+
+#: ../networking.rst:797
+msgid ""
+"You should now be fairly confident working with the Network API. There are "
+"several calls we did not cover. To see these and more, refer to the volume "
+"documentation of your SDK, or try a different step in the tutorial, "
+"including:"
+msgstr ""
+
+#: ../networking.rst:803
+msgid ""
+":doc:`/craziness`: to see all the crazy things we think ordinary folks won't "
+"want to do ;)"
+msgstr ""
+
+#: ../orchestration.rst:3
+msgid "Orchestration"
+msgstr ""
+
+#: ../orchestration.rst:7
+msgid ""
+"Sorry! We're not quite happy with this chapter. It will give you an "
+"introduction to heat, but it's a little dry at the moment. We'd like to "
+"write a template for the Fractals app instead of using the \"hello world\" "
+"style ones, so stay tuned!"
+msgstr ""
+
+#: ../orchestration.rst:11
+msgid ""
+"Throughout this guide, we've talked about the importance of durability and "
+"scalability for your cloud-based applications. In most cases, really "
+"achieving these qualities means automating tasks such as scaling and other "
+"operational tasks."
+msgstr ""
+
+#: ../orchestration.rst:15
+msgid ""
+"The Orchestration module provides a template-based way to describe a cloud "
+"application, then coordinates running the needed OpenStack API calls to run "
+"cloud applications. The templates allow you to create most OpenStack "
+"resource types, such as instances, networking information, volumes, security "
+"groups and even users. It also provides more advanced functionality, such as "
+"instance high availability, instance auto-scaling, and nested stacks."
+msgstr ""
+
+#: ../orchestration.rst:22
+msgid "The OpenStack Orchestration API contains the following constructs:"
+msgstr ""
+
+#: ../orchestration.rst:24
+msgid "Stacks"
+msgstr ""
+
+#: ../orchestration.rst:25
+msgid "Resources"
+msgstr ""
+
+#: ../orchestration.rst:26
+msgid "Templates"
+msgstr ""
+
+#: ../orchestration.rst:28
+msgid ""
+"Stacks are created from Templates, which contain Resources. Resources are an "
+"abstraction in the HOT (Heat Orchestration Template) template language, "
+"which enables you to define different cloud resources by setting the `type` "
+"attribute."
+msgstr ""
+
+#: ../orchestration.rst:32
+msgid ""
+"For example, you might use the Orchestration API to create two compute "
+"instances by creating a Stack and by passing a Template to the Orchestration "
+"API. That Template would contain two Resources with the `type` attribute set "
+"to `OS::Nova::Server`."
+msgstr ""
+
+#: ../orchestration.rst:36
+msgid ""
+"That's a simplistic example, of course, but the flexibility of the Resource "
+"object enables the creation of Templates that contain all the required cloud "
+"infrastructure to run an application, such as load balancers, block storage "
+"volumes, compute instances, networking topology, and security policies."
+msgstr ""
+
+#: ../orchestration.rst:41
+msgid ""
+"The Orchestration module isn't deployed by default in every cloud. If these "
+"commands don't work, it means the Orchestration API isn't available; ask "
+"your support team for assistance."
+msgstr ""
+
+#: ../orchestration.rst:43
+msgid ""
+"This section introduces the `HOT templating language <http://docs.openstack."
+"org/developer/heat/template_guide/hot_guide.html>`_, and takes you through "
+"some of the common calls you will make when working with OpenStack "
+"Orchestration."
+msgstr ""
+
+#: ../orchestration.rst:46
+msgid ""
+"Unlike previous sections of this guide, in which you used your SDK to "
+"programmatically interact with OpenStack, in this section you'll be using "
+"the Orchestration API directly through Template files, so we'll work from "
+"the command line."
+msgstr ""
+
+#: ../orchestration.rst:50
+msgid ""
+"Install the 'heat' commandline client by following this guide: http://docs."
+"openstack.org/cli-reference/content/install_clients.html"
+msgstr ""
+
+#: ../orchestration.rst:53
+msgid ""
+"then set up the necessary variables for your cloud in an 'openrc' file using "
+"this guide: http://docs.openstack.org/cli-reference/content/cli_openrc.html"
+msgstr ""
+
+#: ../orchestration.rst:58
+msgid "the .NET SDK does not currently support OpenStack Orchestration"
+msgstr ""
+
+#: ../orchestration.rst:62
+msgid ""
+"fog `does support OpenStack Orchestration <https://github.com/fog/fog/tree/"
+"master/lib/fog/openstack/models/orchestration>`_."
+msgstr ""
+
+#: ../orchestration.rst:70
+msgid "libcloud does not currently support OpenStack Orchestration."
+msgstr ""
+
+#: ../orchestration.rst:74
+msgid ""
+"Pkgcloud supports OpenStack Orchestration :D:D:D but this section is `not "
+"written yet <https://github.com/pkgcloud/pkgcloud/blob/master/docs/providers/"
+"openstack/orchestration.md>`_"
+msgstr ""
+
+#: ../orchestration.rst:85
+msgid "HOT Templating Language"
+msgstr ""
+
+#: ../orchestration.rst:87
+msgid ""
+"The best place to learn about the template syntax for OpenStack "
+"Orchestration is the `Heat Orchestration Template (HOT) Guide <http://docs."
+"openstack.org/developer/heat/template_guide/hot_guide.html>`_ You should "
+"read the HOT Guide first to learn how to create basic templates, their "
+"inputs and outputs."
+msgstr ""
+
+#: ../orchestration.rst:92
+msgid "Working with Stacks: Basics"
+msgstr ""
+
+#: ../orchestration.rst:102
+msgid "Stack create"
+msgstr ""
+
+#: ../orchestration.rst:104
+msgid ""
+"In the following example, we use the `hello_world <https://github.com/"
+"openstack/heat-templates/blob/master/hot/hello_world.yaml>`_ Hot template to "
+"demonstrate creating a Nova compute instance, with a few configuration "
+"settings passed in, such as an administrative password and the unique "
+"identifier (UUID) of an image:"
+msgstr ""
+
+#: ../orchestration.rst:119
+msgid ""
+"The resulting stack creates a Nova instance automatically, which you can see "
+"here:"
+msgstr ""
+
+#: ../orchestration.rst:130
+msgid ""
+"Verify that the stack was successfully created using the following command:"
+msgstr ""
+
+#: ../orchestration.rst:141
+msgid "Remove the stack:"
+msgstr ""
+
+#: ../orchestration.rst:152
+msgid "Verify that the removal of the stack has deleted the nova instance:"
+msgstr ""
+
+#: ../orchestration.rst:162
+msgid ""
+"While this stack is not very interesting - it just starts a single instance "
+"- it is possible to make very complicated templates that involve dozens of "
+"instances or adds and removes instances based on demand. Continue to the "
+"next section to learn more."
+msgstr ""
+
+#: ../orchestration.rst:168
+msgid "Working with Stacks: Advanced"
+msgstr ""
+
+#: ../orchestration.rst:174
+msgid ""
+"With the use of the Orchestration API, the Fractal app can create an "
+"autoscaling group for all parts of the application, in order to dynamically "
+"provision more compute resources during periods of heavy utilization, and "
+"also terminate compute instances to scale down, as demand decreases."
+msgstr ""
+
+#: ../orchestration.rst:179
+msgid ""
+"There are two helpful articles available to learn about autoscaling with the "
+"Orchestration API:"
+msgstr ""
+
+#: ../orchestration.rst:182
+msgid ""
+"http://superuser.openstack.org/articles/simple-auto-scaling-environment-with-"
+"heat"
+msgstr ""
+
+#: ../orchestration.rst:183
+msgid ""
+"http://superuser.openstack.org/articles/understanding-openstack-heat-auto-"
+"scaling"
+msgstr ""
+
+#: ../orchestration.rst:185
+msgid ""
+"An example template that creates an auto-scaling wordpress instance can be "
+"found in `the heat template repository <https://github.com/openstack/heat-"
+"templates/blob/master/hot/autoscaling.yaml>`_"
+msgstr ""
+
+#: ../orchestration.rst:192
+msgid ""
+"You should now be fairly confident working with the Orchestration service. "
+"There are several calls we did not cover. To see these and more, refer to "
+"the volume documentation of your SDK, or try a different step in the "
+"tutorial, including:"
+msgstr ""
+
+#: ../orchestration.rst:196
+msgid ":doc:`/networking` - to learn about more complex networking"
+msgstr ""
+
+#: ../orchestration.rst:197
+msgid ":doc:`/advice` - for advice for developers new to operations"
+msgstr ""
+
+#: ../orchestration.rst:198
+msgid ""
+":doc:`/craziness` - to see all the crazy things we think ordinary folks "
+"won't want to do ;)"
+msgstr ""
+
+#: ../scaling_out.rst:3 ../scaling_out.rst:149
+msgid "Scaling out"
+msgstr ""
+
+#: ../scaling_out.rst:11
+msgid ""
+"One of the most-often cited reasons for designing applications using cloud "
+"patterns is the ability to **scale out**. That is: to add additional "
+"resources as required. This is in contrast to the previous strategy of "
+"increasing capacity by scaling up the size of existing resources. In order "
+"for scale out to be feasible, you'll need to do two things:"
+msgstr ""
+
+#: ../scaling_out.rst:18
+msgid "Architect your application to make use of additional resources."
+msgstr ""
+
+#: ../scaling_out.rst:19
+msgid "Make it possible to add new resources to your application."
+msgstr ""
+
+#: ../scaling_out.rst:23
+msgid ""
+"In section :doc:`/introduction`, we talked about various aspects of the "
+"application architecture, such as building in a modular fashion, creating an "
+"API, and so on. Now you'll see why those are so important. By creating a "
+"modular application with decoupled services, it is possible to identify "
+"components that cause application performance bottlenecks and scale them out."
+msgstr ""
+
+#: ../scaling_out.rst:30
+msgid ""
+"Just as importantly, you can also remove resources when they are no longer "
+"necessary. It is very difficult to overstate the cost savings that this "
+"feature can bring, as compared to traditional infrastructure."
+msgstr ""
+
+#: ../scaling_out.rst:35
+msgid ""
+"Of course, just having access to additional resources is only part of the "
+"battle; while it's certainly possible to manually add or destroy resources, "
+"you'll get more value -- and more responsiveness -- if the application "
+"simply requests new resources automatically when it needs them."
+msgstr ""
+
+#: ../scaling_out.rst:41
+msgid ""
+"This section continues to illustrate the separation of services onto "
+"multiple instances and highlights some of the choices we've made that "
+"facilitate scalability in the app's architecture."
+msgstr ""
+
+#: ../scaling_out.rst:45
+msgid ""
+"We'll progressively ramp up to use up to about six instances, so ensure that "
+"your cloud account has appropriate quota to handle that many."
+msgstr ""
+
+#: ../scaling_out.rst:48
+msgid ""
+"In the previous section, we used two virtual machines - one 'control' "
+"service and one 'worker'. In our application, the speed at which fractals "
+"can be generated depends on the number of workers. With just one worker, we "
+"can only produce one fractal at a time. Before long, it will be clear that "
+"we need more resources."
+msgstr ""
+
+#: ../scaling_out.rst:54
+msgid ""
+"If you don't have a working application, follow the steps in :doc:"
+"`introduction` to create one."
+msgstr ""
+
+#: ../scaling_out.rst:61
+msgid "Generate load"
+msgstr ""
+
+#: ../scaling_out.rst:63
+msgid ""
+"You can test for yourself what happens when the Fractals application is "
+"under load by:"
+msgstr ""
+
+#: ../scaling_out.rst:66
+msgid ""
+"maxing out the CPU of the existing worker instances (loading the worker)"
+msgstr ""
+
+#: ../scaling_out.rst:67
+msgid "generating a lot of API requests (load up the API)"
+msgstr ""
+
+#: ../scaling_out.rst:71
+msgid "Create a greater number of tasks"
+msgstr ""
+
+#: ../scaling_out.rst:73 ../scaling_out.rst:110
+msgid ""
+"Use SSH to login to the controller instance, :code:`app-controller`, using "
+"the previous added SSH keypair."
+msgstr ""
+
+#: ../scaling_out.rst:80 ../scaling_out.rst:117
+msgid ""
+"Replace :code:`IP_CONTROLLER` with the IP address of the controller instance "
+"and USERNAME to the appropriate username."
+msgstr ""
+
+#: ../scaling_out.rst:84
+msgid ""
+"Call the Fractal application's command line interface (:code:`faafo`) to "
+"request the generation of 5 large fractals."
+msgstr ""
+
+#: ../scaling_out.rst:91
+msgid ""
+"Now if you check the load on the worker, you can see that the instance is "
+"not doing well. On our single CPU flavor instance, a load average of more "
+"than 1 means we are at capacity."
+msgstr ""
+
+#: ../scaling_out.rst:100
+msgid ""
+"Replace :code:`IP_WORKER` with the IP address of the worker instance and "
+"USERNAME to the appropriate username."
+msgstr ""
+
+#: ../scaling_out.rst:105
+msgid "Create a greater number of API service requests"
+msgstr ""
+
+#: ../scaling_out.rst:107
+msgid ""
+"API load is a slightly different problem to the previous one regarding "
+"capacity to work. We can simulate many requests to the API as follows:"
+msgstr ""
+
+#: ../scaling_out.rst:121
+msgid ""
+"Call the Fractal application's command line interface (:code:`faafo`) in a "
+"for loop to send many requests to the API. The following command will "
+"request a random set of fractals, 500 times:"
+msgstr ""
+
+#: ../scaling_out.rst:129
+msgid ""
+"Replace :code:`IP_CONTROLLER` with the IP address of the controller instance."
+msgstr ""
+
+#: ../scaling_out.rst:132
+msgid ""
+"Now if you check the load on the API service instance, :code:`app-"
+"controller`, you can see that the instance is not doing well. On our single "
+"CPU flavor instance, a load average of more than 1 means we are at capacity."
+msgstr ""
+
+#: ../scaling_out.rst:142
+msgid ""
+"The number of requests coming in means that some requests for fractals may "
+"not even get onto the message queue to be processed. To ensure we can cope "
+"with demand, we need to scale out our API services as well."
+msgstr ""
+
+#: ../scaling_out.rst:146
+msgid ""
+"As you can see, we need to scale out the Fractals application's API "
+"capability."
+msgstr ""
+
+#: ../scaling_out.rst:152
+msgid "Remove the old app"
+msgstr ""
+
+#: ../scaling_out.rst:154
+msgid ""
+"Go ahead and delete the existing instances and security groups you created "
+"in previous sections. Remember, when instances in the cloud are no longer "
+"working, remove them and re-create something new."
+msgstr ""
+
+#: ../scaling_out.rst:166
+msgid "Extra security groups"
+msgstr ""
+
+#: ../scaling_out.rst:168
+msgid ""
+"As you change the topology of your applications, you will need to update or "
+"create new security groups. Here, we will re-create the required security "
+"groups."
+msgstr ""
+
+#: ../scaling_out.rst:179
+msgid "A Floating IP helper function"
+msgstr ""
+
+#: ../scaling_out.rst:181
+msgid ""
+"Define a short function to locate unused IPs or allocate a new floating IP. "
+"This saves a few lines of code and prevents you from reaching your Floating "
+"IP quota too quickly."
+msgstr ""
+
+#: ../scaling_out.rst:192
+msgid "Splitting off the database and message queue"
+msgstr ""
+
+#: ../scaling_out.rst:194
+msgid ""
+"Prior to scaling out our application services, like the API service or the "
+"workers, we have to add a central database and messaging instance, called :"
+"code:`app-services`. The database and messaging queue will be used to track "
+"the state of the fractals and to coordinate the communication between the "
+"services."
+msgstr ""
+
+#: ../scaling_out.rst:207
+msgid "Scaling the API service"
+msgstr ""
+
+#: ../scaling_out.rst:209
+msgid ""
+"With multiple workers producing fractals as fast as they can, we also need "
+"to make sure we can receive the requests for fractals as quickly as "
+"possible. If our application becomes popular, we may have many thousands of "
+"users trying to connect to our API to generate fractals."
+msgstr ""
+
+#: ../scaling_out.rst:214
+msgid ""
+"Armed with our security group, image and flavor size we can now add multiple "
+"API services:"
+msgstr ""
+
+#: ../scaling_out.rst:223
+msgid ""
+"These are client-facing services, so unlike the workers they do not use a "
+"message queue to distribute tasks. Instead, we'll need to introduce some "
+"kind of load balancing mechanism to share incoming requests between the "
+"different API services."
+msgstr ""
+
+#: ../scaling_out.rst:228
+msgid ""
+"One simple way might be to give half of our friends one address and half the "
+"other, but that's certainly not a sustainable solution. Instead, we can do "
+"that automatically using a `DNS round robin <http://en.wikipedia.org/wiki/"
+"Round-robin_DNS>`_. However, OpenStack networking can provide Load Balancing "
+"as a Service, which we'll explain in :doc:`/networking`."
+msgstr ""
+
+#: ../scaling_out.rst:241
+msgid "Scaling the workers"
+msgstr ""
+
+#: ../scaling_out.rst:243
+msgid "To increase the overall capacity, we will now add 3 workers:"
+msgstr ""
+
+#: ../scaling_out.rst:252
+msgid ""
+"Adding this capacity enables you to deal with a higher number of requests "
+"for fractals. As soon as these worker instances come up, they'll start "
+"checking the message queue looking for requests, reducing the overall "
+"backlog like a new register opening in the supermarket."
+msgstr ""
+
+#: ../scaling_out.rst:258
+msgid ""
+"This was obviously a very manual process - figuring out we needed more "
+"workers and then starting new ones required some effort. Ideally the system "
+"would do this itself. If your application has been built to detect these "
+"situations, you can have it automatically request and remove resources, but "
+"you don't actually need to do this work yourself. Instead, the OpenStack "
+"Orchestration service can monitor load and start instances as appropriate. "
+"See :doc:`orchestration` to find out how to set that up."
+msgstr ""
+
+#: ../scaling_out.rst:268
+msgid "Verifying we've had an impact"
+msgstr ""
+
+#: ../scaling_out.rst:270
+msgid ""
+"In the steps above, we've split out several services and expanded capacity. "
+"SSH to one of the app instances and create a few fractals. You will see that "
+"the Fractals app has a few new features."
+msgstr ""
+
+#: ../scaling_out.rst:278
+msgid ""
+"Replace :code:`IP_API_1` with the IP address of the first API instance and "
+"USERNAME to the appropriate username."
+msgstr ""
+
+#: ../scaling_out.rst:281
+msgid ""
+"Use the Fractal application's command line interface to generate fractals :"
+"code:`faafo create`. Watch the progress of fractal generation with the :code:"
+"`faafo list`. Use :code:`faafo UUID` to examine some of the fractals. The "
+"generated_by field will show which worker created the fractal. The fact that "
+"multiple worker instances are sharing the work means that fractals will be "
+"generated more quickly and the death of a worker probably won't even be "
+"noticed."
+msgstr ""
+
+#: ../scaling_out.rst:334
+msgid ""
+"The fractals are now available from any of the app-api hosts. Visit http://"
+"IP_API_1/fractal/FRACTAL_UUID and http://IP_API_2/fractal/FRACTAL_UUID to "
+"verify. Now you have multiple redundant web services. If one dies, the "
+"others can be used."
+msgstr ""
+
+#: ../scaling_out.rst:339
+msgid ""
+"Replace :code:`IP_API_1` and :code:`IP_API_2` with the corresponding "
+"Floating IPs. Replace FRACTAL_UUID the UUID of an existing fractal."
+msgstr ""
+
+#: ../scaling_out.rst:343
+msgid ""
+"Go ahead and test the fault tolerance. Start destroying workers and API "
+"instances. As long as you have one of each, your application should be fine. "
+"There is one weak point though. The database contains the fractals and "
+"fractal metadata. If you lose that instance, the application will stop. "
+"Future sections will work to address this weak point."
+msgstr ""
+
+#: ../scaling_out.rst:350
+msgid ""
+"If we had a load balancer, we could distribute this load between the two "
+"different API services. As mentioned previously, there are several options. "
+"We will show one in :doc:`networking`."
+msgstr ""
+
+#: ../scaling_out.rst:354
+msgid ""
+"You could in theory use a simple script to monitor the load on your workers "
+"and API services and trigger the creation of new instances, which you "
+"already know how to do. If you can see how to do that - congratulations, "
+"you're ready to create scalable cloud applications."
+msgstr ""
+
+#: ../scaling_out.rst:359
+msgid ""
+"Of course, creating a monitoring system just for one application may not "
+"always be the best way. We recommend you look at :doc:`orchestration` to "
+"find out about how you can use OpenStack Orchestration's monitoring and "
+"autoscaling capabilities to do steps like this automatically."
+msgstr ""
+
+#: ../scaling_out.rst:368
+msgid ""
+"You should be fairly confident now about starting new instances, and "
+"distributing services from an application amongst the instances."
+msgstr ""
+
+#: ../scaling_out.rst:371
+msgid ""
+"As mentioned in :doc:`/introduction` the generated fractal images will be "
+"saved on the local filesystem of the API service instances. Because we now "
+"have multiple API instances up and running, the fractal images will be "
+"spread across multiple API services. This results in a number of :code:"
+"`IOError: [Errno 2] No such file or directory` exceptions when trying to "
+"download a fractal image from an API service instance not holding the "
+"fractal image on its local filesystem."
+msgstr ""
+
+#: ../scaling_out.rst:379
+msgid ""
+"From here, you should go to :doc:`/durability` to learn how to use Object "
+"Storage to solve this problem in a elegant way. Alternatively, you may jump "
+"to any of these sections:"
+msgstr ""
