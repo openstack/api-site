@@ -155,6 +155,13 @@ Go ahead and delete the existing instances and security groups you
 created in previous sections. Remember, when instances in the cloud
 are no longer working, remove them and re-create something new.
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+        :language: python
+        :start-after: step-1
+        :end-before: step-2
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/scaling_out.py
@@ -169,6 +176,13 @@ As you change the topology of your applications, you will need to
 update or create new security groups. Here, we will re-create the
 required security groups.
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+        :language: python
+        :start-after: step-2
+        :end-before: step-3
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/scaling_out.py
@@ -181,6 +195,13 @@ A Floating IP helper function
 Define a short function to locate unused IPs or allocate a new floating
 IP. This saves a few lines of code and prevents you from
 reaching your Floating IP quota too quickly.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+        :language: python
+        :start-after: step-3
+        :end-before: step-4
 
 .. only:: libcloud
 
@@ -196,6 +217,13 @@ the workers, we have to add a central database and messaging instance,
 called :code:`app-services`. The database and messaging queue will be used
 to track the state of the fractals and to coordinate the communication
 between the services.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+        :language: python
+        :start-after: step-4
+        :end-before: step-5
 
 .. only:: libcloud
 
@@ -213,6 +241,13 @@ thousands of users trying to connect to our API to generate fractals.
 
 Armed with our security group, image and flavor size we can now add
 multiple API services:
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+        :language: python
+        :start-after: step-5
+        :end-before: step-6
 
 .. only:: libcloud
 
@@ -241,6 +276,13 @@ Scaling the workers
 -------------------
 
 To increase the overall capacity, we will now add 3 workers:
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+        :language: python
+        :start-after: step-6
+        :end-before: step-7
 
 .. only:: libcloud
 
@@ -397,6 +439,11 @@ and run the code as a single script.
 
 Before you run this script, confirm that you have set your authentication
 information, the flavor ID, and image ID.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/scaling_out.py
+       :language: python
 
 .. only:: libcloud
 
