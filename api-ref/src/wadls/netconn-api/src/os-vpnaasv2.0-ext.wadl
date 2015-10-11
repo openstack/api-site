@@ -3,7 +3,7 @@
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
-<!--     You can resolve the entites with xmllint          -->
+<!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
 <!--        xmllint -noent os-vpnaasv2.0-ext.wadl          -->
 <!--*******************************************************-->
@@ -69,6 +69,22 @@
                     <method href="#showIPSecPolicy"/>
                     <method href="#updateIPSecPolicy"/>
                     <method href="#deleteIPSecPolicy"/>
+                </resource>
+            </resource>
+            <resource id="VpnEndpointGroups" path="endpointgroups">
+                <method href="#listVpnEndpointGroups"/>
+                <method href="#createVpnEndpointGroup"/>
+                <resource path="{endpoint_group_id}" id="endpoint_group_id">
+                    <param name="endpoint_group_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="VPN endpoint group ID">The
+                            UUID for the VPN endpoint group.</wadl:doc>
+                    </param>
+                    <method href="#showVpnEndpointGroup"/>
+                    <method href="#updateVpnEndpointGroup"/>
+                    <method href="#deleteVpnEndpointGroup"/>
                 </resource>
             </resource>
             <resource id="IPSecSiteConnections" path="ipsecsiteconnections">
@@ -291,6 +307,68 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove IPSec policy">
             <para role="shortdesc">Removes a specified IPSec policy.</para>
             <para>Removes the IPSec policy specified in the request.</para>
+        </wadl:doc>
+        <response status="204"/>&fault401; &fault404; &fault409;</method>
+    <!-- VPN endpoint group -->
+    <method name="POST" id="createVpnEndpointGroup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create VPN endpoint group">
+            <para role="shortdesc">Creates a VPN endpoint group.</para>
+            <para>
+              The endpoint group contains one or more endpoints of a specific
+              type that you can use to create a VPN connections.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpn-endpoint-group-create-req.json"/>
+                </wadl:doc> &vpnEndpointGroupRequestParams; &vpnEndpointGroupCreateRequestParams; </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpn-endpoint-group-create-res.json"/>
+                </wadl:doc> &vpnEndpointGroupResponseParams; </representation>
+        </response>&fault400; &fault401;</method>
+    <method name="GET" id="listVpnEndpointGroups">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List VPN endpoint groups">
+            <para role="shortdesc">Lists VPN endpoint groups.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpn-endpoint-group-list-res.json"/>
+                </wadl:doc> &vpnEndpointGroupListResponseParams; &vpnEndpointGroupResponseParams; </representation>
+        </response> &fault401; &fault403;</method>
+    <method name="GET" id="showVpnEndpointGroup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show VPN endpoint group">
+            <para role="shortdesc">Shows details for a specified VPN endpoint group.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpn-endpoint-group-show-res.json"/>
+                </wadl:doc> &vpnEndpointGroupResponseParams; </representation>
+        </response> &fault401; &fault403; &fault404;</method>
+    <method name="PUT" id="updateVpnEndpointGroup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update VPN endpoint group">
+            <para role="shortdesc">Updates settings for a specified VPN endpoint group.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpn-endpoint-group-update-req.json"/>
+                </wadl:doc> &vpnEndpointGroupRequestParams; </representation>
+        </request>
+        <response status="200"><representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="api_samples/vpn/vpn-endpoint-group-update-res.json"/>
+                </wadl:doc> &vpnEndpointGroupResponseParams; </representation>
+        </response> &fault400; &fault401; &fault404;</method>
+    <method name="DELETE" id="deleteVpnEndpointGroup">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove VPN endpoint group">
+            <para role="shortdesc">Removes a specified VPN endpoint group.</para>
         </wadl:doc>
         <response status="204"/>&fault401; &fault404; &fault409;</method>
     <!-- IPSec site-to-site connection -->
