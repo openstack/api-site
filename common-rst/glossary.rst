@@ -1248,9 +1248,10 @@ OpenStack contribution process.
 
    ebtables
 
-      Used in Compute along with arptables, iptables, and ip6tables to
-      create firewalls and to ensure isolation of network
-      communications.
+      Filtering tool for a Linux bridging firewall, enabling
+      filtering of network traffic passing through a Linux bridge.
+      Used in Compute along with arptables, iptables, and ip6tables
+      to ensure isolation of network communications.
 
    EC2
 
@@ -1341,13 +1342,6 @@ OpenStack contribution process.
    ESXi
 
       An OpenStack-supported hypervisor.
-
-   ebtables
-
-      Filtering tool for a Linux bridging firewall, enabling filtering
-      of network traffic passing through a Linux bridge. Used to restrict
-      communications between hosts and/or nodes in OpenStack Compute along
-      with iptables, arptables, and ip6tables.
 
    ETag
 
