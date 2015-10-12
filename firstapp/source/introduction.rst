@@ -200,6 +200,13 @@ section?  Let's look at it again. (Note that in this subsection, we're
 just explaining what you've already done in the previous section; you
 don't need to execute these commands again.)
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-1
+        :end-before: step-2
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -231,6 +238,13 @@ varies between cloud images.)  See the `Obtaining Images <http://docs.openstack.
 section of the image guide for guidance about which user name you
 should use when SSHing. If you still have problems logging in, ask
 your cloud provider to confirm the user name.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-2
+        :end-before: step-3
 
 .. only:: libcloud
 
@@ -272,18 +286,31 @@ Start by creating a security group for the all-in-one instance and
 adding the appropriate rules, such as HTTP (TCP port 80) and SSH (TCP
 port 22):
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-3
+        :end-before: step-4
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-3
         :end-before: step-4
 
-
-.. note:: :code:`ex_create_security_group_rule()` takes ranges of
-          ports as input. This is why ports 80 and 22 are passed
-          twice.
+    .. note:: :code:`ex_create_security_group_rule()` takes ranges of
+              ports as input. This is why ports 80 and 22 are passed
+              twice.
 
 You can list available security groups with:
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-4
+        :end-before: step-5
 
 .. only:: libcloud
 
@@ -294,6 +321,13 @@ You can list available security groups with:
 
 Once you've created a rule or group, you can also delete it:
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-5
+        :end-before: step-6
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
@@ -302,6 +336,13 @@ Once you've created a rule or group, you can also delete it:
 
 
 To see which security groups apply to an instance, you can:
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-6
+        :end-before: step-7
 
 .. only:: libcloud
 
@@ -349,27 +390,37 @@ then associate it to your instance's network interface.
         :end-before: step-8
 
 
-If you have no free floating IPs that have been previously allocated
-for your project, first select a floating IP pool offered by your
-provider. In this example, we have selected the first one and assume
-that it has available IP addresses.
-
-.. only:: libcloud
+    If you have no free floating IPs that have been previously allocated
+    for your project, first select a floating IP pool offered by your
+    provider. In this example, we have selected the first one and assume
+    that it has available IP addresses.
 
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-8
         :end-before: step-9
 
-Now request that an address from this pool be allocated to your project.
-
-.. only:: libcloud
+    Now request that an address from this pool be allocated to your project.
 
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-9
         :end-before: step-10
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-7
+        :end-before: step-8
+
 Now that you have an unused floating IP address allocated to your
 project, attach it to an instance.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-10
+        :end-before: step-11
 
 .. only:: libcloud
 
@@ -409,6 +460,13 @@ Parameter  Description            Values
 
 .. todo:: https://bugs.launchpad.net/openstack-manuals/+bug/1439918
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-11
+        :end-before: step-12
+
 .. only:: libcloud
 
 
@@ -424,6 +482,12 @@ Next, start a second instance, which will be the worker instance:
 
 .. todo :: more text necessary here...
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-12
+        :end-before: step-13
 
 .. only:: libcloud
 
@@ -459,6 +523,13 @@ Login with SSH and use the Fractal app
 Login to the worker instance, :code:`app-worker-1`, with SSH, using
 the previous added SSH key pair "demokey". Start by getting the IP
 address of the worker:
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+        :language: python
+        :start-after: step-13
+        :end-before: step-14
 
 .. only:: libcloud
 
@@ -588,6 +659,11 @@ This comprehensive code sample lets you view and run the code as a single script
 
 Before you run this script, confirm that you have set your authentication
 information, the flavor ID, and image ID.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/introduction.py
+       :language: python
 
 .. only:: libcloud
 
