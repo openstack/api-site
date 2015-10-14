@@ -53,17 +53,21 @@
    <!--*******************************************************-->
    <method name="POST" id="createServer">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create server">
-         <para role="shortdesc">Creates a server.</para>
+         <para role="shortdesc">
+            Creates a server.
+         </para>
          <para>
             The progress of this operation depends on the location of the
             requested image, network I/O, host load, selected flavor, and
             other factors.
          </para>
          <para>
-            Issue a <code>GET /servers/{id}</code> request to check the
-            progress of the request, which returns a progress attribute
-            with a from 0 to 100% complete value. The
-            <code>Location</code> header returns the full URL to the newly
+            To check the progress of the request, make a <code>GET
+            /servers/{id}</code> request. This call returns a progress
+            attribute, which is a percentage value from 0 to 100.
+         </para>
+         <para>
+            The <code>Location</code> header returns the full URL to the newly
             created server and is available as a <code>self</code> and
             <code>bookmark</code> link in the server representation.
          </para>
@@ -147,13 +151,11 @@
          </itemizedlist>
       </wadl:doc>
       <request>
-         <representation mediaType="application/xml" element="csapi:server">
-            &serverCreateParameters;
-         </representation>
-         <representation mediaType="application/json">
+         <representation element="csapi:server" mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                <xsdxt:code href="../api_samples/all_extensions/server-post-req.json"/>
             </wadl:doc>
+            &serverCreateParameters; &diskConfigRequestParameter;
          </representation>
       </request>
       <response status="202">
@@ -161,7 +163,7 @@
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                <xsdxt:code href="../api_samples/all_extensions/server-post-resp.json"/>
             </wadl:doc>
-            &serverCreateParameters;
+           <!--  &serverCreateResponseParameters; -->
          </representation>
       </response>
       <response status="422">

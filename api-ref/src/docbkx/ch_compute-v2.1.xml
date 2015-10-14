@@ -89,7 +89,9 @@
     </section>
     <section xml:id="os-servers-v2.1">
       <title>Servers</title>
-        <para>Lists, creates, gets details for, updates, and deletes servers.</para>
+        <para>
+          Lists, creates, gets details for, updates, and deletes servers.
+        </para>
         <para><emphasis role="bold">Passwords</emphasis></para>
         <para>
           When you create a server, you can specify a password through the
@@ -215,15 +217,31 @@
           addresses. Nonetheless, clients that must access the server directly
           are encouraged to do so through an access address.
         </para>
-        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02"
-          href="../wadls/compute-api/src/v2.1/wadl/os-compute-2.1.wadl"/>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+          <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-compute-2.1.wadl#Servers">
+            <wadl:method href="#createServer"/>
+            <wadl:method href="listServers"/>
+          </wadl:resource>
+          <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-compute-2.1.wadl#server_detail">
+            <wadl:method href="#listDetailServers"/>
+          </wadl:resource>
+          <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-compute-2.1.wadl#server_id">
+            <wadl:method href="#getServer"/>
+            <wadl:method href="#updateServer"/>
+            <wadl:method href="#deleteServer"/>
+        </wadl:resource>
+      </wadl:resources>
     </section>
     <section xml:id="os-multiple-create-v2.1">
       <title>Servers multiple create (servers)</title>
       <para>
-         Creates one or more servers with an optional reservation ID. The
-         request and response examples show how to create multiple servers with
-         or without a reservation ID.
+         Creates one or more servers.
+      </para>
+      <para>
+          Optionally, you can set <code>"return_reservation_id": "True"</code>
+          in the request body to request that a reservation ID be returned
+          instead of the newly created instance information. With this
+          parameter, the response shows only the reservation ID.
       </para>
       <wadl:resources
          href="../wadls/compute-api/src/v2.1/wadl/os-multiple-create-v2.1.wadl"
