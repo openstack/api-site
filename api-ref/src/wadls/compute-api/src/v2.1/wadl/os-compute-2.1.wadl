@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application [
+   <!ENTITY % common  SYSTEM "../common.ent">
+   %common;
+   <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+   %common_project;
+]>
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+   <resources base="https://servers.api.openstack.com"
+        xml:id="os-compute-v2.1">
+       <resource id="v2.1" path="//v2.1">
+           <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+               <resource id="Servers" type="#ServerList" path="servers">
+                  <method href="#createServer"/>
+                  <resource id="server_detail" path="detail" type="#DetailServerList"/>
+                     <resource id="server_id" path="{server_id}">
+                        &serverIdRequestParameter;
+                        <method href="#getServer"/>
+                        <method href="#updateServer"/>
+                        <method href="#deleteServer"/>
+                     </resource>
+                  </resource>
+               </resource>
+            </resource>
+         </resources>
+
+   <!--*******************************************************-->
+   <!--               Resource Types                          -->
+   <!--*******************************************************-->
+   <resource_type id="DetailServerList">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Detail server list">
+         <para>A detailed server list.</para>
+      </wadl:doc>
+      <method href="#listDetailServers"/>
+   </resource_type>
+   <resource_type id="ServerList">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Server list">
+         <para>
+            A list of servers. In the list, each server element shows includes
+            its ID, name, and links attributes. Other attributes are omitted.
+         </para>
+      </wadl:doc>
+      <method href="#listServers"/>
+   </resource_type>
+   <!--*******************************************************-->
+   <!--                   Servers                             -->
+   <!--*******************************************************-->
+   <method name="POST" id="createServer">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create server">
+         <para role="shortdesc">Creates a server.</para>
+         <para>
+            The progress of this operation depends on the location of the
+            requested image, network I/O, host load, selected flavor, and
+            other factors.
+         </para>
+         <para>
+            Issue a <code>GET /servers/{id}</code> request to check the
+            progress of the request, which returns a progress attribute
+            with a from 0 to 100% complete value. The
+            <code>Location</code> header returns the full URL to the newly
+            created server and is available as a <code>self</code> and
+            <code>bookmark</code> link in the server representation.
+         </para>
+         <note>
+            <para>
+               When you create a server, only the server ID, its links,
+               and the admin password are guaranteed to be returned in
+               the response. You can get additional attributes through
+               subsequent &GET; requests on the server.
+            </para>
+         </note>
+         <para>
+            Include the <code>block-device-mapping-v2</code> parameter
+            in the create request body to boot a server from a volume.
+         </para>
+         <para>
+            Include the <code>key_name</code> parameter in the create request
+            body to add a keypair to the server when you create it.
+            To create a keypair, make a <link
+            xlink:href="http://developer.openstack.org/api-ref-compute-v2-ext.html#createKeypair">
+            create keypair</link> request.
+         </para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  The user must have sufficient server quota to create
+                  the number of servers requested.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  The connection to the Image service is valid.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Asynchronous postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  With correct permissions, you can see the server
+                  status as <code>ACTIVE</code> through API calls.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  With correct access, you can see the created server in
+                  the compute node that OpenStack Compute manages.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Troubleshooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>
+                  If the server status remains <code>BUILDING</code> or
+                  shows another error status, the request failed. Ensure
+                  you meet the preconditions then investigate the
+                  compute node.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  The server is not created in the compute node that
+                  OpenStack Compute manages.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  The compute node needs enough free resource to match
+                  the specified resource of the server creation request.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  Ensure that the scheduler selection filter can fulfill the
+                  request with the available compute nodes that match
+                  the selection criteria of the filter.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/xml" element="csapi:server">
+            &serverCreateParameters;
+         </representation>
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="../api_samples/all_extensions/server-post-req.json"/>
+            </wadl:doc>
+         </representation>
+      </request>
+      <response status="202">
+         <representation mediaType="application/json" element="csapi:server">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="../api_samples/all_extensions/server-post-resp.json"/>
+            </wadl:doc>
+            &serverCreateParameters;
+         </representation>
+      </response>
+      <response status="422">
+         <representation mediaType="application/json"/>
+         <representation mediaType="application/xml" element="csapi:UnprocessableEntity"/>
+      </response>
+      <!-- All other common faults except build in progress -->
+      &commonFaults; &getFaults;
+      &postPutFaults; &buildFaults;
+   </method>
+   <method name="GET" id="listServers">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List servers">
+         <para role="shortdesc">Lists IDs, names, and links for all servers.</para>
+         <para>
+            Servers contain a status attribute that indicates the current
+            server state. You can filter on the server status when you
+            complete a list servers request. The server status is returned in
+            the response body. The possible server status values are:
+         </para>
+         <itemizedlist xml:id="server_status">
+            <title>Server status values</title>
+            <listitem>
+               <para><code>ACTIVE</code>. The server is active.</para>
+            </listitem>
+            <listitem>
+               <para><code>BUILDING</code>. The server has not finished the original build
+                  process.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>DELETED</code>. The server is permanently deleted.</para>
+            </listitem>
+            <listitem>
+               <para><code>ERROR</code>. The server is in error.</para>
+            </listitem>
+            <listitem>
+               <para><code>HARD_REBOOT</code>. The server is hard rebooting. This is equivalent
+                  to pulling the power plug on a physical server, plugging it back in, and
+                  rebooting it.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>PASSWORD</code>. The password is being reset on the server.</para>
+            </listitem>
+            <listitem>
+               <para><code>PAUSED</code>. In a paused state, the state of the server is
+                  stored in RAM. A paused server continues to run in frozen state.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>REBOOT</code>. The server is in a soft reboot state. A reboot
+                  command was passed to the operating system.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>REBUILD</code>. The server is currently being rebuilt from an
+                  image.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>RESCUED</code>. The server is in rescue mode. A rescue image
+                  is running with the original server image attached.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>RESIZED</code>. Server is performing the differential copy of data
+                  that changed during its initial copy. Server is down for this stage.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>REVERT_RESIZE</code>. The resize or migration of a server failed for
+                  some reason. The destination server is being cleaned up and the original
+                  source server is restarting.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>SOFT_DELETED</code>. The server is marked as deleted but the
+                  disk images are still available to restore.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>STOPPED</code>. The server is powered off and the disk image
+                  still persists.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  <code>SUSPENDED</code>. The server is suspended,
+                  either by request or necessity. This status appears for only
+                  the following hypervisors: XenServer/XCP, KVM, and ESXi.
+                  Administrative users may suspend an instance if it is
+                  infrequently used or to perform system maintenance. When you
+                  suspend an instance, its VM state is stored on disk, all memory is written
+                  to disk, and the virtual machine is stopped. Suspending an instance is
+                  similar to placing a device in hibernation; memory and vCPUs become
+                  available to create other instances.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>UNKNOWN</code>. The state of the server is unknown. Contact your
+                  cloud provider.
+               </para>
+            </listitem>
+            <listitem>
+               <para><code>VERIFY_RESIZE</code>. System is awaiting confirmation that the
+                  server is operational after a move or resize.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            &serverListQueryParameters;
+            &limitMarkerReqParameter;
+         </representation>
+      </request>
+      <response status="200 203">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="../api_samples/all_extensions/servers-list-resp.json"/>
+            </wadl:doc>
+            &x-compute-request-idHeader;
+         </representation>
+      </response>
+      <!-- Common Faults and Header --> &commonFaults;
+   </method>
+   <method name="GET" id="listDetailServers">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="List details for servers">
+         <para role="shortdesc">Lists details for all servers.</para>
+         <para>
+            The compute provisioning algorithm has an anti-affinity property
+            that attempts to spread customer VMs across hosts. Under certain
+            situations, VMs from the same customer might be placed on the same
+            host. The <property>hostId</property> property shows the host that
+            your server runs on and can be used to determine this scenario if
+            it is relevant to your application.
+         </para>
+         <note>
+            <para>
+               <property>HostId</property> is unique <emphasis>per
+               account</emphasis> and is not globally unique.
+            </para>
+         </note>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json">
+            &serverListQueryParameters;
+            &limitMarkerReqParameter;
+         </representation>
+      </request>
+      <response status="200 203">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="../api_samples/all_extensions/servers-details-resp.json"/>
+            </wadl:doc>
+         </representation>
+      </response>
+      <!-- Common Faults --> &commonFaults;
+   </method>
+   <method name="GET" id="getServer">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get server details">
+         <para role="shortdesc">Gets details for a specified server.</para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified server must exist.</para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="200 203">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+               <xsdxt:code href="../api_samples/all_extensions/server-get-resp.json"/>
+            </wadl:doc>
+            &x-compute-request-idHeader;
+         </representation>
+      </response>
+      <!-- Common and GET Faults--> &commonFaults; &getFaults;
+   </method>
+   <method name="PUT" id="updateServer">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update server">
+         <para role="shortdesc">Updates the editable attributes of the specified server.</para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified server must exist.</para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <request>
+         <representation mediaType="application/json" element="csapi:server">
+            <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+               title="Update Server Name Request: JSON">
+               <xsdxt:code href="../api_samples/all_extensions/server-put-req.json"/>
+            </wadl:doc>
+         </representation>
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+               title="Update Server IP Addresses Request: JSON">
+               <xsdxt:code href="../api_samples/all_extensions/server-put-req-ad.json"/>
+            </wadl:doc>
+         </representation>
+      </request>
+      <response status="200">
+         <representation mediaType="application/json" element="csapi:server">
+            <wadl:doc xml:lang="EN" title="Update Server Name Response: JSON"
+               xmlns="http://docbook.org/ns/docbook">
+               <xsdxt:code href="../api_samples/all_extensions/server-put-resp.json"/>
+            </wadl:doc>
+         </representation>
+         <representation mediaType="application/json">
+            <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+               title="Update Server IP Addresses Response: JSON">
+               <xsdxt:code href="../api_samples/all_extensions/server-put-resp-ad.json"/>
+            </wadl:doc>
+         </representation>
+      </response>
+      <!-- Common, GET, POST/PUT, inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
+      &inProgressFault;
+   </method>
+   <method name="DELETE" id="deleteServer">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete server">
+         <para role="shortdesc">Deletes a specified server.</para>
+         <para>Preconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>The specified server must exist.</para>
+            </listitem>
+            <listitem>
+               <para>Anyone can delete a server when the server's
+                  status is not locked.
+               </para>
+            </listitem>
+            <listitem>
+               <para>You can delete a server which status is
+                  not locked.
+               </para>
+            </listitem>
+            <listitem>
+               <para>If the specified server is locked, you need to
+                  have administrator privileges to delete the server.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Asynchronous postconditions</para>
+         <itemizedlist>
+            <listitem>
+               <para>With correct permissions, you can see the
+                  specified server status as <code>DELETED</code> through API
+                  calls.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The port attached to the specified server
+                  is deleted.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The server is deleted from the list of
+                  servers returned by an API calls.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The server managed by OpenStack Compute is
+                  deleted on the compute node.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>Troubleshooting</para>
+         <itemizedlist>
+            <listitem>
+               <para>If server status remains in <code>deleting</code>
+                  or shows another error status, the request failed. Ensure you
+                  meet the preconditions then investigate the compute back end.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The request returns the HTTP 409 status code
+                  when the server is locked even if you have a correct permissions.
+                  Ensure you meet the preconditions then investigate the server
+                  status.
+               </para>
+            </listitem>
+            <listitem>
+               <para>The server managed by OpenStack Compute is not
+                  deleted from the compute node.
+               </para>
+            </listitem>
+         </itemizedlist>
+      </wadl:doc>
+      <response status="204"/>
+      <!-- Common, GET, inProgress Faults-->
+      &commonFaults; &getFaults;
+   </method>
+</application>

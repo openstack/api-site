@@ -14,21 +14,22 @@
    role="api-reference">
    <title>Compute API (CURRENT)</title>
    <note>
-      <para>
-         Effective in the OpenStack Kilo release, XML support in requests and
-         responses was removed for the Compute API.
-      </para>
+    <para>
+      Effective in the OpenStack Kilo release, XML support in requests and
+      responses was removed for the Compute API.
+    </para>
    </note>
    <para>
-      This documentation supports the API v2.1 base version. If all extensions
-      are enabled, the Compute API v1.1 and v2.0 requests and responses match
-      the API v2.1 requests and responses.
+    This documentation supports the API v2.1 base version. If all extensions
+    are enabled, the Compute API v1.1 and v2.0 requests and responses match
+    the API v2.1 requests and responses.
    </para>
    <para>
-      Each API version lists its required extensions for the full request and
-      responses to be available. API v2.1 must enable all extensions all the
-      time. It uses micro-version headers to expose any additional
-      functionality. TODO - link for more details...
+    Each API version lists its required extensions for the full request and
+    responses to be available. API v2.1 must enable all extensions all the
+    time. It uses micro-version headers to expose any additional
+    functionality.
+  <!-- TODO - link for more details... -->
    </para>
    <para>
       This page lists the Compute API operations in the following order:</para>
@@ -42,7 +43,7 @@
          <listitem>
             <para>
                <link
-                xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#os-multiple-create-v2.1">Servers</link>
+                xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#os-compute-v2.1">Servers</link>
             </para>
          </listitem>
          <listitem>
@@ -80,6 +81,137 @@
             <wadl:method href="#listVersionsv2.1"/>
          </wadl:resource>
       </wadl:resources>
+   </section>
+   <section xml:id="os-servers-v2.1">
+      <title>Servers</title>
+        <para>Lists, creates, gets details for, updates, and deletes servers.</para>
+        <para><emphasis role="bold">Passwords</emphasis></para>
+        <para>
+          When you create a server, you can specify a password through the
+          optional <property>adminPass</property> attribute. The specified
+          password must meet the complexity requirements set by your OpenStack
+          Compute provider. The server might enter an <code>ERROR</code> state
+          if the complexity requirements are not met. In this case, a client
+          might issue a change password action to reset the server password.
+        </para>
+        <para>
+          If you do not specify a password, the API generates and assigns a
+          random password that it returns in the response object. This
+          password is guaranteed to meet the security requirements set by the
+          compute provider. For security reasons, the password is not returned
+          in subsequent &GET; calls.
+        </para>
+        <para><emphasis role="bold">Server metadata</emphasis></para>
+        <para>
+          You can specify custom server metadata at server launch time. The
+          maximum size for each metadata key-value pair is 255 bytes. The
+          compute provider determines the maximum number of key-value pairs
+          that can be supplied for each server. You can query this value
+          through the <code>maxServerMeta</code> absolute limit.
+        </para>
+        <para><emphasis role="bold">Server networks</emphasis></para>
+        <para>
+          You can specify one or more networks to which the server connects at
+          launch time. Users can also specify a specific port on the network
+          or the fixed IP address to assign to the server interface.
+        </para>
+        <note>
+          <para>
+            You can use both IPv4 and IPv6 addresses as access addresses and
+            you can assign both addresses simultaneously. You can update
+            access addresses after you create a server.
+          </para>
+        </note>
+        <para><emphasis role="bold">Server personality</emphasis></para>
+        <para>
+          To customize the personality of a server instance, you can
+          inject data into its file system. For example, you might
+          insert ssh keys, set configuration files, or store data
+          that you want to retrieve from inside the instance. This
+          customization method provides minimal launch-time
+          personalization. If you require significant customization,
+          create a custom image.
+        </para>
+        <para>
+          Follow these guidelines when you inject files:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              The maximum size of the file path data is 255 bytes.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Encode the file contents as a Base64 string. The compute
+              provider determines the maximum size of the file contents. This
+              value can vary based on the image that is used to create the
+              server.
+            </para>
+            <note>
+              <para>
+                The maximum limit refers to the number of bytes in the
+                decoded data and not to the number of characters in
+                the encoded data.
+              </para>
+            </note>
+          </listitem>
+          <listitem>
+            <para>
+              You can inject only text files. You cannot inject
+              binary or ZIP files into a new build.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The <code>maxPersonality</code> absolute limit defines
+              the maximum number of file path and content pairs that
+              you can supply. The compute provider determines this
+              value.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The <code>maxPersonalitySize</code> absolute limit is a
+              byte limit that is guaranteed to apply to all images in
+              the deployment. Providers can set additional per-image
+              personality limits.
+            </para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          The file injection might not occur until after the server
+          is built and booted.
+        </para>
+        <para>
+          During file injection, any existing files that match specified files
+          are renamed to include the BAK extension appended with a time stamp.
+          For example, if the <code>/etc/passwd</code> file exists, it is
+          backed up as <code>/etc/passwd.bak.1246036261.5785</code>.
+        </para>
+        <para>
+          After file injection, only system administrators can
+          access personality files. For example, on Linux, all files
+          have root as the owner and the root group as the group
+          owner, and allow only user and group read access (chmod
+          440).
+        </para>
+        <para><emphasis role="bold">Server access addresses</emphasis></para>
+        <para>
+          In a hybrid environment, the underlying implementation might not
+          control the IP address of a server. Instead, the access IP address
+          might be part of the dedicated hardware; for example, a router/NAT
+          device. In this case, the addresses provided by the implementation
+          cannot actually be used to access the server (from outside the local
+          LAN). Here, a separate <firstterm>access address</firstterm> might
+          be assigned at creation time to provide access to the server. This
+          address might not be directly bound to a network interface on the
+          server and might not necessarily appear when you query the server
+          addresses. Nonetheless, clients that must access the server directly
+          are encouraged to do so through an access address.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02"
+          href="../wadls/compute-api/src/v2.1/wadl/os-compute-2.1.wadl"/>
    </section>
    <section xml:id="os-multiple-create-v2.1">
       <title>Servers multiple create (servers)</title>
