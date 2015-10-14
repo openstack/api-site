@@ -11,5 +11,5 @@ done
 # Draft documents
 for tag in dotnet fog pkgcloud shade; do
     tools/build-rst.sh firstapp  \
-        --tag ${tag} --target "draft/firstapp-${tag}"
+        --tag ${tag} --target "api-ref/draft/firstapp-${tag}"
 done
