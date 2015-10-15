@@ -686,4 +686,4 @@ create`` command with the image and flavor IDs and the server name, as follows:
    use, see `Firewalls and default ports`_ in the *OpenStack Configuration
    Reference*.
 
-.. _Firewalls and default ports: http://docs.openstack.org/kilo/config-reference/content/firewalls-default-ports.html
+.. _Firewalls and default ports: http://docs.openstack.org/liberty/config-reference/content/firewalls-default-ports.html
