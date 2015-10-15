@@ -20,16 +20,16 @@
                     <resource id="server_id" path="{server_id}">
                         &serverIdRequestParameter;
                         <resource id="action" path="action">
-                            <method href="#shelveServer"/>
-                            <method href="#shelveOffloadServer"/>
-                            <method href="#unshelveServer"/>
+                            <method href="#shelve"/>
+                            <method href="#shelveOffload"/>
+                            <method href="#unshelve"/>
                         </resource>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-    <method name="POST" id="shelveServer">
+    <method name="POST" id="shelve">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Shelve server (shelve action)">
             <para role="shortdesc">Shelves a specified server.</para>
@@ -111,11 +111,11 @@
         </request>
         <response status="202"/>
     </method>
-    <method name="POST" id="shelveOffloadServer">
+    <method name="POST" id="shelveOffload">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Remove shelved server (shelveOffload action)">
+            title="Shelf-offload (remove) server (shelveOffload action)">
             <para role="shortdesc">
-              Removes a specified shelved server.
+              Shelf-offloads, or removes, a specified shelved server.
             </para>
             <para>
               Specify the <code>shelveOffload</code> action in the request body.
@@ -168,17 +168,20 @@
         </request>
         <response status="202"/>
     </method>
-    <method name="POST" id="unshelveServer">
+    <method name="POST" id="unshelve">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Restore shelved server (unshelve action)">
-            <para role="shortdesc">Restores a shelved server.
+            title="Unshelve (restore) shelved server (unshelve action)">
+            <para role="shortdesc">
+              Unshelves, or restores, a specified shelved server.
+            </para>
+            <para>
                 Specify the <code>unshelve</code> action in the request
                 body.
             </para>
             <para>
-                Policy defaults enable only users with the administrative
-                role or the owner of the server to perform this
-                operation. Cloud providers can change these permissions through the
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
                 <code>policy.json</code> file.
               </para>
             <para>Preconditions</para>
@@ -192,20 +195,30 @@
             </itemizedlist>
             <para>Asynchronous Postconditions</para>
             <itemizedlist>
-                  <listitem><para>After you successfully shelve a server, its
-                  status changes to <code>ACTIVE</code>. The server appears on
-                  the compute node.</para></listitem>
-                  <listitem><para>The shelved image is deleted from the
-                  list of images returned by an API call.</para></listitem>
+              <listitem>
+                <para>
+                  After you successfully shelve a server, its status changes
+                  to <code>ACTIVE</code>. The server appears on the compute node.
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  The shelved image is deleted from the list of images
+                  returned by an API call.
+                </para>
+              </listitem>
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                  <listitem><para>If the server status does not change to
-                  <code>ACTIVE</code>, the unshelve operation failed. Ensure
-                  that you meet the preconditions and run the request again.
-                  If the request fails again, investigate whether another
-                  operation is running that causes a race condition.
-                  </para></listitem>
+              <listitem>
+                <para>
+                  If the server status does not change to <code>ACTIVE</code>,
+                  the unshelve operation failed. Ensure that you meet the
+                  preconditions and run the request again. If the request
+                  fails again, investigate whether another operation is
+                  running that causes a race condition.
+                </para>
+              </listitem>
             </itemizedlist>
         </wadl:doc>
         <request>

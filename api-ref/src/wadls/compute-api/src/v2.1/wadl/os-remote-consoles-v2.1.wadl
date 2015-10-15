@@ -10,6 +10,8 @@
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
     xmlns:csapi="http://docs.openstack.org/identity/api/v3">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-remote-consoles-v2.1">
@@ -20,8 +22,10 @@
                     <resource id="server_id" path="{server_id}">
                         &serverIdRequestParameter;
                         <resource id="action" path="action">
-                            <method href="#get_spice_consoleServer"/>
-                            <method href="#get_vnc_consoleServer"/>
+                            <method href="#getRDPConsole"/>
+                            <method href="#getSerialConsole"/>
+                            <method href="#getSPICEConsole"/>
+                            <method href="#getVNCConsole"/>
                         </resource>
                     </resource>
                 </resource>
@@ -31,13 +35,45 @@
     <!-- *******************************************************-->
     <!--      OS Remote consoles            -->
     <!--*******************************************************-->
-    <method name="POST" id="get_spice_consoleServer">
-        <wadl:doc xml:lang="EN" title="Get SPICE console for a server (get_spice_console action)"
+    <method name="POST" id="getRDPConsole">
+        <wadl:doc xml:lang="EN" title="Get RDP console for a server (os-getRDPConsole action)"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets a SPICE console for a specified server.
+            <para role="shortdesc">
+                Gets a <link
+                xlink:href="https://technet.microsoft.com/en-us/windowsserver/ee236407">RDP</link>
+                console for a server.
             </para>
             <para>
-                Specify the <code>get_spice_console</code> action in the request
+                Specify the <code>os-getRDPConsole</code> action in the
+                request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-remote-consoles/get-rdp-console-post-req.json"/>
+                </wadl:doc>
+                &os-getRDPConsoleActionRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-remote-consoles/get-rdp-console-post-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="getSerialConsole">
+        <wadl:doc xml:lang="EN" title="Get serial console for a server (os-getSerialConsole action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Gets a serial console for a server.
+            </para>
+            <para>
+                Specify the <code>os-getSerialConsole</code> action in the request
                 body.
             </para>
         </wadl:doc>
@@ -45,10 +81,39 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-remote-consoles/get-spice-console-post-req.json"
-                    />
+                        href="../api_samples/os-remote-consoles/get-serial-console-post-req.json"/>
                 </wadl:doc>
-                &get_spice_consoleActionRequestParameter;
+                &os-getSerialConsoleActionRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-remote-consoles/get-serial-console-post-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="getSPICEConsole">
+        <wadl:doc xml:lang="EN"
+            title="Get SPICE console for a server (os-getSPICEConsole action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Gets a SPICE console for a specified server.
+            </para>
+            <para>
+                Specify the <code>os-getSPICEConsole</code> action in the request
+                body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/os-remote-consoles/get-spice-console-post-req.json"/>
+                </wadl:doc>
+                &os-getSPICEConsoleActionRequestParameter;
             </representation>
         </request>
         <response status="200">
@@ -61,13 +126,14 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="get_vnc_consoleServer">
-        <wadl:doc xml:lang="EN" title="Get VNC console for a server (get_vnc_console action)"
+    <method name="POST" id="getVNCConsole">
+        <wadl:doc xml:lang="EN" title="Get VNC console for a server (os-getVNCConsole action)"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets a VNC console for a specified server.
+            <para role="shortdesc">
+                Gets a VNC console for a specified server.
             </para>
             <para>
-                Specify the <code>get_vnc_console</code> action in the request
+                Specify the <code>os-getVNCConsole</code> action in the request
                 body.
             </para>
         </wadl:doc>
@@ -75,18 +141,16 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-remote-consoles/get-vnc-console-post-req.json"
-                    />
+                        href="../api_samples/os-remote-consoles/get-vnc-console-post-req.json"/>
                 </wadl:doc>
-                &get_vnc_consoleActionRequestParameter;
+                &os-getVNCConsoleActionRequestParameter;
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-remote-consoles/get-vnc-console-post-resp.json"
-                    />
+                        href="../api_samples/os-remote-consoles/get-vnc-console-post-resp.json"/>
                 </wadl:doc>
             </representation>
         </response>
