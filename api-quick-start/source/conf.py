@@ -185,7 +185,7 @@ html_use_index = False
 
 # If true, links to the reST sources are added to the pages.
 # This one is needed for "Report a bug".
-# html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 # html_show_sphinx = True
@@ -204,6 +204,8 @@ html_use_index = False
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'API-Quick-Start'
 
+# If true, publish source files
+html_copy_source = False
 
 # -- Options for LaTeX output ---------------------------------------------
 
