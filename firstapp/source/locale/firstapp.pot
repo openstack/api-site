@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FirstApp 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 06:18+0000\n"
+"POT-Creation-Date: 2015-10-16 06:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -239,250 +239,247 @@ msgstr ""
 #: ../block_storage.rst:8
 msgid ""
 "By default, data in OpenStack instances is stored on 'ephemeral' disks. "
-"These stay with the instance throughout its lifetime, but when the instance "
-"is terminated, that storage disappears -- along with all the data stored on "
-"it. Ephemeral storage is allocated to a single instance and cannot be moved "
-"to another instance."
+"These disks stay with the instance throughout its lifetime, but when the "
+"instance is terminated, that storage and all the data stored on it "
+"disappears. Ephemeral storage is allocated to a single instance and cannot "
+"be moved to another instance."
 msgstr ""
 
 #: ../block_storage.rst:14
 msgid ""
-"In this section, we will introduce block storage. Block storage (sometimes "
-"referred to as volume storage) provides you with access to persistent "
-"storage devices. You interact with block storage by attaching volumes to "
-"running instances, just as you might attach a USB drive to a physical "
-"server. Volumes can be detached from one instance and re-attached to "
-"another, and the data remains intact. Block storage is implemented in "
-"OpenStack by the OpenStack Block Storage (cinder) project."
+"This section introduces block storage, also known as volume storage, which "
+"provides access to persistent storage devices. You interact with block "
+"storage by attaching volumes to running instances just as you might attach a "
+"USB drive to a physical server. You can detach volumes from one instance and "
+"reattach them to another instance and the data remains intact. The OpenStack "
+"Block Storage (cinder) project implements block storage."
 msgstr ""
 
-#: ../block_storage.rst:23
+#: ../block_storage.rst:21
 msgid ""
-"One component of the Fractal app that cannot be allowed to fail is the "
-"database server, which is used to keep track of all of the data about "
-"fractals that have been created, including their storage location. So while "
-"you may have configured the images to be stored in Object Storage in the "
-"previous section, without the database we lose track of where in Object "
-"Storage they are, and the parameters that were used to create them."
+"Though you might have configured Object Storage to store images, the Fractal "
+"application needs a database to track the location of and parameters that "
+"were used to create images in Object Storage. This database server cannot "
+"fail."
 msgstr ""
 
-#: ../block_storage.rst:31
+#: ../block_storage.rst:25
 msgid ""
-"Advanced users should consider how to remove the database from the "
-"architecture altogether and replace it with metadata in the Object Storage "
-"(then contribute these steps to :doc:`craziness`). Others should read on to "
-"learn about how to work with block storage and move the Fractal app database "
-"server to use it."
+"If you are an advanced user, consider how you might remove the database from "
+"the architecture and replace it with Object Storage metadata (then "
+"contribute these steps to :doc:`craziness`). Other users can continue "
+"reading to learn how to work with block storage and move the Fractal "
+"application database server to use it."
 msgstr ""
 
-#: ../block_storage.rst:38
+#: ../block_storage.rst:32
 msgid "Basics"
 msgstr ""
 
-#: ../block_storage.rst:40
+#: ../block_storage.rst:34
 msgid ""
-"Later on, we'll use a volume from the block storage service to provide "
-"persistent storage for the Fractal app's database server, but first - let's "
-"cover the basics, such as creating and attaching a block storage device."
+"Later on, we'll use a Block Storage volume to provide persistent storage for "
+"the database server for the Fractal application. But first, learn how to "
+"create and attach a Block Storage device."
 msgstr ""
 
-#: ../block_storage.rst:47 ../durability.rst:77 ../introduction.rst:13
+#: ../block_storage.rst:40 ../durability.rst:77 ../introduction.rst:13
 msgid "This section has not yet been completed for the .NET SDK."
 msgstr ""
 
-#: ../block_storage.rst:51 ../durability.rst:81 ../introduction.rst:17
+#: ../block_storage.rst:44 ../durability.rst:81 ../introduction.rst:17
 msgid "This section has not yet been completed for the fog SDK."
 msgstr ""
 
-#: ../block_storage.rst:59 ../durability.rst:111 ../introduction.rst:25
+#: ../block_storage.rst:52 ../durability.rst:111 ../introduction.rst:25
 msgid "This section has not yet been completed for the pkgcloud SDK."
 msgstr ""
 
-#: ../block_storage.rst:71
+#: ../block_storage.rst:64
 msgid "As always, connect to the API endpoint:"
 msgstr ""
 
-#: ../block_storage.rst:95
+#: ../block_storage.rst:94
 msgid "To try it out, make a 1GB volume called :test'."
 msgstr ""
 
-#: ../block_storage.rst:108
-msgid "The parameter :code:`size` is in GigaBytes."
+#: ../block_storage.rst:114
+msgid "The parameter :code:`size` is in gigabytes."
 msgstr ""
 
-#: ../block_storage.rst:110
+#: ../block_storage.rst:116
 msgid "List all volumes to see if it was successful:"
 msgstr ""
 
-#: ../block_storage.rst:123
+#: ../block_storage.rst:136
+msgid "Attach the storage volume to a running instance."
+msgstr ""
+
+#: ../block_storage.rst:139
+msgid "Use Block Storage for the Fractal database server"
+msgstr ""
+
+#: ../block_storage.rst:141
 msgid ""
-"Now that you have created a storage volume, let's attach it to an already "
-"running instance."
+"You need a server for the dedicated database. Use the image, flavor, and "
+"keypair that you used in :doc:`/getting_started` to launch an :code:`app-"
+"database` instance."
 msgstr ""
 
-#: ../block_storage.rst:128
-msgid "Using Block Storage for the Fractal database server"
-msgstr ""
-
-#: ../block_storage.rst:130
+#: ../block_storage.rst:145
 msgid ""
-"Firstly, we're going to need a new server for our dedicated database. Start "
-"a new instance called :code:`app-database` using the image, flavor and "
-"keypair you have been using since :doc:`/getting_started`. We will also need "
-"a new security group to allow access to the database server (for mysql, port "
-"3306) from the network:"
+"You also need a security group to permit access to the database server (for "
+"MySQL, port 3306) from the network:"
 msgstr ""
 
-#: ../block_storage.rst:148
+#: ../block_storage.rst:167
 msgid ""
-"Using the unique identifier (UUID) for the volume, make a new volume object, "
-"then use the server object from the previous snippet and attach the volume "
-"to it at :code:`/dev/vdb`:"
-msgstr ""
-
-#: ../block_storage.rst:159
-msgid "Log in to the server to be able to run the following steps."
-msgstr ""
-
-#: ../block_storage.rst:161
-msgid ""
-"Replace :code:`IP_SERVICES` with the IP address of the services instance and "
-"USERNAME to the appropriate username."
-msgstr ""
-
-#: ../block_storage.rst:164
-msgid "Now prepare the empty block device."
-msgstr ""
-
-#: ../block_storage.rst:176
-msgid ""
-"Stop the running MySQL database service and move the database files from :"
-"file:`/var/lib/mysql` onto the new volume (temporary mounted at :file:`/mnt/"
-"database`)."
+"Create a volume object by using the unique identifier (UUID) for the volume. "
+"Then, use the server object from the previous code snippet to attach the "
+"volume to it at :code:`/dev/vdb`:"
 msgstr ""
 
 #: ../block_storage.rst:185
-msgid ""
-"Sync the filesystems and mount the new blockdevice now containing the "
-"database files to :file:`/var/lib/mysql`."
+msgid "Log in to the server to run the following steps."
 msgstr ""
 
-#: ../block_storage.rst:196
+#: ../block_storage.rst:187
 msgid ""
-"Finally start the previously stopped MySQL database service and check if "
-"everything is working like expected."
+"Replace :code:`IP_SERVICES` with the IP address of the services instance and "
+"USERNAME to the appropriate user name."
 msgstr ""
 
-#: ../block_storage.rst:205
-msgid "Extras"
+#: ../block_storage.rst:190
+msgid "Now prepare the empty block device."
 msgstr ""
 
-#: ../block_storage.rst:207
+#: ../block_storage.rst:202
 msgid ""
-"You can detach the volume and re-attach it elsewhere, or destroy the volume "
-"with the below steps."
+"Stop the running MySQL database service and move the database files from :"
+"file:`/var/lib/mysql` to the new volume, which is temporarily mounted at :"
+"file:`/mnt/database`."
 msgstr ""
 
 #: ../block_storage.rst:211
-msgid "The following operations are destructive and will result in data loss."
+msgid ""
+"Sync the file systems and mount the block device that contains the database "
+"files to :file:`/var/lib/mysql`."
 msgstr ""
 
-#: ../block_storage.rst:213
+#: ../block_storage.rst:222
+msgid ""
+"Finally, start the stopped MySQL database service and validate that "
+"everything works as expected."
+msgstr ""
+
+#: ../block_storage.rst:231
+msgid "Extras"
+msgstr ""
+
+#: ../block_storage.rst:233
+msgid ""
+"You can detach the volume and reattach it elsewhere, or use the following "
+"steps to destroy the volume."
+msgstr ""
+
+#: ../block_storage.rst:237
+msgid "The following operations are destructive and result in data loss."
+msgstr ""
+
+#: ../block_storage.rst:239
 msgid "To detach and destroy a volume:"
 msgstr ""
 
-#: ../block_storage.rst:229
+#: ../block_storage.rst:255
 msgid ""
 ":code:`detach_volume` and :code:`destroy_volume` take a volume object, not a "
 "name."
 msgstr ""
 
-#: ../block_storage.rst:232
+#: ../block_storage.rst:267
 msgid ""
-"There are also many other useful features, such as the ability to create "
-"snapshots of volumes (handy for backups):"
+"Other features, such as creating volume snapshots, are useful for backups:"
 msgstr ""
 
-#: ../block_storage.rst:245
+#: ../block_storage.rst:277
 msgid ""
-"You can find information about these calls and more in the `libcloud "
-"documentation <http://ci.apache.org/projects/libcloud/docs/compute/drivers/"
-"openstack.html>`_."
+"For information about these and other calls, see `libcloud documentation "
+"<http://ci.apache.org/projects/libcloud/docs/compute/drivers/openstack."
+"html>`_."
 msgstr ""
 
-#: ../block_storage.rst:251
-msgid "Working with the OpenStack Database service"
+#: ../block_storage.rst:282
+msgid "Work with the OpenStack Database service"
 msgstr ""
 
-#: ../block_storage.rst:253
+#: ../block_storage.rst:284
 msgid ""
-"You created the database manually above, which is fine for a case with a "
-"single database you won't touch often like this. However, OpenStack also has "
-"a component code-named :code:`trove` that provides Database as a Service "
-"(DBaaS)."
+"Previously, you manually created the database, which is useful for a a "
+"single database that you rarely update. However, the OpenStack :code:`trove` "
+"component provides Database as a Service (DBaaS)."
 msgstr ""
 
-#: ../block_storage.rst:258
+#: ../block_storage.rst:288
 msgid ""
 "This OpenStack Database service is not installed in many clouds right now, "
-"but if your cloud does support it, it can make your life a lot easier when "
+"but if your cloud supports it, it can make your life a lot easier when "
 "working with databases."
 msgstr ""
 
-#: ../block_storage.rst:262
+#: ../block_storage.rst:292
 msgid ""
-"SDKs don't generally support the service yet, but you can use the 'trove' "
-"commandline client to work with it instead."
+"SDKs do not generally support the service yet, but you can use the 'trove' "
+"command-line client to work with it instead."
 msgstr ""
 
-#: ../block_storage.rst:265
+#: ../block_storage.rst:295
 msgid ""
-"Install the trove commandline client by following this guide: http://docs."
+"Install the trove command-line client by following this guide: http://docs."
 "openstack.org/cli-reference/content/install_clients.html"
-msgstr ""
-
-#: ../block_storage.rst:268
-msgid ""
-"Then set up the necessary variables for your cloud in an :file:`openrc.sh` "
-"file using this guide: http://docs.openstack.org/cli-reference/content/"
-"cli_openrc.html"
-msgstr ""
-
-#: ../block_storage.rst:272
-msgid ""
-"Ensure you have an :file:`openrc.sh` file, source it and then check your "
-"trove client works: ::"
-msgstr ""
-
-#: ../block_storage.rst:287
-msgid ""
-"From there, you can find a good resource on what is supported and how to use "
-"in `these slides <http://www.slideshare.net/hastexo/hands-on-trove-database-"
-"as-a-service-in-openstack-33588994>`_. Steps to work with an existing "
-"database service installation start on slide 28."
-msgstr ""
-
-#: ../block_storage.rst:296 ../orchestration.rst:190
-msgid "Next Steps"
 msgstr ""
 
 #: ../block_storage.rst:298
 msgid ""
-"You should now be fairly confident working with Block Storage volumes. There "
-"are several calls we did not cover. To see these and more, refer to the "
-"volume documentation of your SDK, or try a different step in the tutorial, "
-"including:"
+"Then, set up necessary variables for your cloud in an :file:`openrc.sh` file "
+"by using this guide: http://docs.openstack.org/cli-reference/content/"
+"cli_openrc.html"
 msgstr ""
 
-#: ../block_storage.rst:303 ../durability.rst:330
+#: ../block_storage.rst:302
+msgid ""
+"Ensure you have an :file:`openrc.sh` file, source it, and validate that your "
+"trove client works: ::"
+msgstr ""
+
+#: ../block_storage.rst:317
+msgid ""
+"For information about supported features and how to work with an existing "
+"database service installation, see these `slides <http://www.slideshare.net/"
+"hastexo/hands-on-trove-database-as-a-service-in-openstack-33588994>`_."
+msgstr ""
+
+#: ../block_storage.rst:322 ../craziness.rst:67 ../durability.rst:317
+#: ../getting_started.rst:1222 ../introduction.rst:631 ../networking.rst:795
+#: ../scaling_out.rst:408
+msgid "Next steps"
+msgstr ""
+
+#: ../block_storage.rst:324
+msgid ""
+"You should now be fairly confident working with Block Storage volumes. For "
+"information about other calls, see the volume documentation for your SDK or "
+"try one of these tutorial steps:"
+msgstr ""
+
+#: ../block_storage.rst:328 ../durability.rst:330
 msgid ":doc:`/orchestration`: to automatically orchestrate the application"
 msgstr ""
 
-#: ../block_storage.rst:304 ../durability.rst:331
+#: ../block_storage.rst:329 ../durability.rst:331
 msgid ":doc:`/networking`: to learn about more complex networking"
 msgstr ""
 
-#: ../block_storage.rst:305 ../durability.rst:332 ../networking.rst:802
+#: ../block_storage.rst:330 ../durability.rst:332 ../networking.rst:802
 msgid ":doc:`/advice`: for advice for developers new to operations"
 msgstr ""
 
@@ -575,11 +572,6 @@ msgid ""
 "in swift, then changing the API code such as \"list fractals\" to query "
 "swift to get the metadata. If you do this, you should be able to stop using "
 "a database."
-msgstr ""
-
-#: ../craziness.rst:67 ../durability.rst:317 ../getting_started.rst:1222
-#: ../introduction.rst:560 ../networking.rst:795 ../scaling_out.rst:366
-msgid "Next steps"
 msgstr ""
 
 #: ../craziness.rst:69
@@ -952,7 +944,7 @@ msgid ""
 "and toolkits with the OpenStack cloud:"
 msgstr ""
 
-#: ../getting_started.rst:54 ../introduction.rst:404 ../introduction.rst:444
+#: ../getting_started.rst:54 ../introduction.rst:455 ../introduction.rst:508
 msgid "Description"
 msgstr ""
 
@@ -1599,41 +1591,41 @@ msgid ""
 "durable"
 msgstr ""
 
-#: ../getting_started.rst:1229 ../introduction.rst:575 ../scaling_out.rst:383
+#: ../getting_started.rst:1229 ../introduction.rst:646 ../scaling_out.rst:425
 msgid ""
 ":doc:`/block_storage`: Migrate the database to block storage, or use the "
 "database-as-a-service component"
 msgstr ""
 
-#: ../getting_started.rst:1231 ../scaling_out.rst:385
+#: ../getting_started.rst:1231 ../scaling_out.rst:427
 msgid ":doc:`/orchestration`: Automatically orchestrate your application"
 msgstr ""
 
-#: ../getting_started.rst:1232 ../scaling_out.rst:386
+#: ../getting_started.rst:1232 ../scaling_out.rst:428
 msgid ":doc:`/networking`: Learn about complex networking"
 msgstr ""
 
-#: ../getting_started.rst:1233 ../introduction.rst:579 ../scaling_out.rst:387
+#: ../getting_started.rst:1233 ../introduction.rst:650 ../scaling_out.rst:429
 msgid ":doc:`/advice`: Get advice about operations"
 msgstr ""
 
-#: ../getting_started.rst:1234 ../introduction.rst:580 ../scaling_out.rst:388
+#: ../getting_started.rst:1234 ../introduction.rst:651 ../scaling_out.rst:430
 msgid ""
 ":doc:`/craziness`: Learn some crazy things that you might not think to do ;)"
 msgstr ""
 
-#: ../getting_started.rst:1239 ../introduction.rst:584 ../scaling_out.rst:392
+#: ../getting_started.rst:1239 ../introduction.rst:655 ../scaling_out.rst:434
 msgid "Complete code sample"
 msgstr ""
 
-#: ../getting_started.rst:1241 ../introduction.rst:586 ../scaling_out.rst:394
+#: ../getting_started.rst:1241 ../introduction.rst:657 ../scaling_out.rst:436
 msgid ""
 "The following file contains all of the code from this section of the "
 "tutorial. This comprehensive code sample lets you view and run the code as a "
 "single script."
 msgstr ""
 
-#: ../getting_started.rst:1245 ../introduction.rst:589 ../scaling_out.rst:398
+#: ../getting_started.rst:1245 ../introduction.rst:660 ../scaling_out.rst:440
 msgid ""
 "Before you run this script, confirm that you have set your authentication "
 "information, the flavor ID, and image ID."
@@ -1874,18 +1866,18 @@ msgid ""
 "these commands again.)"
 msgstr ""
 
-#: ../introduction.rst:209
+#: ../introduction.rst:216
 msgid ""
 "We explained image and flavor in :doc:`getting_started`, so in the following "
 "sections, we will explain the other parameters in detail, including :code:"
 "`ex_userdata` (cloud-init) and :code:`ex_keyname` (key pairs)."
 msgstr ""
 
-#: ../introduction.rst:215
+#: ../introduction.rst:222
 msgid "Introduction to cloud-init"
 msgstr ""
 
-#: ../introduction.rst:217
+#: ../introduction.rst:224
 msgid ""
 "`cloud-init <https://cloudinit.readthedocs.org/en/latest/>`_ is a tool that "
 "performs instance configuration tasks during the boot of a cloud instance, "
@@ -1894,7 +1886,7 @@ msgid ""
 "init."
 msgstr ""
 
-#: ../introduction.rst:223
+#: ../introduction.rst:230
 msgid ""
 "In this case, we are presenting a shell script as the `userdata <https://"
 "cloudinit.readthedocs.org/en/latest/topics/format.html#user-data-script>`_. "
@@ -1902,7 +1894,7 @@ msgid ""
 "the shell script in the :code:`userdata` variable."
 msgstr ""
 
-#: ../introduction.rst:228
+#: ../introduction.rst:235
 msgid ""
 "When an SSH public key is provided during instance creation, cloud-init "
 "installs this key on a user account. (The user name varies between cloud "
@@ -1912,7 +1904,7 @@ msgid ""
 "logging in, ask your cloud provider to confirm the user name."
 msgstr ""
 
-#: ../introduction.rst:242
+#: ../introduction.rst:256
 msgid ""
 "After the instance is created, cloud-init downloads and runs a script "
 "called :code:`install.sh`. This script installs the Fractals application. "
@@ -1922,11 +1914,11 @@ msgid ""
 "readthedocs.org/en/latest/>`_."
 msgstr ""
 
-#: ../introduction.rst:249
+#: ../introduction.rst:263
 msgid "Introduction to key pairs"
 msgstr ""
 
-#: ../introduction.rst:251
+#: ../introduction.rst:265
 msgid ""
 "Security is important when it comes to your instances; you can't have just "
 "anyone accessing them. To enable logging into an instance, you must provide "
@@ -1935,17 +1927,17 @@ msgid ""
 "it for the user account."
 msgstr ""
 
-#: ../introduction.rst:257
+#: ../introduction.rst:271
 msgid ""
 "Even with a key in place, however, you must have the appropriate security "
 "group rules in place to access your instance."
 msgstr ""
 
-#: ../introduction.rst:261
+#: ../introduction.rst:275
 msgid "Introduction to security groups"
 msgstr ""
 
-#: ../introduction.rst:263
+#: ../introduction.rst:277
 msgid ""
 "Security groups are sets of network access rules that are applied to an "
 "instance's networking. By default, only egress (outbound) traffic is "
@@ -1953,47 +1945,47 @@ msgid ""
 "creating a security group rule."
 msgstr ""
 
-#: ../introduction.rst:268
+#: ../introduction.rst:282
 msgid ""
 "Removing the egress rule created by OpenStack will cause your instance "
 "networking to break."
 msgstr ""
 
-#: ../introduction.rst:271
+#: ../introduction.rst:285
 msgid ""
 "Start by creating a security group for the all-in-one instance and adding "
 "the appropriate rules, such as HTTP (TCP port 80) and SSH (TCP port 22):"
 msgstr ""
 
-#: ../introduction.rst:282
+#: ../introduction.rst:302
 msgid ""
 ":code:`ex_create_security_group_rule()` takes ranges of ports as input. This "
 "is why ports 80 and 22 are passed twice."
 msgstr ""
 
-#: ../introduction.rst:286
+#: ../introduction.rst:306
 msgid "You can list available security groups with:"
 msgstr ""
 
-#: ../introduction.rst:295
+#: ../introduction.rst:322
 msgid "Once you've created a rule or group, you can also delete it:"
 msgstr ""
 
-#: ../introduction.rst:304
+#: ../introduction.rst:338
 msgid "To see which security groups apply to an instance, you can:"
 msgstr ""
 
-#: ../introduction.rst:315
+#: ../introduction.rst:356
 msgid ""
 "Once you've configured permissions, you'll need to know where to access the "
 "application."
 msgstr ""
 
-#: ../introduction.rst:319
+#: ../introduction.rst:360
 msgid "Introduction to Floating IPs"
 msgstr ""
 
-#: ../introduction.rst:321
+#: ../introduction.rst:362
 msgid ""
 "As in traditional IT, cloud instances are accessed through IP addresses that "
 "OpenStack assigns. How this is actually done depends on the networking setup "
@@ -2001,7 +1993,7 @@ msgid ""
 "address assigned directly to your instance."
 msgstr ""
 
-#: ../introduction.rst:326
+#: ../introduction.rst:367
 msgid ""
 "The most common way for OpenStack clouds to allocate Internet rout-able IP "
 "addresses to instances, however, is through the use of floating IPs. A "
@@ -2013,20 +2005,20 @@ msgid ""
 "floating IPs for your use."
 msgstr ""
 
-#: ../introduction.rst:336
+#: ../introduction.rst:377
 msgid ""
 "To use a floating IP, you must first allocate an IP to your project, then "
 "associate it to your instance's network interface."
 msgstr ""
 
-#: ../introduction.rst:341
+#: ../introduction.rst:382
 msgid ""
 "Allocating a floating IP address to an instance does not change the IP "
 "address of the instance, it causes OpenStack to establish the network "
 "translation rules to allow an *additional* IP address."
 msgstr ""
 
-#: ../introduction.rst:352
+#: ../introduction.rst:393
 msgid ""
 "If you have no free floating IPs that have been previously allocated for "
 "your project, first select a floating IP pool offered by your provider. In "
@@ -2034,41 +2026,41 @@ msgid ""
 "available IP addresses."
 msgstr ""
 
-#: ../introduction.rst:363
+#: ../introduction.rst:402
 msgid ""
 "Now request that an address from this pool be allocated to your project."
 msgstr ""
 
-#: ../introduction.rst:371
+#: ../introduction.rst:415
 msgid ""
 "Now that you have an unused floating IP address allocated to your project, "
 "attach it to an instance."
 msgstr ""
 
-#: ../introduction.rst:380
+#: ../introduction.rst:431
 msgid ""
 "That brings us to where we ended up at the end of :doc:`/getting_started`. "
 "But where do we go from here?"
 msgstr ""
 
-#: ../introduction.rst:384
+#: ../introduction.rst:435
 msgid "Splitting services across multiple instances"
 msgstr ""
 
-#: ../introduction.rst:386
+#: ../introduction.rst:437
 msgid ""
 "We've talked about separating functions into different micro-services, and "
 "how that enables us to make use of the cloud architecture. Now let's see "
 "that in action."
 msgstr ""
 
-#: ../introduction.rst:390
+#: ../introduction.rst:441
 msgid ""
 "The rest of this tutorial won't reference the all-in-one instance you "
 "created in section one. Take a moment to delete this instance."
 msgstr ""
 
-#: ../introduction.rst:393
+#: ../introduction.rst:444
 msgid ""
 "It's easy to split out services into multiple instances. We will create a "
 "controller instance called :code:`app-controller`, which hosts the API, "
@@ -2076,67 +2068,67 @@ msgid ""
 "called :code:`app-worker-1`, which just generates fractals."
 msgstr ""
 
-#: ../introduction.rst:399
+#: ../introduction.rst:450
 msgid ""
 "The first step is to start the controller instance. The instance has the API "
 "service, the database, and the messaging service, as you can see from the "
 "parameters passed to the installation script."
 msgstr ""
 
-#: ../introduction.rst:404 ../introduction.rst:444
+#: ../introduction.rst:455 ../introduction.rst:508
 msgid "Parameter"
 msgstr ""
 
-#: ../introduction.rst:404
+#: ../introduction.rst:455
 msgid "Values"
 msgstr ""
 
-#: ../introduction.rst:406
+#: ../introduction.rst:457
 msgid ":code:`-i`"
 msgstr ""
 
-#: ../introduction.rst:406
+#: ../introduction.rst:457
 msgid ""
 ":code:`messaging` (install RabbitMQ) and :code:`faafo` (install the Faafo "
 "app)."
 msgstr ""
 
-#: ../introduction.rst:406
+#: ../introduction.rst:457
 msgid "Install a service"
 msgstr ""
 
-#: ../introduction.rst:407
+#: ../introduction.rst:458
 msgid ":code:`-r`"
 msgstr ""
 
-#: ../introduction.rst:407
+#: ../introduction.rst:458
 msgid ""
 ":code:`api` (enable and start the API service), :code:`worker` (enable and "
 "start the worker service), and :code:`demo` (run the demo mode to request "
 "random fractals)."
 msgstr ""
 
-#: ../introduction.rst:407
+#: ../introduction.rst:458
 msgid "Enable/start something"
 msgstr ""
 
-#: ../introduction.rst:419
+#: ../introduction.rst:477
 msgid ""
 "Note that this time, when you create a security group, you're including a "
 "rule that only applies for instances that are part of the worker_group."
 msgstr ""
 
-#: ../introduction.rst:423
+#: ../introduction.rst:481
 msgid "Next, start a second instance, which will be the worker instance:"
 msgstr ""
 
-#: ../introduction.rst:434
+#: ../introduction.rst:498
 msgid ""
 "Notice that you've added this instance to the worker_group, so it can access "
 "the controller."
 msgstr ""
 
-#: ../introduction.rst:437
+#: ../introduction.rst:501
 msgid ""
 "As you can see from the parameters passed to the installation script, you "
 "are specifying that this is the worker instance, but you're also passing the "
@@ -2145,133 +2137,133 @@ msgid ""
 "parameters."
 msgstr ""
 
-#: ../introduction.rst:444
+#: ../introduction.rst:508
 msgid "Example"
 msgstr ""
 
-#: ../introduction.rst:446
+#: ../introduction.rst:510
 msgid ":code:`-e`"
 msgstr ""
 
-#: ../introduction.rst:446
+#: ../introduction.rst:510
 msgid "The endpoint URL of the API service."
 msgstr ""
 
-#: ../introduction.rst:446
+#: ../introduction.rst:510
 msgid "http://localhost/"
 msgstr ""
 
-#: ../introduction.rst:447
+#: ../introduction.rst:511
 msgid ":code:`-m`"
 msgstr ""
 
-#: ../introduction.rst:447
+#: ../introduction.rst:511
 msgid "The transport URL of the messaging service."
 msgstr ""
 
-#: ../introduction.rst:447
+#: ../introduction.rst:511
 msgid "amqp://guest:guest@localhost:5672/"
 msgstr ""
 
-#: ../introduction.rst:448
+#: ../introduction.rst:512
 msgid ":code:`-d`"
 msgstr ""
 
-#: ../introduction.rst:448
+#: ../introduction.rst:512
 msgid "The connection URL for the database (not used here)."
 msgstr ""
 
-#: ../introduction.rst:448
+#: ../introduction.rst:512
 msgid "sqlite:////tmp/sqlite.db"
 msgstr ""
 
-#: ../introduction.rst:451
+#: ../introduction.rst:515
 msgid ""
 "Now if you make a request for a new fractal, you connect to the controller "
 "instance, :code:`app-controller`, but the work will actually be performed by "
 "a separate worker instance - :code:`app-worker-1`."
 msgstr ""
 
-#: ../introduction.rst:457
+#: ../introduction.rst:521
 msgid "Login with SSH and use the Fractal app"
 msgstr ""
 
-#: ../introduction.rst:459
+#: ../introduction.rst:523
 msgid ""
 "Login to the worker instance, :code:`app-worker-1`, with SSH, using the "
 "previous added SSH key pair \"demokey\". Start by getting the IP address of "
 "the worker:"
 msgstr ""
 
-#: ../introduction.rst:469
+#: ../introduction.rst:540
 msgid "Now you can SSH into the instance:"
 msgstr ""
 
-#: ../introduction.rst:475
+#: ../introduction.rst:546
 msgid ""
 "Replace :code:`IP_WORKER_1` with the IP address of the worker instance and "
 "USERNAME to the appropriate user name."
 msgstr ""
 
-#: ../introduction.rst:478
+#: ../introduction.rst:549
 msgid ""
 "Once you've logged in, check to see whether the worker service process is "
 "running as expected.  You can find the logs of the worker service in the "
 "directory :code:`/var/log/supervisor/`."
 msgstr ""
 
-#: ../introduction.rst:487
+#: ../introduction.rst:558
 msgid ""
 "Open :code:`top` to monitor the CPU usage of the :code:`faafo-worker` "
 "process."
 msgstr ""
 
-#: ../introduction.rst:489
+#: ../introduction.rst:560
 msgid ""
 "Now log into the controller instance, :code:`app-controller`, also with SSH, "
 "using the previously added SSH key pair \"demokey\"."
 msgstr ""
 
-#: ../introduction.rst:496
+#: ../introduction.rst:567
 msgid ""
 "Replace :code:`IP_CONTROLLER` with the IP address of the controller instance "
 "and USERNAME to the appropriate user name."
 msgstr ""
 
-#: ../introduction.rst:499
+#: ../introduction.rst:570
 msgid ""
 "Check to see whether the API service process is running like expected. You "
 "can find the logs for the API service in the directory :file:`/var/log/"
 "supervisor/`."
 msgstr ""
 
-#: ../introduction.rst:508
+#: ../introduction.rst:579
 msgid ""
 "Now call the Fractal application's command line interface (:code:`faafo`) to "
 "request a few new fractals. The following command requests a few fractals "
 "with random parameters:"
 msgstr ""
 
-#: ../introduction.rst:517
+#: ../introduction.rst:588
 msgid ""
 "Watch :code:`top` on the worker instance. Right after calling :code:`faafo` "
 "the :code:`faafo-worker` process should start consuming a lot of CPU cycles."
 msgstr ""
 
-#: ../introduction.rst:526
+#: ../introduction.rst:597
 msgid ""
 "To show the details of a specific fractal use the subcommand :code:`show` of "
 "the Faafo CLI."
 msgstr ""
 
-#: ../introduction.rst:547
+#: ../introduction.rst:618
 msgid ""
 "There are more commands available; find out more details about them with :"
 "code:`faafo get --help`, :code:`faafo list --help`, and :code:`faafo delete "
 "--help`."
 msgstr ""
 
-#: ../introduction.rst:551
+#: ../introduction.rst:622
 msgid ""
 "The application stores the generated fractal images directly in the database "
 "used by the API service instance.  Storing image files in a database is not "
@@ -2281,7 +2273,7 @@ msgid ""
 "`durability`."
 msgstr ""
 
-#: ../introduction.rst:562
+#: ../introduction.rst:633
 msgid ""
 "You should now have a basic understanding of the architecture of cloud-based "
 "applications. In addition, you have had practice starting new instances, "
@@ -2291,23 +2283,23 @@ msgid ""
 "on an OpenStack cloud."
 msgstr ""
 
-#: ../introduction.rst:570
+#: ../introduction.rst:641
 msgid ""
 "From here, you should go to :doc:`/scaling_out` to learn how to scale your "
 "application further. Alternatively, you may jump to any of these sections:"
 msgstr ""
 
-#: ../introduction.rst:574
+#: ../introduction.rst:645
 msgid ""
 ":doc:`/durability`: Learn how to use Object Storage to make your application "
 "more durable"
 msgstr ""
 
-#: ../introduction.rst:577
+#: ../introduction.rst:648
 msgid ":doc:`/orchestration`: Automatically orchestrate the application"
 msgstr ""
 
-#: ../introduction.rst:578
+#: ../introduction.rst:649
 msgid ":doc:`/networking`: Learn about more complex networking"
 msgstr ""
 
@@ -2906,6 +2898,10 @@ msgid ""
 "templates/blob/master/hot/autoscaling.yaml>`_"
 msgstr ""
 
+#: ../orchestration.rst:190
+msgid "Next Steps"
+msgstr ""
+
 #: ../orchestration.rst:192
 msgid ""
 "You should now be fairly confident working with the Orchestration service. "
@@ -3108,33 +3104,33 @@ msgid ""
 "working, remove them and re-create something new."
 msgstr ""
 
-#: ../scaling_out.rst:166
+#: ../scaling_out.rst:173
 msgid "Extra security groups"
 msgstr ""
 
-#: ../scaling_out.rst:168
+#: ../scaling_out.rst:175
 msgid ""
 "As you change the topology of your applications, you will need to update or "
 "create new security groups. Here, we will re-create the required security "
 "groups."
 msgstr ""
 
-#: ../scaling_out.rst:179
+#: ../scaling_out.rst:193
 msgid "A Floating IP helper function"
 msgstr ""
 
-#: ../scaling_out.rst:181
+#: ../scaling_out.rst:195
 msgid ""
 "Define a short function to locate unused IPs or allocate a new floating IP. "
 "This saves a few lines of code and prevents you from reaching your Floating "
 "IP quota too quickly."
 msgstr ""
 
-#: ../scaling_out.rst:192
+#: ../scaling_out.rst:213
 msgid "Splitting off the database and message queue"
 msgstr ""
 
-#: ../scaling_out.rst:194
+#: ../scaling_out.rst:215
 msgid ""
 "Prior to scaling out our application services, like the API service or the "
 "workers, we have to add a central database and messaging instance, called :"
@@ -3143,11 +3139,11 @@ msgid ""
 "services."
 msgstr ""
 
-#: ../scaling_out.rst:207
+#: ../scaling_out.rst:235
 msgid "Scaling the API service"
 msgstr ""
 
-#: ../scaling_out.rst:209
+#: ../scaling_out.rst:237
 msgid ""
 "With multiple workers producing fractals as fast as they can, we also need "
 "to make sure we can receive the requests for fractals as quickly as "
@@ -3155,13 +3151,13 @@ msgid ""
 "users trying to connect to our API to generate fractals."
 msgstr ""
 
-#: ../scaling_out.rst:214
+#: ../scaling_out.rst:242
 msgid ""
 "Armed with our security group, image and flavor size we can now add multiple "
 "API services:"
 msgstr ""
 
-#: ../scaling_out.rst:223
+#: ../scaling_out.rst:258
 msgid ""
 "These are client-facing services, so unlike the workers they do not use a "
 "message queue to distribute tasks. Instead, we'll need to introduce some "
@@ -3169,7 +3165,7 @@ msgid ""
 "different API services."
 msgstr ""
 
-#: ../scaling_out.rst:228
+#: ../scaling_out.rst:263
 msgid ""
 "One simple way might be to give half of our friends one address and half the "
 "other, but that's certainly not a sustainable solution. Instead, we can do "
@@ -3178,15 +3174,15 @@ msgid ""
 "as a Service, which we'll explain in :doc:`/networking`."
 msgstr ""
 
-#: ../scaling_out.rst:241
+#: ../scaling_out.rst:276
 msgid "Scaling the workers"
 msgstr ""
 
-#: ../scaling_out.rst:243
+#: ../scaling_out.rst:278
 msgid "To increase the overall capacity, we will now add 3 workers:"
 msgstr ""
 
-#: ../scaling_out.rst:252
+#: ../scaling_out.rst:294
 msgid ""
 "Adding this capacity enables you to deal with a higher number of requests "
 "for fractals. As soon as these worker instances come up, they'll start "
@@ -3194,7 +3190,7 @@ msgid ""
 "backlog like a new register opening in the supermarket."
 msgstr ""
 
-#: ../scaling_out.rst:258
+#: ../scaling_out.rst:300
 msgid ""
 "This was obviously a very manual process - figuring out we needed more "
 "workers and then starting new ones required some effort. Ideally the system "
@@ -3205,24 +3201,24 @@ msgid ""
 "See :doc:`orchestration` to find out how to set that up."
 msgstr ""
 
-#: ../scaling_out.rst:268
+#: ../scaling_out.rst:310
 msgid "Verifying we've had an impact"
 msgstr ""
 
-#: ../scaling_out.rst:270
+#: ../scaling_out.rst:312
 msgid ""
 "In the steps above, we've split out several services and expanded capacity. "
 "SSH to one of the app instances and create a few fractals. You will see that "
 "the Fractals app has a few new features."
 msgstr ""
 
-#: ../scaling_out.rst:278
+#: ../scaling_out.rst:320
 msgid ""
 "Replace :code:`IP_API_1` with the IP address of the first API instance and "
 "USERNAME to the appropriate username."
 msgstr ""
 
-#: ../scaling_out.rst:281
+#: ../scaling_out.rst:323
 msgid ""
 "Use the Fractal application's command line interface to generate fractals :"
 "code:`faafo create`. Watch the progress of fractal generation with the :code:"
@@ -3233,7 +3229,7 @@ msgid ""
 "noticed."
 msgstr ""
 
-#: ../scaling_out.rst:334
+#: ../scaling_out.rst:376
 msgid ""
 "The fractals are now available from any of the app-api hosts. Visit http://"
 "IP_API_1/fractal/FRACTAL_UUID and http://IP_API_2/fractal/FRACTAL_UUID to "
@@ -3241,13 +3237,13 @@ msgid ""
 "others can be used."
 msgstr ""
 
-#: ../scaling_out.rst:339
+#: ../scaling_out.rst:381
 msgid ""
 "Replace :code:`IP_API_1` and :code:`IP_API_2` with the corresponding "
 "Floating IPs. Replace FRACTAL_UUID the UUID of an existing fractal."
 msgstr ""
 
-#: ../scaling_out.rst:343
+#: ../scaling_out.rst:385
 msgid ""
 "Go ahead and test the fault tolerance. Start destroying workers and API "
 "instances. As long as you have one of each, your application should be fine. "
@@ -3256,14 +3252,14 @@ msgid ""
 "Future sections will work to address this weak point."
 msgstr ""
 
-#: ../scaling_out.rst:350
+#: ../scaling_out.rst:392
 msgid ""
 "If we had a load balancer, we could distribute this load between the two "
 "different API services. As mentioned previously, there are several options. "
 "We will show one in :doc:`networking`."
 msgstr ""
 
-#: ../scaling_out.rst:354
+#: ../scaling_out.rst:396
 msgid ""
 "You could in theory use a simple script to monitor the load on your workers "
 "and API services and trigger the creation of new instances, which you "
@@ -3271,7 +3267,7 @@ msgid ""
 "you're ready to create scalable cloud applications."
 msgstr ""
 
-#: ../scaling_out.rst:359
+#: ../scaling_out.rst:401
 msgid ""
 "Of course, creating a monitoring system just for one application may not "
 "always be the best way. We recommend you look at :doc:`orchestration` to "
@@ -3279,13 +3275,13 @@ msgid ""
 "autoscaling capabilities to do steps like this automatically."
 msgstr ""
 
-#: ../scaling_out.rst:368
+#: ../scaling_out.rst:410
 msgid ""
 "You should be fairly confident now about starting new instances, and "
 "distributing services from an application amongst the instances."
 msgstr ""
 
-#: ../scaling_out.rst:371
+#: ../scaling_out.rst:413
 msgid ""
 "As mentioned in :doc:`/introduction` the generated fractal images will be "
 "saved on the local filesystem of the API service instances. Because we now "
@@ -3296,7 +3292,7 @@ msgid ""
 "fractal image on its local filesystem."
 msgstr ""
 
-#: ../scaling_out.rst:379
+#: ../scaling_out.rst:421
 msgid ""
 "From here, you should go to :doc:`/durability` to learn how to use Object "
 "Storage to solve this problem in a elegant way. Alternatively, you may jump "
