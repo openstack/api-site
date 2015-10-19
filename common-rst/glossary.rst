@@ -763,6 +763,13 @@ OpenStack contribution process.
       Lists allowed commands within the Compute rootwrap
       facility.
 
+   Common Internet File System (CIFS)
+
+      A file sharing protocol. It is a public or open variation of the
+      original Server Message Block (SMB) protocol developed and used by
+      Microsoft. Like the SMB protocol, CIFS runs at a higher level and uses
+      the TCP/IP protocol.
+
    community project
 
       A project that is not officially endorsed by the OpenStack
@@ -1619,6 +1626,11 @@ OpenStack contribution process.
       Apache Hadoop is an open source software framework that supports
       data-intensive distributed applications.
 
+   Hadoop Distributed File System (HDFS)
+
+      A distributed, highly fault-tolerant file system designed to run
+      on low-cost commodity hardware.
+
    handover
 
       An object state in Object Storage where a new replica of the
@@ -2061,6 +2073,13 @@ OpenStack contribution process.
       design summit took place in Atlanta, Georgia, US and Juno is
       an unincorporated community in Georgia.
 
+   Kerberos
+
+      A network authentication protocol which works on the basis of
+      tickets. Kerberos allows nodes communication over a non-secure
+      network, and allows nodes to prove their identity to one another in a
+      secure manner.
+
    kernel-based VM (KVM)
 
       An OpenStack-supported hypervisor. KVM is a full
@@ -2137,6 +2156,11 @@ OpenStack contribution process.
 
       Virtualization API library used by OpenStack to interact with
       many of its supported hypervisors.
+
+   Lightweight Directory Access Protocol (LDAP)
+
+      An application protocol for accessing and maintaining distributed
+      directory information services over an IP network.
 
    Linux bridge
 
@@ -3231,6 +3255,38 @@ OpenStack contribution process.
 
       A horizon component that stores and tracks client session
       information. Implemented through the Django sessions framework.
+
+   share
+
+      A remote, mountable file system in the context of the Shared File
+      Systems. You can mount a share to, and access a share from, several
+      hosts by several users at a time.
+
+   share network
+
+      An entity in the context of the Shared File Systems that
+      encapsulates interaction with the Networking service. If the driver
+      you selected runs in the mode requiring such kind of interaction, you
+      need to specify the share network to create a share.
+
+   Shared File Systems API
+
+      A Shared File Systems service that provides a stable RESTful API.
+      The service authenticates and routes requests throughout the Shared
+      File Systems service. There is python-manilaclient to interact with
+      the API.
+
+   Shared File Systems service
+
+      An OpenStack service that provides a set of services for
+      management of shared file systems in a multi-tenant cloud
+      environment. The service is similar to how OpenStack provides
+      block-based storage management through the OpenStack Block Storage
+      service project. With the Shared File Systems service, you can create
+      a remote file system and mount the file system on your instances. You
+      can also read and write data from your instances to and from your
+      file system. The project name of the Shared File Systems service is
+      manila.
 
    shared IP address
 
