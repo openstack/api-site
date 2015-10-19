@@ -2007,6 +2007,16 @@ OpenStack contribution process.
       ip6tables to IPv6, arptables to ARP, and ebtables to Ethernet frames.
       Requires root privilege to manipulate.
 
+   IQN
+
+      iSCSI Qualified Name (IQN) is the format most commonly used
+      for iSCSI names, which uniquely identify nodes in an iSCSI network.
+      All IQNs follow the pattern iqn.yyyy-mm.domain:identifier, where
+      'yyyy-mm' is the year and month in which the domain was registered,
+      'domain' is the reversed domain name of the issuing organization, and
+      'identifier' is an optional string which makes each IQN under the same
+      domain unique. For example, 'iqn.2015-10.org.openstack.408ae959bce1'.
+
    iSCSI
 
       The SCSI disk protocol tunneled within Ethernet, supported by
