@@ -2034,7 +2034,7 @@ OpenStack contribution process.
       The SCSI disk protocol tunneled within Ethernet, supported by
       Compute, Object Storage, and Image service.
 
-   ISO9960
+   ISO9660
 
       One of the VM image disk formats supported by Image
       service.
