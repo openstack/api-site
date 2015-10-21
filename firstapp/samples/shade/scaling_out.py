@@ -30,7 +30,7 @@ def get_floating_ip(conn):
 
 # step-4
 userdata = '''#!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/stackforge/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
     -i database -i messaging
 '''
 
@@ -46,7 +46,7 @@ services_ip = conn.get_server_private_ip(instance_services)
 
 # step-5
 userdata = '''#!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/stackforge/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
     -i faafo -r api -m 'amqp://guest:guest@%(services_ip)s:5672/' \
     -d 'mysql+pymysql://faafo:password@%(services_ip)s:3306/faafo'
 ''' % { 'services_ip': services_ip }
@@ -76,7 +76,7 @@ for instance in [instance_api_1,  instance_api_2]:
 
 # step-6
 userdata = '''#!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/stackforge/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
     -i faafo -r worker -e 'http://%(api_1_ip)s' -m 'amqp://guest:guest@%(services_ip)s:5672/'
 ''' % {'api_1_ip': api_1_ip, 'services_ip': services_ip}
 
