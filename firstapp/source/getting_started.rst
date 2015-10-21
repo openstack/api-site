@@ -55,8 +55,8 @@ Language        Name          Description                                       
 ============== ============= ================================================================= ====================================================
 Python         Libcloud      A Python-based library managed by the Apache Foundation.
                              This library enables you to work with multiple types of clouds.   https://libcloud.apache.org
-Python         OpenStack SDK A Python-based library specifically developed for OpenStack.      https://github.com/stackforge/python-openstacksdk
-Python         Shade         A Python-based library developed by OpenStack Infra team to       https://github.com/openstack-infra/shade
+Python         OpenStack SDK A Python-based library specifically developed for OpenStack.      http://git.openstack.org/cgit/openstack/python-openstacksdk
+Python         Shade         A Python-based library developed by OpenStack Infra team to       http://git.openstack.org/cgit/openstack-infra/shade
                              operate multiple OpenStack clouds.
 Java           jClouds       A Java-based library. Like Libcloud, it's also managed by the     https://jclouds.apache.org
                              Apache Foundation and works with multiple types of clouds.

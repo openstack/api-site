@@ -5,8 +5,9 @@ Writing Your First OpenStack Application
 This directory contains the "Writing Your First OpenStack Application"
 tutorial.
 
-The tutorials work with an application that can be found at
-`https://github.com/stackforge/faafo <https://github.com/stackforge/faafo/>`_.
+The tutorials work with an application that can be found in the
+`openstack/faafo <http://git.openstack.org/cgit/openstack/faafo>`_
+repository.
 
 Prerequisites
 -------------

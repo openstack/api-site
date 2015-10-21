@@ -140,7 +140,7 @@ if (security_group_exists) {
 
 // step-11
 userdata = "#!/usr/bin/env bash\n" +
-    "curl -L -s https://git.openstack.org/cgit/stackforge/faafo/plain/contrib/install.sh" +
+    "curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh" +
     " | bash -s -- -i faafo -i messaging -r api -r worker -r demo";
 userdata = new Buffer(userdata).toString('base64')
 
