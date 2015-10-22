@@ -21,17 +21,17 @@
                     <resource id="server_id" path="{server_id}">
                         &serverIdRequestParameter;
                         <resource id="action" path="action">
+                            <method href="#attachVolume"/>
+                            <method href="#confirmResizeServer"/>
+                            <method href="#createImage"/>
                             <method href="#rebootServer"/>
                             <method href="#rebuildServer"/>
+                            <method href="#rescueServer"/>
                             <method href="#resizeServer"/>
-                            <method href="#confirmServer"/>
-                            <method href="#revertServer"/>
-                            <method href="#createImage"/>
-                            <method href="#start"/>
-                            <method href="#stop"/>
-                            <method href="#attachVolume"/>
-                            <method href="#rescue"/>
-                            <method href="#unrescue"/>
+                            <method href="#revertResizeServer"/>
+                            <method href="#os-startServer"/>
+                            <method href="#os-stopServer"/>
+                            <method href="#unrescueServer"/>
                         </resource>
                     </resource>
                 </resource>
@@ -41,94 +41,93 @@
     <!-- *******************************************************-->
     <!--             Server Actions                             -->
     <!--********************************************************-->
-    <method name="POST" id="rebootServer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Reboot server">
+    <method name="POST" id="attachVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Attach volume (attach action)">
             <para role="shortdesc">
-                Reboots the specified server. Specify the <code>reboot</code>
-                action in the request body.
-            </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/servers/server-action-reboot.json"/>
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="202"/>
-        <!-- Common, GET, postput, inProgress Faults--> &commonFaults; &getFaults; &postPutFaults;
-        &rebootFaults; &inProgressFault; </method>
-    <method name="POST" id="rebuildServer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Rebuild server">
-            <para role="shortdesc">
-                Rebuilds the specified server. Specify the
-                <code>rebuild</code> action in the request body.
+                Attaches a specified volume to a specified server.
             </para>
             <para>
-                To rebuild the specified server with preservation of the
-                ephemeral partition, set the <code>preserve_ephemeral</code>
-                parameter to <code>true</code>.
-            </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/servers/server-action-rebuild-preserve-ephemeral.json"/>
-                </wadl:doc>
-                &rebuildActionRequestParameter;
-                &imageRefRequestParameter;
-                &serverNameRequestParameter;
-                &adminPassRequestParameter;
-                &metadataRequestParameter;
-                &personalityRequestParameter;
-                &preserve_ephemeralRequestParameter;
-            </representation>
-        </request>
-        <response status="202">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/all_extensions/server-action-rebuild-resp.json"/>
-                </wadl:doc>
-            </representation>
-        </response>
-        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
-    <method name="POST" id="resizeServer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Resize server">
-            <para role="shortdesc">
-                Resizes the specified server. Specify the <code>resize</code>
-                action in the request body.
+                Specify the <code>attach</code> action in the request body.
             </para>
             <para>
-                A successfully resized server shows a
-                <code>VERIFY_RESIZE</code> status, <code>RESIZED</code> VM
-                status, and <code>finished</code> migration status. If you set
-                the <code>auto_confirm</code> option of the Compute service to
-                <code>True</code>, the Compute service automatically confirms
-                the resize operation.
+                If the attach operation succeeds, the volume status
+                is <code>in-use</code>.
             </para>
             <para>Preconditions</para>
-                <itemizedlist>
-                  <listitem><para>You can only resize a server when its status is
-                  <code>ACTIVE</code> or <code>SHUTOFF</code>.</para></listitem>
-                <listitem><para>If the specified server is locked, you must have
-                administrator privileges to resize the server.</para></listitem>
+            <itemizedlist>
+                <listitem><para>The specified server must exist.</para></listitem>
+                <listitem><para>You can only attach a volume to the server
+                when its status is <code>available</code>.</para></listitem>
+                <listitem><para>The connection to the Block Storage service is valid.
+                </para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+            <listitem>
+                <para>
+                    If the request fails due to an OpenStack Compute service
+                    error, ensure you meet the preconditions and run the request
+                    again. If the request fails again, investigate OpenStack
+                    Compute service or ask your cloud provider.
+                </para>
+            </listitem>
             </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/servers/server-action-resize.json"/>
+                    <xsdxt:code href="../api_samples/servers/server-action-attach-volume.json"/>
                 </wadl:doc>
+                &attachActionRequestParameter;
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="volume_id" style="plain" type="csapi:UUID"
+                    required="true" id="volume_id">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The volume ID.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="device" style="plain" type="xsd:string"
+                    required="false" id="device">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The device name.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="disk_bus" style="plain" type="xsd:string"
+                    required="false" id="disk_bus">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The disk bus name.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="device_type" style="plain" type="xsd:string"
+                    required="false" id="device_type">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The device type name.</para>
+                    </wadl:doc>
+                </param>
             </representation>
         </request>
         <response status="202"/>
-        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
-    <method name="POST" id="confirmServer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Confirm resized server">
+        <response status="409">
+            <representation mediaType="application/json"/>
+        </response>
+        &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+      <method name="POST" id="confirmResizeServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="Confirm resized server (confirmResize action)">
             <para role="shortdesc">
-                Confirms a pending resize action. Specify the
+                Confirms a pending resize action for a specified server.
+            </para>
+            <para>
+                Specify the
                 <code>confirmResize</code> action in the request body.
             </para>
             <para>
@@ -163,59 +162,21 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../api_samples/servers/server-action-confirm-resize.json"/>
                 </wadl:doc>
+                &confirmResizeActionRequestParameter;
             </representation>
         </request>
         <response status="204"/>
-        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
-    <method name="POST" id="revertServer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Revert resized server">
+        &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+      <method name="POST" id="createImage">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="Create image (createImage action)">
             <para role="shortdesc">
-                Cancels and reverts a pending resize action. Specify the
-                <code>revertResize</code> action in the request body.
+                Creates an image from a specified server.
             </para>
             <para>
-                After you make this request, you typically must keep
-                polling the server status to determine whether the request
-                succeeded. A successfully reverting resize operation shows
-                a status of <code>ACTIVE</code> or <code>SHUTOFF</code>
-                and a migration_status of <code>reverted</code>. You can
-                also see the reverted server in the compute node that
-                OpenStack Compute manages.
-            </para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>You can only confirm the resized server where the status
-                is <code>VERIFY_RESIZE</code> and the vm_status is <code>RESIZED</code>.
-                </para></listitem>
-                <listitem><para>If the specified server is locked, you must have
-                administrator privileges to revert the resizing.</para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-                <listitem><para>If the specified server status remains
-                <code>RESIZED</code>, the request failed. Ensure you meet the
-                preconditions and run the request again. If the request fails again,
-                investigate the compute back end.</para></listitem>
-                <listitem><para>The specified server is not reverted in the compute
-                node that OpenStack Compute manages.</para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/servers/server-action-revert-resize.json"/>
-                </wadl:doc>
-            </representation>
-        </request>
-        <response status="202"/>
-        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
-    <method name="POST" id="createImage">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create image">
-            <para role="shortdesc">
-                Creates an image. Specify the <code>createImage</code>
-                action in the request body.
+                Specify the <code>createImage</code> action in the request body.
             </para>
             <para>
                 After you make this request, you typically must keep polling
@@ -263,193 +224,82 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../api_samples/servers/server-action-create-image.json"/>
                 </wadl:doc>
+                &createImageActionRequestParameter;
             </representation>
         </request>
-        <response status="202">
-        </response>
+        <response status="202"/>
         <response status="409">
             <representation mediaType="application/json"/>
         </response>
-        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
+        &commonFaults;
         &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
-    <method name="POST" id="start">
+    <method name="POST" id="rebootServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Start server">
-            <para role="shortdesc">Starts a stopped server and changes
-                its status to <code>ACTIVE</code>.</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                  <listitem><para>The server status must be <code>SHUTOFF</code>.
-                  </para></listitem>
-                <listitem><para>If the specified server is locked, you
-                must have administrator privileges to start the server.
-                </para></listitem>
-            </itemizedlist>
-            <para>Asynchronous Postconditions</para>
-            <itemizedlist>
-              <listitem><para>After you successfully start a server,
-                its status changes to <code>ACTIVE</code>. The server appears on the compute
-                node that the Compute service manages.</para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-                  <listitem>
-                    <para>
-                        If the server status does not change to
-                        <code>ACTIVE</code>, the start operation failed.
-                        Ensure that you meet the preconditions and run the
-                        request again. If the request fails again, investigate
-                        whether another operation is running that causes a
-                        race condition.
-                  </para>
-              </listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
-                    xml:lang="EN" title="Start server: JSON request">
-                    <xsdxt:code
-                        href="../api_samples/servers/server-action-start.json"
-                    />
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="os-start" style="plain" type="xsd:string"
-                    required="true" id="os-start">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Specify the
-                                <code>os-start</code> action in the
-                            request body.</para></wadl:doc>
-                </param>
-            </representation>
-        </request>
-        <response status="202"/>
-    </method>
-    <method name="POST" id="stop">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Stop server">
-            <para role="shortdesc">Stops a running server and changes
-                its status to <code>SHUTOFF</code>.</para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                  <listitem><para>The server status must be
-                  <code>ACTIVE</code> or <code>ERROR</code>.
-                  </para></listitem>
-                <listitem><para>If the specified server is locked,
-                you must have administrator privileges to stop
-                the server.</para></listitem>
-            </itemizedlist>
-            <para>Asynchronous Postconditions</para>
-            <itemizedlist>
-                  <listitem><para>After you successfully stop a server,
-                    its status changes to <code>SHUTOFF</code>. The server instance data appears
-                    only on the compute node that Compute service manages.
-                    </para></listitem>
-            </itemizedlist>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
-                    xml:lang="EN" title="Stop server: JSON request">
-                    <xsdxt:code
-                        href="../api_samples/servers/server-action-stop.json"
-                    />
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="os-stop" style="plain" type="xsd:string"
-                    required="true" id="os-stop">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Specify the
-                                <code>os-stop</code> action in the
-                            request body.</para></wadl:doc>
-                </param>
-            </representation>
-        </request>
-        <response status="202"/>
-    </method>
-    <method name="POST" id="attachVolume">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Attach volume">
+         title="Reboot server (reboot action)">
             <para role="shortdesc">
-                Attaches a specified volume. Specify the <code>attach</code>
-                action in the request body.
+                Reboots a specified server.
             </para>
             <para>
-                If the attach operation succeeds, the volume status
-                is <code>in-use</code>.
+                Specify the <code>reboot</code> action in the request body.
             </para>
-            <para>Preconditions</para>
-            <itemizedlist>
-                <listitem><para>The specified server must exist.</para></listitem>
-                <listitem><para>You can only attach a volume to the server
-                when its status is <code>available</code>.</para></listitem>
-                <listitem><para>The connection to the Block storage service is valid.
-                </para></listitem>
-            </itemizedlist>
-            <para>Troubleshooting</para>
-            <itemizedlist>
-            <listitem><para>If the request fails due to an OpenStack
-                Compute service error, ensure you meet the preconditions
-                and run the request again. If the request fails again,
-                investigate OpenStack Compute service
-                or ask your cloud provider.
-            </para></listitem>
-            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../api_samples/servers/server-action-attach-volume.json"/>
+                    <xsdxt:code href="../api_samples/servers/server-action-reboot.json"/>
                 </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="volume_id" style="plain" type="csapi:UUID"
-                    required="true" id="volume_id">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>The volume ID.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="device" style="plain" type="xsd:string"
-                    required="false" id="device">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>The device name.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="disk_bus" style="plain" type="xsd:string"
-                    required="false" id="disk_bus">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>The disk bus name.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="device_type" style="plain" type="xsd:string"
-                    required="false" id="device_type">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>The device type name.</para>
-                    </wadl:doc>
-                </param>
+                &rebootActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+        &commonFaults; &getFaults; &postPutFaults;
+        &rebootFaults; &inProgressFault; </method>
+    <method name="POST" id="rebuildServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Rebuild server (rebuild action)">
+            <para role="shortdesc">
+                Rebuilds a specified server.
+            </para>
+            <para>
+                Specify the <code>rebuild</code> action in the request body.
+            </para>
+            <para>
+                To rebuild the specified server with preservation of the
+                ephemeral partition, set the <code>preserve_ephemeral</code>
+                parameter to <code>true</code>.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/servers/server-action-rebuild-preserve-ephemeral.json"/>
+                </wadl:doc>
+                &rebuildActionRequestParameter;
+                &imageRefRequestParameter;
+                &serverNameRequestParameter;
+                &adminPassRequestParameter;
+                &metadataRequestParameter;
+                &personalityRequestParameter;
+                &preserve_ephemeralRequestParameter;
             </representation>
         </request>
         <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/all_extensions/server-action-rebuild-resp.json"/>
+                </wadl:doc>
+            </representation>
         </response>
-        <response status="409">
-            <representation mediaType="application/json"/>
-        </response>
-        <!-- All other faults, build, common, get, post/put, and inProgress --> &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
-    </method>
-    <method name="POST" id="rescue">
+        &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
+       <method name="POST" id="rescueServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Rescue server">
+            title="Rescue server (rescue action)">
             <para role="shortdesc">
-                Puts a server in rescue mode and changes its status to
+                Puts a specified server in rescue mode and changes its status to
                 <code>RESCUE</code>.
+            </para>
+            <para>
+                Specify the <code>rescue</code> action in the request body.
             </para>
             <para>
                 If you specify the <code>rescue_image_ref</code> extended
@@ -482,17 +332,7 @@
                         href="../api_samples/os-rescue/server-rescue-req-with-image-ref.json"
                     />
                 </wadl:doc>
-                <param name="rescue" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN" title="Rescue action"
-                            >
-                        <para>
-                            Specify the <code>rescue</code> action in the
-                            request body.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &rescueActionRequestParameter;
                 <param name="adminPass" style="plain"
                     type="csapi:string" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -542,12 +382,198 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="unrescue">
+    <method name="POST" id="resizeServer">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Unrescue server">
+         title="Resize server (resize action)">
+            <para role="shortdesc">
+                Resizes a specified server.
+            </para>
+            <para>
+                Specify the <code>resize</code> action in the request body.
+            </para>
+            <para>
+                A successfully resized server shows a
+                <code>VERIFY_RESIZE</code> status, <code>RESIZED</code> VM
+                status, and <code>finished</code> migration status. If you set
+                the <code>auto_confirm</code> option of the Compute service to
+                <code>True</code>, the Compute service automatically confirms
+                the resize operation.
+            </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                    You can only resize a server when its status is
+                    <code>ACTIVE</code> or <code>SHUTOFF</code>.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    If the specified server is locked, you must have
+                    administrator privileges to resize the server.
+                </para>
+            </listitem>
+        </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/all_extensions/server-action-resize.json"/>
+                </wadl:doc>
+                &resizeActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+        &commonFaults; &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+    <method name="POST" id="revertResizeServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="Revert resized server (revertResize action)">
+            <para role="shortdesc">
+                Cancels and reverts a pending resize action for a specified server.
+            </para>
+            <para>
+                Specify the <code>revertResize</code> action in the request
+                body.
+            </para>
+            <para>
+                After you make this request, you typically must keep
+                polling the server status to determine whether the request
+                succeeded. A successfully reverting resize operation shows
+                a status of <code>ACTIVE</code> or <code>SHUTOFF</code>
+                and a migration_status of <code>reverted</code>. You can
+                also see the reverted server in the compute node that
+                OpenStack Compute manages.
+            </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>You can only confirm the resized server where the status
+                is <code>VERIFY_RESIZE</code> and the vm_status is <code>RESIZED</code>.
+                </para></listitem>
+                <listitem><para>If the specified server is locked, you must have
+                administrator privileges to revert the resizing.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                <listitem><para>If the specified server status remains
+                <code>RESIZED</code>, the request failed. Ensure you meet the
+                preconditions and run the request again. If the request fails again,
+                investigate the compute back end.</para></listitem>
+                <listitem><para>The specified server is not reverted in the compute
+                node that OpenStack Compute manages.</para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/servers/server-action-revert-resize.json"/>
+                </wadl:doc>
+                &revertResizeActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+        &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+    <method name="POST" id="os-startServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Start server (os-start action)">
+            <para role="shortdesc">
+                Starts a specified stopped server and changes
+                its status to <code>ACTIVE</code>.
+            </para>
+            <para>
+                Specify the <code>os-start</code> action in the request body.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                  <listitem><para>The server status must be <code>SHUTOFF</code>.
+                  </para></listitem>
+                <listitem><para>If the specified server is locked, you
+                must have administrator privileges to start the server.
+                </para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+              <listitem><para>After you successfully start a server,
+                its status changes to <code>ACTIVE</code>. The server appears on the compute
+                node that the Compute service manages.</para></listitem>
+            </itemizedlist>
+            <para>Troubleshooting</para>
+            <itemizedlist>
+                  <listitem>
+                    <para>
+                        If the server status does not change to
+                        <code>ACTIVE</code>, the start operation failed.
+                        Ensure that you meet the preconditions and run the
+                        request again. If the request fails again, investigate
+                        whether another operation is running that causes a
+                        race condition.
+                  </para>
+              </listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Start server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/servers/server-action-start.json"
+                    />
+                </wadl:doc>
+                &os-startActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="os-stopServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Stop server (os-stop action)">
+            <para role="shortdesc">Stops a running server and changes
+                its status to <code>SHUTOFF</code>.
+            </para>
+            <para>
+                Specify the <code>os-stop</code>
+                action in the request body.</para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                  <listitem><para>The server status must be
+                  <code>ACTIVE</code> or <code>ERROR</code>.
+                  </para></listitem>
+                <listitem><para>If the specified server is locked,
+                you must have administrator privileges to stop
+                the server.</para></listitem>
+            </itemizedlist>
+            <para>Asynchronous Postconditions</para>
+            <itemizedlist>
+                  <listitem><para>After you successfully stop a server,
+                    its status changes to <code>SHUTOFF</code>. The server instance data appears
+                    only on the compute node that Compute service manages.
+                    </para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/wadl:docbook"
+                    xml:lang="EN" title="Stop server: JSON request">
+                    <xsdxt:code
+                        href="../api_samples/servers/server-action-stop.json"
+                    />
+                </wadl:doc>
+                &os-stopActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="unrescueServer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Unrescue server (unrescue action)">
             <para role="shortdesc">
                 Unrescues a specified server. Changes status to
                 <code>ACTIVE</code>.
+            </para>
+            <para>
+                Specify the <code>unrescue</code>
+                action in the request body.
             </para>
             <para>Preconditions</para>
             <itemizedlist>
@@ -575,17 +601,7 @@
                         href="../api_samples/os-rescue/server-unrescue-req.json"
                     />
                 </wadl:doc>
-                <param name="unrescue" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN" title="Unrescue action"
-                            >
-                        <para>
-                            Specify the <code>unrescue</code>
-                            action in the request body.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &unrescueActionRequestParameter;
             </representation>
         </request>
         <response status="202"/>
