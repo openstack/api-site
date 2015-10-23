@@ -1,102 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2014 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "../common.ent">
-    %common;
-    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
-    %common_project;
+   <!ENTITY % common  SYSTEM "../common.ent">
+   %common;
+   <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+   %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:csapi="http://docs.openstack.org/identity/api/v3"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <resources base="https://servers.api.openstack.com"
         xml:id="os-multiple-create-v2.1">
         <resource id="v2.1" path="//v2.1">
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
                 <resource id="servers" path="servers">
-                    <!--  &serverCreateParameters; -->
-                    <param name="return_reservation_id" style="plain"
-                        required="false" type="xsd:string">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN">
-                            <para>
-                                Set to <code>True</code>to generate a reservation
-                                ID for each server. Omit this attribute to create
-                                servers without a reservation ID. This extended
-                                attribute is enabled when the service provider
-                                enables multiple server launch.
-                            </para>
-                        </wadl:doc>
-                    </param>
-                    <param name="min_count" style="plain" required="false"
-                        type="xsd:string">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN">
-                            <para>
-                                The minimum number of servers to launch when the
-                                service provider enables multiple server launch.
-                            </para>
-                        </wadl:doc>
-                    </param>
-                    <param name="max_count" style="plain" required="false"
-                        type="xsd:string">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN">
-                            <para>
-                                The maximum number of servers to launch when the
-                                service provider enables multiple server launch.
-                            </para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#createServer"/>
+                    <method href="#createServers"/>
+                    <method href="#createServersResId"/>
                 </resource>
             </resource>
         </resource>
     </resources>
-    <method name="POST" id="createServer">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create multiple servers">
+    <method name="POST" id="createServers">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Create multiple servers">
             <para role="shortdesc">
-                Creates one or more servers with an optional reservation ID.
+                Creates one or more servers.
             </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+                    title="Create multiple servers without reservation ID">
                     <xsdxt:code
-                        href="../api_samples/os-multiple-create/multiple-create-no-resv-post-req.json"
-                    />
+                        href="../api_samples/os-multiple-create/multiple-create-no-resv-post-req.json"/>
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/os-multiple-create/multiple-create-post-req.json"
-                    />
-                </wadl:doc>
+                &serverCreateParameters;
+                &diskConfigRequestParameter;
+                &return_reservation_idRequestParameter;
             </representation>
         </request>
         <response status="202">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/os-multiple-create/multiple-create-no-resv-post-resp.json"
-                    />
+                    xml:lang="EN" title="Create multiple servers without reservation ID">
+                    <xsdxt:code href="../api_samples/all_extensions/server-post-resp.json"/>
                 </wadl:doc>
             </representation>
+        </response>
+    </method>
+    <method name="POST" id="createServersResId">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Create multiple servers with reservation ID">
+            <para role="shortdesc">
+                Creates one or more servers with a reservation ID.
+            </para>
+            <para>
+                Set <code>"return_reservation_id": "True"</code> in the
+                request body to request that a reservation ID be returned
+                instead of the newly created instance information. With this
+                parameter, the response shows only the reservation ID.
+            </para>
+        </wadl:doc>
+        <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
+                    xml:lang="EN" title="Create multiple servers with reservation ID">
+                    <xsdxt:code
+                        href="../api_samples/os-multiple-create/multiple-create-post-req.json"/>
+                </wadl:doc>
+                &serverCreateParameters;
+                &diskConfigRequestParameter;
+                &return_reservation_idRequestParameter;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Create multiple servers with reservation ID">
                     <xsdxt:code
                         href="../api_samples/os-multiple-create/multiple-create-post-resp.json"
                     />
                 </wadl:doc>
+                &reservation_idResponseParameter;
             </representation>
         </response>
     </method>
