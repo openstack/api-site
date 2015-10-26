@@ -19,14 +19,13 @@ To begin sending API requests, use one of the following methods:
 -  **cURL**
 
    A command-line tool that lets you send HTTP requests and receive
-   responses. See `the section called “OpenStack
-   APIs” <#Compute_API_Quick_Start>`__.
+   responses. See the section called :ref:`openstack_API_quick_guide`.
 
 -  **OpenStack command-line client**
 
    The OpenStack project provides a command-line client that enables
-   you to access APIs through easy-to-use commands. See `the section
-   called “OpenStack command-line clients” <#cli-intro>`__.
+   you to access APIs through easy-to-use commands. See the section
+   called :ref:`client-intro`.
 
 -  **REST clients**
 

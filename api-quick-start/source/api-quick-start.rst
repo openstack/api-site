@@ -1,3 +1,5 @@
+.. _openstack_API_quick_guide:
+
 ==============
 OpenStack APIs
 ==============
@@ -537,6 +539,7 @@ Use the Compute API to list servers, as follows:
         ]
     }
 
+.. _client-intro:
 
 OpenStack command-line clients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
