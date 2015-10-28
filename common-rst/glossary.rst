@@ -360,7 +360,7 @@ OpenStack contribution process.
    AWS CloudFormation template
 
       AWS CloudFormation allows AWS users to create and manage a
-      collection of related resources. The Orchestration module
+      collection of related resources. The Orchestration service
       supports a CloudFormation-compatible format (CFN).
 
    back end
@@ -902,8 +902,8 @@ OpenStack contribution process.
       An official OpenStack project. Currently consists of Compute
       (nova), Object Storage (swift), Image service (glance), Identity
       (keystone), Dashboard (horizon), Networking (neutron), and Block
-      Storage (cinder), the Telemetry module (ceilometer), Orchestration
-      module (heat), Database service (trove), Bare Metal service (ironic),
+      Storage (cinder), Telemetry (ceilometer), Orchestration (heat),
+      Database service (trove), Bare Metal service (ironic),
       Data processing service (sahara). However, this
       definition is changing based on
       community discussions about the "Big Tent".
