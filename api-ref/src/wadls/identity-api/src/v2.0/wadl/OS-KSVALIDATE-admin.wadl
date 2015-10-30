@@ -2,9 +2,9 @@
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
-<!--     You can resolve the entities with xmllint          -->
+<!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent OS-KSVALIDATE-admin.wadl             -->
+<!--        xmllint -noent OS-KSVALIDATE-admin.wadl        -->
 <!--*******************************************************-->
 <!DOCTYPE application [
     <!ENTITY % common  SYSTEM "common.ent">
@@ -12,7 +12,6 @@
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
     xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0"
@@ -41,10 +40,12 @@
                             type="xsd:string" required="true">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>A valid
-                                   authentication token for an
-                                   administrative
-                                user.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                    A valid authentication token for an
+                                    administrative user.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <param name="X-Subject-Token" style="header"
                             type="xsd:string" required="true">
@@ -62,12 +63,12 @@
                                 xmlns="http://docbook.org/ns/docbook"
                                 xml:lang="EN">
                                 <para>
-                                    Validates that a token has the tenant in
-                                    scope, for performance. Valid tokens are in
-                                    the <code>/tokens/{tokenId}</code> path. If
-                                    the token is not valid, this call returns
-                                    the <code>itemNotFound (404)</code> response
-                                    code.
+                                    Validates that a token has the specified
+                                    tenant in scope, for performance. Valid
+                                    tokens are in the
+                                    <code>/tokens/{tokenId}</code> path. If the
+                                    token is not valid, this call throws the
+                                    <code>itemNotFound (404)</code> fault.
                                 </para>
                             </wadl:doc>
                         </param>
@@ -104,7 +105,6 @@
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-
     <!-- token Operations -->
     <method name="GET" id="validateToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -128,7 +128,7 @@
                 as HP-IDM.
             </para>
         </wadl:doc>
-        <response status="200 203">
+        <response status="200">
             <representation mediaType="application/json" element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -137,7 +137,8 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response>
+        <response status="203"/> &commonFaults; &getFaults; </method>
     <method name="HEAD" id="checkToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Check token">
@@ -159,7 +160,8 @@
                 as HP-IDM.
             </para>
         </wadl:doc>
-        <response status="200 203"/> &commonFaults; &getFaults; </method>
+        <response status="200"/>
+        <response status="203"/> &commonFaults; &getFaults; </method>
     <method name="GET" id="listEndpointsForToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List endpoints for token">
@@ -169,7 +171,7 @@
         <request>
             &limitMarkerReqParameter;
         </request>
-        <response status="200 203">
+        <response status="200">
             <representation mediaType="application/json" element="identity:endpoints">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
@@ -178,5 +180,6 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response>
+        <response status="203"/> &commonFaults; &getFaults; </method>
 </application>
