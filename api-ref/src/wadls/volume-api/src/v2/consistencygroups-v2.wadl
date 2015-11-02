@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/v2"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:json="http://json-schema.org/schema#"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    <resources base="https://volume.example.com/" xml:id="consistencygroups-v2">
+        <resource id="version" path="//v2">
+            <resource id="tenant_id" path="{tenant_id}">
+                <param name="tenant_id" style="template"
+                    type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The unique identifier of the tenant or account.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <resource id="consistencygroups" path="consistencygroups">
+                    <method href="#getConsistencygroups-v2"/>
+                    <method href="#postConsistencygroups-v2"/>
+                    <resource id="detail" path="detail">
+                        <method href="#getConsistencygroupsDetail-v2"/>
+                    </resource>
+                    <resource id="create_from_src" path="create_from_src">
+                        <method href="#postConsistencygroupsFromSrc-v2"/>
+                    </resource>
+                    <resource path="{consistencygroup_id}" id="consistencygroup_id">
+                        <param name="consistencygroup_id" style="template"
+                            type="xsd:string">
+                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>
+                                    The unique identifier of the consistency
+                                    group.
+                                </para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#getConsistencygroup-v2"/>
+                        <resource path="delete" id="delete">
+                            <method href="#postConsistencygroupDelete-v2"/>
+                        </resource>
+                        <resource path="update" id="update">
+                            <method href="#putConsistencygroupUpdate-v2"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- consistencygroups -->
+    <method name="GET" id="getConsistencygroups-v2">
+        <wadl:doc xml:lang="EN" title="List consistency groups"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists consistency groups.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-list-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                &getConsistencyGroupsResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="getConsistencygroupsDetail-v2">
+        <wadl:doc xml:lang="EN" title="List consistency groups with details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists consistency groups with details.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-list-detailed-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                &getConsistencyGroupsDetailResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="postConsistencygroups-v2">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create consistency group">
+            <para role="shortdesc">
+                Creates a consistency group.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-create-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                &postConsistencyGroupsRequestParameters;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-create-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="postConsistencygroupsFromSrc-v2">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create consistency group from source">
+            <para role="shortdesc">
+                Creates a consistency group from source.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-create-from-src-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                &postConsistencyGroupsFromSrcRequestParameters;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-create-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="postConsistencygroupDelete-v2">
+        <wadl:doc xml:lang="EN" title="Delete consistency group"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a consistency group.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-delete-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                &postConsistencyGroupsDeleteParameters;
+            </representation>
+        </request>
+        <response status="202">
+        </response>
+    </method>
+    <method name="PUT" id="putConsistencygroupUpdate-v2">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update consistency group">
+            <para role="shortdesc">
+                Updates a consistency group.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-update-request.json"/>
+                </wadl:doc>
+                &postConsistencyGroupsUpdateParameters;
+            </representation>
+        </request>
+        <response status="202">
+        </response>
+    </method>
+    <method name="GET" id="getConsistencygroup-v2">
+        <wadl:doc xml:lang="EN" title="Show consistency group details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a consistency group.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/consistencygroups/consistency-group-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/xml">
+                &getConsistencyGroupsDetailResponseParameters;
+            </representation>
+        </response>
+    </method>
+</application>
