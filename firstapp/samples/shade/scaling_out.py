@@ -71,7 +71,7 @@ api_2_ip = conn.get_server_private_ip(instance_api_2)
 
 for instance in [instance_api_1,  instance_api_2]:
     floating_ip = get_floating_ip(conn)
-    conn.attach_ip_to_server(instance['id'], floating_ip['id'])
+    conn.add_ip_list(instance, [floating_ip['floating_ip_address']])
     print('allocated %(ip)s to %(host)s' % {'ip': floating_ip['floating_ip_address'], 'host': instance['name']})
 
 # step-6

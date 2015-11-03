@@ -44,7 +44,7 @@ unused_floating_ip = conn.available_floating_ip()
 # step-9
 
 # step-10
-conn.attach_ip_to_server(testing_instance['id'], unused_floating_ip['id'])
+conn.add_ip_list(testing_instance, [unused_floating_ip['floating_ip_address']])
 
 # step-11
 worker_group = conn.create_security_group('worker', 'for services that run on a worker node')
@@ -70,7 +70,7 @@ instance_controller_1 = conn.create_server(wait=True, auto_ip=False,
 
 unused_floating_ip = conn.available_floating_ip()
 
-conn.attach_ip_to_server(instance_controller_1['id'], unused_floating_ip['id'])
+conn.add_ip_list(instance_controller_1, [unused_floating_ip['floating_ip_address']])
 print('Application will be deployed to http://%s' % unused_floating_ip['floating_ip_address'])
 
 # step-12
@@ -96,7 +96,7 @@ instance_worker_1 = conn.create_server(wait=True, auto_ip=False,
 
 unused_floating_ip = conn.available_floating_ip()
 
-conn.attach_ip_to_server(instance_worker_1['id'], unused_floating_ip['id'], wait=True)
+conn.add_ip_list(instance_worker_1, [unused_floating_ip['floating_ip_address']])
 print('The worker will be available for SSH at %s' % unused_floating_ip['floating_ip_address'])
 
 

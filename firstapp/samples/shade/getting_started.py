@@ -88,7 +88,7 @@ testing_instance = conn.create_server(wait=True, auto_ip=False,
 f_ip = conn.available_floating_ip()
 
 #step-14
-conn.attach_ip_to_server(testing_instance['id'], f_ip['id'])
+conn.add_ip_list(testing_instance, [f_ip['floating_ip_address']])
 
 #step-15
 print('The Fractals app will be deployed to http://%s' % f_ip['floating_ip_address'] )
