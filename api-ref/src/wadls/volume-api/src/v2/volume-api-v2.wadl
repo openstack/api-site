@@ -70,6 +70,8 @@
                             <method href="#attachVolume"/>
                             <method href="#unmanageVolume"/>
                             <method href="#forcedetachVolume"/>
+                            <method href="#promotereplicaVolume"/>
+                            <method href="#reenablereplicaVolume"/>
                         </resource>
                     </resource>
                 </resource>
@@ -103,9 +105,11 @@
                             required="true" type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The unique
-                                   identifier of an existing
-                                   snapshot.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                    The UUID of the snapshot.
+                               </para>
+                           </wadl:doc>
                         </param>
                         <method href="#getSnapshot"/>
                         <method href="#updateSnapshot"/>
@@ -500,7 +504,7 @@
     </method>
     <method name="POST" id="extendVolume">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Extend volume">
+            title="Extend volume size">
             <para role="shortdesc">
                 Extends the size of a volume to a requested size, in gibibytes
                 (GiB). Specify the <code>os-extend</code> action in the
@@ -751,6 +755,49 @@
                     />
                 </wadl:doc>
                 &forcedetachVolumeReqParameters;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="promotereplicaVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Promote replicated volume">
+            <para role="shortdesc">
+                Promotes a replicated volume. Specify the
+                <code>os-promote-replica</code> action in
+                the request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/os-replica/os-promote-replica-request.json"
+                    />
+                </wadl:doc>
+                &promotereplicaVolumeReqParameters;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="reenablereplicaVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Reenable volume replication">
+            <para role="shortdesc">
+                Re-enables replication of a volume. Specify the
+                <code>os-reenable-replica</code> action in the request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="api_samples/os-replica/os-reenable-replica-request.json"
+                    />
+                </wadl:doc>
+                &reenablereplicaVolumeReqParameters;
             </representation>
         </request>
         <response status="202"/>
@@ -1072,7 +1119,7 @@
     </method>
     <method name="GET" id="getSnapshotsDetail">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List snapshots (detailed)">
+            title="List snapshots with details">
             <para role="shortdesc">
                 Lists all Block Storage snapshots, with details, that the
                 tenant can access.
