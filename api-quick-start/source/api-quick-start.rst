@@ -60,21 +60,20 @@ The payload of credentials to authenticate contains these parameters:
 +-----------------------+----------------+--------------------------------------+
 | *tenantName*          | xsd:string     | The tenant name. Both the            |
 | (Optional)            |                | *tenantId* and *tenantName*          |
-|                       |                | are optional, but should not be      |
-|                       |                | specified together. If both          |
-|                       |                | attributes are specified, the server |
-|                       |                | responds with a 400 Bad Request.     |
+|                       |                | are optional and mutually exclusive. |
+|                       |                | If you specify both attributes, the  |
+|                       |                | server returns the Bad Request (400) |
+|                       |                | response code.                       |
 +-----------------------+----------------+--------------------------------------+
 | *tenantId*            | xsd:string     | The tenant ID. Both the              |
-|  (Optional)           |                | *tenantId* and *tenantName*          |
-|                       |                | are optional, but should not be      |
-|                       |                | specified together. If both          |
-|                       |                | attributes are specified, the server |
-|                       |                | responds with a 400 Bad Request. If  |
-|                       |                | you do not know the tenantId, you    |
-|                       |                | can send a request with "" for the   |
-|                       |                | tenantId and get the ID returned to  |
-|                       |                | you in the response.                 |
+| (Optional)            |                | *tenantId* and *tenantName*          |
+|                       |                | are optional and mutually exclusive. |
+|                       |                | If you specify both attributes, the  |
+|                       |                | server returns the Bad Request (400) |
+|                       |                | response code. If you do not know    |
+|                       |                | the tenant ID, send a request with   |
+|                       |                | "" for the tenant ID. The response   |
+|                       |                | returns the tenant ID.               |
 +-----------------------+----------------+--------------------------------------+
 | token (Optional)      | xsd:string     | A token. If you do not provide a     |
 |                       |                | token, you must provide a user name  |
@@ -93,7 +92,7 @@ command to request a token with your tenantName and ID:
                 {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
                 | python -m json.tool
 
-If the request succeeds, you receive a 200 OK response followed by a
+If the request succeeds, it returns the OK (200) response code followed by a
 response body that contains a token in the form ``"id":"token"`` and an
 expiration date and time in the form ``"expires":"datetime"``.
 
@@ -685,8 +684,7 @@ create`` command with the image and flavor IDs and the server name, as follows:
     +--------------------------------------+---------------------------------------------------------+
 
 .. note::
-   For information about the default ports that the OpenStack components
-   use, see `Firewalls and default ports`_ in the *OpenStack Configuration
-   Reference*.
+   For information about the default ports that the OpenStack components use,
+   see `Firewalls and default ports`_ in the *OpenStack Configuration Reference*.
 
 .. _Firewalls and default ports: http://docs.openstack.org/liberty/config-reference/content/firewalls-default-ports.html

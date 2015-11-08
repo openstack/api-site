@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -56,7 +56,7 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List subnets">
             <para role="shortdesc">Lists subnets to which the
-                specified tenant has access.</para>
+                tenant has access.</para>
             <para>Default policy settings returns exclusively subnets
                 owned by the tenant submitting the request, unless the
                 request is submitted by a user with administrative
@@ -84,34 +84,46 @@
     <method name="POST" id="createSubnet">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create subnet">
-            <para role="shortdesc">Creates a subnet on a specified
-                network.</para>
-            <para>OpenStack Networking does not try
-                to derive the correct IP version from the specified
-                CIDR. If you do not specify the <code>gateway_ip</code> attribute,
-                OpenStack Networking allocates an address from the
-                CIDR for the gateway for the subnet.</para>
-            <para>To specify a subnet without a gateway, set the
-            <code>gateway_ip</code> attribute to
-            <code>null</code> in the request body. If you do not specify the
-            <code>allocation_pools</code> attribute, OpenStack Networking
-            automatically allocates pools for covering all IP addresses in
-            the CIDR, excluding the address reserved for the subnet
-            gateway. Otherwise, you can explicitly specify allocation
-            pools as shown in the following example.</para>
-            <para>When you specify both the <code>allocation_pools</code> and
-                    <code>gateway_ip</code> attributes, you must ensure that the gateway IP does not
-                overlap with the specified allocation pools; otherwise
-                a 409 Conflict error occurs.</para>
-            <para>A subnet can have one or more name servers and host routes.
-                Hosts in this subnet use the specified
-                name servers. Devices with IP addresses from this subnet, not
-                including the local subnet route, use the specified host routes.</para>
-            <para>Specify the <code>ipv6_ra_mode</code> and
-                    <code>ipv6_address_mode</code> attributes to create subnets
-                that support IPv6 configurations, such as Stateless Address
-                Autoconfiguration (SLAAC), DHCPv6 Stateful, and DHCPv6
-                Stateless configurations.</para>
+            <para role="shortdesc">
+                Creates a subnet on a network.
+            </para>
+            <para>
+                OpenStack Networking does not try to derive the correct IP
+                version from the CIDR. If you do not specify the
+                <code>gateway_ip</code> attribute, OpenStack Networking
+                allocates an address from the CIDR for the gateway for the
+                subnet.
+            </para>
+            <para>
+                To specify a subnet without a gateway, set the
+                <code>gateway_ip</code> attribute to <code>null</code> in the
+                request body. If you do not specify the
+                <code>allocation_pools</code> attribute, OpenStack Networking
+                automatically allocates pools for covering all IP addresses in
+                the CIDR, excluding the address reserved for the subnet
+                gateway. Otherwise, you can explicitly specify allocation
+                pools as shown in the following example.
+            </para>
+            <para>
+                When you specify both the <code>allocation_pools</code> and
+                <code>gateway_ip</code> attributes, you must ensure that the
+                gateway IP does not overlap with the allocation pools;
+                otherwise, the call returns the <code>Conflict (409)</code>
+                response code.
+            </para>
+            <para>
+                A subnet can have one or more name servers and host routes.
+                Hosts in this subnet use the name servers. Devices
+                with IP addresses from this subnet, not including the local
+                subnet route, use the host routes.
+            </para>
+            <para>
+                Specify the <code>ipv6_ra_mode</code> and
+                <code>ipv6_address_mode</code> attributes to create subnets
+                that support IPv6 configurations, such as stateless address
+                autoconfiguration (SLAAC), DHCPv6 stateful, and DHCPv6
+                stateless configurations.
+            </para>
         </wadl:doc>
         <request> &subnetObject; &subnetCreateParameters;
             <representation mediaType="application/json">
@@ -195,8 +207,8 @@
         &fault409conflict; </method>
     <method name="GET" id="showSubnet">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show subnet">
-            <para role="shortdesc">Shows information for a specified
+            title="Show subnet details">
+            <para role="shortdesc">Shows details for a
                 subnet.</para>
             <para>Use the fields query parameter to filter the results.</para>
         </wadl:doc>
@@ -219,7 +231,7 @@
     <method name="PUT" id="updateSubnet">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update subnet">
-            <para role="shortdesc">Updates a specified subnet.</para>
+            <para role="shortdesc">Updates a subnet.</para>
             <para>Some attributes, such as IP version (ip_version),
                 and CIDR (cidr) cannot be updated. Attempting to
                 update these attributes results in a <code>400 Bad
@@ -260,7 +272,7 @@
     <method name="DELETE" id="removeSubnet">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete subnet">
-            <para role="shortdesc">Deletes a specified subnet.</para>
+            <para role="shortdesc">Deletes a subnet.</para>
             <para>The operation fails if subnet IP addresses are still
                 allocated.</para>
         </wadl:doc>

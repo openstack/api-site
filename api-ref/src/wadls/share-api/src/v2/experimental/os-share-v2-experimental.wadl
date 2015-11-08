@@ -70,7 +70,7 @@
                   <resource path="{consistency_group_id}" id="consistency_group_id">
                      <param name="consistency_group_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The unique identifier of the consistency group.</para>
+                           <para>The UUID of the consistency group.</para>
                         </wadl:doc>
                      </param>
                      <method href="#getConsistencyGroup" />
@@ -91,7 +91,7 @@
                   <resource path="{cgsnapshot_id}" id="cgsnapshot_id">
                      <param name="cgsnapshot_id" style="template" type="csapi:UUID">
                         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                           <para>The unique identifier of the consistency group snapshot.</para>
+                           <para>The UUID of the consistency group snapshot.</para>
                         </wadl:doc>
                      </param>
                      <resource path="members" id="cgsnapshot-members">
@@ -113,10 +113,10 @@
    <method name="POST" id="migrateShare">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Migrate share">
          <para role="shortdesc">
-            Migrates a specified share from one back end to another.
+            Migrates a share from one back end to another.
          </para>
          <para>
-            You can migrate a specified share from one back end to another but
+            You can migrate a share from one back end to another but
             both back ends must set the
             <code>driver_handles_share_servers</code> parameter to
             <code>False</code>. This action is not supported if one of the
@@ -184,8 +184,8 @@
    </method>
    <method name="GET" id="getConsistencyGroup">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
-       xml:lang="EN" title="Show consistency group">
-         <para role="shortdesc">Shows information about a specified consistency group.</para>
+       xml:lang="EN" title="Show consistency group details">
+         <para role="shortdesc">Shows details for a consistency group.</para>
       </wadl:doc>
       <response status="200">
          <representation mediaType="application/json">
@@ -199,7 +199,7 @@
    <method name="PUT" id="updateConsistencyGroup">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Update consistency group">
-         <para role="shortdesc">Updates a specified consistency group.</para>
+         <para role="shortdesc">Updates a consistency group.</para>
          <para>You can update only these attributes:</para>
          <itemizedlist>
             <listitem>
@@ -234,14 +234,14 @@
    <method name="DELETE" id="deleteConsistencyGroup">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Delete consistency group">
-         <para role="shortdesc">Deletes a specified consistency group.</para>
+         <para role="shortdesc">Deletes a consistency group.</para>
       </wadl:doc>
       <response status="202" />
    </method>
    <method name="POST" id="resetConsistencyGroupState">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Reset consistency group state">
-         <para role="shortdesc">Administrator only. Explicitly updates the state of a specified consistency group.</para>
+         <para role="shortdesc">Administrator only. Explicitly updates the state of a consistency group.</para>
          <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
       </wadl:doc>
       <request>
@@ -257,7 +257,7 @@
    <method name="POST" id="force-deleteConsistencyGroup">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Force-delete consistency group">
-         <para role="shortdesc">Administrator only. Force-deletes a specified consistency group.</para>
+         <para role="shortdesc">Administrator only. Force-deletes a consistency group.</para>
          <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
       </wadl:doc>
       <request>
@@ -326,8 +326,8 @@
    </method>
    <method name="GET" id="getConsistencyGroupSnapshot">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
-       xml:lang="EN" title="Show consistency group snapshot">
-         <para role="shortdesc">Shows information about a specified consistency group snapshot.</para>
+       xml:lang="EN" title="Show consistency group snapshot details">
+         <para role="shortdesc">Shows details for a consistency group snapshot.</para>
       </wadl:doc>
       <response status="200">
          <representation mediaType="application/json">
@@ -341,7 +341,7 @@
    <method name="GET" id="getConsistencyGroupSnapshotMembers">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Show consistency group snapshot member">
-         <para role="shortdesc">Shows information about a specified consistency group snapshot member.</para>
+         <para role="shortdesc">Shows information about a consistency group snapshot member.</para>
       </wadl:doc>
       <response status="200">
          <representation mediaType="application/json">
@@ -355,7 +355,7 @@
    <method name="PUT" id="updateConsistencyGroupSnapshot">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Update consistency group snapshot">
-         <para role="shortdesc">Updates a specified consistency group snapshot.</para>
+         <para role="shortdesc">Updates a consistency group snapshot.</para>
          <para>You can update only these attributes:</para>
          <itemizedlist>
             <listitem>
@@ -390,15 +390,21 @@
    <method name="DELETE" id="deleteConsistencyGroupSnapshot">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Delete consistency group snapshot">
-         <para role="shortdesc">Deletes a specified consistency group snapshot.</para>
+         <para role="shortdesc">Deletes a consistency group snapshot.</para>
       </wadl:doc>
       <response status="202" />
    </method>
    <method name="POST" id="resetConsistencyGroupSnapshotState">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Reset consistency group snapshot state">
-         <para role="shortdesc">Administrator only. Explicitly updates the state of a specified consistency group snapshot.</para>
-         <para>Administrators can use the <code>policy.json</code> file to permit other roles to complete this action.</para>
+         <para role="shortdesc">
+            Administrator only. Explicitly updates the state of a consistency
+            group snapshot.
+         </para>
+         <para>
+            Administrators can use the <code>policy.json</code> file to permit
+            other roles to complete this action.
+         </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -411,9 +417,14 @@
       <response status="202" />
    </method>
    <method name="POST" id="force-deleteConsistencyGroupSnapshot">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Force-delete consistency group snapshot">
-         <para role="shortdesc">Administrator only. Force-deletes a specified consistency group snapshot.</para>
-         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+         title="Force-delete consistency group snapshot">
+         <para role="shortdesc">
+            Administrator only. Force-deletes a consistency group snapshot.
+         </para>
+         <para>
+            Use the <code>policy.json</code> file to grant permissions for this action to other roles.
+         </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
