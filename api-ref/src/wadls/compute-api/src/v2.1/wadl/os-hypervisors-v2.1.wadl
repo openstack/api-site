@@ -17,75 +17,24 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
                 <resource id="os-hypervisors" path="os-hypervisors">
-                    <method href="#listhypervisors"/>
+                    <method href="#listHypervisors"/>
                     <resource id="statistics" path="statistics">
-                        <method href="#showhypervisorstatistics"/>
-                    </resource>
-                    <resource id="os-pci" path="os-pci">
-                        <method href="#listHypervisorsPciDetails"/>
-                    </resource>
-                    <resource id="search" path="search">
-                        <param name="query" style="query"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">
-                                <para>
-                                    Filters the search results by the
-                                    <code>?query={filter}</code> query parameter.
-                                </para>
-                            </wadl:doc>
-                        </param>
-                        <method href="#searchhypervisors"/>
+                        <method href="#showHypervisorStatistics"/>
                     </resource>
                     <resource id="hypervisor_id" path="{hypervisor_id}">
-                        <method href="#showhypervisordetails"/>
-                        <resource id="os-pci2" path="os-pci">
-                            <method href="#showHypervisorsPci"/>
-                        </resource>
-                        <resource id="servers" path="servers">
-                            <method href="#listservers"/>
-                            <resource id="server_id" path="{server_id}">
-                                <method href="#showserver">
-                                </method>
-                            </resource>
-                        </resource>
-                        <resource id="search2" path="search">
-                            <param name="query" style="query"
-                                type="xsd:string">
-                                <wadl:doc
-                                    xmlns="http://docbook.org/ns/docbook"
-                                    xml:lang="EN"><para>Filters the search
-                                        results by the
-                                           <code>?query={filter}</code> query
-                                        parameter.</para>
-                                </wadl:doc>
-                            </param>
-                            <method href="#searchhypervisors"/>
-                        </resource>
-                        <resource id="hypervisor_id2" path="{hypervisor_id}">
-                            &hypervisorIdRequestParameter;
-                            <method href="#showhypervisordetails"/>
-                            <resource id="servers3" path="servers">
-                                <method href="#listservers"/>
-                                <resource id="server_id2" path="{server_id}">
-                                    <method href="#showserver">
-                                    </method>
-                                </resource>
-                            </resource>
-                            <resource id="uptime" path="uptime">
-                                <method href="#showhypervisoruptime"/>
+                        <method href="#showHypervisor"/>
+                        <resource id="uptime" path="uptime">
+                                <method href="#showHypervisorUptime"/>
                             </resource>
                         </resource>
                     </resource>
                 </resource>
             </resource>
-        </resource>
-    </resources>
+        </resources>
     <!-- *******************************************************-->
     <!--        OS Hypervisors                        -->
     <!--*******************************************************-->
-    <method name="GET" id="listhypervisors">
+    <method name="GET" id="listHypervisors">
         <wadl:doc xml:lang="EN" title="List hypervisors"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Lists hypervisors.</para>
@@ -101,7 +50,7 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="showhypervisordetails">
+    <method name="GET" id="showHypervisor">
         <wadl:doc xml:lang="EN" title="Show hypervisor details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Shows details for a
@@ -112,13 +61,13 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/os-hypervisors/hypervisors-show-resp.json"
+                        href="../api_samples/os-hypervisors/hypervisor-show-resp.json"
                     />
                 </wadl:doc> &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
-    <method name="GET" id="showhypervisorstatistics">
+    <method name="GET" id="showHypervisorStatistics">
         <wadl:doc xml:lang="EN" title="Show hypervisor statistics"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Shows statistics for all
@@ -135,7 +84,7 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="showhypervisoruptime">
+    <method name="GET" id="showHypervisorUptime">
         <wadl:doc xml:lang="EN" title="Show hypervisor uptime"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Shows the uptime for a
@@ -147,45 +96,6 @@
                     xml:lang="EN">
                     <xsdxt:code
                         href="../api_samples/os-hypervisors/hypervisors-uptime-resp.json"
-                    />
-                </wadl:doc> &x-openstack-request-idHeader;
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="listHypervisorsPciDetails">
-        <wadl:doc xml:lang="EN" title="List hypervisors with PCI statistics"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Lists hypervisors. Includes PCI device statistics.
-            </para>
-        </wadl:doc>
-        <request> </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/os-pci/hypervisors-pci-detail-resp.json"
-                    />
-                </wadl:doc> &x-openstack-request-idHeader;
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="showHypervisorsPci">
-        <wadl:doc xml:lang="EN" title="Show hypervisor with PCI statistics"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Shows information for a hypervisor. Includes PCI
-                device statistics.
-            </para>
-        </wadl:doc>
-        <request> </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/os-pci/hypervisors-pci-show-resp.json"
                     />
                 </wadl:doc> &x-openstack-request-idHeader;
             </representation>
