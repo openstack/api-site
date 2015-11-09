@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
@@ -298,15 +298,44 @@ Accept: application/json</programlisting></wadl:doc>
                 </listitem>
             </itemizedlist>
             <para>
-                If you specify both IDs, the operation returns a <code>400 Bad
-                Request</code> error.
+                When you specify an IPv6 subnet, this operation adds the
+                subnet to an existing internal port with same network ID, on
+                the router. If a port with the same network ID does not exist,
+                this operation creates a port on the router for that subnet.
             </para>
             <para>
-                If the port is already used, the operation returns a <code>409
-                Conflict</code> error.
+                The limitation of one IPv4 subnet per router port remains,
+                though a port can contain any number of IPv6 subnets that
+                belong to the same network ID.
             </para>
             <para>
-                The port ID that is returned by this operation can be either:
+                When you use the <code>port-create</code> command to add a
+                port and then call <code>router-interface-add</code> with this port
+                ID, this operation adds the port to the router if the following
+                conditions are met:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The port has no more than one IPv4 subnet.
+                    </para>
+                    <para>
+                        The IPv6 subnets, if any, on the port do not have same
+                        network ID as network ID of IPv6 subnets on any other
+                        ports.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>
+                If you specify both IDs, this operation returns the <code>Bad
+                Request (400)</code> response code.
+            </para>
+            <para>
+                If the port is already in use, this operation returns the
+                <code>Conflict (409)</code> response code.
+            </para>
+            <para>
+                This operation returns a port ID that is either:
             </para>
             <itemizedlist>
                 <listitem>
@@ -316,23 +345,23 @@ Accept: application/json</programlisting></wadl:doc>
                 </listitem>
                 <listitem>
                     <para>
-                        The ID of a port that is created by this operation to
-                        attach the subnet to the router.
+                        The ID of a port that this operation creates to attach
+                        the specified subnet to the router.
                     </para>
                 </listitem>
             </itemizedlist>
             <para>
-                After you run this operation:
+                After you run this operation, the operation sets:
             </para>
             <itemizedlist>
                 <listitem>
                     <para>
-                        The device ID of this port is set to the router ID.
+                        The device ID of this port to the router ID.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        The <code>device_owner</code> attribute is set to
+                        The <code>device_owner</code> attribute to
                         <code>network:router_interface</code>.
                     </para>
                 </listitem>
@@ -375,26 +404,31 @@ Accept: application/json</programlisting></wadl:doc>
     <method name="PUT" id="removeRouterInterface">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Remove interface from router">
-            <para role="shortdesc">Removes an internal interface from
-                a logical router.</para>
-            <para>This operation removes an internal router interface,
-                which detaches a subnet from the router. You must
-                specify either a subnet ID or port ID in the request
-                body; this value is used to identify the router
-                interface to remove.</para>
-            <para>
-                You can specify both a subnet ID and port ID. If you specify
-                both IDs, the subnet ID must correspond to the subnet ID of
-                the first IP address on the port. Otherwise, the operation
-                returns a <code>Conflict (409)</code> response code. The response
-                contains information about the affected router and interface.
+            <para role="shortdesc">
+                Removes an internal interface from a logical router.
             </para>
             <para>
-                The operation returns the <code>Not Found (404)</code>
-                response code if the router or the subnet and port do not
-                exist or are not visible to you. As a consequence of this
-                operation, the port connecting the router with the subnet is
-                removed from the subnet for the network.
+                This operation removes an internal router interface, which
+                detaches a subnet from the router. If this subnet ID is the
+                last subnet on the port, this operation deletes the port
+                itself. You must specify either a subnet ID or port ID in the
+                request body; the operation uses this value to identify which
+                router interface to remove.
+            </para>
+            <para>
+                You can also specify both a subnet ID and port ID. If you
+                specify both IDs, the subnet ID must correspond to the subnet
+                ID of the first IP address on the port specified by the port
+                ID. Otherwise, this operation returns the <code>Conflict
+                (409)</code> response code with information about the affected
+                router and interface.
+            </para>
+            <para>
+                If the router or the subnet and port do not exist or are not
+                visible to you, this operation returns the <code>Not Found
+                (404)</code> response code. As a consequence of this
+                operation, the operation removes the port connecting the
+                router with the subnet from the subnet for the network.
             </para>
             <para>This example removes an interface from a
                 router:</para>
@@ -485,7 +519,7 @@ Accept: application/json</programlisting>
                 Default policy settings enable only administrative users to
                 set floating IP addresses and some non-administrative users
                 might require a floating IP address. If you do not specify a
-                floating IP address in the request, the API automatically
+                floating IP address in the request, the operation automatically
                 allocates one.
             </para>
             <para>
