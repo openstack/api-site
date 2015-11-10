@@ -210,8 +210,8 @@ to run code snippets in your language of choice.
 
 .. only:: pkgcloud
 
-    To try it, add the following code to a script (or use an
-    interactive nodejs shell) by calling :code:`node`.
+    To try it, use an interactive Node.js shell by calling :code:`node` or add
+    the following code to a script.
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-1
@@ -526,7 +526,7 @@ this guide, you must change the image and flavor IDs to correspond to
 the image and flavor that you choose.
 
 If the image that you want is not available in your cloud, you can usually
-upload one depending on your cloud's policy settings. For information about
+upload one depending on the policy settings of your cloud. For information about
 how to upload images, see
 `obtaining images <http://docs.openstack.org/image-guide/content/ch_obtaining_images.html>`_.
 
@@ -1219,13 +1219,33 @@ address to your instance.
 
 .. only:: libcloud
 
-    Use :code:`ex_list_floating_ip_pools()` and select the first floating IP
-    address pool. Allocate this pool to your project and attach it to your
-    instance.
+    To see if there is a private IP address assigned to your instance:
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-13
         :end-before: step-14
+
+    If one is assigned, users can use this address to access the instance on
+    some OpenStack clouds.
+
+    To determine whether a public IP address is assigned to your instance:
+
+    .. literalinclude:: ../samples/libcloud/getting_started.py
+        :start-after: step-14
+        :end-before: step-15
+
+    If one is assigned, users can use this address to access the instance.
+
+    To create a floating IP address to use with your instance:
+
+    Use :code:`ex_list_floating_ip_pools()` and select the first floating IP
+
+    address pool. Allocate this pool to your project and use it to get a
+    floating IP address.
+
+    .. literalinclude:: ../samples/libcloud/getting_started.py
+        :start-after: step-15
+        :end-before: step-16
 
     This code returns the floating IP address:
 
@@ -1233,17 +1253,17 @@ address to your instance.
 
         <OpenStack_1_1_FloatingIpAddress: id=4536ed1e-4374-4d7f-b02c-c3be2cb09b67, ip_addr=203.0.113.101, pool=<OpenStack_1_1_FloatingIpPool: name=floating001>, driver=<libcloud.compute.drivers.openstack.OpenStack_1_1_NodeDriver object at 0x1310b50>>
 
-    You can then attach it to the instance:
+        Attach the floating IP address to the instance:
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
-        :start-after: step-14
-        :end-before: step-15
+        :start-after: step-16
+        :end-before: step-17
 
 .. only:: pkgcloud
 
-    Use :code:`getFloatingIps` to check for unused addresses, selecting the
-    first one if available, otherwise use :code:`allocateNewFloatingIp` to
-    allocate a new Floating IP to your project from the default address pool.
+    Use :code:`getFloatingIps` to check for unused addresses. Select the first
+    available address. Otherwise, use :code:`allocateNewFloatingIp` to
+    allocate a new floating IP to your project from the default address pool.
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-13
@@ -1255,7 +1275,7 @@ address to your instance.
 
         203.0.113.101
 
-    You can then attach it to the instance:
+    Attach the floating IP address to the instance:
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-14
@@ -1300,8 +1320,8 @@ Access the application
 
 Deploying application data and configuration to the instance can take some
 time. Consider enjoying a cup of coffee while you wait. After the application
-deploys, you can visit the awesome graphic interface at the following link
-by using your preferred browser.
+deploys, you can use your preferred browser to visit the awesome graphic
+interface at the following link.
 
 .. only:: fog
 
@@ -1312,7 +1332,7 @@ by using your preferred browser.
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
-        :start-after: step-15
+        :start-after: step-17
 
 .. only:: pkgcloud
 
@@ -1329,7 +1349,8 @@ by using your preferred browser.
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-15
 
-.. note:: If you do not use floating IPs, substitute another IP address as appropriate
+.. note:: If you do not use floating IP addresses, substitute another IP
+          address, as appropriate.
 
 .. figure:: images/screenshot_webinterface.png
     :width: 800px
