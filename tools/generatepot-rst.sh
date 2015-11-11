@@ -51,7 +51,7 @@ if [ ${DOCNAME} = "install-guide" ] ; then
     TAG="-t obs -t rdo -t ubuntu -t debian"
 fi
 if [ ${DOCNAME} = "firstapp" ] ; then
-    TAG="-t libcloud  -t dotnet -t fog -t pkgcloud -t shade"
+    TAG="-t libcloud  -t dotnet -t fog -t openstacksdk -t pkgcloud -t shade"
 fi
 sphinx-build -b gettext $TAG ${DIRECTORY}/source/ \
     ${DIRECTORY}/source/locale/
