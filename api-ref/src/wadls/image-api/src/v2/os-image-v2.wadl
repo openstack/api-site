@@ -31,8 +31,11 @@
    <!--             All Resources                             -->
    <!--*******************************************************-->
    <resources base="https://glance.example.com/" xml:id="os-image-v2">
-      <resource id="versions" path="//">
-         <method href="#listVersions-image-v2"/>
+      <resource id="versions" path="/">
+         <method href="#listVersions-image-null-v2"/>
+         <resource id="versionspath" path="versions">
+            <method href="#listVersions-image-v2"/>
+         </resource>
       </resource>
       <resource id="version" path="//v2">
          <resource id="Images" type="#ImageList" path="images">
@@ -94,14 +97,31 @@
    <!--*******************************************************-->
    <!--               All Methods                             -->
    <!--*******************************************************-->
-   <method name="GET" id="listVersions-image-v2">
+   <method name="GET" id="listVersions-image-null-v2">
       <wadl:doc xml:lang="EN" title="List API versions"
          xmlns="http://docbook.org/ns/docbook">
-         <para role="shortdesc">Lists information about all Image
+         <para role="shortdesc">Lists information about available Image
             service API versions.
          </para>
       </wadl:doc>
-      <response status="200 300">
+      <response status="300">
+         <representation mediaType="application/json">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook"
+               xml:lang="EN">
+               <xsdxt:code
+                  href="samples/image-versions-response.json"/>
+            </wadl:doc>
+         </representation>
+      </response>
+   </method>
+   <method name="GET" id="listVersions-image-v2">
+      <wadl:doc xml:lang="EN" title="List API versions"
+         xmlns="http://docbook.org/ns/docbook">
+         <para role="shortdesc">Lists information about available Image
+            service API versions.
+         </para>
+      </wadl:doc>
+      <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook"
                xml:lang="EN">
