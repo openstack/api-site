@@ -56,7 +56,7 @@ Fractal worker can use for configuration.
 Using Object Storage instead of a database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We haven't quite figured out how to do this yet, but the general steps involve
+We have not quite figured out how to do this yet, but the general steps involve
 changing the fractal upload code to store metadata with the object in swift,
 then changing the API code such as "list fractals" to query swift to get the
 metadata. If you do this, you should be able to stop using a database.
@@ -66,7 +66,7 @@ metadata. If you do this, you should be able to stop using a database.
 Next steps
 ~~~~~~~~~~
 
-Wow! If you've made it through this section, you know more than the authors of
+Wow! If you have made it through this section, you know more than the authors of
 this guide know about working with OpenStack clouds.
 
 Perhaps you can `contribute

@@ -5,17 +5,17 @@ Networking
 .. todo:: Latter part of the chapter (LBaaS) needs to use Fractals app
           entities for the examples.
 
-Prior to this chapter, all of the nodes that comprise the fractal application
-were attached to the same network.
+In previous chapters, all nodes that comprise the fractal application were
+attached to the same network.
 
-In this section of the tutorial, we introduce the Networking API.
-This will enable us to build networking topologies that separate
-public traffic accessing the application from traffic between the API
-and the worker components.  We also introduce load balancing for
-resilience, and create a secure back-end network for communication between
-the database, webserver, file storage, and worker components.
+This chapter introduces the Networking API. This will enable us to build
+networking topologies that separate public traffic accessing the application
+from traffic between the API and the worker components. We also introduce
+load balancing for resilience, and create a secure back-end network for
+communication between the database, webserver, file storage, and worker
+components.
 
-.. warning:: This section assumes your cloud provider has implemented the
+.. warning:: This section assumes that your cloud provider has implemented the
              OpenStack Networking API (neutron). Users of clouds which have
              implemented legacy networking (nova-network) will have access to
              networking via the Compute API. Log in to the Horizon dashboard
@@ -60,20 +60,19 @@ the database, webserver, file storage, and worker components.
     .. warning:: PHP-OpenCloud supports the OpenStack Networking API,
                  but this section has not been completed.
 
-Working with the CLI
-~~~~~~~~~~~~~~~~~~~~
+Work with the CLI
+~~~~~~~~~~~~~~~~~
 
-As SDKs don't currently fully support the OpenStack Networking API, this section
-uses the command-line clients.
+Because the SDKs do not fully support the OpenStack Networking API, this
+section uses the command-line clients.
 
-Install the 'neutron' command-line client by following this guide:
+Use this guide to install the 'neutron' command-line client:
 http://docs.openstack.org/cli-reference/content/install_clients.html
 
-Then set up the necessary variables for your cloud in an 'openrc' file
-using this guide:
+Use this guide to set up the necessary variables for your cloud in an 'openrc' file:
 http://docs.openstack.org/cli-reference/content/cli_openrc.html
 
-Ensure you have an openrc.sh file, source it and then check your
+Ensure you have an openrc.sh file, source it, and then check that your
 neutron client works: ::
 
     $ cat openrc.sh
@@ -91,8 +90,8 @@ neutron client works: ::
 Networking segmentation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In traditional datacenters, network segments are
-dedicated to specific types of network traffic.
+In traditional data centers, network segments are dedicated to specific types
+of network traffic.
 
 The fractal application we are building contains three types of
 network traffic:
@@ -130,7 +129,7 @@ would be similar to the following diagram:
             }
         }
 
-In this network layout, we are assuming that the OpenStack cloud in which
+In this network layout, we assume that the OpenStack cloud in which
 you have been building your application has a public network and tenant router
 that was previously created by your cloud provider or by yourself, following
 the instructions in the appendix.
@@ -194,8 +193,8 @@ worker back end is as follows:
 
 * Allocate floating ips and assign them to the web server nodes.
 
-Creating networks
-~~~~~~~~~~~~~~~~~
+Create networks
+~~~~~~~~~~~~~~~
 
 Most cloud providers will make a public network accessible to you.
 We will attach a router to this public network to grant Internet access
@@ -206,7 +205,7 @@ be accessed from the Internet.
 Let's just confirm that we have a public network by listing the networks our
 tenant has access to. The public network doesn't have to be named public -
 it could be 'external', 'net04_ext' or something else - the important thing
-is it exists and can be used to reach the internet.
+is it exists and can be used to reach the Internet.
 
 ::
 
@@ -256,7 +255,7 @@ Next, create a network and subnet for the workers.
         | tenant_id         | f77bf3369741408e89d8f6fe090d29d2           |
         +-------------------+--------------------------------------------+
 
-Now, create a network and subnet for the webservers.
+Now, create a network and subnet for the web servers.
 
 ::
 
@@ -336,7 +335,7 @@ Next, create a network and subnet for the API servers.
     | tenant_id         | 0cb06b70ef67424b8add447415449722           |
     +-------------------+--------------------------------------------+
 
-Now that you've got the networks created, go ahead and create two
+Now that you have got the networks created, go ahead and create two
 Floating IPs, for web servers. Ensure that you replace 'public' with
 the name of the public/external network offered by your cloud provider.
 
@@ -439,9 +438,9 @@ Now, attach our router to the worker, api, and webserver subnets.
 Booting a worker
 ----------------
 
-Now that you've prepared the networking infrastructure, you can go
+Now that you have prepared the networking infrastructure, you can go
 ahead and boot an instance on it. Ensure you use appropriate flavor
-and image values for your cloud - see :doc:`getting_started` if you've not
+and image values for your cloud - see :doc:`getting_started` if you have not
 already.
 
 .. todo:: Show how to create an instance in libcloud using the network
