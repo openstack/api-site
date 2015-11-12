@@ -384,6 +384,12 @@ OpenStack contribution process.
       Image service uses to get and store VM images. Options include Object
       Storage, local file system, S3, and HTTP.
 
+   backup restore and disaster recovery as a service
+
+      The OpenStack project that provides integrated tooling for
+      backing up, restoring, and recovering file systems,
+      instances, or database backups. The project name is freezer.
+
    bandwidth
 
       The amount of available data used by communication resources,
@@ -749,6 +755,14 @@ OpenStack contribution process.
 
       A pre-made VM image that serves as a cloudpipe server.
       Essentially, OpenVPN running on Linux.
+
+   Clustering
+
+      The OpenStack project that OpenStack project that implements
+      clustering services and libraries for the management of
+      groups of homogeneous objects exposed by other OpenStack
+      services. The project name of Clustering service is
+      senlin.
 
    CMDB
 
@@ -1529,6 +1543,11 @@ OpenStack contribution process.
 
       Object Storage middleware that uploads (posts) an image through
       a form on a web page.
+
+   freezer
+
+      OpenStack project that provides backup restore and disaster
+      recovery as a service.
 
    front end
 
@@ -2326,6 +2345,10 @@ OpenStack contribution process.
       The design summit will take place in Tokyo, Japan. Mitaka
       is a city in Tokyo.
 
+   monasca
+
+      OpenStack project that provides a Monitoring service.
+
    multi-host
 
       High-availability mode for legacy (nova) networking.
@@ -2356,6 +2379,16 @@ OpenStack contribution process.
 
       A Ceph component that communicates with external clients, checks
       data state and consistency, and performs quorum functions.
+
+   Monitoring
+
+      The OpenStack project that provides a multi-tenant, highly
+      scalable, performant, fault-tolerant Monitoring-as-a-Service
+      solution for metrics, complex event processing, and logging.
+      It builds an extensible platform for advanced monitoring
+      services that can be used by both operators and tenants to
+      gain operational insight and visibility, ensuring
+      availability and stability. The project name is monasca.
 
    multi-factor authentication
 
@@ -3188,6 +3221,10 @@ OpenStack contribution process.
       Linux kernel security module that provides the mechanism for
       supporting access control policies.
 
+   senlin
+
+      OpenStack project that provides a Clustering service.
+
    server
 
       Computer that provides explicit services to the client software
@@ -3348,10 +3385,22 @@ OpenStack contribution process.
       A controlled reboot where a VM instance is properly restarted
       through operating system commands.
 
+   Software Development Lifecycle Automation service
+
+      OpenStack project that aims to make cloud services easier to
+      consume and integrate with application development process
+      by automating the source-to-image process, and simplifying
+      app-centric deployment. The project name is solum.
+
    SolidFire Volume Driver
 
       The Block Storage driver for the SolidFire iSCSI storage
       appliance.
+
+   solum
+
+      OpenStack project that provides a Software Development
+      Lifecycle Automation service.
 
    SPICE
 
