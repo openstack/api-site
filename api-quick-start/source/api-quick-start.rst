@@ -5,22 +5,20 @@ OpenStack APIs
 ==============
 
 To authenticate access to OpenStack services, you must first issue an
-authentication request to OpenStack Identity to acquire an
-authentication token. To request an authentication token, you must
-supply a payload of credentials in the authentication request.
+authentication request with a payload of credentials to OpenStack Identity to
+get an authentication token.
 
 Credentials are usually a combination of your user name and password,
-and optionally, the name or ID of the tenant in which your cloud runs.
+and optionally, the name or ID of the tenant where your cloud runs.
 Ask your cloud administrator for your user name, password, and tenant so
 that you can generate authentication tokens. Alternatively, you can
 supply a token rather than a user name and password.
 
-When you send API requests, you include the token in the
-``X-Auth-Token`` header. If you access multiple OpenStack services, you
-must get a token for each service. A token is valid for a limited time
-before it expires. A token can also become invalid for other reasons.
-For example, if the roles for a user change, existing tokens for that
-user are invalid.
+When you send API requests, you include the token in the ``X-Auth-Token``
+header. If you access multiple OpenStack services, you must get a token for
+each service. A token is valid for a limited time before it expires. A token
+can also become invalid for other reasons. For example, if the roles for a
+user change, existing tokens for that user are no longer valid.
 
 Authentication and API request workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,14 +30,13 @@ Authentication and API request workflow
 
 #. Send API requests and include the token in the ``X-Auth-Token``
    header. Continue to send API requests with that token until the service
-   completes the request or a 401 Unauthorized error occurs.
+   completes the request or the Unauthorized (401) error occurs.
 
-#. If the 401 Unauthorized error occurs, request another token.
+#. If the Unauthorized (401) error occurs, request another token.
 
-The examples in this section use cURL commands. For information about
-cURL, see http://curl.haxx.se/. For information about the OpenStack
-APIs, see `OpenStack API
-Reference <http://developer.openstack.org/api-ref.html>`__.
+The examples in this section use cURL commands. For information about cURL,
+see http://curl.haxx.se/. For information about the OpenStack APIs, see
+`OpenStack API Reference <http://developer.openstack.org/api-ref.html>`__.
 
 
 .. _authenticate:
@@ -65,15 +62,15 @@ The payload of credentials to authenticate contains these parameters:
 |                       |                | server returns the Bad Request (400) |
 |                       |                | response code.                       |
 +-----------------------+----------------+--------------------------------------+
-| *tenantId*            | xsd:string     | The tenant ID. Both the              |
-| (Optional)            |                | *tenantId* and *tenantName*          |
-|                       |                | are optional and mutually exclusive. |
-|                       |                | If you specify both attributes, the  |
-|                       |                | server returns the Bad Request (400) |
-|                       |                | response code. If you do not know    |
-|                       |                | the tenant ID, send a request with   |
-|                       |                | "" for the tenant ID. The response   |
-|                       |                | returns the tenant ID.               |
+| *tenantId*            | xsd:string     | The tenant ID. Both the *tenantId*   |
+| (Optional)            |                | and *tenantName* are optional and    |
+|                       |                | mutually exclusive. If you specify   |
+|                       |                | both attributes, the server returns  |
+|                       |                | the Bad Request (400) response code. |
+|                       |                | If you do not know the tenant name   |
+|                       |                | ID, send a request with "" for the   |
+|                       |                | tenant name or ID. The response      |
+|                       |                | returns the tenant name or ID.       |
 +-----------------------+----------------+--------------------------------------+
 | token (Optional)      | xsd:string     | A token. If you do not provide a     |
 |                       |                | token, you must provide a user name  |
@@ -82,11 +79,12 @@ The payload of credentials to authenticate contains these parameters:
 
 
 For a typical OpenStack deployment that runs Identity, use the following cURL
-command to request a token with your tenantName and ID:
+command to request a token. Specify your tenant name, and user name and
+password credentials:
 
 .. code::
 
-    $ curl -s -X POST http://8.21.28.222:5000/v2.0/tokens \
+    $ curl -s -X POST http://128.136.179.2:5000/v2.0/tokens \
                 -H "Content-Type: application/json" \
                 -d '{"auth": {"tenantName": "'"$OS_TENANT_NAME"'", "passwordCredentials":
                 {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
@@ -97,16 +95,16 @@ response body that contains a token in the form ``"id":"token"`` and an
 expiration date and time in the form ``"expires":"datetime"``.
 
 .. note::
-   If you do not know your tenant name or ID, you can send an
-   authentication request with an empty tenantName, as follows:
+   If you do not know the tenant name or ID, send a request with "" for the
+   tenant name or ID. The response returns the tenant name or ID.
 
     .. code::
 
-        $ curl -s -X POST http://8.21.28.222:5000/v2.0/tokens \
-                        -H "Content-Type: application/json" \
-                        -d '{"auth": {"tenantName": "", "passwordCredentials":
-                        {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
-                        | python -m json.tool
+        $ curl -s -X POST http://128.136.179.2:5000/v2.0/tokens \
+                  -H "Content-Type: application/json" \
+                  -d '{"auth": {"tenantName": "", "passwordCredentials":
+                      {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
+                  | python -m json.tool
 
 The following example shows a successful response:
 
@@ -124,10 +122,10 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8774/v2/TENANT_ID",
-                            "id": "0eb78b6d3f644438aea327d9c57b7b5a",
-                            "internalURL": "http://10.100.0.222:8774/v2/TENANT_ID",
-                            "publicURL": "http://8.21.28.222:8774/v2/TENANT_ID",
+                            "adminURL": "http://172.16.1.2:8774/v2/2a124051e083457091cecc3aa553a5a9",
+                            "id": "9484a876103048d6b6061405292a69ec",
+                            "internalURL": "http://172.16.1.2:8774/v2/2a124051e083457091cecc3aa553a5a9",
+                            "publicURL": "http://128.136.179.2:8774/v2/2a124051e083457091cecc3aa553a5a9",
                             "region": "RegionOne"
                         }
                     ],
@@ -138,10 +136,10 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:9696/",
-                            "id": "3f4b6015a2f9481481ca03dace8acf32",
-                            "internalURL": "http://10.100.0.222:9696/",
-                            "publicURL": "http://8.21.28.222:9696/",
+                            "adminURL": "http://172.16.1.2:9696/",
+                            "id": "48bb1eaac6004287b569171d6eff3a8b",
+                            "internalURL": "http://172.16.1.2:9696/",
+                            "publicURL": "http://128.136.179.2:9696/",
                             "region": "RegionOne"
                         }
                     ],
@@ -152,24 +150,24 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8776/v2/TENANT_ID",
-                            "id": "16f6416588f64946bdcdf4a431a8f252",
-                            "internalURL": "http://10.100.0.222:8776/v2/TENANT_ID",
-                            "publicURL": "http://8.21.28.222:8776/v2/TENANT_ID",
+                            "adminURL": "http://172.16.1.2:8776/v2/2a124051e083457091cecc3aa553a5a9",
+                            "id": "4914cc64592048ab823beeed6ff58add",
+                            "internalURL": "http://172.16.1.2:8776/v2/2a124051e083457091cecc3aa553a5a9",
+                            "publicURL": "http://128.136.179.2:8776/v2/2a124051e083457091cecc3aa553a5a9",
                             "region": "RegionOne"
                         }
                     ],
                     "endpoints_links": [],
-                    "name": "cinder_v2",
+                    "name": "cinderv2",
                     "type": "volumev2"
                 },
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8779/v1.0/TENANT_ID",
-                            "id": "be48765ae31e425cb06036b1ebab694a",
-                            "internalURL": "http://10.100.0.222:8779/v1.0/TENANT_ID",
-                            "publicURL": "http://8.21.28.222:8779/v1.0/TENANT_ID",
+                            "adminURL": "http://172.16.1.2:8779/v1.0/2a124051e083457091cecc3aa553a5a9",
+                            "id": "255f5bcfd284485ebf033f7488a1a0bd",
+                            "internalURL": "http://172.16.1.2:8779/v1.0/2a124051e083457091cecc3aa553a5a9",
+                            "publicURL": "http://128.136.179.2:8779/v1.0/2a124051e083457091cecc3aa553a5a9",
                             "region": "RegionOne"
                         }
                     ],
@@ -180,10 +178,24 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:9292",
-                            "id": "1adfcb5414304f3596fb81edb2dfb514",
-                            "internalURL": "http://10.100.0.222:9292",
-                            "publicURL": "http://8.21.28.222:9292",
+                            "adminURL": "http://128.136.179.2:8080",
+                            "id": "18c55bdb3f4044958cc2257a9345d921",
+                            "internalURL": "http://172.16.1.2:8080",
+                            "publicURL": "http://128.136.179.2:8080",
+                            "region": "RegionOne"
+                        }
+                    ],
+                    "endpoints_links": [],
+                    "name": "swift_s3",
+                    "type": "s3"
+                },
+                {
+                    "endpoints": [
+                        {
+                            "adminURL": "http://172.16.1.2:9292",
+                            "id": "2b8be454ac394e4bb482c88a1876c987",
+                            "internalURL": "http://172.16.1.2:9292",
+                            "publicURL": "http://128.136.179.2:9292",
                             "region": "RegionOne"
                         }
                     ],
@@ -194,10 +206,38 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8777",
-                            "id": "350f3b91d73f4b3ab8a061c94ac31fbb",
-                            "internalURL": "http://10.100.0.222:8777",
-                            "publicURL": "http://8.21.28.222:8777",
+                            "adminURL": "http://172.16.1.2:8774/v3",
+                            "id": "b806c63677334f5c8318234a9f8ce6be",
+                            "internalURL": "http://172.16.1.2:8774/v3",
+                            "publicURL": "http://128.136.179.2:8774/v3",
+                            "region": "RegionOne"
+                        }
+                    ],
+                    "endpoints_links": [],
+                    "name": "novav3",
+                    "type": "computev3"
+                },
+                {
+                    "endpoints": [
+                        {
+                            "adminURL": "http://172.16.1.3:8786/v1/2a124051e083457091cecc3aa553a5a9",
+                            "id": "83daad78b4e94ff98ed0dc9384d2287b",
+                            "internalURL": "http://172.16.1.3:8786/v1/2a124051e083457091cecc3aa553a5a9",
+                            "publicURL": "http://128.136.179.2:8786/v1/2a124051e083457091cecc3aa553a5a9",
+                            "region": "RegionOne"
+                        }
+                    ],
+                    "endpoints_links": [],
+                    "name": "manila",
+                    "type": "share"
+                },
+                {
+                    "endpoints": [
+                        {
+                            "adminURL": "http://172.16.1.2:8777",
+                            "id": "4d6b384ae0ad4f9c840d9841d2558fc2",
+                            "internalURL": "http://172.16.1.2:8777",
+                            "publicURL": "http://128.136.179.2:8777",
                             "region": "RegionOne"
                         }
                     ],
@@ -208,24 +248,10 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8000/v1/",
-                            "id": "2198b0d32a604e75a5cc1e13276a813d",
-                            "internalURL": "http://10.100.0.222:8000/v1/",
-                            "publicURL": "http://8.21.28.222:8000/v1/",
-                            "region": "RegionOne"
-                        }
-                    ],
-                    "endpoints_links": [],
-                    "name": "heat-cfn",
-                    "type": "cloudformation"
-                },
-                {
-                    "endpoints": [
-                        {
-                            "adminURL": "http://10.100.0.222:8776/v1/TENANT_ID",
-                            "id": "7c193c4683d849ca8e8db493722a4d8c",
-                            "internalURL": "http://10.100.0.222:8776/v1/TENANT_ID",
-                            "publicURL": "http://8.21.28.222:8776/v1/TENANT_ID",
+                            "adminURL": "http://172.16.1.2:8776/v1/2a124051e083457091cecc3aa553a5a9",
+                            "id": "0504d7f8035a4149ba41842bae498a10",
+                            "internalURL": "http://172.16.1.2:8776/v1/2a124051e083457091cecc3aa553a5a9",
+                            "publicURL": "http://128.136.179.2:8776/v1/2a124051e083457091cecc3aa553a5a9",
                             "region": "RegionOne"
                         }
                     ],
@@ -236,10 +262,10 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8773/services/Admin",
-                            "id": "11fac8254be74d7d906110f0069e5748",
-                            "internalURL": "http://10.100.0.222:8773/services/Cloud",
-                            "publicURL": "http://8.21.28.222:8773/services/Cloud",
+                            "adminURL": "http://172.16.1.2:8773/services/Admin",
+                            "id": "5b8d4c3357e04be78a8eb928a839cdd7",
+                            "internalURL": "http://172.16.1.2:8773/services/Cloud",
+                            "publicURL": "http://128.136.179.2:8773/services/Cloud",
                             "region": "RegionOne"
                         }
                     ],
@@ -250,24 +276,24 @@ The following example shows a successful response:
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:8004/v1/TENANT_ID",
-                            "id": "38fa4f9afce34d4ca0f5e0f90fd758dd",
-                            "internalURL": "http://10.100.0.222:8004/v1/TENANT_ID",
-                            "publicURL": "http://8.21.28.222:8004/v1/TENANT_ID",
+                            "adminURL": "http://128.136.179.2:8080/",
+                            "id": "1a4c96b000de4474908e45460017bf00",
+                            "internalURL": "http://172.16.1.2:8080/v1/AUTH_2a124051e083457091cecc3aa553a5a9",
+                            "publicURL": "http://128.136.179.2:8080/v1/AUTH_2a124051e083457091cecc3aa553a5a9",
                             "region": "RegionOne"
                         }
                     ],
                     "endpoints_links": [],
-                    "name": "heat",
-                    "type": "orchestration"
+                    "name": "swift",
+                    "type": "object-store"
                 },
                 {
                     "endpoints": [
                         {
-                            "adminURL": "http://10.100.0.222:35357/v2.0",
-                            "id": "256cdf78ecb04051bf0f57ec11070222",
-                            "internalURL": "http://10.100.0.222:5000/v2.0",
-                            "publicURL": "http://8.21.28.222:5000/v2.0",
+                            "adminURL": "http://172.16.1.2:35357/v2.0",
+                            "id": "40c9824d67dc4ef5b3b9495e117719a2",
+                            "internalURL": "http://172.16.1.2:5000/v2.0",
+                            "publicURL": "http://128.136.179.2:5000/v2.0",
                             "region": "RegionOne"
                         }
                     ],
@@ -278,28 +304,28 @@ The following example shows a successful response:
             ],
             "token": {
                 "audit_ids": [
-                    "gsjrNoqFSQeuLUo0QeJprQ"
+                    "a8ozqFkkSfCmUQpbCZlS-w"
                 ],
-                "expires": "2014-12-15T15:09:29Z",
-                "id": "TOKEN_ID",
-                "issued_at": "2014-12-15T14:09:29.794527",
+                "expires": "2015-11-05T23:23:27Z",
+                "id": "4b57c7d386a7438b829d1a8922e0eaac",
+                "issued_at": "2015-11-05T22:23:27.166658",
                 "tenant": {
                     "description": "Auto created account",
                     "enabled": true,
-                    "id": "TENANT_ID",
-                    "name": "USERNAME"
+                    "id": "2a124051e083457091cecc3aa553a5a9",
+                    "name": "facebook987654321"
                 }
             },
             "user": {
-                "id": "USER_ID",
-                "name": "USERNAME",
+                "id": "182d9ad16c2a4397bdceb595658b830f",
+                "name": "facebook987654321",
                 "roles": [
                     {
                         "name": "_member_"
                     }
                 ],
                 "roles_links": [],
-                "username": "USERNAME"
+                "username": "facebook987654321"
             }
         }
     }
@@ -307,18 +333,23 @@ The following example shows a successful response:
 Send API requests
 ~~~~~~~~~~~~~~~~~
 
-This section shows how to make some basic Compute API calls. For a
-complete list of Compute API v2.0 calls, see `Compute APIs and
-Extensions <http://developer.openstack.org/api-ref-compute-v2.html>`__.
+This section shows how to make some basic Compute API calls. For a complete
+list of Compute API calls, see
+`Compute API (CURRENT) <http://developer.openstack.org/api-ref-compute-v2.1.html>`__.
 
-Use the Compute API to list flavors, as follows:
+Export the token ID to the ``TOKEN`` environment variable. For example:
 
 .. code::
 
-    $ curl -s -H \
-                "X-Auth-Token:token" \
-                http://8.21.28.222:8774/v2/tenant_id/flavors \
-                | python -m json.tool
+    export TOKEN=4b57c7d386a7438b829d1a8922e0eaab
+
+The token expires every 24 hours.
+
+Use the Compute API to list flavors:
+
+.. code::
+
+    $ curl -s -H "X-Auth-Token: $TOKEN" http://128.136.179.2:8774/v2/$OS_TENANT/flavors | python -m json.tool
 
 .. code::
 
@@ -397,7 +428,7 @@ Use the Compute API to list flavors, as follows:
         ]
     }
 
-Use the Compute API to list images, as follows:
+Use the Compute API to list images:
 
 .. code::
 
@@ -508,7 +539,7 @@ Use the Compute API to list images, as follows:
         ]
     }
 
-Use the Compute API to list servers, as follows:
+Use the Compute API to list servers:
 
 .. code::
 
@@ -547,7 +578,7 @@ For scripting work and simple requests, you can use a command-line client like
 the ``openstack-client`` client. This client enables you to use the Identity,
 Compute, Block Storage, and Object Storage APIs through a command-line
 interface. Also, each OpenStack project has a related client project that
-includes Python API bindings and a CLI.
+includes Python API bindings and a command-line interface (CLI).
 
 For information about the command-line clients, see `OpenStack
 Command-Line Interface Reference <http://docs.openstack.org/cli-reference/content/>`__.
@@ -555,15 +586,15 @@ Command-Line Interface Reference <http://docs.openstack.org/cli-reference/conten
 Install the clients
 -------------------
 
-Use ``pip`` to install the OpenStack clients on a Mac OS X or Linux
-system. It is easy and ensures that you get the latest version of the
-client from the `Python Package Index <http://pypi.python.org/pypi>`__.
-Also, ``pip`` lets you update or remove a package.
+Use ``pip`` to install the OpenStack clients on a Mac OS X or Linux system. It
+is easy and ensures that you get the latest version of the client from the
+`Python Package Index <http://pypi.python.org/pypi>`__. Also, ``pip`` lets you
+update or remove a package.
 
-You must install each project's client separately, but the
-python-openstackclient covers multiple projects.
+You must install the client for each project separately, but the
+``python-openstackclient`` covers multiple projects.
 
-Run this command to install or update a client package:
+Install or update a client package:
 
 .. code::
 
@@ -571,7 +602,7 @@ Run this command to install or update a client package:
 
 Where *PROJECT* is the project name.
 
-For example, to install the ``openstack`` client, run this command:
+For example, install the ``openstack`` client:
 
 .. code::
 
@@ -592,12 +623,10 @@ To remove the ``openstack`` client, run this command:
 Before you can issue client commands, you must download and source the
 ``openrc`` file to set environment variables.
 
-For complete information about the OpenStack clients, including how to
-source the ``openrc`` file, see `OpenStack End User
-Guide <http://docs.openstack.org/user-guide/>`__, `OpenStack Admin
-User Guide <http://docs.openstack.org/user-guide-admin/>`__, and
-`OpenStack Command-Line Interface
-Reference <http://docs.openstack.org/cli-reference/content/>`__.
+For complete information about the OpenStack clients, including how to source
+the ``openrc`` file, see `OpenStack End User Guide <http://docs.openstack.org/user-guide/>`__,
+`OpenStack Admin User Guide <http://docs.openstack.org/user-guide-admin/>`__,
+and `OpenStack Command-Line Interface Reference <http://docs.openstack.org/cli-reference/content/>`__.
 
 Launch an instance
 ------------------
@@ -606,7 +635,7 @@ To launch instances, you must choose a name, an image, and a flavor for
 your instance.
 
 To list available images, call the Compute API through the ``openstack``
-client, as follows:
+client:
 
 .. code::
 
@@ -642,8 +671,8 @@ To list flavors, run this command:
 
 To launch an instance, note the IDs of your desired image and flavor.
 
-To launch an instance named ``my_instance``, run the ``openstack server
-create`` command with the image and flavor IDs and the server name, as follows:
+To launch the ``my_instance`` instance, run the ``openstack server create``
+command with the image and flavor IDs and the server name:
 
 .. code::
 
