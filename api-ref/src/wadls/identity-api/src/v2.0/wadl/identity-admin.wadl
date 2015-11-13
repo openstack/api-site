@@ -19,7 +19,8 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:db="http://docbook.org/ns/docbook">
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:db="http://docbook.org/ns/docbook">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
@@ -196,17 +197,7 @@
                     </param>
                     <method href="#admin-updateUser"/>
                     <method href="#admin-deleteUser"/>
-                </resource>
-                <resource id="admin-userid" path="{user_id}">
-                    <param xmlns="http://wadl.dev.java.net/2009/02" name="user_id" style="template"
-                        type="xsd:string" required="true">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>
-                                The user ID.
-                            </para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#admin-getUserById"/>
+                    <method href="#admin-showUser"/>
                     <resource id="admin-userRoles" path="roles">
                         <method href="#admin-listUserGlobalRoles"/>
                     </resource>
@@ -991,12 +982,43 @@
                     <xsdxt:code href="../samples/user.json"/>
                 </wadl:doc>
             </representation>
-        </response>&commonFaults; &getFaults; </method>
-    <method name="GET" id="admin-getUserById">
+        </response>&commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="admin-showUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get user information by ID">
-            <para role="shortdesc">Gets detailed information about a user by user
-                ID.</para>
+            title="Show user details">
+            <para role="shortdesc">
+                Shows details for a user by ID.
+            </para>
+            <para>
+                The <link
+                xlink:href="http://docs.openstack.org/cli-reference/content/openstackclient_commands.html#openstackclient_subcommand_user_show_with_identity_api_v2">openstack
+                user show</link> command supports showing user details by name or ID. However, the
+                command actually looks up the user ID for a user name and queries the user by ID.
+            </para>
+            <para>
+                As a workaround, complete these steps to show details for a
+                user by name:
+            </para>
+            <orderedlist>
+                <listitem>
+                    <para>
+                        <link xlink:href="#admin-listUsers">List all users</link>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        In the response, find the user name for which you want
+                        to show details and note its corresponding user ID.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Issue the <link xlink:href="#admin-showUser">show
+                        details for user</link> call.
+                    </para>
+                </listitem>
+            </orderedlist>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json" element="identity:user">
