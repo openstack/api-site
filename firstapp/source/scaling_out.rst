@@ -33,7 +33,7 @@ that this feature can bring, as compared to traditional
 infrastructure.
 
 Of course, just having access to additional resources is only part of
-the battle; while it's certainly possible to manually add or destroy
+the battle; while it's certainly possible to manually add or delete
 resources, you'll get more value -- and more responsiveness -- if the
 application simply requests new resources automatically when it needs
 them.
@@ -382,7 +382,7 @@ redundant web services. If one dies, the others can be used.
           corresponding Floating IPs. Replace FRACTAL_UUID the UUID
           of an existing fractal.
 
-Go ahead and test the fault tolerance. Start destroying workers and API
+Go ahead and test the fault tolerance. Start deleting workers and API
 instances. As long as you have one of each, your application should
 be fine. There is one weak point though. The database contains the
 fractals and fractal metadata. If you lose that instance, the

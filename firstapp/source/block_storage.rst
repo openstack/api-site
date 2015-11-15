@@ -231,12 +231,12 @@ Extras
 ~~~~~~
 
 You can detach the volume and reattach it elsewhere, or use the following
-steps to destroy the volume.
+steps to delete the volume.
 
 .. warning::
     The following operations are destructive and result in data loss.
 
-To detach and destroy a volume:
+To detach and delete a volume:
 
 .. only:: libcloud
 

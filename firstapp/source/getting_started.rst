@@ -33,7 +33,7 @@ robust, application.
 
 The second application is an OpenStack application that enables you to:
 
-* Create and destroy compute resources. These resources are virtual
+* Create and delete compute resources. These resources are virtual
   machine instances where the Fractals application runs.
 * Make cloud-related architecture decisions such as turning
   functions into micro-services and modularizing them.
@@ -1008,7 +1008,7 @@ section.
 Deploy the application to a new instance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now that you know how to create and destroy instances, you can deploy the
+Now that you know how to create and delete instances, you can deploy the
 sample application. The instance that you create for the application is
 similar to the first instance that you created, but this time, we'll briefly
 introduce a few extra concepts.
@@ -1018,7 +1018,7 @@ introduce a few extra concepts.
 
 When you create an instance for the application, you'll want to give it a bit
 more information than you supplied to the bare instance that you just created
-and destroyed. We'll go into more detail in later sections, but for now,
+and deleted. We'll go into more detail in later sections, but for now,
 simply create the following resources so that you can feed them to the
 instance:
 
