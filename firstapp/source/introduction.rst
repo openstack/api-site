@@ -24,10 +24,6 @@ particular. It also describes some commands in the previous section.
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK.
 
-.. only:: openstacksdk
-
-    .. warning:: This section has not yet been completed for the OpenStack SDK.
-
 .. only:: phpopencloud
 
     .. warning:: This section has not yet been completed for the
@@ -61,20 +57,20 @@ Cloud applications often use many small instances rather than a few large
 instances. Provided that an application is sufficiently modular, you can
 easily distribute micro-services across as many instances as required. This
 architecture enables an application to grow past the limit imposed by the
-maximum size of an instance. It's like trying to move a large number of people
-from one place to another; there's only so many people you can put on the
+maximum size of an instance. It is like trying to move a large number of people
+from one place to another; there is only so many people you can put on the
 largest bus, but you can use an unlimited number of buses or small cars, which
 provide just the capacity you need - and no more.
 
 Fault tolerance
 ---------------
 
-In cloud programming, there's a well-known analogy known as "cattle vs
-pets". If you haven't heard it before, it goes like this:
+In cloud programming, there is a well-known analogy known as "cattle vs
+pets". If you have not heard it before, it goes like this:
 
-When you're dealing with pets, you name them and care for them and if
+When you are dealing with pets, you name them and care for them and if
 they get sick, you nurse them back to health. Nursing pets back to
-health can be difficult and very time consuming. When you're dealing
+health can be difficult and very time consuming. When you are dealing
 with cattle, you attach a numbered tag to their ear and if they get
 sick you put them down and move on.
 
@@ -85,24 +81,24 @@ went wrong with one of those servers, the staff's job was to do
 whatever it took to make it right again and save the server and the
 application.
 
-In cloud programming, it's very different. Rather than large,
-expensive servers, you're dealing with virtual machines that are
+In cloud programming, it is very different. Rather than large,
+expensive servers, you are dealing with virtual machines that are
 literally disposable; if something goes wrong, you shut it down and
-spin up a new one. There's still operations staff, but rather than
+spin up a new one. There is still operations staff, but rather than
 nursing individual servers back to health, their job is to monitor the
 health of the overall system.
 
-There are definite advantages to this architecture. It's easy to get a
+There are definite advantages to this architecture. It is easy to get a
 "new" server, without any of the issues that inevitably arise when a
 server has been up and running for months, or even years.
 
 As with classical infrastructure, failures of the underpinning cloud
 infrastructure (hardware, networks, and software) are
-unavoidable. When you're designing for the cloud, it's crucial that
+unavoidable. When you are designing for the cloud, it is crucial that
 your application is designed for an environment where failures can
-happen at any moment. This may sound like a liability, but it's not;
+happen at any moment. This may sound like a liability, but it is not;
 by designing your application with a high degree of fault tolerance,
-you're also making it resilient in the face of change, and therefore
+you are also making it resilient in the face of change, and therefore
 more adaptable.
 
 Fault tolerance is essential to the cloud-based application.
@@ -130,9 +126,9 @@ Fractals application architecture
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Fractals application was designed with the principles of the previous
-subsection in mind. You'll note that in :doc:`getting_started`, we deployed the
-application in an all-in-one style, on a single virtual machine. This isn't
-good practice, but because the application uses micro-services to decouple
+subsection in mind. You will note that in :doc:`getting_started`, we deployed the
+application in an all-in-one style, on a single virtual machine. This is not
+a good practice, but because the application uses micro-services to decouple
 logical application functions, we can change this easily.
 
 .. graphviz:: images/architecture.dot
@@ -162,7 +158,7 @@ worker may crash and the tasks will be processed by other workers.
 The worker service consumes messages from the work queue and then processes
 them to create the corresponding fractal image file.
 
-Of course there's also a web interface which offers a more human
+Of course there is also a web interface which offers a more human
 friendly way of accessing the API to view the created fractal images,
 and a simple command line interface.
 
@@ -176,7 +172,7 @@ and a simple command line interface.
 
 There are also multiple storage back ends (to store the generated
 fractal images) and a database component (to store the state of
-tasks), but we'll talk about those in :doc:`/durability` and
+tasks), but we will talk about those in :doc:`/durability` and
 :doc:`/block_storage` respectively.
 
 How the Fractals application interacts with OpenStack
@@ -188,7 +184,7 @@ How the Fractals application interacts with OpenStack
           across each section. Adding it here forces the
           introduction of block storage, object storage, orchestration
           and neutron networking too early, which could seriously
-          confuse users who don't have these services in their
+          confuse users who do not have these services in their
           cloud. Therefore, this should not be done here.
 
 
@@ -196,9 +192,9 @@ The magic revisited
 ~~~~~~~~~~~~~~~~~~~
 
 So what exactly was that request doing at the end of the previous
-section?  Let's look at it again. (Note that in this subsection, we're
-just explaining what you've already done in the previous section; you
-don't need to execute these commands again.)
+section?  Let us look at it again. (Note that in this subsection, we are
+just explaining what you have already done in the previous section; you
+do not need to execute these commands again.)
 
 .. only:: shade
 
@@ -213,9 +209,20 @@ don't need to execute these commands again.)
         :start-after: step-1
         :end-before: step-2
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-1
+        :end-before: step-2
+
 We explained image and flavor in :doc:`getting_started`, so in the following
 sections, we will explain the other parameters in detail, including
 :code:`ex_userdata` (cloud-init) and :code:`ex_keyname` (key pairs).
+
+.. only:: openstacksdk
+
+    .. note:: In openstacksdk parameter :code:`ex_userdata` is called :code:`user_data`
+              and parameter :code:`ex_keyname` is called :code:`key_name`.
 
 
 Introduction to cloud-init
@@ -252,6 +259,13 @@ your cloud provider to confirm the user name.
         :start-after: step-2
         :end-before: step-3
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-2
+        :end-before: step-3
+
+    .. note:: User data in openstacksdk must be encoded to base64.
 
 After the instance is created, cloud-init downloads and runs a script called
 :code:`install.sh`. This script installs the Fractals application. Cloud-init
@@ -262,7 +276,7 @@ about cloud-init in the `official documentation <https://cloudinit.readthedocs.o
 Introduction to key pairs
 -------------------------
 
-Security is important when it comes to your instances; you can't have just
+Security is important when it comes to your instances; you can not have just
 anyone accessing them. To enable logging into an instance, you must provide
 the public key of an SSH key pair during instance creation. In section one,
 you created and uploaded a key pair to OpenStack, and cloud-init installed it
@@ -303,6 +317,12 @@ port 22):
               ports as input. This is why ports 80 and 22 are passed
               twice.
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-3
+        :end-before: step-4
+
 You can list available security groups with:
 
 .. only:: shade
@@ -318,8 +338,13 @@ You can list available security groups with:
         :start-after: step-4
         :end-before: step-5
 
+.. only:: openstacksdk
 
-Once you've created a rule or group, you can also delete it:
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-4
+        :end-before: step-5
+
+Once you have created a rule or group, you can also delete it:
 
 .. only:: shade
 
@@ -334,6 +359,11 @@ Once you've created a rule or group, you can also delete it:
         :start-after: step-5
         :end-before: step-6
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-5
+        :end-before: step-6
 
 To see which security groups apply to an instance, you can:
 
@@ -350,10 +380,15 @@ To see which security groups apply to an instance, you can:
         :start-after: step-6
         :end-before: step-7
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-6
+        :end-before: step-7
 
 .. todo:: print() ?
 
-Once you've configured permissions, you'll need to know where to
+Once you have configured permissions, you will need to know where to
 access the application.
 
 Introduction to Floating IPs
@@ -412,6 +447,27 @@ then associate it to your instance's network interface.
         :start-after: step-7
         :end-before: step-8
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-7
+        :end-before: step-8
+
+    If you have no free floating IPs that have been allocated for
+    your project, first select a network which offer allocation
+    of floating IPs. In this example we use network which is
+    called :code:`public`.
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-8
+        :end-before: step-9
+
+    Now request an address from this network to be allocated to your project.
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-9
+        :end-before: step-10
+
 Now that you have an unused floating IP address allocated to your
 project, attach it to an instance.
 
@@ -428,22 +484,28 @@ project, attach it to an instance.
         :start-after: step-10
         :end-before: step-11
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-10
+        :end-before: step-11
+
 That brings us to where we ended up at the end of
 :doc:`/getting_started`. But where do we go from here?
 
 Splitting services across multiple instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We've talked about separating functions into different micro-services,
+We have talked about separating functions into different micro-services,
 and how that enables us to make use of the cloud architecture. Now
-let's see that in action.
+let us see that in action.
 
-The rest of this tutorial won't reference the all-in-one instance you
+The rest of this tutorial will not reference the all-in-one instance you
 created in section one. Take a moment to delete this instance.
 
-It's easy to split out services into multiple instances. We will
+It is easy to split out services into multiple instances. We will
 create a controller instance called :code:`app-controller`, which
-hosts the API, database, and messaging services. We'll also create a
+hosts the API, database, and messaging services. We will also create a
 worker instance called :code:`app-worker-1`, which just generates
 fractals.
 
@@ -474,7 +536,13 @@ Parameter  Description            Values
         :start-after: step-11
         :end-before: step-12
 
-Note that this time, when you create a security group, you're
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-11
+        :end-before: step-12
+
+Note that this time, when you create a security group, you are
 including a rule that only applies for instances that are part of the
 worker_group.
 
@@ -495,11 +563,17 @@ Next, start a second instance, which will be the worker instance:
         :start-after: step-12
         :end-before: step-13
 
-Notice that you've added this instance to the worker_group, so it can
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-12
+        :end-before: step-13
+
+Notice that you have added this instance to the worker_group, so it can
 access the controller.
 
 As you can see from the parameters passed to the installation script, you are
-specifying that this is the worker instance, but you're also passing the
+specifying that this is the worker instance, but you are also passing the
 address of the API instance and the message queue so the worker can pick up
 requests. The Fractals application installation script can take several
 parameters.
@@ -537,6 +611,12 @@ address of the worker:
         :start-after: step-13
         :end-before: step-14
 
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
+        :start-after: step-13
+        :end-before: step-14
+
 Now you can SSH into the instance:
 
 ::
@@ -546,7 +626,7 @@ Now you can SSH into the instance:
 .. note:: Replace :code:`IP_WORKER_1` with the IP address of the
           worker instance and USERNAME to the appropriate user name.
 
-Once you've logged in, check to see whether the worker service process
+Once you have logged in, check to see whether the worker service process
 is running as expected.  You can find the logs of the worker service
 in the directory :code:`/var/log/supervisor/`.
 
@@ -621,7 +701,7 @@ with :code:`faafo get --help`, :code:`faafo list --help`, and
 
 .. note:: The application stores the generated fractal images directly
           in the database used by the API service instance.  Storing
-          image files in a database is not good practice. We're doing it
+          image files in a database is not good practice. We are doing it
           here as an example only as an easy way to allow multiple
           instances to have access to the data. For best practice, we
           recommend storing objects in Object Storage, which is
@@ -668,4 +748,9 @@ information, the flavor ID, and image ID.
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/introduction.py
+       :language: python
+
+.. only:: openstacksdk
+
+    .. literalinclude:: ../samples/openstacksdk/introduction.py
        :language: python
