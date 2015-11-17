@@ -2,13 +2,13 @@
 Appendix
 ========
 
-Bootstrapping your network
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Bootstrap your network
+~~~~~~~~~~~~~~~~~~~~~~
 
-Most cloud providers will provision all of the required network
-objects necessary to boot an instance.  An easy way to see if these
-have been created for you is to access the Network Topology section of
-the OpenStack dashboard.
+Most cloud providers provision all network objects that are required
+to boot an instance. To determine whether these objects were created
+for you, access the Network Topology section of the OpenStack
+dashboard.
 
 .. figure:: images/network-topology.png
     :width: 920px

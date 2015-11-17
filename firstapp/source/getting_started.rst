@@ -5,22 +5,20 @@ Getting started
 Who should read this guide
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This guide is for software developers who want to deploy applications to
-OpenStack clouds.
+This guide is for experienced software developers who want to deploy
+applications to OpenStack clouds.
 
-We assume that you're an experienced programmer who has not created a cloud
-application in general or an OpenStack application in particular.
-
-If you're familiar with OpenStack, this section teaches you how to program
-with its components.
+If you are familiar with OpenStack but have not created a cloud
+application in general or an OpenStack application in particular, this
+section teaches you how to program with OpenStack components.
 
 What you will learn
 ~~~~~~~~~~~~~~~~~~~
 
-Deploying applications in a cloud environment can be very different from
-deploying them in a traditional IT environment. This guide teaches you how to
-deploy applications on OpenStack and some best practices for cloud application
-development.
+Deploying applications in a cloud environment can be very different
+from deploying them in a traditional IT environment. This guide
+teaches you how to deploy applications on OpenStack and some best
+practices for cloud application development.
 
 A general overview
 ~~~~~~~~~~~~~~~~~~
@@ -54,16 +52,16 @@ and toolkits with the OpenStack cloud:
 Language        Name          Description                                                       URL
 ============== ============= ================================================================= ====================================================
 Python         Libcloud      A Python-based library managed by the Apache Foundation.
-                             This library enables you to work with multiple types of clouds.   https://libcloud.apache.org
-Python         OpenStack SDK A Python-based library specifically developed for OpenStack.      http://git.openstack.org/cgit/openstack/python-openstacksdk
-Python         Shade         A Python-based library developed by OpenStack Infra team to       http://git.openstack.org/cgit/openstack-infra/shade
+                             This library enables you to work with multiple types of clouds.    https://libcloud.apache.org
+Python         OpenStack SDK A Python-based library specifically developed for OpenStack.       http://git.openstack.org/cgit/openstack/python-openstacksdk
+Python         Shade         A Python-based library developed by OpenStack Infra team to        http://git.openstack.org/cgit/openstack-infra/shade
                              operate multiple OpenStack clouds.
-Java           jClouds       A Java-based library. Like Libcloud, it's also managed by the     https://jclouds.apache.org
+Java           jClouds       A Java-based library. Like Libcloud, it is also managed by the     https://jclouds.apache.org
                              Apache Foundation and works with multiple types of clouds.
-Ruby           fog           A Ruby-based SDK for multiple clouds.                             https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
-node.js        pkgcloud      A Node.js-based SDK for multiple clouds.                          https://github.com/pkgcloud/pkgcloud
-PHP            php-opencloud A library for developers using PHP to work with OpenStack clouds. http://php-opencloud.com/
-.NET Framework OpenStack SDK A .NET-based library enables you to write C++ or C# code for      https://www.nuget.org/packages/openstack.net
+Ruby           fog           A Ruby-based SDK for multiple clouds.                              https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
+node.js        pkgcloud      A Node.js-based SDK for multiple clouds.                           https://github.com/pkgcloud/pkgcloud
+PHP            php-opencloud A library for developers using PHP to work with OpenStack clouds.  http://php-opencloud.com/
+.NET Framework OpenStack SDK A .NET-based library enables you to write C++ or C# code for       https://www.nuget.org/packages/openstack.net
                for Microsoft Microsoft applications.
                .NET
 ============== ============= ================================================================= ====================================================
@@ -71,7 +69,7 @@ PHP            php-opencloud A library for developers using PHP to work with Ope
 For a list of available SDKs, see `Software Development Kits <https://wiki.openstack.org/wiki/SDKs>`_.
 
 Other versions of this guide show you how to use the other SDKs and
-languages to complete these tasks. If you're a developer for another toolkit
+languages to complete these tasks. If you are a developer for another toolkit
 that you would like this guide to include, feel free to submit code snippets.
 You can contact `OpenStack Documentation team <https://wiki.openstack.org/Documentation>`_
 members for more information.
@@ -176,7 +174,7 @@ The actual auth URL is:
 
         http://controller:5000
 
-How you'll interact with OpenStack
+How you interact with OpenStack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this tutorial, you interact with your OpenStack cloud through the SDK that
@@ -530,7 +528,7 @@ upload one depending on the policy settings of your cloud. For information about
 how to upload images, see
 `obtaining images <http://docs.openstack.org/image-guide/content/ch_obtaining_images.html>`_.
 
-Set the image and size variables to appropriate values for your cloud. We'll
+Set the image and size variables to appropriate values for your cloud. We will
 use these variables in later sections.
 
 First, tell the connection to get a specified image by using the ID of the
@@ -726,7 +724,7 @@ Next, tell the script which flavor you want to use:
 
         openstack.compute.v2.flavor.Flavor(attrs={u'name': u'm1.small', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}], u'ram': 2048, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 1, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 20, 'id': u'2'}, loaded=True)
 
-Now, you're ready to launch the instance.
+Now, you can launch the instance.
 
 Launch an instance
 ~~~~~~~~~~~~~~~~~~
@@ -958,8 +956,8 @@ Before you continue, you must do one more thing.
 Destroy an instance
 ~~~~~~~~~~~~~~~~~~~
 
-Cloud resources such as running instances that you no longer use can cost
-money. Destroy cloud resources to avoid unexpected expenses.
+Cloud resources, such as running instances that you no longer use, can
+cost money. To avoid unexpected expenses, destroy cloud resources.
 
 .. only:: fog
 
@@ -1010,15 +1008,15 @@ Deploy the application to a new instance
 
 Now that you know how to create and delete instances, you can deploy the
 sample application. The instance that you create for the application is
-similar to the first instance that you created, but this time, we'll briefly
+similar to the first instance that you created, but this time, we will briefly
 introduce a few extra concepts.
 
 .. note:: Internet connectivity from your cloud instance is required
           to download the application.
 
-When you create an instance for the application, you'll want to give it a bit
+When you create an instance for the application, you want to give it a bit
 more information than you supplied to the bare instance that you just created
-and deleted. We'll go into more detail in later sections, but for now,
+and deleted. We will go into more detail in later sections, but for now,
 simply create the following resources so that you can feed them to the
 instance:
 
@@ -1027,10 +1025,10 @@ instance:
   instance. Typically, your public key is written to :code:`.ssh/id_rsa.pub`. If
   you do not have an SSH public key file, follow
   `these instructions <https://help.github.com/articles/generating-ssh- keys/>`_ first.
-  We'll cover these instructions in depth in :doc:`/introduction`.
+  We will cover these instructions in depth in :doc:`/introduction`.
 
-In the following example, :code:`pub_key_file` should be set to the location
-of your public SSH key file.
+In the following example, set :code:`pub_key_file` to the location of
+your public SSH key file.
 
 .. only:: fog
 
@@ -1074,7 +1072,7 @@ of your public SSH key file.
 
 * Network access. By default, OpenStack filters all traffic. You must create
   a security group and apply it to your instance. The security group allows HTTP
-  and SSH access. We'll go into more detail in :doc:`/introduction`.
+  and SSH access. We will go into more detail in :doc:`/introduction`.
 
 .. only:: fog
 
@@ -1110,7 +1108,7 @@ of your public SSH key file.
 * Userdata. During instance creation, you can provide userdata to OpenStack to
   configure instances after they boot. The cloud-init service applies the
   user data to an instance. You must pre-install the cloud-init service on your
-  chosen image. We'll go into more detail in :doc:`/introduction`.
+  chosen image. We will go into more detail in :doc:`/introduction`.
 
 .. only:: fog
 
@@ -1139,7 +1137,7 @@ of your public SSH key file.
 
 .. only:: openstacksdk
 
-    .. note:: User data in openstacksdk must be encoded to base64
+    .. note:: User data in openstacksdk must be encoded to Base64
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-11
@@ -1150,8 +1148,8 @@ Now, you can boot and configure the instance.
 Boot and configure an instance
 ------------------------------
 
-Use the image, flavor, key pair, and userdata to create an instance. After you
-request the instance, wait for it to build.
+Use the image, flavor, key pair, and userdata to create an instance.
+After you request the instance, wait for it to build.
 
 .. only:: fog
 
@@ -1192,15 +1190,16 @@ instance to deploy the Fractals application.
 Associate a floating IP for external connectivity
 -------------------------------------------------
 
-We'll cover networking in detail in :doc:`/networking`.
+We cover networking in detail in :doc:`/networking`.
 
 To see the application running, you must know where to look for it. By
-default, your instance has outbound network access. To make your instance
-reachable from the Internet, you need an IP address. By default in some cases,
-your instance is provisioned with a publicly rout-able IP address. In this
-case, you'll see an IP address listed under `public_ips` or `private_ips` when
-you list the instances. If not, you must create and attach a floating IP
-address to your instance.
+default, your instance has outbound network access. To make your
+instance reachable from the Internet, you need an IP address. By
+default in some cases, your instance is provisioned with a publicly
+rout-able IP address. In this case, you see an IP address listed
+under `public_ips` or `private_ips` when you list the instances. If
+not, you must create and attach a floating IP address to your
+instance.
 
 .. only:: fog
 
@@ -1209,8 +1208,7 @@ address to your instance.
         :start-after: step-13
         :end-before: step-14
 
-    This will get an ip address that you can assign to your instance
-    with:
+    This gets an IP address that you can assign to your instance:
 
     .. literalinclude:: ../samples/fog/getting_started.rb
         :language: ruby
@@ -1219,7 +1217,7 @@ address to your instance.
 
 .. only:: libcloud
 
-    To see if there is a private IP address assigned to your instance:
+    To see whether a private IP address is assigned to your instance:
 
     .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-13
@@ -1239,7 +1237,6 @@ address to your instance.
     To create a floating IP address to use with your instance:
 
     Use :code:`ex_list_floating_ip_pools()` and select the first floating IP
-
     address pool. Allocate this pool to your project and use it to get a
     floating IP address.
 
@@ -1263,7 +1260,7 @@ address to your instance.
 
     Use :code:`getFloatingIps` to check for unused addresses. Select the first
     available address. Otherwise, use :code:`allocateNewFloatingIp` to
-    allocate a new floating IP to your project from the default address pool.
+    allocate a floating IP to your project from the default address pool.
 
     .. literalinclude:: ../samples/pkgcloud/getting_started.js
         :start-after: step-13
@@ -1289,12 +1286,11 @@ address to your instance.
 
 .. only:: openstacksdk
 
-    .. note:: For this example we take Floating IP pool from network
-              which is called 'public'. This should be your external
-              network.
+    .. note:: For this example, we take a floating IP pool from the 'public'
+              network, which is your external network.
 
-    List all available Floating IPs for this project and select the first free
-    one. Allocate new Floating IP if none is available.
+    List all available floating IPs for this project and select the first free
+    one. Allocate a new floating IP if none is available.
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-13
@@ -1362,16 +1358,16 @@ interface at the following link.
 Next steps
 ~~~~~~~~~~
 
-Don't worry if these concepts are not yet completely clear. In
+Do not worry if these concepts are not yet completely clear. In
 :doc:`/introduction`, we explore these concepts in more detail.
 
-* :doc:`/scaling_out`: Learn how to scale your application
-* :doc:`/durability`: Learn how to use Object Storage to make your application durable
+* :doc:`/scaling_out`: Learn how to scale your application.
+* :doc:`/durability`: Learn how to use Object Storage to make your application durable.
 * :doc:`/block_storage`: Migrate the database to block storage, or use
-  the database-as-a-service component
-* :doc:`/orchestration`: Automatically orchestrate your application
-* :doc:`/networking`: Learn about complex networking
-* :doc:`/advice`: Get advice about operations
+  the database-as-a-service component.
+* :doc:`/orchestration`: Automatically orchestrate your application.
+* :doc:`/networking`: Learn about complex networking.
+* :doc:`/advice`: Get advice about operations.
 * :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
 
 .. todo:: List the next sections here or simply reference introduction.

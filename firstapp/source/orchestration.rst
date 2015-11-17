@@ -2,18 +2,20 @@
 Orchestration
 =============
 
-This guide describes the importance of durability and scalability for your
-cloud-based applications. In most cases, you must automate tasks, such as
-scaling and other operational tasks, to achieve these goals.
+This chapter explains the importance of durability and scalability for
+your cloud-based applications. In most cases, really achieving these
+qualities means automating tasks such as scaling and other operational
+tasks.
 
-The Orchestration module provides a template-based way to describe a cloud
-application, then coordinates running the needed OpenStack API calls to run
-cloud applications. The templates enable you to create most OpenStack resource
-types, such as instances, networking information, volumes, security groups,
-and even users. It also provides more advanced functionality, such as
-instance high availability, instance auto-scaling, and nested stacks.
+The Orchestration module provides a template-based way to describe a
+cloud application, then coordinates running the needed OpenStack API
+calls to run cloud applications. The templates enable you to create
+most OpenStack resource types, such as instances, networking
+information, volumes, security groups, and even users. It also provides
+more advanced functionality, such as instance high availability,
+instance auto-scaling, and nested stacks.
 
-The OpenStack Orchestration API contains the following constructs:
+The OpenStack Orchestration API contains these constructs:
 
 * Stacks
 * Resources
@@ -42,11 +44,12 @@ This section introduces the
 `HOT templating language <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_,
 and takes you through some common OpenStack Orchestration calls.
 
-Unlike in previous sections where you used your SDK to programatically
-interact with OpenStack, you use the 'heat' command-line client to access the
-Orchestration API directly through template files.
+In previous sections of this guide, you used your SDK to
+programatically interact with OpenStack. In this section you work from
+the command line to use the Orchestration API directly through
+template files.
 
-Use this guide to install the 'heat' command-line client:
+Install the 'heat' command-line client by following this guide:
 http://docs.openstack.org/cli-reference/content/install_clients.html
 
 Then, use this guide to set up the necessary variables for your cloud in an 'openrc' file:
@@ -83,12 +86,12 @@ http://docs.openstack.org/cli-reference/content/cli_openrc.html
 
     .. note:: PHP-opencloud supports OpenStack Orchestration :D:D:D but this section is not written yet.
 
-HOT Templating Language
+HOT templating language
 -----------------------
 
-The best place to learn about the OpenStack Orchestration template syntax is the
+To learn about the template syntax for OpenStack Orchestration, how to
+create basic templates, and their inputs and outputs, see
 `Heat Orchestration Template (HOT) Guide <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_.
-Read this guide to learn about basic templates and their inputs and outputs.
 
 Work with stacks: Basics
 ------------------------
@@ -182,7 +185,6 @@ impact dozens of instances or that add and remove instances on demand.
 Continue to the next section to learn more.
 
 Work with stacks: Advanced
---------------------------
 
 .. todo:: needs more explanatory material
 
@@ -205,10 +207,11 @@ For an example template that creates an auto-scaling Wordpress instance, see
 Next steps
 ----------
 
-You should now be fairly confident working with the Orchestration service. To
-see the calls that we did not cover, see the volume documentation for your
-SDK. Or, try one of these tutorial steps:
+You should now be fairly confident working with the Orchestration
+service. To see the calls that we did not cover and more, see the
+volume documentation of your SDK. Or, try one of these steps in the
+tutorial:
 
 * :doc:`/networking`: Learn about complex networking.
 * :doc:`/advice`: Get advice about operations.
-* :doc:`/craziness`. Learn some crazy things that you might not think to do ;)
+* :doc:`/craziness`: Learn some crazy things that you might not think to do ;)

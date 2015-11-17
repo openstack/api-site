@@ -6,50 +6,46 @@ Scaling out
           the fractals app that simply returns the CPU load on the
           local server. Then add to this section a simple loop that
           checks to see if any servers are overloaded and adds a new
-          one if they are. (Or do this via SSH and w)
+          one if they are. (Or do this through SSH and w)
 
-One of the most-often cited reasons for designing applications using
-cloud patterns is the ability to **scale out**. That is: to add
-additional resources as required. This is in contrast to the previous
-strategy of increasing capacity by scaling up the size of existing
-resources. In order for scale out to be feasible, you'll need to
-do two things:
+An often-cited reason for designing applications by using cloud
+patterns is the ability to **scale out**. That is: to add additional
+resources, as required. Contrast this strategy to the previous one of
+increasing capacity by scaling up the size of existing resources. To
+scale out, you must:
 
 * Architect your application to make use of additional resources.
 * Make it possible to add new resources to your application.
 
 .. todo:: nickchase needs to restate the second point
 
-In section :doc:`/introduction`, we talked about various aspects of the
-application architecture, such as building in a modular fashion,
-creating an API, and so on. Now you'll see why those are so
-important. By creating a modular application with decoupled services,
-it is possible to identify components that cause application
-performance bottlenecks and scale them out.
+The :doc:`/introduction` section describes how to build in a modular
+fashion, create an API, and other aspects of the application
+architecture. Now you will see why those strategies are so important.
+By creating a modular application with decoupled services, you can
+identify components that cause application performance bottlenecks and
+scale them out. Just as importantly, you can also remove resources
+when they are no longer necessary. It is very difficult to overstate
+the cost savings that this feature can bring, as compared to
+traditional infrastructure.
 
-Just as importantly, you can also remove resources when they are no
-longer necessary. It is very difficult to overstate the cost savings
-that this feature can bring, as compared to traditional
-infrastructure.
-
-Of course, just having access to additional resources is only part of
-the battle; while it's certainly possible to manually add or delete
-resources, you'll get more value -- and more responsiveness -- if the
-application simply requests new resources automatically when it needs
-them.
+Of course, having access to additional resources is only part of the
+game plan; while you can manually add or delete resources, you get
+more value and more responsiveness if the application automatically
+requests additional resources when it needs them.
 
 This section continues to illustrate the separation of services onto
-multiple instances and highlights some of the choices we've made that
-facilitate scalability in the app's architecture.
+multiple instances and highlights some of the choices that we have
+made that facilitate scalability in the application architecture.
 
-We'll progressively ramp up to use up to about six instances, so ensure
-that your cloud account has appropriate quota to handle that many.
+You will progressively ramp up to use up six instances, so make sure that your
+cloud account has the appropriate quota.
 
-In the previous section, we used two virtual machines - one 'control'
-service and one 'worker'. In our application, the speed at which
-fractals can be generated depends on the number of workers. With just
-one worker, we can only produce one fractal at a time. Before long, it
-will be clear that we need more resources.
+The previous section uses two virtual machines - one 'control' service
+and one 'worker'. The speed at which your application can generate
+fractals depends on the number of workers. With just one worker, you
+can produce only one fractal at a time. Before long, you will need more
+resources.
 
 .. note:: If you do not have a working application, follow the steps in
           :doc:`introduction` to create one.
@@ -60,37 +56,37 @@ will be clear that we need more resources.
 Generate load
 ~~~~~~~~~~~~~
 
-You can test for yourself what happens when the Fractals application is under
-load by:
+To test what happens when the Fractals application is under load, you
+can:
 
-* maxing out the CPU of the existing worker instances (loading the worker)
-* generating a lot of API requests (load up the API)
+* Load the worker: Create a lot of tasks to max out the CPU of existing
+  worker instances
+* Load the API: Create a lot of API service requests
 
+Create more tasks
+-----------------
 
-Create a greater number of tasks
---------------------------------
-
-Use SSH to login to the controller instance, :code:`app-controller`,
-using the previous added SSH keypair.
+Use SSH with the existing SSH keypair to log in to the
+:code:`app-controller` controller instance.
 
 ::
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_CONTROLLER
 
 .. note:: Replace :code:`IP_CONTROLLER` with the IP address of the
-          controller instance and USERNAME to the appropriate
-          username.
+          controller instance and USERNAME with the appropriate
+          user name.
 
-Call the Fractal application's command line interface (:code:`faafo`) to
-request the generation of 5 large fractals.
+Call the :code:`faafo` command-line interface to request the
+generation of five large fractals.
 
 ::
 
     $ faafo create --height 9999 --width 9999 --tasks 5
 
-Now if you check the load on the worker, you can see that the instance
-is not doing well. On our single CPU flavor instance, a load average
-of more than 1 means we are at capacity.
+If you check the load on the worker, you can see that the instance is
+not doing well. On the single CPU flavor instance, a load average
+greater than 1 means that the server is at capacity.
 
 ::
 
@@ -98,29 +94,28 @@ of more than 1 means we are at capacity.
     10:37:39 up  1:44,  2 users,  load average: 1.24, 1.40, 1.36
 
 .. note:: Replace :code:`IP_WORKER` with the IP address of the worker
-          instance and USERNAME to the appropriate username.
+          instance and USERNAME with the appropriate user name.
 
 
-Create a greater number of API service requests
------------------------------------------------
+Create more API service requests
+--------------------------------
 
-API load is a slightly different problem to the previous one regarding
-capacity to work. We can simulate many requests to the API as follows:
+API load is a slightly different problem than the previous one regarding
+capacity to work. We can simulate many requests to the API, as follows:
 
-Use SSH to login to the controller instance, :code:`app-controller`,
-using the previous added SSH keypair.
+Use SSH with the existing SSH keypair to log in to the
+:code:`app-controller` controller instance.
 
 ::
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_CONTROLLER
 
 .. note:: Replace :code:`IP_CONTROLLER` with the IP address of the
-          controller instance and USERNAME to the appropriate
-          username.
+          controller instance and USERNAME with the appropriate
+          user name.
 
-Call the Fractal application's command line interface (:code:`faafo`) in a for
-loop to send many requests to the API. The following command will
-request a random set of fractals, 500 times:
+Use a for loop to call the :code:`faafo` command-line interface to
+request a random set of fractals 500 times:
 
 ::
 
@@ -129,31 +124,30 @@ request a random set of fractals, 500 times:
 .. note:: Replace :code:`IP_CONTROLLER` with the IP address of the
           controller instance.
 
-Now if you check the load on the API service instance,
-:code:`app-controller`, you can see that the instance is not doing
-well. On our single CPU flavor instance, a load average of more than
-1 means we are at capacity.
+If you check the load on the :code:`app-controller` API service
+instance, you see that the instance is not doing well. On your single
+CPU flavor instance, a load average greater than 1 means that the server is
+at capacity.
 
 ::
 
     $ uptime
     10:37:39 up  1:44,  2 users,  load average: 1.24, 1.40, 1.36
 
-The number of requests coming in means that some requests for fractals
-may not even get onto the message queue to be processed. To ensure we
-can cope with demand, we need to scale out our API services as well.
-
-As you can see, we need to scale out the Fractals application's API capability.
+The sheer number of requests means that some requests for fractals
+might not make it to the message queue for processing. To ensure that
+you can cope with demand, you must also scale out the API capability
+of the Fractals application.
 
 Scaling out
 ~~~~~~~~~~~
 
-Remove the old app
-------------------
+Remove the existing app
+-----------------------
 
-Go ahead and delete the existing instances and security groups you
-created in previous sections. Remember, when instances in the cloud
-are no longer working, remove them and re-create something new.
+Go ahead and delete the existing instances and security groups that
+you created in previous sections. Remember, when instances in the
+cloud are no longer working, remove them and re-create something new.
 
 .. only:: shade
 
@@ -177,9 +171,9 @@ are no longer working, remove them and re-create something new.
 Extra security groups
 ---------------------
 
-As you change the topology of your applications, you will need to
-update or create new security groups. Here, we will re-create the
-required security groups.
+As you change the topology of your applications, you must update or
+create security groups. Here, you re-create the required security
+groups.
 
 .. only:: shade
 
@@ -199,12 +193,12 @@ required security groups.
         :start-after: step-2
         :end-before: step-3
 
-A Floating IP helper function
+A floating IP helper function
 -----------------------------
 
-Define a short function to locate unused IPs or allocate a new floating
-IP. This saves a few lines of code and prevents you from
-reaching your Floating IP quota too quickly.
+Define a short function to locate unused or allocate floating IPs.
+This saves a few lines of code and prevents you from reaching your
+floating IP quota too quickly.
 
 .. only:: shade
 
@@ -224,14 +218,13 @@ reaching your Floating IP quota too quickly.
         :start-after: step-3
         :end-before: step-4
 
-Splitting off the database and message queue
---------------------------------------------
+Split the database and message queue
+------------------------------------
 
-Prior to scaling out our application services, like the API service or
-the workers, we have to add a central database and messaging instance,
-called :code:`app-services`. The database and messaging queue will be used
-to track the state of the fractals and to coordinate the communication
-between the services.
+Before you scale out your application services, like the API service or the
+workers, you must add a central database and an :code:`app-services` messaging
+instance. The database and messaging queue will be used to track the state of
+fractals and to coordinate the communication between the services.
 
 .. only:: shade
 
@@ -251,15 +244,15 @@ between the services.
         :start-after: step-4
         :end-before: step-5
 
-Scaling the API service
------------------------
+Scale the API service
+---------------------
 
-With multiple workers producing fractals as fast as they can, we also
-need to make sure we can receive the requests for fractals as quickly
-as possible. If our application becomes popular, we may have many
-thousands of users trying to connect to our API to generate fractals.
+With multiple workers producing fractals as fast as they can, the
+system must be able to receive the requests for fractals as quickly as
+possible. If our application becomes popular, many thousands of users
+might connect to our API to generate fractals.
 
-Armed with our security group, image and flavor size we can now add
+Armed with a security group, image, and flavor size, you can add
 multiple API services:
 
 .. only:: shade
@@ -280,27 +273,27 @@ multiple API services:
         :start-after: step-5
         :end-before: step-6
 
-These are client-facing services, so unlike the workers they do not
-use a message queue to distribute tasks. Instead, we'll need to
-introduce some kind of load balancing mechanism to share incoming
-requests between the different API services.
+These services are client-facing, so unlike the workers they do not
+use a message queue to distribute tasks. Instead, you must introduce
+some kind of load balancing mechanism to share incoming requests
+between the different API services.
 
-One simple way might be to give half of our friends one address and
-half the other, but that's certainly not a sustainable solution.
-Instead, we can do that automatically using a `DNS round robin
-<http://en.wikipedia.org/wiki/Round-robin_DNS>`_. However, OpenStack
-networking can provide Load Balancing as a Service, which we'll
-explain in :doc:`/networking`.
+A simple solution is to give half of your friends one address and half
+the other, but that solution is not sustainable. Instead, you can use
+a `DNS round robin <http://en.wikipedia.org/wiki/Round- robin_DNS>`_
+to do that automatically. However, OpenStack networking can provide
+Load Balancing as a Service, which :doc:`/networking` explains.
+
 
 .. todo:: Add a note that we demonstrate this by using the first API
           instance for the workers and the second API instance for the
           load simulation.
 
 
-Scaling the workers
--------------------
+Scale the workers
+-----------------
 
-To increase the overall capacity, we will now add 3 workers:
+To increase the overall capacity, add three workers:
 
 .. only:: shade
 
@@ -320,43 +313,45 @@ To increase the overall capacity, we will now add 3 workers:
         :start-after: step-6
         :end-before: step-7
 
-
 Adding this capacity enables you to deal with a higher number of
-requests for fractals. As soon as these worker instances come up,
-they'll start checking the message queue looking for requests,
-reducing the overall backlog like a new register opening in the
-supermarket.
+requests for fractals. As soon as these worker instances start, they
+begin checking the message queue for requests, reducing the overall
+backlog like a new register opening in the supermarket.
 
-This was obviously a very manual process - figuring out we needed more
-workers and then starting new ones required some effort. Ideally the
-system would do this itself. If your application has been built to
-detect these situations, you can have it automatically request and
-remove resources, but you do not actually need to do this work
+This process was obviously a very manual one. Figuring out that we
+needed more workers and then starting new ones required some effort.
+Ideally the system would do this itself. If you build your application
+to detect these situations, you can have it automatically request and
+remove resources, which saves you the effort of doing this work
 yourself. Instead, the OpenStack Orchestration service can monitor
-load and start instances as appropriate. See :doc:`orchestration` to find
-out how to set that up.
+load and start instances, as appropriate. To find out how to set that
+up, see :doc:`orchestration`.
 
-Verifying we've had an impact
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Verify that we have had an impact
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the steps above, we've split out several services and expanded
-capacity. SSH to one of the app instances and create a few fractals.
-You will see that the Fractals app has a few new features.
+In the previous steps, you split out several services and expanded
+capacity. To see the new features of the Fractals application, SSH to
+one of the app instances and create a few fractals.
 
 ::
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_API_1
 
 .. note:: Replace :code:`IP_API_1` with the IP address of the first
-          API instance and USERNAME to the appropriate username.
+          API instance and USERNAME with the appropriate user name.
 
-Use the Fractal application's command line interface to generate fractals
-:code:`faafo create`. Watch the progress of fractal generation with
-the :code:`faafo list`. Use :code:`faafo UUID` to examine some of the
-fractals. The generated_by field will show which worker created the
-fractal. The fact that multiple worker instances are sharing the work
-means that fractals will be generated more quickly and the death of a
-worker probably won't even be noticed.
+Use the :code:`faafo create` command to generate fractals.
+
+Use the :code:`faafo list` command to watch the progress of fractal
+generation.
+
+Use the :code:`faafo UUID` command to examine some of the fractals.
+
+The `generated_by` field shows the worker that created the fractal.
+Because multiple worker instances share the work, fractals are
+generated more quickly and users might not even notice when a worker
+fails.
 
 ::
 
@@ -403,72 +398,71 @@ worker probably won't even be noticed.
     | generated_by | app-worker-1                                                     |
     +--------------+------------------------------------------------------------------+
 
-The fractals are now available from any of the app-api hosts. Visit
-http://IP_API_1/fractal/FRACTAL_UUID and
-http://IP_API_2/fractal/FRACTAL_UUID to verify. Now you have multiple
-redundant web services. If one dies, the others can be used.
+The fractals are now available from any of the app-api hosts. To
+verify, visit http://IP_API_1/fractal/FRACTAL_UUID and
+http://IP_API_2/fractal/FRACTAL_UUID. You now have multiple redundant
+web services. If one fails, you can use the others.
 
 .. note:: Replace :code:`IP_API_1` and :code:`IP_API_2` with the
-          corresponding Floating IPs. Replace FRACTAL_UUID the UUID
+          corresponding floating IPs. Replace FRACTAL_UUID with the UUID
           of an existing fractal.
 
 Go ahead and test the fault tolerance. Start deleting workers and API
-instances. As long as you have one of each, your application should
-be fine. There is one weak point though. The database contains the
+instances. As long as you have one of each, your application is fine.
+However, be aware of one weak point. The database contains the
 fractals and fractal metadata. If you lose that instance, the
-application will stop. Future sections will work to address this weak
-point.
+application stops. Future sections will explain how to address this
+weak point.
 
-If we had a load balancer, we could distribute this load between the
-two different API services. As mentioned previously, there are several
-options. We will show one in :doc:`networking`.
+If you had a load balancer, you could distribute this load between the
+two different API services. You have several options. The
+:doc:`networking` section shows you one option.
 
-You could in theory use a simple script to monitor the load on your
-workers and API services and trigger the creation of new instances,
-which you already know how to do. If you can see how to do that -
-congratulations, you're ready to create scalable cloud applications.
+In theory, you could use a simple script to monitor the load on your
+workers and API services and trigger the creation of instances, which
+you already know how to do. Congratulations! You are ready to create
+scalable cloud applications.
 
-Of course, creating a monitoring system just for one application may
-not always be the best way. We recommend you look at :doc:`orchestration`
-to find out about how you can use OpenStack Orchestration's monitoring
-and autoscaling capabilities to do steps like this automatically.
-
+Of course, creating a monitoring system for a single application might
+not make sense. To learn how to use the OpenStack Orchestration
+monitoring and auto-scaling capabilities to automate these steps, see
+:doc:`orchestration`.
 
 Next steps
 ~~~~~~~~~~
 
-You should be fairly confident now about starting new instances, and
-distributing services from an application amongst the instances.
+You should be fairly confident about starting instances and
+distributing services from an application among these instances.
 
-As mentioned in :doc:`/introduction` the generated fractal images will be
-saved on the local filesystem of the API service instances. Because we
-now have multiple API instances up and running, the fractal
-images will be spread across multiple API services. This results in a number of
-:code:`IOError: [Errno 2] No such file or directory` exceptions when trying to download a
-fractal image from an API service instance not holding the fractal
-image on its local filesystem.
+As mentioned in :doc:`/introduction`, the generated fractal images are
+saved on the local file system of the API service instances. Because
+you have multiple API instances up and running, the fractal images are
+spread across multiple API services, which causes a number of
+:code:`IOError: [Errno 2] No such file or directory` exceptions when
+trying to download a fractal image from an API service instance that
+does not have the fractal image on its local file system.
 
-From here, you should go to :doc:`/durability` to learn how to use
-Object Storage to solve this problem in a elegant way. Alternatively,
-you may jump to any of these sections:
+Go to :doc:`/durability` to learn how to use Object Storage to solve
+this problem in a elegant way. Or, you can proceed to one of these
+sections:
 
 * :doc:`/block_storage`: Migrate the database to block storage, or use
-  the database-as-a-service component
-* :doc:`/orchestration`: Automatically orchestrate your application
-* :doc:`/networking`: Learn about complex networking
-* :doc:`/advice`: Get advice about operations
+  the database-as-a-service component.
+* :doc:`/orchestration`: Automatically orchestrate your application.
+* :doc:`/networking`: Learn about complex networking.
+* :doc:`/advice`: Get advice about operations.
 * :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
-
 
 Complete code sample
 ~~~~~~~~~~~~~~~~~~~~
 
-The following file contains all of the code from this
-section of the tutorial. This comprehensive code sample lets you view
-and run the code as a single script.
+This file contains all the code from this tutorial section. This
+comprehensive code sample lets you view and run the code as a single
+script.
 
-Before you run this script, confirm that you have set your authentication
-information, the flavor ID, and image ID.
+Before you run this script, confirm that you have set your
+authentication information, the flavor ID, and image ID.
+
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/scaling_out.rb

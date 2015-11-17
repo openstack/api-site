@@ -2,129 +2,120 @@
 Advice for developers new to operations
 =======================================
 
-In this section, we will introduce some operational concepts and tasks
-which may be new to developers who have not written cloud applications
-before.
+This section introduces some operational concepts and tasks to
+developers who have not written cloud applications before.
 
 Monitoring
 ~~~~~~~~~~
 
-Monitoring is essential for cloud applications, especially if the
-application is to be 'scalable'. You must know how many requests are
-coming in, and what impact that has on the various services -- in
-other words, enough information to determine whether you should start
-another worker or API service as we did in :doc:`/scaling_out`.
+Monitoring is essential for 'scalable' cloud applications. You must
+know how many requests are coming in and the impact that these
+requests have on various services. You must have enough information to
+determine whether to start another worker or API service as you
+did in :doc:`/scaling_out`.
 
-.. todo:: explain how to achieve this kind of monitoring.  Ceilometer?
+.. todo:: explain how to achieve this kind of monitoring. Ceilometer?
           (STOP LAUGHING.)
 
-Aside from this kind of monitoring, you should consider availability
-monitoring.  Does your application care about a worker going down?
-Maybe not. Does it care about a failed database server? Probably yes.
+In addition to this kind of monitoring, you should consider
+availability monitoring. Although your application might not care
+about a failed worker, it should care about a failed database server.
 
-One great pattern to add this to your application is the `Health
-Endpoint Monitoring Pattern
-<https://msdn.microsoft.com/en-us/library/dn589789.aspx>`, where a
-special API endpoint is introduced to your application for a basic
-health check.
+Use the
+`Health Endpoint Monitoring Pattern <https://msdn.microsoft.com/en-us/library/dn589789.aspx>`
+to implement functional checks within your application that external
+tools can access through exposed endpoints at regular intervals.
 
 Backups
 ~~~~~~~
 
-Where instances store information that is not reproducible (such as a
-database server, a file server, or even log files for an application),
-it is important to back up this information as you would a normal
-non-cloud server. It sounds simple, but just because it is 'in the
-cloud' does not mean it has any additional robustness or resilience
-when it comes to failure of the underlying hardware or systems.
+Just as you back up information on a non-cloud server, you must back
+up non-reproducible information, such as information on a database
+server, file server, or in application log files. Just because
+something is 'in the cloud' does not mean that the underlying hardware
+or systems cannot fail.
 
-OpenStack provides a couple of tools that make it easier to perform
-backups. If your provider runs OpenStack Object Storage, this is
-normally extremely robust and has several handy API calls and CLI
-tools for working with archive files.
+OpenStack provides a couple of tools that make it easy to back up
+data. If your provider runs OpenStack Object Storage, you can use its
+API calls and CLI tools to work with archive files.
 
-It is also possible to create snapshots of running instances and persistent
-volumes using the OpenStack API. Refer to the documentation of your SDK for
-more.
+You can also use the OpenStack API to create snapshots of running
+instances and persistent volumes. For more information, see your SDK
+documentation.
 
 .. todo:: Link to appropriate documentation, or better yet, link and
           also include the commands here.
 
-While the technical action to perform backups can be straightforward,
-you should also think about your policies regarding what is backed up
-and how long each item should be retained.
+In addition to configuring backups, review your policies about what
+you back up and how long to retain each backed up item.
 
-Phoenix Servers
+Phoenix servers
 ~~~~~~~~~~~~~~~
 
-Application developers and operators who employ
-`Phoenix Servers <http://martinfowler.com/bliki/PhoenixServer.html>`_
-have built systems that start from a known baseline (sometimes just a specific
-version of an operating system) and have built tooling that will automatically
-build, install, and configure a system with no manual intervention.
+`Phoenix Servers <http://martinfowler.com/bliki/PhoenixServer.html>`_,
+named for the mythical bird that is consumed by fire and rises from
+the ashes to live again, make it easy to start over with new
+instances.
 
-Phoenix Servers, named for the mythological bird that would live its life,
-be consumed by fire, then rise from the ashes to live again, make it possible
-to easily "start over" with new instances.
+Application developers and operators who use phoenix servers have
+access to systems that are built from a known baseline, such as a
+specific operating system version, and to tooling that automatically
+builds, installs, and configures a system.
 
-If your application is automatically deployed on a regular basis,
-resolving outages and security updates are not special operations that
-require manual intervention.  If you suffer an outage, provision more
-resources in another region. If you have to patch security holes,
-provision more compute nodes that will be built with the
-updated/patched software, then terminate vulnerable nodes, with
-traffic automatically failing over to the new instances.
+If you deploy your application on a regular basis, you can resolve
+outages and make security updates without manual intervention. If an
+outage occurs, you can provision more resources in another region. If
+you must patch security holes, you can provision additional compute
+nodes that are built with the updated software. Then, you can
+terminate vulnerable nodes and automatically fail-over traffic to the
+new instances.
 
 Security
 ~~~~~~~~
 
-Security-wise, one thing to keep in mind is that if one instance of an
-application is compromised, all instances with the same image and
-configuration are likely to suffer the same vulnerability. In this
-case, it is safer to rebuild all of your instances (a task made easier
-by configuration management - see below).
+If one application instance is compromised, all instances with the
+same image and configuration will likely suffer the same
+vulnerability. The safest path is to use configuration management to
+rebuild all instances.
 
 Configuration management
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Tools such as Ansible, Chef, and Puppet allow you to describe exactly
-what should be installed on an instance and how it should be
-configured. Using these descriptions, the tool implements any changes
-required to get to the desired state.
+Configuration management tools, such as Ansible, Chef, and Puppet,
+enable you to describe exactly what to install and configure on an
+instance. Using these descriptions, these tools implement the changes
+that are required to get to the desired state.
 
-These tools vastly reduce the amount of effort it takes to work with
-large numbers of servers, and also improves the ability to recreate,
-update, move, or distribute applications.
+These tools vastly reduce the effort it takes to work with large
+numbers of servers, and also improve the ability to recreate, update,
+move, and distribute applications.
 
 Application deployment
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Related to configuration management is the question of how you deploy
-your application.
+How do you deploy your application? For example, do you pull the
+latest code from a source control repository? Do you make packaged
+releases that update infrequently? Do you perform haphazard tests in a
+development environment and deploy only after major changes?
 
-For example, do you:
+One of the latest trends in scalable cloud application deployment is
+`continuous integration <http://en.wikipedia.org/wiki/Continuous_integration>`_
+and `continuous deployment <http://en.wikipedia.org/wiki/Continuous_delivery>`_
+(CI/CD).
 
-* pull the latest code from a source control repository?
-* make packaged releases that update infrequently?
-* big-bang test in a development environment and deploy only after
-  major changes?
-
-One of the latest trends in deploying scalable cloud applications is
-`continuous integration
-<http://en.wikipedia.org/wiki/Continuous_integration>`_ / `continuous
-deployment <http://en.wikipedia.org/wiki/Continuous_delivery>`_
-(CI/CD).  Working in a CI/CD fashion means you are always testing your
-application and making frequent deployments to production.
+CI/CD means that you always test your application and make frequent
+deployments to production.
 
 In this tutorial, we have downloaded the latest version of our
 application from source and installed it on a standard image. Our
-magic install script also updates the standard image to have the
-latest dependencies we need to run the application.
+magic installation script also updates the standard image to have the
+latest dependencies that you need to run the application.
 
-Another approach to this is to create a 'gold' image - one that has your
-application and dependencies pre-installed. This means faster boot times and
-a higher degree of control over what is on the instance, however a process is
-needed to ensure that 'gold' images do not fall behind on security updates.
+Another approach is to create a 'gold' image, which pre-installs your
+application and its dependencies. A 'gold' image enables faster boot
+times and more control over what is on the instance. However, if you
+use 'gold' images, you must have a process in place to ensure that
+these images do not fall behind on security updates.
 
 Fail fast
 ~~~~~~~~~

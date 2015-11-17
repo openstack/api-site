@@ -2,9 +2,10 @@
 Introduction to the fractals application architecture
 =====================================================
 
-This section introduces the application architecture and explains how it was
-designed to take advantage of cloud features in general and OpenStack in
-particular. It also describes some commands in the previous section.
+This section introduces the application architecture and explains how
+it was designed to take advantage of cloud features in general and
+OpenStack in particular. It also describes some commands in the
+previous section.
 
 .. todo:: (for Nick) Improve the architecture discussion.
 
@@ -68,11 +69,10 @@ Fault tolerance
 In cloud programming, there is a well-known analogy known as "cattle vs
 pets". If you have not heard it before, it goes like this:
 
-When you are dealing with pets, you name them and care for them and if
-they get sick, you nurse them back to health. Nursing pets back to
-health can be difficult and very time consuming. When you are dealing
-with cattle, you attach a numbered tag to their ear and if they get
-sick you put them down and move on.
+When you deal with pets, you name and care for them. If they get sick,
+you nurse them back to health, which can be difficult and very time
+consuming. When you deal with cattle, you attach a numbered tag to
+their ear. If they get sick, you put them down and move on.
 
 That, as it happens, is the new reality of programming. Applications
 and systems used to be created on large, expensive servers, cared for
@@ -82,24 +82,23 @@ whatever it took to make it right again and save the server and the
 application.
 
 In cloud programming, it is very different. Rather than large,
-expensive servers, you are dealing with virtual machines that are
-literally disposable; if something goes wrong, you shut it down and
-spin up a new one. There is still operations staff, but rather than
-nursing individual servers back to health, their job is to monitor the
-health of the overall system.
+expensive servers, you have virtual machines that are disposable; if
+something goes wrong, you shut the server down and spin up a new one.
+There is still operations staff, but rather than nursing individual
+servers back to health, their job is to monitor the health of the
+overall system.
 
 There are definite advantages to this architecture. It is easy to get a
 "new" server, without any of the issues that inevitably arise when a
 server has been up and running for months, or even years.
 
 As with classical infrastructure, failures of the underpinning cloud
-infrastructure (hardware, networks, and software) are
-unavoidable. When you are designing for the cloud, it is crucial that
-your application is designed for an environment where failures can
-happen at any moment. This may sound like a liability, but it is not;
-by designing your application with a high degree of fault tolerance,
-you are also making it resilient in the face of change, and therefore
-more adaptable.
+infrastructure (hardware, networks, and software) are unavoidable.
+When you design for the cloud, it is crucial that your application is
+designed for an environment where failures can happen at any moment.
+This may sound like a liability, but it is not; by designing your
+application with a high degree of fault tolerance, you also make it
+resilient, and more adaptable, in the face of change.
 
 Fault tolerance is essential to the cloud-based application.
 
@@ -424,7 +423,7 @@ To see which security groups apply to an instance, you can:
 
 .. todo:: print() ?
 
-Once you have configured permissions, you will need to know where to
+Once you have configured permissions, you must know where to
 access the application.
 
 Introduction to Floating IPs
@@ -611,9 +610,8 @@ Parameter  Description            Values
         :start-after: step-11
         :end-before: step-12
 
-Note that this time, when you create a security group, you are
-including a rule that only applies for instances that are part of the
-worker_group.
+Note that this time, when you create a security group, you include a
+rule that applies to only instances that are part of the worker group.
 
 Next, start a second instance, which will be the worker instance:
 
@@ -647,11 +645,11 @@ Next, start a second instance, which will be the worker instance:
 Notice that you have added this instance to the worker_group, so it can
 access the controller.
 
-As you can see from the parameters passed to the installation script, you are
-specifying that this is the worker instance, but you are also passing the
-address of the API instance and the message queue so the worker can pick up
-requests. The Fractals application installation script can take several
-parameters.
+As you can see from the parameters passed to the installation script,
+you define this instance as the worker instance. But, you also pass
+the address of the API instance and the message queue so the worker
+can pick up requests. The Fractals application installation script
+accepts several parameters.
 
 ========== ==================================================== ====================================
 Parameter  Description                                          Example
@@ -708,7 +706,7 @@ Now you can SSH into the instance:
           worker instance and USERNAME to the appropriate user name.
 
 Once you have logged in, check to see whether the worker service process
-is running as expected.  You can find the logs of the worker service
+is running as expected. You can find the logs of the worker service
 in the directory :code:`/var/log/supervisor/`.
 
 ::
@@ -781,9 +779,9 @@ with :code:`faafo get --help`, :code:`faafo list --help`, and
 :code:`faafo delete --help`.
 
 .. note:: The application stores the generated fractal images directly
-          in the database used by the API service instance.  Storing
+          in the database used by the API service instance. Storing
           image files in a database is not good practice. We are doing it
-          here as an example only as an easy way to allow multiple
+          here as an example only as an easy way to enable multiple
           instances to have access to the data. For best practice, we
           recommend storing objects in Object Storage, which is
           covered in :doc:`durability`.
@@ -799,27 +797,26 @@ instances to run it. These are the basic steps for requesting and
 using compute resources in order to run your application on an
 OpenStack cloud.
 
-From here, you should go to :doc:`/scaling_out` to learn how to scale your
-application further. Alternatively, you may jump to any of these
-sections:
+From here, go to :doc:`/scaling_out` to learn how to further scale
+your application. Or, try one of these steps in the tutorial:
 
-* :doc:`/durability`: Learn how to use Object Storage to make your application more durable
+* :doc:`/durability`: Learn how to use Object Storage to make your application more durable.
 * :doc:`/block_storage`: Migrate the database to block storage, or use
-  the database-as-a-service component
-* :doc:`/orchestration`: Automatically orchestrate the application
-* :doc:`/networking`: Learn about more complex networking
-* :doc:`/advice`: Get advice about operations
+  the database-as-a-service component.
+* :doc:`/orchestration`: Automatically orchestrate your application.
+* :doc:`/networking`: Learn about complex networking.
+* :doc:`/advice`: Get advice about operations.
 * :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
-
 
 Complete code sample
 ~~~~~~~~~~~~~~~~~~~~
 
-The following file contains all of the code from this section of the tutorial.
-This comprehensive code sample lets you view and run the code as a single script.
+The following file contains all of the code from this section of the
+tutorial. This comprehensive code sample lets you view and run the
+code as a single script.
 
-Before you run this script, confirm that you have set your authentication
-information, the flavor ID, and image ID.
+Before you run this script, confirm that you have set your
+authentication information, the flavor ID, and image ID.
 
 .. only:: shade
 

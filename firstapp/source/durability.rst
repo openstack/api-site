@@ -11,11 +11,11 @@ Making it durable
 .. todo:: Large object support in Swift
           http://docs.openstack.org/developer/swift/overview_large_objects.html
 
-This section introduces object storage.  `OpenStack Object Storage
+This section introduces object storage. `OpenStack Object Storage
 <http://www.openstack.org/software/openstack-storage/>`_ (code-named
 swift) is open source software for creating redundant, scalable data
 storage using clusters of standardized servers to store petabytes of
-accessible data.  It is a long-term storage system for large amounts
+accessible data. It is a long-term storage system for large amounts
 of static data that can be retrieved, leveraged, and updated. Access
 is via an API, not through a file-system like more traditional
 storage.
@@ -28,7 +28,7 @@ API. The Object Storage API is organized around two types of entities:
 
 Similar to the Unix programming model, an object is a "bag of bytes"
 that contains data, such as documents and images. Containers are used
-to group objects.  You can make many objects inside a container, and
+to group objects. You can make many objects inside a container, and
 have many containers inside your account.
 
 If you think about how you traditionally make what you store durable,
@@ -50,16 +50,16 @@ to keep them safe.
 Using Object Storage to store fractals
 --------------------------------------
 
-The Fractals app currently uses the local filesystem on the instance
+The Fractals app currently uses the local file system on the instance
 to store the images it generates. This is not scalable or durable, for
 a number of reasons.
 
-Because the local filesystem is ephemeral storage, if the instance is
-terminated, the fractal images will be lost along with the
-instance. Block based storage, which we'll discuss in
-:doc:`/block_storage`, avoids that problem, but like local filesystems, it
-requires administration to ensure that it does not fill up, and
-immediate attention if disks fail.
+Because the local file system is ephemeral storage, if the instance is
+terminated, the fractal images will be lost along with the instance.
+Block based storage, which we will discuss in :doc:`/block_storage`,
+avoids that problem, but like local file systems, it requires
+administration to ensure that it does not fill up, and immediate
+attention if disks fail.
 
 The Object Storage service manages many of these tasks that normally
 would require the application owner to manage them, and presents a
@@ -96,14 +96,14 @@ First, let's learn how to connect to the Object Storage endpoint:
         Libcloud 0.16 and 0.17 are afflicted with a bug that means
         authentication to a swift endpoint can fail with `a Python
         exception
-        <https://issues.apache.org/jira/browse/LIBCLOUD-635>`_.  If
+        <https://issues.apache.org/jira/browse/LIBCLOUD-635>`_. If
         you encounter this, you can upgrade your libcloud version, or
         apply a simple `2-line patch
         <https://github.com/fifieldt/libcloud/commit/ec58868c3344a9bfe7a0166fc31c0548ed22ea87>`_.
 
     .. note:: Libcloud uses a different connector for Object Storage
               to all other OpenStack services, so a conn object from
-              previous sections won't work here and we have to create
+              previous sections will not work here and we have to create
               a new one named :code:`swift`.
 
 .. only:: pkgcloud
@@ -151,8 +151,8 @@ all containers in your account:
         [<Container: name=fractals, provider=OpenStack Swift>]
 
 The next logical step is to upload an object. Find a photo of a goat
-online, name it :code:`goat.jpg` and upload it to your container
-:code:`fractals`:
+on line, name it :code:`goat.jpg`, and upload it to your
+:code:`fractals` container:
 
 .. only:: libcloud
 
@@ -160,9 +160,9 @@ online, name it :code:`goat.jpg` and upload it to your container
         :start-after: step-4
         :end-before: step-5
 
-List objects in your container :code:`fractals` to see if the upload
-was successful, then download the file to verify the md5sum is the
-same:
+List objects in your :code:`fractals` container to see if the upload
+was successful. Then, download the file to verify that the md5sum is
+the same:
 
 .. only:: libcloud
 
@@ -245,14 +245,17 @@ swift container. A simple for loop takes care of that:
 
     .. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
 
-    .. note:: The example code uses the awesome `Requests library <http://docs.python-requests.org/en/latest/>`_. Ensure that it is installed on your system before trying to run the script above.
+    .. note:: The example code uses the awesome
+              `Requests library <http://docs.python-requests.org/en/latest/>`_.
+              Before you try to run the previous script, make sure that
+              it is installed on your system.
 
 
 Configure the Fractals app to use Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning:: Currently it is not possible to directly store generated
-             images on the OpenStack Object Storage. Please revisit
+.. warning:: Currently, you cannot directly store generated
+             images in OpenStack Object Storage. Please revisit
              this section again in the future.
 
 Extra features
@@ -261,9 +264,9 @@ Extra features
 Delete containers
 ~~~~~~~~~~~~~~~~~
 
-One call we didn't cover above that you probably need to know is how
-to delete a container.  Ensure that you have removed all objects from
-the container before running this, otherwise it will fail:
+One call we did not cover and that you probably need to know is how
+to delete a container. Ensure that you have removed all objects from
+the container before running this script. Otherwise, the script fails:
 
 .. only:: libcloud
 
@@ -276,13 +279,13 @@ the container before running this, otherwise it will fail:
 Add metadata to objects
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also do advanced things like uploading an object with metadata, such
-as in this below example, but for further information we'll refer you to the
-documentation for your SDK. This option also uses a bit stream to upload the
-file - iterating bit by bit over the file and passing those bits to swift as
-they come, compared to loading the entire file in memory and then sending it.
-This is more efficient, especially for larger files.
-
+You can also do advanced things like uploading an object with
+metadata, such as in following example. For more information, see the
+documentation for your SDK. This option also uses a bit stream to
+upload the file, iterating bit by bit over the file and passing those
+bits to Object Storage as they come. Compared to loading the entire
+file in memory and then sending it, this method is more efficient,
+especially for larger files.
 
 .. only:: libcloud
 
@@ -302,9 +305,9 @@ For efficiency, most Object Storage installations treat large objects
 
     If you are working with large objects, use the
     :code:`ex_multipart_upload_object` call instead of the simpler
-    :code:`upload_object` call. How the upload works behind-the-scenes
-    is by splitting the large object into chunks, and creating a
-    special manifest so they can be recombined on download. Alter the
+    :code:`upload_object` call. Behind the scenes, the call splits the
+    large object into chunks and creates a special manifest so that
+    the chunks can be recombined on download. Alter the
     :code:`chunk_size` parameter (in bytes) according to what your
     cloud can accept.
 
@@ -316,17 +319,18 @@ For efficiency, most Object Storage installations treat large objects
 Next steps
 ----------
 
-You should now be fairly confident working with Object Storage.
-You can find more about the Object Storage SDK calls at:
+You should now be fairly confident working with Object Storage. You
+can find more information about the Object Storage SDK calls at:
 
 .. only:: libcloud
 
     https://libcloud.readthedocs.org/en/latest/storage/api.html
 
-Or try a different step in the tutorial, including:
+Or, try one of these steps in the tutorial:
 
-* :doc:`/block_storage`: to migrate the database to block storage, or use
-  the database-as-as-service component
-* :doc:`/orchestration`: to automatically orchestrate the application
-* :doc:`/networking`: to learn about more complex networking
-* :doc:`/advice`: for advice for developers new to operations
+* :doc:`/block_storage`: Migrate the database to block storage, or use
+  the database-as-a-service component.
+* :doc:`/orchestration`: Automatically orchestrate your application.
+* :doc:`/networking`: Learn about complex networking.
+* :doc:`/advice`: Get advice about operations.
+* :doc:`/craziness`: Learn some crazy things that you might not think to do ;)
