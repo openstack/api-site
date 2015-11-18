@@ -1,0 +1,278 @@
+heat_template_version: 2014-10-16
+
+
+description: |
+  A template that starts the faafo application with auto-scaling workers
+
+
+parameters:
+
+  key_name:
+    type: string
+    description: Name of an existing keypair to enable SSH access to the instances
+    default: id_rsa
+    constraints:
+      - custom_constraint: nova.keypair
+        description: Must already exist on your cloud
+
+  flavor:
+    type: string
+    description: The flavor that the application uses
+    constraints:
+      - custom_constraint: nova.flavor
+        description:  Must be a valid flavor provided by your cloud provider.
+
+  image_id:
+    type: string
+    description: The ID of the image to use to create the instance
+    constraints:
+      - custom_constraint: glance.image
+        description: Must be a valid image on your cloud
+
+  period:
+    type: number
+    description: The period to use to calculate the ceilometer statistics (in seconds)
+    default: 60
+
+  faafo_source:
+    type: string
+    description: The location of the faafo application install script on the Internet
+    # allows you to clone and play with the faafo code if you like
+    default: https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh
+
+
+resources:
+
+  api:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: "For ssh and http on an api node"
+      rules: [
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 22,
+        port_range_max: 22},
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 80,
+        port_range_max: 80},]
+
+  worker:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: "For ssh on a worker node"
+      rules: [
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 22,
+        port_range_max: 22},]
+
+  services:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: "For ssh, DB and AMPQ on the services node"
+      rules: [
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 80,
+        port_range_max: 80},
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 22,
+        port_range_max: 22},
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 5672,
+        port_range_max: 5672,
+        remote_mode: remote_group_id,
+        remote_group_id: { get_resource: worker } },
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 5672,
+        port_range_max: 5672,
+        remote_mode: remote_group_id,
+        remote_group_id: { get_resource: api } },
+        {remote_ip_prefix: 0.0.0.0/0,
+        protocol: tcp,
+        port_range_min: 3306,
+        port_range_max: 3306,
+        remote_mode: remote_group_id,
+        remote_group_id: { get_resource: api } },
+        ]
+
+  app_services:
+    # The database and AMPQ services run on this instance.
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: image_id }
+      flavor: { get_param: flavor }
+      key_name: { get_param: key_name }
+      name: services
+      security_groups:
+        - {get_resource: services}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          template: |
+            #!/usr/bin/env bash
+            curl -L -s faafo_installer | bash -s -- \
+            -i database -i messaging
+            wc_notify --data-binary '{"status": "SUCCESS"}'
+          params:
+            wc_notify: { get_attr: ['wait_handle', 'curl_cli'] }
+            faafo_installer: { get_param: faafo_source }
+
+  api_instance:
+    # The web interface runs on this instance
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: image_id }
+      flavor: { get_param: flavor }
+      key_name: { get_param: key_name }
+      name: api
+      security_groups:
+        - {get_resource: api}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          template: |
+            #!/usr/bin/env bash
+            curl -L -s faafo_installer | bash -s -- \
+            -i faafo -r api -m 'amqp://guest:guest@services_ip:5672/' \
+            -d 'mysql+pymysql://faafo:password@services_ip:3306/faafo'
+            wc_notify --data-binary '{"status": "SUCCESS"}'
+          params:
+            wc_notify: { get_attr: ['wait_handle', 'curl_cli'] }
+            services_ip: { get_attr: [app_services, first_address] }
+            faafo_installer: { get_param: faafo_source }
+
+  worker_auto_scaling_group:
+    # The worker instances are managed by this auto-scaling group
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      resource:
+        type: OS::Nova::Server
+        properties:
+          key_name: { get_param: key_name }
+          image: { get_param: image_id }
+          flavor: { get_param: flavor }
+          # The metadata used for ceilometer monitoring
+          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+          name: worker
+          security_groups:
+            - {get_resource: worker}
+          user_data_format: RAW
+          user_data:
+            str_replace:
+              template: |
+                #!/usr/bin/env bash
+                curl -L -s faafo_installer | bash -s -- \
+                -i faafo -r worker -e 'http://api_1_ip' -m 'amqp://guest:guest@services_ip:5672/'
+                wc_notify --data-binary '{"status": "SUCCESS"}'
+              params:
+                wc_notify: { get_attr: ['wait_handle', 'curl_cli'] }
+                api_1_ip: { get_attr: [api_instance, first_address] }
+                services_ip: { get_attr: [app_services, first_address] }
+                faafo_installer: { get_param: faafo_source }
+      min_size: 1
+      desired_capacity: 1
+      max_size: 3
+
+  wait_handle:
+    type: OS::Heat::WaitConditionHandle
+
+  wait_condition:
+    type: OS::Heat::WaitCondition
+    depends_on: [ app_services, api_instance, worker_auto_scaling_group ]
+    properties:
+      handle: { get_resource: wait_handle }
+      # All three initial servers clock in when they finish installing their software
+      count: 3
+      # 10 minute limit for installation
+      timeout: 600
+
+  scale_up_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: worker_auto_scaling_group}
+      cooldown: { get_param: period }
+      scaling_adjustment: 1
+
+  scale_down_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: worker_auto_scaling_group}
+      cooldown: { get_param: period }
+      scaling_adjustment: '-1'
+
+  cpu_alarm_high:
+    type: OS::Ceilometer::Alarm
+    properties:
+      description: Scale-up if the average CPU > 90% for period seconds
+      meter_name: cpu_util
+      statistic: avg
+      period: { get_param: period }
+      evaluation_periods: 1
+      threshold: 90
+      alarm_actions:
+        - {get_attr: [scale_up_policy, alarm_url]}
+      matching_metadata: {'metadata.user_metadata.stack': {get_param: "OS::stack_id"}}
+      comparison_operator: gt
+
+  cpu_alarm_low:
+    type: OS::Ceilometer::Alarm
+    properties:
+      description: Scale-down if the average CPU < 15% for period seconds
+      meter_name: cpu_util
+      statistic: avg
+      period: { get_param: period }
+      evaluation_periods: 1
+      threshold: 15
+      alarm_actions:
+        - {get_attr: [scale_down_policy, alarm_url]}
+      matching_metadata: {'metadata.user_metadata.stack': {get_param: "OS::stack_id"}}
+      comparison_operator: lt
+
+outputs:
+
+  api_url:
+    description: The URL for api server
+    value:
+      list_join: ['', ['http://', get_attr: [api_instance, first_address]]]
+
+  scale__workers_up_url:
+    description: >
+      HTTP POST to this URL webhook to scale up the worker group.
+      Does not accept request headers or body. Place quotes around the URL.
+    value: {get_attr: [scale_up_policy, alarm_url]}
+
+  scale_workers_down_url:
+    description: >
+      HTTP POST to this URL webhook to scale down the worker group.
+      Does not accept request headers or body. Place quotes around the URL.
+    value: {get_attr: [scale_down_policy, alarm_url]}
+
+  ceilometer_statistics_query:
+    value:
+      str_replace:
+        template: >
+          ceilometer statistics -m cpu_util -q metadata.user_metadata.stack=stackval -p period -a avg
+        params:
+          stackval: { get_param: "OS::stack_id" }
+          period: { get_param: period }
+    description: >
+      This query shows the cpu_util sample statistics of the worker group in this stack.
+      These statistics trigger the alarms.
+
+  ceilometer_sample_query:
+    value:
+      str_replace:
+        template: >
+          ceilometer sample-list -m cpu_util -q metadata.user_metadata.stack=stackval
+        params:
+          stackval: { get_param: "OS::stack_id" }
+    description: >
+      This query shows the cpu_util meter samples of the worker group in this stack.
+      These samples are used to calculate the statistics.
