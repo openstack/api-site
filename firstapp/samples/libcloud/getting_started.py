@@ -116,6 +116,18 @@ for instance in conn.list_nodes():
     print(instance)
 
 # step-13
+private_ip = None
+if len(testing_instance.private_ips):
+    private_ip = testing_instance.private_ips[0]
+    print('Private IP found: {}'.format(private_ip))
+
+# step-14
+public_ip = None
+if len(testing_instance.public_ips):
+    public_ip = testing_instance.public_ips[0]
+    print('Public IP found: {}'.format(private_ip))
+
+# step-15
 print('Checking for unused Floating IP...')
 unused_floating_ip = None
 for floating_ip in conn.ex_list_floating_ips():
@@ -123,16 +135,24 @@ for floating_ip in conn.ex_list_floating_ips():
         unused_floating_ip = floating_ip
         break
 
-if not unused_floating_ip:
+if not unused_floating_ip and len(conn.ex_list_floating_ip_pools()):
     pool = conn.ex_list_floating_ip_pools()[0]
     print('Allocating new Floating IP from pool: {}'.format(pool))
     unused_floating_ip = pool.create_floating_ip()
 
-# step-14
-if len(testing_instance.public_ips) > 0:
+# step-16
+if public_ip:
     print('Instance ' + testing_instance.name + ' already has a public ip. Skipping attachment.')
-else:
+elif unused_floating_ip:
     conn.ex_attach_floating_ip_to_node(testing_instance, unused_floating_ip)
 
-# step-15
-print('The Fractals app will be deployed to http://%s' % unused_floating_ip.ip_address)
+# step-17
+actual_ip_address = None
+if public_ip:
+    actual_ip_address = public_ip
+elif unused_floating_ip:
+    actual_ip_address = unused_floating_ip.ip_address
+elif private_ip:
+    actual_ip_address = private_ip
+
+print('The Fractals app will be deployed to http://{}'.format(actual_ip_address))
