@@ -191,10 +191,10 @@ How the Fractals application interacts with OpenStack
 The magic revisited
 ~~~~~~~~~~~~~~~~~~~
 
-So what exactly was that request doing at the end of the previous
-section?  Let us look at it again. (Note that in this subsection, we are
-just explaining what you have already done in the previous section; you
-do not need to execute these commands again.)
+So what exactly was that request doing at the end of the previous section?
+Let us look at it again. In this subsection, we are just explaining what you
+have already done in the previous section; you do not need to run these
+commands again.
 
 .. only:: shade
 
@@ -277,7 +277,7 @@ your cloud provider to confirm the user name.
         :start-after: step-2
         :end-before: step-3
 
-    .. note:: User data in openstacksdk must be encoded to base64.
+    .. note:: User data in openstacksdk must be encoded to Base64.
 
 After the instance is created, cloud-init downloads and runs a script called
 :code:`install.sh`. This script installs the Fractals application. Cloud-init

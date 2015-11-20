@@ -51,7 +51,7 @@ fractals can be generated depends on the number of workers. With just
 one worker, we can only produce one fractal at a time. Before long, it
 will be clear that we need more resources.
 
-.. note:: If you don't have a working application, follow the steps in
+.. note:: If you do not have a working application, follow the steps in
           :doc:`introduction` to create one.
 
 .. todo:: Ensure we have the controller_ip even if this is a new
@@ -331,7 +331,7 @@ This was obviously a very manual process - figuring out we needed more
 workers and then starting new ones required some effort. Ideally the
 system would do this itself. If your application has been built to
 detect these situations, you can have it automatically request and
-remove resources, but you don't actually need to do this work
+remove resources, but you do not actually need to do this work
 yourself. Instead, the OpenStack Orchestration service can monitor
 load and start instances as appropriate. See :doc:`orchestration` to find
 out how to set that up.
