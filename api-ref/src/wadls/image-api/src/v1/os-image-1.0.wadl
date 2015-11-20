@@ -31,16 +31,12 @@
     <!--*******************************************************-->
     <resources base="https://glance.example.com/"
         xml:id="os-image-v1.0">
-        <resource id="versions" path="//">
-            <method href="#listVersions-image-v1"/>
-        </resource>
-        <!--  <resource id="extensions" path="extensions">
-            <method href="#listExtensions"/>
-            <resource id="extension" path="{alias}">
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="alias" style="template" type="xsd:string"/>
-                <method href="#getExtension"/>
+        <resource id="versions" path="/">
+            <method href="#listVersions-image-null-v1"/>
+            <resource id="versionspath" path="versions">
+                <method href="#listVersions-image-v1"/>
             </resource>
-        </resource>-->
+        </resource>
         <resource id="version" type="#VersionDetails" path="//v1">
             <resource id="Images" type="#ImageList" path="images">
                 <method href="#createImage-v1"/>
@@ -87,26 +83,17 @@
         </wadl:doc>
         <method href="#showVersionDetails-image-v1"/>
     </resource_type>
-    <!-- <resource_type id="ExtensionList">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"
-            title="Extension List">
-            <para>A list of supported extensions.</para>
-        </wadl:doc>
-        <method href="#listExtensions"/>
-    </resource_type>-->
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-    <method name="GET" id="listVersions-image-v1">
+    <method name="GET" id="listVersions-image-null-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List API versions"><para
-                role="shortdesc">Lists information about all Image
+                role="shortdesc">Lists information about available Image
                 service API versions.</para>
         </wadl:doc>
-        <response status="200 300">
+        <response status="300">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -117,112 +104,24 @@
             </representation>
         </response>
     </method>
-    <!--<method name="GET" id="showVersionDetails-image-v1">
+    <method name="GET" id="listVersions-image-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"
-            title="Show API v1 details">
-            <para role="shortdesc">Shows details for Image service API
-                v1.</para>
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="List API versions"><para
+                role="shortdesc">Lists information about available Image
+                service API versions.</para>
         </wadl:doc>
-        <response status="200 203">
+        <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/imagedetails.json"
-                    />
+                        href="samples/image-versions-response.json"/>
                 </wadl:doc>
-            </representation>
-            <!-\- this call fails - opened bug 1311243 -\->
-            <representation mediaType="application/xml"
-                element="common:version">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../api_samples/version-get-resp.xml"/>
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="location" style="plain" type="xsd:anyURI"
-                    required="true"
-                    path="/common:version/atom:link[@rel='self']/@href">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN" title="Location"><para>Full URL
-                            to a service or server.</para></wadl:doc>
-                    <link resource_type="#VersionDetails" rel="self"/>
-                </param>
             </representation>
         </response>
-    </method>-->
-    <!-- Extensions -->
-    <!--<method name="GET" id="listExtensions">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"
-            title="List extensions">
-            <para>Lists available extensions.</para>
-        </wadl:doc>
-        <response status="200 203">
-            <param xmlns="http://wadl.dev.java.net/2009/02" name="next" style="plain" type="xsd:anyURI"
-                path="/capi:extensions/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">Moves to the next item in the
-                    list.</wadl:doc>
-                <link resource_type="#ExtensionList" rel="next"/>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02" name="previous" style="plain" type="xsd:anyURI"
-                path="/capi:extensions/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">Moves to the previous item in the
-                    list.</wadl:doc>
-                <link resource_type="#ExtensionList" rel="previous"/>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="List extensions: JSON response">
-                        <xsdxt:code href="../samples/extensions.json"
-                        />
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-            <!-\-  <representation mediaType="application/xml"
-                element="capi:extensions">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="List extensions: XML response">
-                        <xsdxt:code href="../samples/extensions.xml"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>-\->
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getExtension">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"
-            title="Show extension details">
-            <para>Shows details for an
-                extension.</para>
-        </wadl:doc>
-        <response status="200 203">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="Get extension details: JSON response">
-                        <xsdxt:code href="../samples/extension.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-            <!-\-  <representation mediaType="application/xml"
-                element="capi:extension">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="Get extension details: XML response">
-                        <xsdxt:code href="../samples/extension.xml"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>-\->
-        </response> &commonFaults; &getFaults; </method>-->
+    </method>
     <method name="POST" id="createImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -441,19 +340,6 @@
         </response>
         &fault403;
     </method>
-    <!--<method name="HEAD" id="getImageHeaders-v1">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"
-            title="Show image details as headers">
-            <para role="shortdesc">Shows the image details as
-                response headers.</para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/xml"
-                element="imageapi:image"/>
-        </response>
-    </method>-->
     <method name="DELETE" id="deleteImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
