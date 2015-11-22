@@ -17,27 +17,29 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
                 <resource id="os-floating-ips" path="os-floating-ips">
-                    <method href="#ListFloatingIPs"/>
-                    <method href="#AllocateFloatingIP"/>
-                    <resource path="{id}">
-                        &floatingIpIdRequestParameter;
-                        <method href="#DeallocateFloatingIP"/>
+                    <method href="#listFloatingIPs"/>
+                    <method href="#createFloatingIP"/>
+                    <resource id="floating-ip-id" path="{floating-ip-id}">
+                        &floating-ip-idRequestParameter;
+                        <method href="#showFloatingIP"/>
+                        <method href="#deleteFloatingIP"/>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
-    <method name="GET" id="ListFloatingIPs">
+    <method name="GET" id="listFloatingIPs">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List floating IPs">
-            <para role="shortdesc">Lists floating IP addresses
-                associated with the tenant or account.
+            title="List floating IP addresses">
+            <para role="shortdesc">
+                Lists floating IP addresses associated with the tenant or
+                account.
             </para>
             <para>
-              Policy defaults enable only users with the administrative role
-              or the owner of the server to perform this operation. Cloud
-              providers can change these permissions through the
-              <code>policy.json</code> file.
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
             </para>
         </wadl:doc>
         <response status="200">
@@ -51,15 +53,24 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="AllocateFloatingIP">
+    <method name="POST" id="createFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Allocate floating IP">
-            <para role="shortdesc">Allocates a new floating IP address
-                to a tenant or account.</para>
+            title="Create (allocate) floating IP address">
+            <para role="shortdesc">
+                Creates, or allocates, a floating IP address for the current
+                project. By default, the floating IP address is allocated from
+                the public pool.
+            </para>
             <para>
-              Policy defaults enable only users with the administrative role
-              or the owner of the server to perform this operation. Cloud providers can change
-              these permissions through the <code>policy.json</code> file.
+                If more than one floating IP address pool is available, use
+                the <code>pool</code> parameter to specify from which pool to
+                allocate the IP address.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
             </para>
         </wadl:doc>
         <request>
@@ -67,20 +78,26 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../api_samples/os-floating-ips/floating-ips-create-req.json"
-                    />
+                        href="../api_samples/os-floating-ips/floating-ips-create-req.json"/>
                 </wadl:doc>
                 <param name="pool" style="plain">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                            Pool from which to allocate IP address. If you
-                            omit this parameter, default pool is used.
+                            Pool from which to allocate the IP address. If you
+                            omit this parameter, the call allocates the
+                            floating IP address from the public pool.
                         </para>
                         <para>
-                          Policy defaults enable only users with the administrative role
-                          or the owner of the server to perform this operation. Cloud providers can change
-                          these permissions through the <code>policy.json</code> file.
+                            If no floating IP addresses are available, the
+                            call returns the <code>400</code> response code
+                            with an informational message.
+                        </para>
+                        <para>
+                            Policy defaults enable only users with the administrative role
+                            or the owner of the server to perform this operation. Cloud
+                            providers can change these permissions through the
+                            <code>policy.json</code> file.
                         </para>
                     </wadl:doc>
                 </param>
@@ -96,29 +113,50 @@
                 </wadl:doc>
             </representation>
         </response>
-        <response status="400">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                xml:lang="EN"><p xmlns="http://www.w3.org/1999/xhtml"
-                    >If there are no floating IPs available, the
-                    extension returns an error code 400 with a message
-                    indicating that no more floating IPs are
-                    available.</p></wadl:doc>
+        <response status="400"/>
+    </method>
+    <method name="GET" id="showFloatingIP">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show floating IP address details">
+            <para role="shortdesc">
+                Shows details for a floating IP address, by ID, that is
+                associated with the tenant or account.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/os-floating-ips/floating-ip-get-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
         </response>
     </method>
-    <method name="DELETE" id="DeallocateFloatingIP">
+    <method name="DELETE" id="deleteFloatingIP">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Deallocate floating IP">
-            <para role="shortdesc">Deallocates a floating IP address.
+            title="Delete (deallocate) floating IP address">
+            <para role="shortdesc">
+                Deletes, or deallocates, a floating IP address from the
+                current project and returns it to the pool from which it was
+                allocated.
             </para>
             <para>
-              You can use this call to deallocate and delete only manually-allocated
-              floating IP addresses. You must manually deallocate
-              auto-allocated floating IP addresses before you can delete them.
+                If the IP address is still associated with a running instance,
+                it is automatically disassociated from that instance.
             </para>
             <para>
-              Policy defaults enable only users with the administrative role
-              or the owner of the server to perform this operation. Cloud providers can change
-              these permissions through the <code>policy.json</code> file.
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
             </para>
         </wadl:doc>
         <response status="202"/>

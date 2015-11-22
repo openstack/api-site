@@ -239,6 +239,7 @@
         <wadl:method href="#addFixedIp"/>
       </wadl:resource>
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-server-actions-v2.1.wadl#action">
+        <wadl:method href="#addFloatingIp"/>
         <wadl:method href="#attach"/>
         <wadl:method href="#confirmResize"/>
         <wadl:method href="#createImage"/>
@@ -266,6 +267,7 @@
         <wadl:method href="#removeFixedIp"/>
       </wadl:resource>
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-server-actions-v2.1.wadl#action">
+        <wadl:method href="removeFloatingIp"/>
         <wadl:method href="#rescue"/>
         <wadl:method href="#resize"/>
       </wadl:resource>
@@ -624,9 +626,40 @@
    <section xml:id="os-floating-ips-v2.1">
       <title>Floating IPs (os-floating-ips)</title>
       <para>
-         Assigns and allocates floating IP addresses to instances
-         that run in an OpenStack cloud.
+        Lists floating IP addresses that are associated with a project. Also,
+        creates (allocates) a floating IP address for a project, shows
+        floating IP address details, and deletes (deallocates) a floating IP
+        address from a project.
       </para>
+      <para>
+        A pool of floating IP addresses, configured by the cloud
+        administrator, is available in OpenStack Compute. The project quota
+        defines the maximum number of floating IP addresses that you can
+        allocate to the project. After you <link
+        xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#createFloatingIP">allocate a floating IP address</link>
+        for a project, you can:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <link xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#addFloatingIp">Add (associate) the floating
+            IP address</link> with an instance in the project. Only one
+            floating IP address can be associated with an instance at a time.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <link xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#removeFloatingIp">Remove (disassociate) the
+            floating IP address</link> from an instance in the project.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Delete, or deallocate, a floating IP from the project, which
+            automatically deletes any associations for that IP address.
+          </para>
+        </listitem>
+      </itemizedlist>
       <wadl:resources
          href="../wadls/compute-api/src/v2.1/wadl/os-floating-ips-v2.1.wadl"
          xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
@@ -635,7 +668,8 @@
       <title>Floating IPs bulk (os-floating-ips-bulk)</title>
       <para>
          Bulk-creates, deletes, and lists floating IPs. Default pool name is
-         <code>nova</code>. To view available pools, use the <code>os-floating-ip-pools</code> extension.
+         <code>nova</code>. To view available pools, use the <code>os-
+         floating-ip-pools</code> extension.
       </para>
       <wadl:resources
          href="../wadls/compute-api/src/v2.1/wadl/os-floating-ips-bulk-v2.1.wadl"
