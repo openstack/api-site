@@ -202,7 +202,7 @@ instances. After also attaching this router to our internal networks,
 we will allocate floating IPs from the public network for instances
 which need to be accessed from the Internet.
 
-Let's just confirm that we have a public network by listing the
+Confirm that we have a public network by listing the
 networks our tenant has access to. The public network does not have to
 be named public - it could be 'external', 'net04_ext' or something
 else - the important thing is it exists and can be used to reach the
@@ -529,7 +529,7 @@ nodes. The end result will be the following network topology:
 libcloud support added 0.14:
 https://developer.rackspace.com/blog/libcloud-0-dot-14-released/
 
-Let's start by looking at what's already in place.
+Start by looking at what is already in place.
 
 ::
 
@@ -686,7 +686,7 @@ You should be able to see them in the member list:
     | f3ba0605-4926-4498-b86d-51002892e93a | 203.0.113.22 |            80 |      1 | True           | ACTIVE |
     +--------------------------------------+--------------+---------------+--------+----------------+--------+
 
-Now let's create a health monitor that will ensure that members of the
+Now, create a health monitor that will ensure that members of the
 load balancer pool are active and able to respond to requests. If a
 member in the pool dies or is unresponsive, the member is removed from
 the pool so that client requests are routed to another active member.
@@ -751,7 +751,7 @@ And confirm it is in place:
     | f0bcb66e-5eeb-447b-985e-faeb67540c2f | myvip | 203.0.113.63 | HTTP     | True           | ACTIVE |
     +--------------------------------------+-------+--------------+----------+----------------+--------+
 
-Now let's look at the big picture.
+Now, look at the big picture.
 
 Final result
 ~~~~~~~~~~~~
