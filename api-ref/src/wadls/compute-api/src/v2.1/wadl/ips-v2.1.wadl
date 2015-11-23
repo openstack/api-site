@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="server-ips-v2.1">
+        <resource id="v2.1" path="//v2.1">
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenantIdRequestParameter;
+                <resource id="servers" path="servers">
+                    <resource id="server_id" path="{server_id}">
+                        &serverIdRequestParameter;
+                        <resource id="ips" path="ips">
+                            <method href="#list-ips"/>
+                            <resource path="{network_label}">
+                                &networkLabelRequestParameter;
+                                <method href="#show-ip"/>
+                            </resource>
+                       </resource>
+                   </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="list-ips">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List IPs">
+            <para role="shortdesc">
+                Lists IP addresses that are assigned to an instance.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/ips/server-ips-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="show-ip">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show IP details">
+            <para role="shortdesc">
+                Shows IP addresses details for a network label of a server instance.
+            </para>
+            <para>
+              Policy defaults enable only users with the administrative role
+              or the owner of the server to perform this operation. Cloud providers can change
+              these permissions through the <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../api_samples/ips/server-ips-network-resp.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
