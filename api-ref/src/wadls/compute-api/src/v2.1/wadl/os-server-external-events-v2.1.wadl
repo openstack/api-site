@@ -17,7 +17,7 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
                 <resource id="os-server-external-events" path="os-server-external-events">
-                    <method href="#createevents"/>
+                    <method href="#createEvents"/>
                 </resource>
             </resource>
         </resource>
@@ -25,10 +25,17 @@
     <!-- *******************************************************-->
     <!--     Server external events                            -->
     <!--*******************************************************-->
-    <method name="POST" id="createevents">
-        <wadl:doc xml:lang="EN" title="Create events"
+    <method name="POST" id="createEvents">
+        <wadl:doc xml:lang="EN" title="Run events"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Creates events.</para>
+            <para role="shortdesc">
+                Creates one or more external events. Each event is dispatched to a
+                server instance.
+            </para>
+            <para>
+                This instance must be assigned to a host. Otherwise, this call
+                does not dispatch the event to the instance.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -43,8 +50,7 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="List events">
                         <para>
-                            Specify the <code>events</code> action in the
-                            request body.
+                            The action.
                         </para>
                     </wadl:doc>
                 </param>
@@ -53,9 +59,9 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="name">
                         <para>
-                            The event name. Valid values are
+                            The event name. A valid value is
                             <code>network-changed</code>, <code>network-vif-plugged</code>,
-                            <code>network-vif-unplugged</code>, and
+                            <code>network-vif-unplugged</code>, or
                             <code>network-vif-deleted</code>.
                         </para>
                     </wadl:doc>
@@ -74,18 +80,25 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="server_uuid">
                         <para>
-                            The ID of the server that is associated with the event.
+                            The UUID of the server instance to which the event is
+                            dispatched.
+                        </para>
+                        <para>
+                            This instance must be assigned to a host.
+                            Otherwise, this call does not dispatch the event to
+                            the instance.
                         </para>
                     </wadl:doc>
                 </param>
                 <param name="status" style="plain" type="xsd:string"
-                    required="true">
+                    required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="status">
                         <para>
-                            The event status. Valid values are
-                            <code>failed</code>, <code>completed</code>, and
-                            <code>in-progress</code>.
+                            The event status. A valid value is
+                            <code>failed</code>, <code>completed</code>, or
+                            <code>in-progress</code>. Default is
+                            <code>completed</code>.
                         </para>
                     </wadl:doc>
                 </param>
@@ -104,8 +117,7 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN" title="code">
                         <para>
-                            The HTTP status code that pertains to the
-                            individual event.
+                            The HTTP response code for the event.
                         </para>
                     </wadl:doc>
                 </param>
