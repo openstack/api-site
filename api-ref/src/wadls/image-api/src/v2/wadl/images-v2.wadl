@@ -278,14 +278,14 @@
 <programlisting>nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn</programlisting>
                <para>
                   Where <emphasis>n</emphasis> is a hexadecimal digit from 0
-                  to f (or F).
+                  to f, or F.
                </para>
                <para>
                   For example:
                </para>
                <programlisting>b2173dd3-7ad6-4362-baa6-a68bce3565cb</programlisting>
                <para>
-                  If you omit this value, the API generates a UUID for the new
+                  If you omit this value, the API generates a UUID for the
                   image.
                </para>
             </wadl:doc>
@@ -296,7 +296,8 @@
             <wadl:doc xmlns="http://docbook.org/ns/docbook"
                xmlns:wadl="http://wadl.dev.java.net/2009/02"
                xml:lang="EN">
-               <para>Image visibility. Public or private.
+               <para>
+                  Image visibility. Public or private.
                   Default is public.
                </para>
             </wadl:doc>
@@ -307,7 +308,9 @@
             <wadl:doc xmlns="http://docbook.org/ns/docbook"
                xmlns:wadl="http://wadl.dev.java.net/2009/02"
                xml:lang="EN">
-               <para>Image tags.</para>
+               <para>
+                  Image tags.
+               </para>
             </wadl:doc>
             </param>
             &container_formatRequestParameter; &disk_formatRequestParameter;
@@ -447,10 +450,13 @@
          </para>
          <itemizedlist spacing="compact">
             <listitem>
-               <para><code>application/openstack-images-v2.0-json-patch</code></para>
+               <para>
+                  <code>application/openstack-images-v2.0-json-patch</code>
+               </para>
             </listitem>
             <listitem>
-               <para><code>application/openstack-images-v2.1-json-patch</code>
+               <para>
+                  <code>application/openstack-images-v2.1-json-patch</code>
                   (since Image API v2.2)
                </para>
             </listitem>
@@ -462,8 +468,7 @@
          <para>
             For information about the &PATCH; method and the available media
             types, see <link
-            xlink:href="http://specs.openstack.org/openstack/glance-specs/specs/api/v2/http-patch-image-api-v2.html">Image API v2
-            HTTP PATCH media types</link>.
+            xlink:href="http://specs.openstack.org/openstack/glance-specs/specs/api/v2/http-patch-image-api-v2.html">Image API v2 HTTP PATCH media types</link>.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
@@ -578,7 +583,7 @@
             &fileParameter; &image_schemaParameter;
          </representation>
       </response>
-      &getFaults;
+      &fault404;
    </method>
    <method name="POST" id="reactivateImage-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
@@ -624,7 +629,9 @@
          <para>Preconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The image must exist.</para>
+               <para>
+                  The image must exist.
+               </para>
             </listitem>
          </itemizedlist>
       </wadl:doc>
@@ -637,6 +644,7 @@
             </wadl:doc>
          </representation>
       </response>
+      &fault403;
    </method>
    <method name="DELETE" id="deleteImage-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
@@ -644,32 +652,36 @@
          <para role="shortdesc">
             (Since Image API v2.0) Deletes an image.
          </para>
-         <para>You cannot delete images with the <code>protected</code>
-            attribute set to true (boolean).
+         <para>
+            You cannot delete images with the <code>protected</code> attribute
+            set to <code>true</code> (boolean).
          </para>
          <para>Preconditions</para>
          <itemizedlist>
             <listitem>
-               <para>You can delete an image in all status
-                  except <code>deleted</code>.
+               <para>
+                  You can delete an image in any status except
+                  <code>deleted</code>.
                </para>
             </listitem>
             <listitem>
-               <para>You must first set the <code>protected</code> attribute
-                  to <code>false</code> (boolean) and then perform
-                  the delete.
+               <para>
+                  First, set the <code>protected</code> attribute to
+                  <code>false</code> (boolean). Then, perform the delete.
                </para>
             </listitem>
          </itemizedlist>
          <para>Synchronous Postconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The response is empty and returns the
-                  HTTP 204 status code.
+               <para>
+                  The response is empty and returns the HTTP <code>204</code>
+                  response code.
                </para>
             </listitem>
             <listitem>
-               <para>The API deletes the image from the images index.
+               <para>
+                  The API deletes the image from the images index.
                </para>
             </listitem>
             <listitem>
@@ -683,8 +695,8 @@
          <itemizedlist>
             <listitem>
                <para>
-                  The response returns the HTTP 403 status code when the
-                  <code>protected</code> attribute is set to
+                  The call returns the HTTP <code>403</code> response code
+                  when the <code>protected</code> attribute is set to
                   <code>true</code> even if you have correct permissions.
                   Ensure that you meet the preconditions and run the request
                   again. If the request fails again, review your API request.
@@ -702,7 +714,8 @@
          <para role="shortdesc">(Since
             Image API v2.0) Uploads binary image data.
          </para>
-         <para>Set the <code>Content-Type</code> request header to
+         <para>
+            Set the <code>Content-Type</code> request header to
             <code>application/octet-stream</code>.
          </para>
          <para>Example call:
@@ -748,9 +761,9 @@
                </para>
             </listitem>
             <listitem>
-               <para>With correct access, you can see the stored
-                  data in the storage system that OpenStack Image service
-                  manages.
+               <para>
+                  With correct access, you can see the stored data in the
+                  storage system that OpenStack Image service manages.
                </para>
             </listitem>
          </itemizedlist>
@@ -777,18 +790,19 @@
    <method name="GET" id="showImageFile-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Download binary image data">
-         <para role="shortdesc">(Since
-            Image API v2.0) Downloads binary image data.
+         <para role="shortdesc">
+            (Since Image API v2.0) Downloads binary image data.
          </para>
-         <para>Example call: <code>curl -i -X GET -H "X-Auth-Token:
-            $token"
+         <para>
+            Example call: <code>curl -i -X GET -H "X-Auth-Token: $token"
             $image_url/v2/images/{image_id}/file</code>
          </para>
          <para>
-            The response body contains the raw binary data that represents the actual virtual disk.
-            The <code>Content-Type</code> header contains the <code>application/octet-stream</code>
-            value. The <code>Content-MD5</code> header contains an MD5 checksum of the image data.
-            Use this checksum to verify the integrity of the image data.
+            The response body contains the raw binary data that represents the
+            actual virtual disk. The <code>Content-Type</code> header contains
+            the <code>application/octet-stream</code> value. The
+            <code>Content-MD5</code> header contains an MD5 checksum of the image
+            data. Use this checksum to verify the integrity of the image data.
          </para>
          <para></para>
          <para>Preconditions</para>
@@ -800,19 +814,22 @@
          <para>Synchronous Postconditions</para>
          <itemizedlist>
             <listitem>
-               <para>You can download the binary image data
+               <para>
+                  You can download the binary image data
                   in your machine if the image has image
                   data.
                </para>
             </listitem>
             <listitem>
-               <para>If image data exists, the call returns the
-                  HTTP <code>200</code> status code.
+               <para>
+                  If image data exists, the call returns the
+                  HTTP <code>200</code> response code.
                </para>
             </listitem>
             <listitem>
-               <para>If no image data exists, the call returns
-                  the HTTP <code>204</code> status code.
+               <para>
+                  If no image data exists, the call returns
+                  the HTTP <code>204</code> response code.
                </para>
             </listitem>
          </itemizedlist>
@@ -839,8 +856,7 @@
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Delete image tag">
          <para role="shortdesc">
-            (Since Image API
-            v2.0) Deletes a tag from an image.
+            (Since Image API v2.0) Deletes a tag from an image.
          </para>
       </wadl:doc>
       <response status="204"/>
@@ -859,8 +875,8 @@
                </para>
             </listitem>
             <listitem>
-               <para>You must be the owner or a member of
-                  the image.
+               <para>
+                  You must be the owner or a member of the image.
                </para>
             </listitem>
          </itemizedlist>
@@ -889,16 +905,18 @@
          </para>
          <para>
             If a user who does not share this image makes this call, the call
-            returns the HTTP 404 response code.
+            returns the HTTP <code>404</code> response code.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The image must exist.
+               <para>
+                  The image must exist.
                </para>
             </listitem>
             <listitem>
-               <para>You must be the owner or a member of
+               <para>
+                  You must be the owner or a member of
                   the image.
                </para>
             </listitem>
@@ -924,8 +942,8 @@
    <method name="POST" id="createImageMember-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Create image member">
-         <para role="shortdesc">(Since Image API v2.1) Adds a tenant ID as an
-            image member.
+         <para role="shortdesc">
+            (Since Image API v2.1) Adds a tenant ID as an image member.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
@@ -934,8 +952,10 @@
                </para>
             </listitem>
             <listitem>
-               <para>You can only add a new member to an
-                  image which 'visibility' attribute is <code>private</code>.
+               <para>
+                  You can only add a member to an image that has a
+                  <code>visibility</code> attribute set to
+                  <code>private</code>.
                </para>
             </listitem>
             <listitem>
@@ -959,10 +979,10 @@
                <para>
                   Even if you have correct permissions, if the
                   <code>visibility</code> attribute is set to
-                  <code>public</code>, the request returns the HTTP 403
-                  response code. Ensure that you meet the preconditions and
-                  run the request again. If the request fails again, review
-                  your API request.
+                  <code>public</code>, the request returns the HTTP
+                  <code>403</code> response code. Ensure that you meet the
+                  preconditions and run the request again. If the request
+                  fails again, review your API request.
                </para>
             </listitem>
             <listitem>
@@ -1016,12 +1036,13 @@
          <para>Preconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The images must exist.
+               <para>
+                  The images must exist.
                </para>
             </listitem>
             <listitem>
-               <para>You must be a member of the
-                image.
+               <para>
+                  You must be a member of the image.
                </para>
             </listitem>
          </itemizedlist>
@@ -1056,8 +1077,8 @@
             <wadl:doc xmlns="http://docbook.org/ns/docbook"
                xmlns:wadl="http://wadl.dev.java.net/2009/02"
                xml:lang="EN">
-               <para>The status of this image
-                  member.
+               <para>
+                  The status of this image member.
                </para>
             </wadl:doc>
             </param>
@@ -1085,20 +1106,21 @@
          <para>Preconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The image must exist.
+               <para>
+                  The image must exist.
                </para>
             </listitem>
             <listitem>
-               <para>You must be the owner of the
-                  image.
+               <para>
+                  You must be the owner of the image.
                </para>
             </listitem>
          </itemizedlist>
          <para>Synchronous Postconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The API removes the member from
-                  the image members.
+               <para>
+                  The API removes the member from the image members.
                </para>
             </listitem>
          </itemizedlist>
@@ -1107,25 +1129,24 @@
             <listitem>
                <para>
                   Even if you have correct permissions, if you are not the
-                  owner of The image, the request returns the HTTP
-                  403 error code. Ensure that you meet the preconditions
-                  and run the request again. If the request fails again,
-                  review your API request.
+                  owner of the image or you specify an incorrect image ID or
+                  member ID, the call returns the HTTP <code>403</code> or
+                  <code>404</code> response code. Ensure that you meet the
+                  preconditions and run the request again. If the request
+                  fails again, review your API request URI.
                </para>
             </listitem>
          </itemizedlist>
       </wadl:doc>
       <response status="204"/>
-      <response status="403"  xmlns="http://wadl.dev.java.net/2009/02">
-         <representation mediaType="application/xml"
-            element="csapi:forbidden"/>
-         <representation mediaType="application/json"/>
-      </response>
+      &fault403; &fault404;
    </method>
    <method name="GET" id="listTasks-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="List tasks">
-         <para role="shortdesc">Lists tasks.</para>
+         <para role="shortdesc">
+            Lists tasks.
+         </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -1145,7 +1166,9 @@
    <method name="POST" id="createTask-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Create task">
-         <para role="shortdesc">Creates a task.</para>
+         <para role="shortdesc">
+            Creates a task.
+         </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -1162,7 +1185,8 @@
    <method name="GET" id="showTask-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Show task details">
-         <para role="shortdesc">Shows details for a task.
+         <para role="shortdesc">
+            Shows details for a task.
          </para>
       </wadl:doc>
       <request>
