@@ -526,7 +526,7 @@ the image and flavor that you choose.
 If the image that you want is not available in your cloud, you can usually
 upload one depending on the policy settings of your cloud. For information about
 how to upload images, see
-`obtaining images <http://docs.openstack.org/image-guide/content/ch_obtaining_images.html>`_.
+`obtaining images <http://docs.openstack.org/image-guide/obtain-images.html>`_.
 
 Set the image and size variables to appropriate values for your cloud. We will
 use these variables in later sections.

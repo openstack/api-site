@@ -246,7 +246,7 @@ executes the shell script in the :code:`userdata` variable.
 
 When an SSH public key is provided during instance creation,
 cloud-init installs this key on a user account. (The user name
-varies between cloud images.)  See the `Obtaining Images <http://docs.openstack.org/image-guide/content/ch_obtaining_images.html>`_
+varies between cloud images.)  See the `Obtaining Images <http://docs.openstack.org/image-guide/obtain-images.html>`_
 section of the image guide for guidance about which user name you
 should use when SSHing. If you still have problems logging in, ask
 your cloud provider to confirm the user name.
