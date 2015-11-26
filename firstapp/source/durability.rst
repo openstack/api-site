@@ -75,10 +75,12 @@ First, learn how to connect to the Object Storage endpoint:
         :start-after: step-1
         :end-before: step-2
 
-
 .. only:: jclouds
 
-    .. warning:: This section has not yet been completed for the jclouds SDK.
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-1
+        :end-before: step-2
 
 .. only:: libcloud
 
@@ -131,6 +133,13 @@ Call yours :code:`fractals`:
 
         TBC
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-2
+        :end-before: step-3
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
@@ -158,6 +167,13 @@ all containers in your account:
 
         TBC
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-3
+        :end-before: step-4
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
@@ -177,6 +193,13 @@ on line, name it :code:`goat.jpg`, and upload it to your
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-4
+        :end-before: step-5
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
         :start-after: step-4
         :end-before: step-5
 
@@ -217,6 +240,39 @@ the same:
 
         7513986d3aeb22659079d1bf3dc2468b
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-5
+        :end-before: step-6
+
+    ::
+
+       Objects in fractals:
+       SwiftObject{name=an amazing goat,
+        uri=https://swift.some.org:8888/v1/AUTH_8997868/fractals/an%20amazing%20goat,
+        etag=439884df9c1c15c59d2cf43008180048,
+        lastModified=Wed Nov 25 15:09:34 AEDT 2015, metadata={}}
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-6
+        :end-before: step-7
+
+    ::
+
+        Fetched: an amazing goat
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-7
+        :end-before: step-8
+
+    ::
+
+        MD5 for file goat.jpg: 439884df9c1c15c59d2cf43008180048
+
 
 .. only:: libcloud
 
@@ -254,6 +310,13 @@ Finally, clean up by deleting the test object:
         :start-after: step-8
         :end-before: step-9
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-8
+        :end-before: step-10
+
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
@@ -278,11 +341,18 @@ Back up the Fractals from the database on the Object Storage
 Back up the Fractals app images, which are currently stored inside the
 database, on Object Storage.
 
-Place the images in the :code:`fractals`' container:
+Place the images in the :code:`fractals` container:
 
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-10
+        :end-before: step-11
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
         :start-after: step-10
         :end-before: step-11
 
@@ -293,13 +363,20 @@ Place the images in the :code:`fractals`' container:
         :end-before: step-11
 
 Next, back up all existing fractals from the database to the swift container.
-A simple `for` loop takes care of that:
+A simple loop takes care of that:
 
 .. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
 
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-11
+        :end-before: step-12
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
         :start-after: step-11
         :end-before: step-12
 
@@ -336,12 +413,19 @@ Extra features
 Delete containers
 ~~~~~~~~~~~~~~~~~
 
-To delete a container, make sure that you have removed all objects from the
-container before running this script. Otherwise, the script fails:
+To delete a container, you must first remove all objects from the container.
+Otherwise, the delete operation fails:
 
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/durability.rb
+        :start-after: step-12
+        :end-before: step-13
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
         :start-after: step-12
         :end-before: step-13
 
@@ -358,18 +442,32 @@ Add metadata to objects
 
 You can complete advanced tasks such as uploading an object with metadata, as
 shown in following example. For more information, see the documentation for
-your SDK. This option also uses a bit stream to upload the file, iterating bit
-by bit over the file and passing those bits to Object Storage as they come.
-Compared to loading the entire file in memory and then sending it, this method
-is more efficient, especially for larger files.
+your SDK.
 
 .. only:: fog
+
+    This option also uses a bit stream to upload the file, iterating bit
+    by bit over the file and passing those bits to Object Storage as they come.
+    Compared to loading the entire file in memory and then sending it, this method
+    is more efficient, especially for larger files.
 
     .. literalinclude:: ../samples/fog/durability.rb
         :start-after: step-13
         :end-before: step-14
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-13
+        :end-before: step-14
+
 .. only:: libcloud
+
+    This option also uses a bit stream to upload the file, iterating bit
+    by bit over the file and passing those bits to Object Storage as they come.
+    Compared to loading the entire file in memory and then sending it, this method
+    is more efficient, especially for larger files.
 
     .. literalinclude:: ../samples/libcloud/durability.py
         :start-after: step-13
@@ -389,6 +487,20 @@ For efficiency, most Object Storage installations treat large objects,
         :start-after: step-14
         :end-before: step-15
 
+.. only:: jclouds
+
+    If you work with large objects, use the :code:`RegionScopedBlobStoreContext`
+    class family instead of the ones used so far.
+
+    .. note:: Large file uploads that use the :code:`openstack-swift` provider
+              are supported in only jclouds V2, currently in beta. Also, the
+              default chunk size is 64 Mb. Consider changing this as homework.
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
+        :start-after: step-14
+        :end-before: step-15
+
 .. only:: libcloud
 
     If you work with large objects, use the :code:`ex_multipart_upload_object`
@@ -401,6 +513,19 @@ For efficiency, most Object Storage installations treat large objects,
         :start-after: step-14
         :end-before: step-15
 
+.. only:: jclouds
+
+    Complete code sample
+    ~~~~~~~~~~~~~~~~~~~~
+
+    This file contains all the code from this tutorial section. This
+    class lets you view and run the code.
+
+    Before you run this class, confirm that you have configured it for
+    your cloud and the instance running the Fractals application.
+
+    .. literalinclude:: ../samples/jclouds/Durability.java
+        :language: java
 
 Next steps
 ----------
