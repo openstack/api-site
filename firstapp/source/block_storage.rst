@@ -68,24 +68,10 @@ Connect to the API endpoint:
 
 .. only:: libcloud
 
-    .. code-block:: python
-
-      from libcloud.compute.types import Provider
-      from libcloud.compute.providers import get_driver
-
-        auth_username = 'your_auth_username'
-        auth_password = 'your_auth_password'
-        auth_url = 'http://controller:5000'
-        project_name = 'your_project_name_or_id'
-        region_name = 'your_region_name'
-
-        provider = get_driver(Provider.OPENSTACK)
-        connection = provider(auth_username,
-                              auth_password,
-                              ex_force_auth_url=auth_url,
-                              ex_force_auth_version='2.0_password',
-                              ex_tenant_name=project_name,
-                              ex_force_service_region=region_name)
+    .. literalinclude:: ../samples/libcloud/block_storage.py
+        :language: python
+        :start-after: step-1
+        :end-before: step-2
 
 .. only:: shade
 
@@ -98,10 +84,10 @@ To try it out, make a 1GB volume called :test'.
 
 .. only:: libcloud
 
-    .. code-block:: python
-
-        volume = connection.create_volume(1, 'test')
-        print(volume)
+    .. literalinclude:: ../samples/libcloud/block_storage.py
+        :language: python
+        :start-after: step-2
+        :end-before: step-3
 
     ::
 
@@ -120,10 +106,10 @@ To see if the volume creation was successful, list all volumes:
 
 .. only:: libcloud
 
-    .. code-block:: python
-
-        volumes = connection.list_volumes()
-        print(volumes)
+     .. literalinclude:: ../samples/libcloud/block_storage.py
+        :language: python
+        :start-after: step-3
+        :end-before: step-4
 
     ::
 
@@ -150,15 +136,10 @@ MySQL, port 3306) from the network:
 
 .. only:: libcloud
 
-    .. code-block:: python
-
-       db_group = connection.ex_create_security_group('database', 'for database service')
-       connection.ex_create_security_group_rule(db_group, 'TCP', 3306, 3306)
-       instance = connection.create_node(name='app-database',
-                                         image=image,
-                                         size=flavor,
-                                         ex_keyname=keypair_name,
-                                         ex_security_groups=[db_group])
+    .. literalinclude:: ../samples/libcloud/block_storage.py
+        :language: python
+        :start-after: step-4
+        :end-before: step-5
 
 .. only:: shade
 
@@ -173,10 +154,10 @@ attach the volume to it at :code:`/dev/vdb`:
 
 .. only:: libcloud
 
-    .. code-block:: python
-
-        volume = connection.ex_get_volume('755ab026-b5f2-4f53-b34a-6d082fb36689')
-        connection.attach_volume(instance, volume, '/dev/vdb')
+    .. literalinclude:: ../samples/libcloud/block_storage.py
+        :language: python
+        :start-after: step-5
+        :end-before: step-6
 
 .. only:: shade
 
@@ -243,17 +224,13 @@ To detach and delete a volume:
 
 .. only:: libcloud
 
-    .. code-block:: python
-
-        connection.detach_volume(volume)
+    .. literalinclude:: ../samples/libcloud/block_storage.py
+        :start-after: step-6
+        :end-before: step-7
 
     ::
 
         True
-
-    .. code-block:: python
-
-        connection.destroy_volume(volume)
 
     .. note:: :code:`detach_volume` and :code:`destroy_volume` take a
               volume object, not a name.
@@ -269,10 +246,10 @@ To detach and delete a volume:
 
     Other features, such as creating volume snapshots, are useful for backups:
 
-    .. code-block:: python
-
-        snapshot_name = 'test_backup_1'
-        connection.create_volume_snapshot('test', name=snapshot_name)
+    .. literalinclude:: ../samples/libcloud/block_storage.py
+        :language: python
+        :start-after: step-7
+        :end-before: step-8
 
     .. todo:: Do we need a note here to mention that 'test' is the
               volume name and not the volume object?
