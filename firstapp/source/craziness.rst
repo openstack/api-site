@@ -8,7 +8,7 @@ Regions and geographic diversity
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note:: For more information about multi-site clouds, see the
-          `Multi-Site chapter <http://docs.openstack.org/arch-design/content/multi_site.html>`_
+          `Multi-Site chapter <http://docs.openstack.org/arch-design/multi-site.html>`_
           in the Architecture Design Guide.
 
 OpenStack supports 'regions', which are geographically-separated
@@ -23,7 +23,7 @@ Multiple clouds
 
 .. note:: For more information about hybrid clouds, see the `Hybrid
           Cloud chapter
-          <http://docs.openstack.org/arch-design/content/hybrid.html>`_
+          <http://docs.openstack.org/arch-design/hybrid.html>`_
           in the Architecture Design Guide.
 
 You might want to use multiple clouds, such as a private cloud inside
