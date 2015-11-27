@@ -167,6 +167,13 @@ cloud are no longer working, remove them and re-create something new.
         :start-after: step-1
         :end-before: step-2
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+        :language: java
+        :start-after: step-1
+        :end-before: step-2
+
 
 Extra security groups
 ---------------------
@@ -190,6 +197,13 @@ groups.
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/scaling_out.py
+        :start-after: step-2
+        :end-before: step-3
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+        :language: java
         :start-after: step-2
         :end-before: step-3
 
@@ -218,6 +232,13 @@ floating IP quota too quickly.
         :start-after: step-3
         :end-before: step-4
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+        :language: java
+        :start-after: step-3
+        :end-before: step-4
+
 Split the database and message queue
 ------------------------------------
 
@@ -241,6 +262,13 @@ fractals and to coordinate the communication between the services.
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/scaling_out.py
+        :start-after: step-4
+        :end-before: step-5
+
+ .. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+        :language: java
         :start-after: step-4
         :end-before: step-5
 
@@ -273,6 +301,13 @@ multiple API services:
         :start-after: step-5
         :end-before: step-6
 
+ .. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+        :language: java
+        :start-after: step-5
+        :end-before: step-6
+
 These services are client-facing, so unlike the workers they do not
 use a message queue to distribute tasks. Instead, you must introduce
 some kind of load balancing mechanism to share incoming requests
@@ -283,7 +318,6 @@ the other, but that solution is not sustainable. Instead, you can use
 a `DNS round robin <http://en.wikipedia.org/wiki/Round- robin_DNS>`_
 to do that automatically. However, OpenStack networking can provide
 Load Balancing as a Service, which :doc:`/networking` explains.
-
 
 .. todo:: Add a note that we demonstrate this by using the first API
           instance for the workers and the second API instance for the
@@ -310,6 +344,13 @@ To increase the overall capacity, add three workers:
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/scaling_out.py
+        :start-after: step-6
+        :end-before: step-7
+
+ .. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+        :language: java
         :start-after: step-6
         :end-before: step-7
 
@@ -477,3 +518,8 @@ authentication information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/libcloud/scaling_out.py
        :language: python
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/ScalingOut.java
+       :language: java
