@@ -21,6 +21,7 @@
                     <resource id="server_id" path="{server_id}">
                         &serverIdRequestParameter;
                         <resource id="action" path="action">
+                            <method href="#addFloatingIp"/>
                             <method href="#attach"/>
                             <method href="#confirmResize"/>
                             <method href="#createImage"/>
@@ -28,6 +29,7 @@
                             <method href="#stop"/>
                             <method href="#reboot"/>
                             <method href="#rebuild"/>
+                            <method href="#removeFloatingIp"/>
                             <method href="#rescue"/>
                             <method href="#resize"/>
                             <method href="#revertResize"/>
@@ -41,6 +43,71 @@
     <!-- *******************************************************-->
     <!--             Server Actions                             -->
     <!--********************************************************-->
+    <method name="POST" id="addFloatingIp">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Add (associate) floating IP (addFloatingIp action)">
+            <para role="shortdesc">
+                Adds a floating IP address to a server, which associates that
+                address with the server.
+            </para>
+            <para>
+                A pool of floating IP addresses, configured by the cloud
+                administrator, is available in OpenStack Compute. The project
+                quota defines the maximum number of floating IP addresses that
+                you can allocate to the project. After you <link
+                xlink:href="#createFloatingIP">create (allocate) a floating IP
+                address</link> for a project, you can associate that address
+                with the server. Specify the <code>addFloatingIp</code> action
+                in the request body.
+            </para>
+            <para>
+                If an instance is connected to multiple networks, you can
+                associate a floating IP address with a specific fixed IP
+                address by using the optional <code>fixed_address</code>
+                parameter.
+            </para>
+            <para>Preconditions</para>
+            <itemizedlist>
+                <listitem><para>The server must exist.</para></listitem>
+                <listitem><para>You can only add a floating IP address to the server
+                when its status is <code>available</code>.</para></listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/servers/server-action-addFloatingIp-req.json"/>
+                </wadl:doc>
+                &addFloatingIpActionRequestParameter;
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="address" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The floating IP address.</para>
+                    </wadl:doc>
+                </param>
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="fixed_address" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN">
+                        <para>
+                            The fixed IP address with which you want to
+                            associate the floating IP address.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202"/>
+        <response status="409">
+            <representation mediaType="application/json"/>
+        </response>
+        &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
     <method name="POST" id="attach">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Attach volume (attach action)">
             <para role="shortdesc">
@@ -120,7 +187,7 @@
         &commonFaults;
         &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
     </method>
-      <method name="POST" id="confirmResize">
+    <method name="POST" id="confirmResize">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
          title="Confirm resized server (confirmResize action)">
             <para role="shortdesc">
@@ -381,7 +448,49 @@
             </representation>
         </response>
         &commonFaults;
-        &getFaults; &postPutFaults; &buildFaults; &inProgressFault; </method>
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+    <method name="POST" id="removeFloatingIp">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Remove (disassociate) floating IP (removeFloatingIp action)">
+            <para role="shortdesc">
+                Removes, or disassociates, a floating IP address from a server.
+            </para>
+            <para>
+                The IP address is returned to the pool of IP addresses that is
+                available for all projects. When you remove a floating IP
+                address and that IP address is still associated with a running
+                instance, it is automatically disassociated from that
+                instance.
+            </para>
+            <para>
+                Specify the <code>removeFloatingIp</code> action in the request
+                body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../api_samples/servers/server-action-removeFloatingIp-req.json"/>
+                </wadl:doc>
+                &removeFloatingIpActionRequestParameter;
+                <param xmlns="http://wadl.dev.java.net/2009/02"
+                    name="address" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                        xml:lang="EN"><para>The floating IP address.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202"/>
+        <response status="409">
+            <representation mediaType="application/json"/>
+        </response>
+        &commonFaults;
+        &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
        <method name="POST" id="rescue">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Rescue server (rescue action)">
