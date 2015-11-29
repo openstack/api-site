@@ -454,6 +454,18 @@
     </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02"
+ name="multiattach" style="plain"
+   type="xsd:boolean" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+      <para>
+        To enable this volume to attach to more than one server, set this
+        value to <code>true</code>. Default is <code>false</code>.
+      </para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
   name="snapshot_id" style="plain"
   type="csapi:uuid" required="false">
   <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -544,7 +556,34 @@
             <code>false</code> if access is private.
     </para></wadl:doc>
 </param>'>
-<!ENTITY createVolumeResponseParameters '
+<!ENTITY volumeSimpleResponseParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="name" style="plain" type="xsd:string" required="true">
+   <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+      <para>The volume name.</para>
+   </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="id"
+  style="plain" type="csapi:uuid"
+  required="true">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xml:lang="EN">
+    <para>
+      The UUID of the volume.
+    </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="links"
+ style="plain" type="xsd:dict"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The volume links.</para></wadl:doc>
+</param>'>
+<!ENTITY volumeDetailResponseParameters '
 <param xmlns="http://wadl.dev.java.net/2009/02" name="status"
  style="plain" type="xsd:string" required="true">
    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -560,11 +599,22 @@
    </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02"
- name="attachments" style="plain" type="xsd:list" required="true">
-   <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+  name="attachments" style="plain" type="xsd:list" required="true">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-      <para>One or more instance attachments.</para>
-   </wadl:doc>
+      <para>
+        Instance attachment information.
+      </para>
+      <para>
+        If this volume is attached to a server instance, the attachments list
+        includes the UUID of the attached server, an attachment UUID, the name
+        of the attached host, if any, the volume UUID, the device, and the
+        device UUID.
+      </para>
+      <para>
+        Otherwise, this list is empty.
+      </para>
+  </wadl:doc>
 </param>
 <param xmlns="http://wadl.dev.java.net/2009/02"
  name="availability_zone" style="plain"
@@ -664,7 +714,146 @@
        xmlns:wadl="http://wadl.dev.java.net/2009/02"
        xml:lang="EN">
        <para>The status of the volume replication.</para></wadl:doc>
-</param>' >
+</param>'>
+<!ENTITY volumeDetailResponseParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="volume"
+ style="plain" type="xsd:dict" required="true">
+   <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+      <para>A volume object.</para>
+   </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="status"
+ style="plain" type="xsd:string" required="true">
+   <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+      <para>The volume status.</para>
+   </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="name" style="plain" type="xsd:string" required="true">
+   <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+      <para>The volume name.</para>
+   </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  name="attachments" style="plain" type="xsd:list" required="true">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+      <para>
+        Instance attachment information.
+      </para>
+      <para>
+        If this volume is attached to a server instance, the attachments list
+        includes the UUID of the attached server, an attachment UUID, the name
+        of the attached host, if any, the volume UUID, the device, and the
+        device UUID.
+      </para>
+      <para>
+        Otherwise, this list is empty.
+      </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="availability_zone" style="plain"
+   type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The availability zone.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="created_at" style="plain"
+   type="xsd:datetime" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Date and time when the volume was created.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="description" style="plain"
+   type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The volume description.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="volume_type" style="plain"
+   type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The associated volume type.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="snapshot_id" style="plain"
+   type="csapi:uuid" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+       The UUID of the source volume snapshot.
+    </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="source_volid" style="plain"
+   type="csapi:uuid" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+       The UUID of the source volume.
+    </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="metadata"
+ style="plain" type="xsd:dict"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+      One or more metadata key and value pairs that are associated with the
+      volume.
+    </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="id"
+  style="plain" type="csapi:uuid"
+  required="true">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xml:lang="EN">
+    <para>
+      The UUID of the volume.
+    </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="size"
+ style="plain" type="xsd:int"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The size of the volume, in gibibytes (GiB).</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="os-volume-replication:driver_data" style="plain" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The name of the volume replication driver.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+     name="os-volume-replication:extended_status" style="plain" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The status of the volume replication.</para></wadl:doc>
+</param>'>
 <!ENTITY quotasResponse '
 <param name="quota_set" style="plain" required="true"
    xmlns="http://wadl.dev.java.net/2009/02"
