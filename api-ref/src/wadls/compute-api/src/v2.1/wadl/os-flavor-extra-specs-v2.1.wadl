@@ -16,34 +16,33 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
                 <resource id="flavors" path="flavors">
-                    <resource id="os-flavor-extra-specs"
-                            path="os-flavor-extra-specs">
-                        <resource id="flavor_id" path="{flavor_id}">
-                            &flavorIdRequestParameter;
-                            <method href="#updateflavor"/>
-                            <method href="#listflavor"/>
-                                <resource id="flavor_extra_spec_key"
-                                    path="{flavor_extra_spec_key}">
-                                    &flavorExtraSpecKeyParameter;
-                                    <method href="#showflavor"/>
-                                    <method href="#updateflavorspec"/>
-                                </resource>
+                    <resource id="flavor_id" path="{flavor_id}">
+                        &flavor_idTemplateParameter;
+                        <resource id="os-extra_specs" path="os-extra_specs">
+                            <method href="#createFlavorExtraSpec"/>
+                            <method href="#listFlavorExtraSpecs"/>
+                            <resource id="flavor_extra_spec_key" path="{flavor_extra_spec_key}">
+                                &flavor_extra_spec_keyTemplateParameter;
+                                <method href="#showFlavorExtraSpec"/>
+                                <method href="#updateFlavorExtraSpec"/>
+                                <method href="#deleteFlavorExtraSpec"/>
                             </resource>
                         </resource>
                     </resource>
                 </resource>
             </resource>
-        </resources>
+        </resource>
+    </resources>
     <!-- *******************************************************-->
     <!--             Flavor Extra Specs                            -->
     <!--*******************************************************-->
-    <method name="POST" id="updateflavor">
+    <method name="POST" id="createFlavorExtraSpec">
         <wadl:doc xml:lang="EN"
-            title="Create or update flavor extra specs"
+            title="Create extra specs for a flavor"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Creates and updates flavor extra
-                specs.</para>
+                Creates extra specs for a flavor, by ID.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -64,38 +63,30 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="showflavor">
-        <wadl:doc xml:lang="EN" title="Show flavor extra specs"
+    <method name="GET" id="showFlavorExtraSpec">
+        <wadl:doc xml:lang="EN" title="Show an extra spec for a flavor"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Shows an extra spec for a
-                flavor, by key.</para>
+                Shows an extra spec, by key, for a flavor, by ID.
+            </para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/flavor-extra-specs/flavor-extra-specs-create-req.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../api_samples/flavor-extra-specs/flavor-extra-specs-get-resp.json"
                     />
-                </wadl:doc> &x-openstack-request-idHeader;
+                </wadl:doc>
+                &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
-    <method name="GET" id="listflavor">
-        <wadl:doc xml:lang="EN" title="Show flavor extra specs"
+    <method name="GET" id="listFlavorExtraSpecs">
+        <wadl:doc xml:lang="EN" title="List extra specs for a flavor"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Lists extra specs for a
-                flavor.</para>
+                Lists all extra specs for a flavor, by ID.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -112,16 +103,17 @@
                     <xsdxt:code
                         href="../api_samples/flavor-extra-specs/flavor-extra-specs-list-resp.json"
                     />
-                </wadl:doc> &x-openstack-request-idHeader;
+                </wadl:doc>
+                &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
-    <method name="PUT" id="updateflavorspec">
-        <wadl:doc xml:lang="EN" title="Update flavor extra spec"
+    <method name="PUT" id="updateFlavorExtraSpec">
+        <wadl:doc xml:lang="EN" title="Update an extra spec for a flavor"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Updates an extra spec value,
-                by key, for a flavor.</para>
+                Updates an extra spec, by key, for a flavor, by ID.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -140,6 +132,16 @@
                     />
                 </wadl:doc>
             </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteFlavorExtraSpec">
+        <wadl:doc xml:lang="EN" title="Delete an extra spec for a flavor"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes an extra spec, by key, for a flavor, by ID.
+            </para>
+        </wadl:doc>
+        <response status="204">
         </response>
     </method>
 </application>
