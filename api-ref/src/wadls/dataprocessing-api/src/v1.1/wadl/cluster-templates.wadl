@@ -5,27 +5,27 @@
 <!--                                                       -->
 <!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent node-group-template.wadl        -->
+<!--        xmllint -noent cluster-templates.wadl          -->
 <!--*******************************************************-->
 <!DOCTYPE application [
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
+    <!ENTITY % common SYSTEM "common.ent">
+    %common;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v2"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <resources base="https://servers.api.openstack.com"
         xml:id="cluster-templates-v1.1">
         <resource id="v1.1" path="//v1.1">
             <resource id="tenant_id" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="capi:UUID">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>The unique identifier of the tenant or account.</para>
-                    </wadl:doc>
-                </param>
+                &tenant_idTemplateParameter;
                 <resource id="cluster-templates" path="cluster-templates">
                     <method href="#cluster-templates-list"/>
                     <method href="#cluster-templates-create"/>
@@ -59,6 +59,7 @@
                         href="../samples/cluster-templates/list-resp.json"
                     />
                 </wadl:doc>
+                &clustertemplateResponseParameters;
             </representation>
         </response>
     </method>
@@ -84,6 +85,7 @@
                         href="../samples/cluster-templates/create-resp.json"
                     />
                 </wadl:doc>
+                &clustertemplateResponseParameters;
             </representation>
         </response>
     </method>
@@ -99,6 +101,7 @@
                         href="../samples/cluster-templates/list-resp.json"
                     />
                 </wadl:doc>
+                &clustertemplateResponseParameters;
             </representation>
         </response>
     </method>
@@ -124,6 +127,7 @@
                         href="../samples/cluster-templates/update-resp.json"
                     />
                 </wadl:doc>
+                &clustertemplateResponseParameters;
             </representation>
         </response>
     </method>
