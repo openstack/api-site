@@ -1,0 +1,2103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application[
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:csapi="http://docs.openstack.org/identity/api/v3">
+    <resources base="https://senlin.example.com/" xml:id="clustering-api-v1.0">
+        <resource id="versions" path="//">
+            <method href="#getVersions-senlin-v1"/>
+        </resource>
+        <resource id="version" path="//v1">
+            <resource id="profile_types" path="profile-types">
+                <method href="#listProfileTypes"/>
+                <resource id="profile_type" path="{profile_type}">
+                    &profile_typeTemplateParameter;
+                    <method href="#showProfileType"/>
+                </resource>
+            </resource>
+            <resource id="policy_types" path="policy-types">
+                <method href="#listPolicyType"/>
+                <resource id="policy_type" path="{policy_type}">
+                    &policy_typeTemplateParameter;
+                    <method href="#showPolicyType"/>
+                </resource>
+            </resource>
+            <resource id="profiles" path="profiles">
+                <method href="#listProfiles"/>
+                <method href="#createProfile"/>
+                <resource path="{profile_id}" id="profile_id">
+                    &profile_idTemplateParameter;
+                    <method href="#showProfile"/>
+                    <method href="#updateProfile"/>
+                    <method href="#deleteProfile"/>
+                </resource>
+            </resource>
+            <resource id="policies" path="policies">
+                <method href="#listPolicies"/>
+                <method href="#createPolicy"/>
+                <resource path="{policy_id}" id="policy_id">
+                    &policy_idTemplateParameter;
+                    <method href="#showPolicy"/>
+                    <method href="#updatePolicy"/>
+                    <method href="#deletePolicy"/>
+                </resource>
+            </resource>
+            <resource id="clusters" path="clusters">
+                <method href="#listClusters"/>
+                <method href="#createCluster"/>
+                <resource id="cluster_id" path="{cluster_id}">
+                    &cluster_idTemplateParameter;
+                    <method href="#showCluster"/>
+                    <method href="#updateCluster"/>
+                    <method href="#deleteCluster"/>
+                    <resource id="cluster_actions" path="actions">
+                        <method href="#cluster_action"/>
+                    </resource>
+                    <resource id="cluster_policies" path="policies">
+                        <method href="#listClusterPolicies"/>
+                        <resource id="cluster_policy_id" path="{policy_id}">
+                            &policy_idTemplateParameter;
+                            <method href="#showClusterPolicy"/>
+                        </resource>
+                    </resource>
+               </resource>
+            </resource>
+            <resource id="nodes" path="nodes">
+                <method href="#listNodes"/>
+                <method href="#createNode"/>
+                <resource id="node_id" path="{node_id}">
+                    &node_idTemplateParameter;
+                    <method href="#showNode"/>
+                    <method href="#updateNode"/>
+                    <method href="#deleteNode"/>
+                    <resource id="node_actions" path="actions">
+                        <method href="#node_action"/>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="actions" path="actions">
+                <method href="#listActions"/>
+                <resource id="action_id" path="{action_id}">
+                    &action_idTemplateParameter;
+                    <method href="#showAction"/>
+                </resource>
+            </resource>
+            <resource id="webhooks" path="webhooks">
+                <method href="#listWebhooks"/>
+                <method href="#createWebhook"/>
+                <resource id="webhook_res_id" path="{webhook_id}">
+                    &webhook_idTemplateParameter;
+                    <method href="#showWebhook"/>
+                    <method href="#deleteWebhook"/>
+                    <resource id="webhook_trigger" path="trigger">
+                        <method href="#triggerWebhook"/>
+                    </resource>
+                </resource>
+            </resource>
+            <resource id="events" path="events">
+                <method href="#listEvents"/>
+                <resource id="event_id" path="{event_id}">
+                    &event_idTemplateParameter;
+                    <method href="#showEvent"/>
+                </resource>
+            </resource>
+            <resource id="build_info" path="build-info">
+                <method href="#showBuild"/>
+            </resource>
+        </resource>
+    </resources>
+    <method name="GET" id="getVersions-senlin-v1">
+        <wadl:doc xml:lang="EN" title="List versions" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists information for all Clustering API versions.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/senlin_versions_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listClusters">
+        <wadl:doc xml:lang="EN" title="List clusters" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists clusters.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &limitMarkerReqParameter;
+                <param name="name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a cluster name. Use this
+                            filter multiple times to filter by multiple names.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="status" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a cluster status. Use this
+                            filter multiple times to filter by multiple
+                            statuses.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Includes deleted clusters in or excludes deleted
+                            clusters from the cluster list.
+                        </para>
+                        <para>
+                            Set to <code>False</code> to exclude deleted
+                            clusters from the cluster list. Set to
+                            <code>True</code> to include deleted clusters in
+                            the cluster list. Default is <code>False</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_nested" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Includes nested clusters in or excludes nested
+                            clusters from the cluster list.
+                        </para>
+                        <para>
+                            Set to <code>False</code> to exclude nested
+                            clusters from the cluster list. Set to
+                            <code>True</code> to include nested clusters in
+                            the cluster list. Default is <code>False</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                       <para>
+                            Sorts the list by an attribute. A valid attribute
+                            is <code>name</code>, <code>status</code>,
+                            <code>created_time</code>, or
+                            <code>updated_time</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="global_project" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether to include nodes from either all
+                            tenants or the current tenant.
+                        </para>
+                        <para>
+                            If you are an administrative user and you set this
+                            value to <code>True</code>, the call returns all
+                            nodes from all tenants. Default is
+                            <code>False</code>, which returns only nodes in
+                            the current tenant.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/cluster_list_resp.json"/>
+                </wadl:doc>
+                <param name="clusters" style="plain" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            List of cluster records. Each record contains
+                            fields such as <code>created_time</code>,
+                            <code>id</code>, <code>name</code>,
+                            <code>profile_id</code>, <code>size</code>,
+                            <code>nodes</code>, <code>status</code>,
+                            <code>status_reason</code>, and so on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createCluster">
+        <wadl:doc xml:lang="EN" title="Create cluster"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Creates a cluster.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/cluster_create.json"/>
+                </wadl:doc>
+                &clusterRequestParameters;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/cluster_create_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="cluster" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with the <code>id</code>, <code>name</code>,
+                            <code>status</code>, and other fields for the
+                            cluster.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showCluster">
+        <wadl:doc xml:lang="EN" title="Show cluster details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a cluster.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/cluster_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PATCH" id="updateCluster">
+        <wadl:doc xml:lang="EN" title="Update cluster"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Updates a cluster.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/cluster_update.json"/>
+                </wadl:doc>
+                &updateClusterRequestParameters;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/cluster_update_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="cluster" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with the <code>id</code>, <code>name</code>,
+                            <code>status</code>, and other fields for the
+                            cluster.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="cluster_action">
+        <wadl:doc xml:lang="EN" title="Trigger cluster action"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Triggers an action on a cluster.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="action" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The action to trigger. Supported actions include:
+                        </para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <code>add_nodes</code> Add nodes to a
+                                    cluster. Provide a list of nodes. For example:
+                                    <xsdxt:code href="samples/cluster_add_nodes.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>del_nodes</code> Delete nodes from
+                                    a cluster. Provide a list of nodes.
+                                    <xsdxt:code href="samples/cluster_del_nodes.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>scale_out</code> Enlarge the cluster
+                                    by <code>count</code> number of nodes.
+                                    <xsdxt:code href="samples/cluster_scale_out.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>scale_in</code> Shrink the cluster
+                                    by <code>count</code> number of nodes.
+                                    <xsdxt:code href="samples/cluster_scale_in.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>resize</code> Change the size of the
+                                    cluster by <code>adjustment_type</code>, <code>number</code>,
+                                    <code>min_step</code>, <code>min_size</code>, <code>max_size</code> or
+                                    <code>strict</code>.
+                                    <xsdxt:code href="samples/cluster_resize.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>policy_attach</code> Attach a policy
+                                    to a cluster. The request body contains
+                                    parameters for the policy attachment.
+                                    <xsdxt:code href="samples/cluster_policy_attach.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>policy_detach</code> Detach a policy
+                                    from the cluster. The request body
+                                    contains the ID of the policy.
+                                    <xsdxt:code href="samples/cluster_policy_attach.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>updatePolicy</code> Update the
+                                    policy attachment. Specify the policy ID and
+                                    property settings in the request body.
+                                    <xsdxt:code href="samples/cluster_policy_update.json"/>
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                        <para>
+                            Each action takes a different set of parameters.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The <code>Location</code> response header contains the
+                        action that the request initiated.
+                    </para>
+                </wadl:doc>
+                &actionLocationParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listClusterPolicies">
+        <wadl:doc xml:lang="EN" title="List policies" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all policies for a cluster.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="priority" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a policy priority on the cluster.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="level" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a policy enforcement level
+                            on the cluster.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="cooldown" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a policy cool down value
+                            on the cluster.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="enabled" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a policy enabled status on
+                            the cluster.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Sorts the list by an attribute. A valid attribute
+                            is <code>priority</code>, <code>level</code>,
+                            <code>cooldown</code>, or <code>enabled</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A <code>cluster_policies</code> list contains records
+                        of cluster-policy bindings. Each record contains
+                        cluster-related fields, the policy, and the binding
+                        itself.
+                    </para>
+                    <xsdxt:code href="samples/cluster_policy_list_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showClusterPolicy">
+        <wadl:doc xml:lang="EN" title="Show cluster policy details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a policy for a cluster.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A <code>cluster_policy</code> map with keys such as
+                        <code>cluster_id</code>, <code>policy_id</code>,
+                        <code>policy_type </code>, <code>level</code>,
+                        <code>cooldown</code>, <code>priority </code>, and so
+                        on. The key values are attributes for the policy that
+                        is attached to the cluster.
+                    </para>
+                    <xsdxt:code href="samples/cluster_policy_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteCluster">
+        <wadl:doc xml:lang="EN" title="Delete cluster"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a cluster.
+            </para>
+        </wadl:doc>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The <code>Location</code> response header contains the
+                        action that the request triggered.
+                    </para>
+                </wadl:doc>
+                &resourceLocationParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listProfileTypes">
+        <wadl:doc xml:lang="EN" title="List profile types"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists supported profile types.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A list of supported profile types.
+                    </para>
+                    <xsdxt:code href="samples/profile_type_list_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showProfileType">
+        <wadl:doc xml:lang="EN" title="Show profile type details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a profile type.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/profile_type_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listPolicyType">
+        <wadl:doc xml:lang="EN" title="List policy types"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all supported policy types.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A list of supported policy types.
+                    </para>
+                    <xsdxt:code href="samples/policy_type_list_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showPolicyType">
+        <wadl:doc xml:lang="EN" title="Show policy type details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a policy type.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/policy_type_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listProfiles">
+        <wadl:doc xml:lang="EN" title="List profiles"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all profiles.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &limitMarkerReqParameter;
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Sorts the list by the <code>name</code>,
+                            <code>type</code>, <code>created_time</code>,
+                            <code>updated_time</code>,
+                            <code>deleted_time</code>, <code>permission</code>
+                            or <code>metadata</code> attribute.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the name of a profile.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="type" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the name of a profile.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="permission" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the permission string of a profile.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="metadata" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by a metadata key and value pair.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Includes deleted profiles in or excludes deleted
+                            profiles from the response.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/profile_list_resp.json"/>
+                </wadl:doc>
+                <param name="profiles" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Profile records. Each record contains the
+                            <code>id</code>, <code>name</code>,
+                            <code>type</code>, <code>spec</code>,
+                            <code>permission</code>, <code>metadata</code>,
+                            and other fields.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createProfile">
+        <wadl:doc xml:lang="EN" title="Create profile" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Creates a profile.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/profile_create.json"/>
+                </wadl:doc>
+                <param name="profile" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with details for the profile.
+                        </para>
+                        <itemizedlist xml:id="profile_body">
+                            <title>Profile Body</title>
+                            <listitem>
+                                <para>
+                                    <code>name</code> Name for the profile (required).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>spec</code> Detailed specification
+                                    based on the chosen profile type
+                                    (required).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>permission</code> A string
+                                    representing the default permission of
+                                    the profile (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>metadata</code> A list of key and
+                                    value pairs to associate with the profile
+                                    (optional).
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/profile_create_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="profile" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A dictionary with details for the profile.
+                        </para>
+                        <itemizedlist xml:id="profile_response_body">
+                            <title>Profile Create Response</title>
+                            <listitem>
+                                <para>
+                                    <code>id</code> An unique ID for the profile.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>name</code> Name for the profile.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>type</code> Name of policy type
+                                    referenced by the profile.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>spec</code> Detailed specification
+                                    based on the profile type.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>permission</code> The permission of
+                                    the profile.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>metadata</code> A list of key and
+                                    value pairs that are attached to the
+                                    profile.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>created_time</code> The UTC date and
+                                    time stamp when the profile was created.
+                                </para>
+                            </listitem>
+                             <listitem>
+                                <para>
+                                    <code>updated_time</code> The UTC date and
+                                    time stamp when the profile was updated.
+                                </para>
+                            </listitem>
+                             <listitem>
+                                <para>
+                                    <code>deleted_time</code> The UTC date and
+                                    time stamp when the profile was deleted.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>domain</code> The ID of the domain to which the profile belongs.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>project</code> The ID of the project to which the profile belongs.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>user</code> The ID of the user who created the profile.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showProfile">
+        <wadl:doc xml:lang="EN" title="Show profile details" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a profile.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A profile record. Contains fields such as
+                        <code>id</code>, <code>name</code>, <code>type</code>,
+                        <code>spec</code>, <code>permission</code>,
+                        <code>metadata</code>, and so on.
+                    </para>
+                    <xsdxt:code href="samples/profile_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PATCH" id="updateProfile">
+        <wadl:doc xml:lang="EN" title="Update profile" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Updates a profile.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/profile_update.json"/>
+                </wadl:doc>
+                <param name="name" style="plain" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>New name for the target profile.</para>
+                    </wadl:doc>
+                </param>
+                <param name="permission" style="plain" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A permission.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="metadata" style="plain" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A list of key and value pairs to associate with
+                            the target profile.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A profile record. Contains fields such as
+                        <code>id</code>, <code>name</code>, <code>type</code>,
+                        <code>spec</code>, <code>permission</code>,
+                        <code>metadata</code>, and so on.
+                    </para>
+                    <xsdxt:code href="samples/profile_update_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteProfile">
+        <wadl:doc xml:lang="EN" title="Delete profile" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a profile.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="GET" id="listPolicies">
+        <wadl:doc xml:lang="EN" title="List policies" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all policies.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                &limitMarkerReqParameter;
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Sorts the list by the <code>name</code>,
+                            <code>type</code>, <code>level</code>,
+                            <code>created_time</code>,
+                            <code>updated_time</code>,
+                            <code>deleted_time</code>, or
+                            <code>cooldown</code> attribute.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the name of a policy.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="type" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the type of a policy.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="level" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the default enforcement
+                            level of a policy.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="cooldown" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the default cooldown value
+                            of a policy.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>Specifies whether deleted policies are to be listed.</para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/policy_list_resp.json"/>
+                </wadl:doc>
+                <param name="policies" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            List of policy records. Each record contains
+                            fields such as <code>id</code>, <code>name</code>,
+                            <code>type</code>, <code>spec</code>,
+                            <code>level</code>, <code>cooldown</code>, and so
+                            on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createPolicy">
+        <wadl:doc xml:lang="EN" title="Create policy" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Creates a policy.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/policy_create.json"/>
+                </wadl:doc>
+                <param name="policy" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with keys and values that specify the
+                            details for the policy to be created:
+                        </para>
+                    </wadl:doc>
+                </param>
+                &createPolicyRequestParameters;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/policy_create_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="policy" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with a set of keys and values that
+                            provides the details of the policy.
+                        </para>
+                        <itemizedlist xml:id="policy_response_body">
+                            <title>Policy create response</title>
+                            <listitem>
+                                <para>
+                                    <code>id</code> An unique ID for the newly created policy.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>name</code> Name for the newly created policy.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>type</code> Name of policy type referenced by the policy.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>spec</code> Detailed specification based on the policy type.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>level</code> A number representing the default enforcement level.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>cooldown</code> A number representing the default cooldown seconds.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>created_time</code> The UTC date and
+                                    time stamp when the policy was created.
+                                </para>
+                            </listitem>
+                             <listitem>
+                                <para>
+                                    <code>updated_time</code> The UTC date and
+                                    time stamp when the policy was updated.
+                                </para>
+                            </listitem>
+                             <listitem>
+                                <para>
+                                    <code>deleted_time</code> The UTC date and
+                                    time stamp when the policy was deleted.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>domain</code> The ID of the domain to which the profile belongs.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>project</code> The ID of the project to which the profile belongs.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>user</code> The ID of the user who created the profile.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showPolicy">
+        <wadl:doc xml:lang="EN" title="Show policy details" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a policy.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A policy record with fields such as <code>id</code>,
+                        <code>name</code>, <code>type</code>,
+                        <code>spec</code>, <code>level</code>,
+                        <code>cooldown</code>, <code>created_time</code>,
+                        <code>deleted_time</code>, and so on.
+                    </para>
+                    <xsdxt:code href="samples/policy_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PATCH" id="updatePolicy">
+        <wadl:doc xml:lang="EN" title="Update policy" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Updates a policy.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/policy_update.json"/>
+                </wadl:doc>
+                <param name="policy" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with a set of key and value pairs that
+                            specify the details of the policy:
+                        </para>
+                        <itemizedlist xml:id="updatePolicy_body">
+                            <title>Policy body</title>
+                            <listitem>
+                                <para>
+                                    <code>name</code> New name for the policy, if specified.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>level</code> New enforcement level for the policy, if specified.
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>cooldown</code> New cooldown, in
+                                    seconds, for the policy, if specified.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A policy record that includes fields such as
+                        <code>id</code>, <code>name</code>, <code>type</code>,
+                        <code>spec</code>, <code>level</code>,
+                        <code>cooldown</code>, <code>created_time</code>,
+                        <code>updated_time</code>, <code>deleted_time</code>,
+                        and so on.
+                    </para>
+                    <xsdxt:code href="samples/policy_update_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deletePolicy">
+        <wadl:doc xml:lang="EN" title="Delete policy" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a policy.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="GET" id="listNodes">
+        <wadl:doc xml:lang="EN" title="List nodes" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all nodes.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                &limitMarkerReqParameter;
+                <param name="cluster_id" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the cluster that owns a node.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Includes deleted nodes in or excludes deleted
+                            nodes from the list.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the name of a node.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="status" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the status of a node.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Sorts the list by an attribute. A valid attribute
+                            is <code>name</code>, <code>status</code>,
+                            <code>created_time</code>, or <code>updated_time
+                            </code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="global_project" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether nodes from all tenants (projects) are to be listed.
+                            Operation subject to access policy enforcement.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/node_list_resp.json"/>
+                </wadl:doc>
+                <param name="nodes" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            List of node records. Each record contains fields
+                            such as <code>id</code>, <code>cluster_id</code>,
+                            <code>name</code>, <code>physical_id</code>,
+                            <code>profile_id</code>,
+                            <code>created_time</code>, <code>index</code>,
+                            <code>status</code>, <code>status_reason</code>,
+                            <code>metadata</code>, <code>updated_time</code>,
+                            and so on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createNode">
+        <wadl:doc xml:lang="EN" title="Create node" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Creates a node.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/node_create.json"/>
+                </wadl:doc>
+                <param name="node" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>A map with detailed data for the node.</para>
+                        <itemizedlist xml:id="createNode_body">
+                            <title>Node Create Request Body</title>
+                            <listitem>
+                                <para>
+                                    <code>name</code> Name for the created node (required).
+                                </para>
+                            </listitem>
+                             <listitem>
+                                <para>
+                                    <code>profile_id</code> Name, ID, or short
+                                    ID of the profile used by the node for creation (required).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>cluster_id</code> Name, ID, or short ID of the cluster
+                                    the node lives in. If not specified, the node created will be
+                                    an orphaned node (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>role</code> A string indicating the role this node plays
+                                    in a cluster (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>metadata</code> A list of key-value pairs to attach to
+                                    the newly created node (optional).
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/node_create_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="node" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Detailed data for the node, such as
+                            <code>id</code>, <code>name</code>,
+                            <code>status</code>, and so on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="PATCH" id="updateNode">
+        <wadl:doc xml:lang="EN" title="Update node" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Updates a node.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/node_update.json"/>
+                </wadl:doc>
+                <param name="node" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>A map with detailed data for the node.</para>
+                        <itemizedlist xml:id="updateNode_body">
+                            <title>Node Update Request Body</title>
+                            <listitem>
+                                <para>
+                                    <code>name</code> New name for the node (optional).
+                                </para>
+                            </listitem>
+                             <listitem>
+                                <para>
+                                    <code>profile_id</code> Name, ID, or short ID of the new
+                                    profile to use by the node. The new profile has to have
+                                    the same profile type as that of the node (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>role</code> The new role this node
+                                    plays in a cluster (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>metadata</code> A list of key-value pairs to attach to
+                                    the updated node (optional).
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/node_update_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="node" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Detailed data for the node such as
+                            <code>id</code>, <code>name</code>,
+                            <code>status</code>, and so on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="node_action">
+        <wadl:doc xml:lang="EN" title="Trigger node action" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Triggers an action on a node.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="action" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with the action to trigger. Optionally,
+                            includes the parameters for the action. Supported
+                            action names include:
+                        </para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <code>join</code> Adds current node to a cluster.
+                                    <xsdxt:code href="samples/node_join.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>leave</code> Deletes the current node from its cluster.
+                                    <xsdxt:code href="samples/node_leave.json"/>
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A map that includes the <code>action</code> key and
+                        value, where the value is the UUID of the action that
+                        the request initiated.
+                    </para>
+                </wadl:doc>
+                &actionLocationParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteNode">
+        <wadl:doc xml:lang="EN" title="Delete node" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a node.
+            </para>
+        </wadl:doc>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The <code>Location</code> response header contains the
+                        action that the request initiated.
+                    </para>
+                </wadl:doc>
+                &resourceLocationParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showNode">
+        <wadl:doc xml:lang="EN" title="Show node details" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows data for a node.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="show_details" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether the node details are returned.
+                            Default is <code>False</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A node record. Each record contains fields such as
+                        <code>id</code>, <code>cluster_id</code>,
+                        <code>name</code>, <code>physical_id</code>,
+                        <code>profile_id</code>, <code>created_time</code>,
+                        <code>index</code>, <code>status</code>,
+                        <code>status_reason</code>, <code>metadata</code>,
+                        <code>updated_time</code>, and so on.
+                    </para>
+                    <xsdxt:code href="samples/node_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listWebhooks">
+        <wadl:doc xml:lang="EN" title="List webhooks" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all webhooks.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                &limitMarkerReqParameter;
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether to show or omit deleted webhooks.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the name of a webhook.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="user" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the user name of a webhook.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="obj_id" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the ID of the targeted object of a webhook.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="obj_type" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the type of the targeted object of a webhook.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="action" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the targeted action of a webhook.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Sorts the list by an attribute. A valid attribute
+                            is <code>name</code>, <code>obj_id</code>,
+                            <code>obj_type</code>, <code>created_time</code>,
+                            or <code>deleted_time</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="global_project" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether to show or omit webhooks from all projects.
+                            This operation is subject to access privilege checking.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/webhook_list_resp.json"/>
+                </wadl:doc>
+                <param name="nodes" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            List of webhook records. Each record contains
+                            fields such as <code>id</code>, <code>name</code>,
+                            <code>user</code>, <code>project></code>,
+                            <code>domain</code>, <code>obj_id</code>,
+                            <code>obj_type</code>, <code>action</code>,
+                            <code>credential</code>, <code>params</code>,
+                            <code>created_time</code> and
+                            <code>deleted_time</code>, and so on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createWebhook">
+        <wadl:doc xml:lang="EN" title="Create webhook" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Creates a webhook.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/webhook_create.json"/>
+                </wadl:doc>
+                <param name="webhook" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A map with detailed data for the webhook.
+                        </para>
+                        <itemizedlist xml:id="createWebhook_body">
+                            <title>Webhook Create Request Body</title>
+                            <listitem>
+                                <para>
+                                    <code>name</code> Name for the webhook (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>obj_id</code> Name, ID, or short ID of the object targeted
+                                    by the webhook (required).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>obj_type</code> The object type. A
+                                    valid value is <code>cluster</code>,
+                                    <code>node</code>, or <code>policy</code> (required).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>action</code> The action to initiate
+                                    when the webhook is triggered. Valid
+                                    values depend on the
+                                    <code>obj_type</code> (required).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>credential</code> A map of key and
+                                    value pairs to use for authentication. If
+                                    omitted, the requester credential is used
+                                    (optional).
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>params</code> A map of key and value
+                                    pairs to use for action creation. Some
+                                    actions might require certain input
+                                    parameters (optional).
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/webhook_create_resp.json" />
+                </wadl:doc>
+                &resourceLocationParameter;
+                <param name="webhook" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The webhook details, such as <code>id</code>,
+                            <code>name</code>, <code>action</code>, and so on.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showWebhook">
+        <wadl:doc xml:lang="EN" title="Show webhook details" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for a webhook.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        A webhook record. The record includes fields such as
+                        <code>id</code>, <code>name</code>,
+                        <code>obj_id</code>, <code>obj_type</code>,
+                        <code>action</code>, <code>credential</code>,
+                        <code>params</code>, <code>created_time</code>,
+                        <code>created_time</code>, <code>deleted_time</code>,
+                        <code>user</code>, <code>project</code>,
+                        <code>domain</code>, and so on.
+                    </para>
+                    <xsdxt:code href="samples/webhook_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteWebhook">
+        <wadl:doc xml:lang="EN" title="Delete webhook" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a webhook.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+    </method>
+    <method name="POST" id="triggerWebhook">
+        <wadl:doc xml:lang="EN" title="Trigger webhook action" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Triggers a webhook action.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="key" style="query" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The key to decipher the credentials stored in database.
+                            Senlin uses the decrypted data for authentication.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="params" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The JSON body with inputs to use for the targeted action.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The <code>Location</code> response header contains the
+                        action that the request initiated.
+                    </para>
+                </wadl:doc>
+                &actionLocationParameter;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listEvents">
+        <wadl:doc xml:lang="EN" title="List events" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists events.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &limitMarkerReqParameter;
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sorts the list by an attribute. A valid attribute
+                            is <code>timestamp</code>, <code>obj_type </code>,
+                            <code>obj_name</code>, <code>user</code>, or
+                            <code>action</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="global_project" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether to include or exclude events for all projects.
+                            Default is <code>False</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether to include or exclude deleted events.
+                            Default is <code>False</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="obj_id" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the object ID for an event.
+                            Use this filter multiple times to filter by multiple objects.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="obj_type" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the type of object
+                            associated with an event. Use this filter multiple
+                            times to filter by multiple objects. A valid value
+                            is <code>CLUSTER</code> or <code>NODE</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="obj_name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the name of object
+                            associated with an event. Use this filter multiple
+                            times to filter by multiple objects.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="cluster_id" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the cluster ID associated
+                            with an event. Use this filter multiple times to
+                            filter by multiple clusters.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="action" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the action name associated
+                            with an event. Use this filter multiple times to
+                            filter by multiple actions.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/event_list_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showEvent">
+        <wadl:doc xml:lang="EN" title="Show event details" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for an event.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        An <code>event</code> map, which contains the details
+                        of an event such as <code>TIMESTAMP</code> or
+                        <code>LEVEL</code>.
+                    </para>
+                    <xsdxt:code href="samples/event_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listActions">
+        <wadl:doc xml:lang="EN" title="List actions" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists all actions.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &limitMarkerReqParameter;
+                <param name="name" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by an action name. Use this
+                            filter multiple times to filter by multiple names.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="target" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by the targeted object ID
+                            that is associated with an action. An object can be a
+                            cluster, a node, and so on. Use this filter
+                            multiple times to filter by multiple targets.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="action" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Filters the response by an action name. Use this
+                            filter multiple times to filter by multiple names.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_key" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Sorts the list by the <code>name</code>,
+                            <code>target</code>, <code>action</code>,
+                            <code>created_time</code>, <code>status</code>, or
+                            other attribute.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="sort_dir" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Sort direction. A valid value is <code>asc</code>
+                            (ascending) or <code>desc</code> (descending).
+                            Default is <code>desc</code>. You can specify
+                            multiple pairs of sort key and sort direction
+                            query parameters. If you omit the sort direction
+                            in a pair, the API uses the natural sorting
+                            direction of the attribute that is provided as the
+                            <code>sort_key</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="show_deleted" style="query" required="false"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Indicates whether to include or exclude deleted
+                            action entries. Default is <code>False</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        An <code>actions</code> list that contains all records
+                        that meet the criteria. Each record provides detailed
+                        data about an action.
+                    </para>
+                    <xsdxt:code href="samples/action_list_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showAction">
+        <wadl:doc xml:lang="EN" title="Show action details" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for an action.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        An <code>action</code> map. Contains fields, such as <code>id</code>,
+                        <code>action</code>, and so on.
+                    </para>
+                    <xsdxt:code href="samples/action_get_resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showBuild">
+        <wadl:doc xml:lang="EN" title="Show build information" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows build information for a Senlin deployment.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/build_info.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
