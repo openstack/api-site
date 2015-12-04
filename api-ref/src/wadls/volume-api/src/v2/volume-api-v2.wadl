@@ -11,20 +11,15 @@
     xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/v2"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:json="http://json-schema.org/schema#"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <resources base="https://volume.example.com/" xml:id="volume-v2">
         <resource id="versions" path="//">
             <method href="#listVersions"/>
         </resource>
         <resource id="version" type="#VersionDetails" path="//v2">
             <resource id="tenant_id" path="{tenant_id}">
-                <param name="tenant_id" style="template"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>The unique identifier of the tenant or
-                            account.</para></wadl:doc>
-                </param>
+                &tenantIdRequestParameter;
                 <resource id="extensions" type="#ExtensionList"
                     path="extensions">
                     <resource id="extension" path="{alias}">
@@ -34,10 +29,12 @@
                             type="xsd:string">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>An alias, which is
-                                   a name for a pointer to a resource.
-                                   For example, a named
-                                   extension.</para>
+                                xml:lang="EN">
+                                <para>
+                                    An alias, which is a name for a pointer to
+                                    a resource. For example, a named
+                                    extension.
+                               </para>
                             </wadl:doc>
                         </param>
                         <method href="#getExtension-cinder-v2"/>
@@ -54,8 +51,12 @@
                             required="true" type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The UUID of an existing
-                                   volume.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                    The UUID of an existing
+                                    volume.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <method href="#getVolume"/>
                         <method href="#updateVolume"/>
@@ -82,8 +83,12 @@
                             required="true" type="csapi:UUID">
                             <wadl:doc
                                 xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The UUID for an existing volume
-                                   type.</para></wadl:doc>
+                                xml:lang="EN">
+                                <para>
+                                    The UUID for an existing volume
+                                    type.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <method href="#updateVolumeType"/>
                         <method href="#updateVolumeTypeExtraSpecs"/>
@@ -93,9 +98,9 @@
                 </resource>
                 <resource id="snapshots" path="snapshots">
                     <method href="#createSnapshot"/>
-                    <method href="#getSnapshotsSimple"/>
+                    <method href="#listSnapshots"/>
                     <resource path="detail" id="detail-snapshot">
-                        <method href="#getSnapshotsDetail"/>
+                        <method href="#listSnapshotsDetail"/>
                     </resource>
                     <resource path="{snapshot_id}" id="snapshot_id">
                         <param name="snapshot_id" style="template"
@@ -108,7 +113,7 @@
                                </para>
                            </wadl:doc>
                         </param>
-                        <method href="#getSnapshot"/>
+                        <method href="#showSnapshot"/>
                         <method href="#updateSnapshot"/>
                         <method href="#deleteSnapshot"/>
                         <resource path="metadata"
@@ -242,28 +247,52 @@
             <para role="shortdesc">
                 Creates a volume.
             </para>
-            <para>To create a bootable volume, include the ID of the image
-            from which you want to create the volume in the
-            <code>imageRef</code> attribute in the request body.</para>
+            <para>
+                To create a bootable volume, include the ID of the image from
+                which you want to create the volume in the
+                <code>imageRef</code> attribute in the request body.
+            </para>
             <para>Preconditions</para>
             <itemizedlist>
-                <listitem><para>You must have enough volume storage quota
-                          remaining to create a volume of size requested.</para></listitem>
+                <listitem>
+                    <para>
+                        You must have enough volume storage quota remaining to
+                        create a volume of size requested.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Asynchronous Postconditions</para>
             <itemizedlist>
-                <listitem><para>With correct permissions, you can see the volume status
-                as <code>available</code> through API calls.</para></listitem>
-                <listitem><para>With correct access, you can see the created volume
-                in the storage system that OpenStack Block Storage manages.</para></listitem>
+                <listitem>
+                    <para>
+                        With correct permissions, you can see the volume
+                        status as <code>available</code> through API calls.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        With correct access, you can see the created volume in
+                        the storage system that OpenStack Block Storage
+                        manages.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Troubleshooting</para>
             <itemizedlist>
-                <listitem><para>If volume status remains <code>creating</code> or
-                shows another error status, the request failed. Ensure you meet the preconditions
-                then investigate the storage back end.</para></listitem>
-                <listitem><para>Volume is not created in the storage system which OpenStack
-                          Block Storage manages.</para></listitem>
+                <listitem>
+                    <para>
+                        If volume status remains <code>creating</code> or
+                        shows another error status, the request failed. Ensure
+                        you meet the preconditions then investigate the
+                        storage back end.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Volume is not created in the storage system that
+                        OpenStack Block Storage manages.
+                    </para>
+                </listitem>
                 <listitem>
                     <para>
                         The storage node needs enough free storage space to
@@ -1001,73 +1030,83 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/snapshot_create_request.xml"
-                    />
+                        href="api_samples/snapshot_create_request.xml"/>
                 </wadl:doc>
-                <param name="snapshot" style="query" type="string"
+                <param name="snapshot" style="plain" type="string"
                     required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A partial representation
-                            of a snapshot used in the creation
-                            process.</para>
+                        xml:lang="EN">
+                        <para>
+                            A partial representation of a snapshot used in the
+                            creation process.
+                        </para>
                     </wadl:doc>
                 </param>
-                <param name="volume_id" style="query" type="string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>To create a snapshot from
-                            an existing volume, specify the ID of the
-                            existing volume.</para>
-                    </wadl:doc>
-                </param>
-                <param name="force" style="query" type="xsd:boolean"
+                <param name="name" style="plain" type="string"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>[True/False] Indicate
-                            whether to snapshot, even if the volume is
-                            attached. Default==False.</para>
+                        xml:lang="EN">
+                        <para>
+                            The name of the snapshot. Default is
+                            <code>None</code>.
+                        </para>
                     </wadl:doc>
                 </param>
-                <param name="name" style="query" type="string"
-                    required="false">
-
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Name of the snapshot.
-                            Default==None.</para>
-                    </wadl:doc>
-                </param>
-                <param name="description" style="query"
+                <param name="description" style="plain"
                     type="string" required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Description of snapshot.
-                            Default==None.</para>
+                        xml:lang="EN">
+                        <para>
+                            A description for the snapshot. Default is
+                            <code>None</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="new_size" style="plain"
+                    type="xsd:int" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The size for the volume, in gibibytes (GiB).
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="volume_id" style="plain" type="csapi:uuid"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            To create a snapshot from an existing volume,
+                            specify the ID of the existing volume.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="force" style="plain" type="xsd:boolean"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Indicates whether to snapshot, even if the volume
+                            is attached. Default is <code>False</code>.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>
             <representation mediaType="application/json"
-                            json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots#post/snapshot">
+                json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots#post/snapshot">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/snapshot_create_request.json"
-                    />
+                        href="api_samples/snapshot_create_request.json"/>
                 </wadl:doc>
             </representation>
         </request>
         <response status="202">
-            <param name="size" style="plain" type="xsd:int"
-                required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <para>The size of the volume, in
-                        gibibytes (GiB).</para></wadl:doc>
-            </param>
             <representation mediaType="application/xml">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="api_samples/snapshot_create_response.xml"
-                    />
+                        href="api_samples/snapshot_create_response.xml"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/json">
@@ -1077,10 +1116,12 @@
                         href="api_samples/snapshot_create_response.json"
                     />
                 </wadl:doc>
+                &snapshotResponseParameter;
+                &snapshotResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="GET" id="getSnapshotsSimple">
+    <method name="GET" id="listSnapshots">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List snapshots">
             <para role="shortdesc">
@@ -1110,10 +1151,12 @@
                         href="api_samples/snapshot_list_simple_response.json"
                     />
                 </wadl:doc>
+                &snapshotsResponseParameter;
+                &snapshotResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="GET" id="getSnapshotsDetail">
+    <method name="GET" id="listSnapshotsDetail">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List snapshots with details">
             <para role="shortdesc">
@@ -1137,10 +1180,30 @@
                         href="api_samples/snapshot_list_detail_response.json"
                     />
                 </wadl:doc>
+                &snapshotsResponseParameter;
+                &snapshotResponseParameters;
+                <param name="os-extended-snapshot-attributes:progress" style="plain" type="int"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            A percentage value for the build progress.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="os-extended-snapshot-attributes:project_id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the owning project.
+                        </para>
+                    </wadl:doc>
+                </param>
             </representation>
         </response>
     </method>
-    <method name="GET" id="getSnapshot">
+    <method name="GET" id="showSnapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show snapshot details">
             <para role="shortdesc">
@@ -1163,6 +1226,26 @@
                         href="api_samples/snapshot_show_response.json"
                     />
                 </wadl:doc>
+                &snapshotResponseParameter;
+                &snapshotResponseParameters;
+                <param name="os-extended-snapshot-attributes:progress" style="plain" type="int"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            A percentage value for the build progress.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="os-extended-snapshot-attributes:project_id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the owning project.
+                        </para>
+                    </wadl:doc>
+                </param>
             </representation>
         </response>
     </method>
@@ -1182,13 +1265,53 @@
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/json" json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots#put/snapshot">
+            <representation mediaType="application/json"
+                json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots#put/snapshot">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/snapshot_update_request.json"
                     />
                 </wadl:doc>
+                <param name="snapshot" style="plain" type="string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            A partial representation of a snapshot used in the
+                            creation process.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The name of the snapshot. Default is
+                            <code>None</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="description" style="plain"
+                    type="string" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            A description for the snapshot. Default is
+                            <code>None</code>.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="new_size" style="plain"
+                    type="xsd:int" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The size for the volume, in gibibytes (GiB).
+                        </para>
+                    </wadl:doc>
+                </param>
             </representation>
         </request>
         <response status="200">
@@ -1207,6 +1330,8 @@
                         href="api_samples/snapshot_update_response.json"
                     />
                 </wadl:doc>
+                &snapshotResponseParameter;
+                &snapshotResponseParameters;
             </representation>
         </response>
     </method>
@@ -1242,6 +1367,26 @@
                         href="api_samples/snapshot_metadata_response.json"
                     />
                 </wadl:doc>
+                &snapshotResponseParameter;
+                &snapshotResponseParameters;
+                <param name="os-extended-snapshot-attributes:progress" style="plain" type="int"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            A percentage value for the build progress.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="os-extended-snapshot-attributes:project_id" style="plain" type="csapi:uuid"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the owning project.
+                        </para>
+                    </wadl:doc>
+                </param>
             </representation>
         </response>
     </method>
@@ -1261,13 +1406,24 @@
                     />
                 </wadl:doc>
             </representation>
-            <representation mediaType="application/json" json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots/metadata#put/metadata">
+            <representation mediaType="application/json"
+                json:ref="http://docs.openstack.org/api/openstack-block-storage/v2/snapshots/metadata#put/metadata">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
                         href="api_samples/snapshot_update_metadata_request.json"
                     />
                 </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="metadata" style="plain" type="dict"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <para>
+                      One or more metadata key and value pairs for the snapshot.
+                    </para>
+                  </wadl:doc>
+                </param>
             </representation>
         </request>
         <response status="200">
@@ -1286,6 +1442,16 @@
                         href="api_samples/snapshot_update_metadata_response.json"
                     />
                 </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="metadata" style="plain" type="dict"
+                  required="true">
+                  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <para>
+                      One or more metadata key and value pairs for the snapshot, if any.
+                    </para>
+                  </wadl:doc>
+                </param>
             </representation>
         </response>
     </method>
