@@ -10,23 +10,22 @@
     xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
     xmlns:csapi="http://docs.openstack.org/identity/api/v3">
-    <resources base="https://servers.api.openstack.com" xml:id="os-flavorsspecs-v2.1">
+    <resources base="https://servers.api.openstack.com"
+        xml:id="os-remote-consoles-v2.1">
         <resource id="v2.1" path="//v2.1">
             <resource id="tenant_id" path="{tenant_id}">
                 &tenantIdRequestParameter;
-                <resource id="flavors" path="flavors">
-                    <resource id="flavor_id" path="{flavor_id}">
-                        &flavor_idTemplateParameter;
-                        <resource id="os-extra_specs" path="os-extra_specs">
-                            <method href="#createFlavorExtraSpec"/>
-                            <method href="#listFlavorExtraSpecs"/>
-                            <resource id="flavor_extra_spec_key" path="{flavor_extra_spec_key}">
-                                &flavor_extra_spec_keyTemplateParameter;
-                                <method href="#showFlavorExtraSpec"/>
-                                <method href="#updateFlavorExtraSpec"/>
-                                <method href="#deleteFlavorExtraSpec"/>
-                            </resource>
+                <resource id="servers" path="servers">
+                    <resource id="server_id" path="{server_id}">
+                        &serverIdRequestParameter;
+                        <resource id="action" path="action">
+                            <method href="#getRDPConsole"/>
+                            <method href="#getSerialConsole"/>
+                            <method href="#getSPICEConsole"/>
+                            <method href="#getVNCConsole"/>
                         </resource>
                     </resource>
                 </resource>
@@ -34,114 +33,126 @@
         </resource>
     </resources>
     <!-- *******************************************************-->
-    <!--             Flavor Extra Specs                            -->
+    <!--      OS Remote consoles            -->
     <!--*******************************************************-->
-    <method name="POST" id="createFlavorExtraSpec">
+    <method name="POST" id="getRDPConsole">
+        <wadl:doc xml:lang="EN" title="Get RDP console (os-getRDPConsole action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Gets a <link
+                xlink:href="https://technet.microsoft.com/en-us/windowsserver/ee236407">RDP</link>
+                console for a server.
+            </para>
+            <para>
+                Specify the <code>os-getRDPConsole</code> action in the
+                request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/servers-action/get-rdp-console-post-req.json"/>
+                </wadl:doc>
+                &os-getRDPConsoleActionRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/servers-action/get-rdp-console-post-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="getSerialConsole">
+        <wadl:doc xml:lang="EN" title="Get serial console (os-getSerialConsole action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Gets a serial console for a server.
+            </para>
+            <para>
+                Specify the <code>os-getSerialConsole</code> action in the request
+                body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/servers-action/get-serial-console-post-req.json"/>
+                </wadl:doc>
+                &os-getSerialConsoleActionRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../api_samples/servers-action/get-serial-console-post-resp.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="getSPICEConsole">
         <wadl:doc xml:lang="EN"
-            title="Create extra specs for a flavor"
+            title="Get SPICE console (os-getSPICEConsole action)"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Creates extra specs for a flavor, by ID.
+                Gets a SPICE console for a server.
+            </para>
+            <para>
+                Specify the <code>os-getSPICEConsole</code> action in the request
+                body.
             </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-create-req.json"
-                    />
+                        href="../api_samples/servers-action/get-spice-console-post-req.json"/>
                 </wadl:doc>
+                &os-getSPICEConsoleActionRequestParameter;
             </representation>
         </request>
-        <response status="201">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-create-resp.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="GET" id="showFlavorExtraSpec">
-        <wadl:doc xml:lang="EN" title="Show an extra spec for a flavor"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Shows an extra spec, by key, for a flavor, by ID.
-            </para>
-        </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-get-resp.json"
+                        href="../api_samples/servers-action/get-spice-console-post-resp.json"
                     />
                 </wadl:doc>
-                &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
-    <method name="GET" id="listFlavorExtraSpecs">
-        <wadl:doc xml:lang="EN" title="List extra specs for a flavor"
+    <method name="POST" id="getVNCConsole">
+        <wadl:doc xml:lang="EN" title="Get VNC console (os-getVNCConsole action)"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Lists all extra specs for a flavor, by ID.
+                Gets a VNC console for a server.
+            </para>
+            <para>
+                Specify the <code>os-getVNCConsole</code> action in the request
+                body.
             </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-create-req.json"
-                    />
+                        href="../api_samples/servers-action/get-vnc-console-post-req.json"/>
                 </wadl:doc>
+                &os-getVNCConsoleActionRequestParameter;
             </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-list-resp.json"
-                    />
-                </wadl:doc>
-                &x-openstack-request-idHeader;
-            </representation>
-        </response>
-    </method>
-    <method name="PUT" id="updateFlavorExtraSpec">
-        <wadl:doc xml:lang="EN" title="Update an extra spec for a flavor"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Updates an extra spec, by key, for a flavor, by ID.
-            </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-update-req.json"
-                    />
+                        href="../api_samples/servers-action/get-vnc-console-post-resp.json"/>
                 </wadl:doc>
             </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code
-                        href="../api_samples/os-flavor-extra-specs/flavor-extra-specs-update-resp.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="DELETE" id="deleteFlavorExtraSpec">
-        <wadl:doc xml:lang="EN" title="Delete an extra spec for a flavor"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Deletes an extra spec, by key, for a flavor, by ID.
-            </para>
-        </wadl:doc>
-        <response status="204">
         </response>
     </method>
 </application>
