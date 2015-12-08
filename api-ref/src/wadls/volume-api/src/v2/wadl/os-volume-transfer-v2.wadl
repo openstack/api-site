@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/v2"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <resources base="https://volume.example.com/"
+        xml:id="volume-transfer-v2">
+        <resource id="version" path="//v2">
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenant_idTemplateParameter;
+                <resource id="os-volume-transfer" path="os-volume-transfer">
+                    <method href="#createVolumeTransfer"/>
+                    <method href="#listVolumeTransfer"/>
+                    <resource path="detail" id="detail">
+                        <method href="#listVolumeTransferDetails"/>
+                    </resource>
+                    <resource path="{transfer_id}" id="transfer_id">
+                        <param name="transfer_id" style="template"
+                            required="true" type="csapi:UUID">
+                            <wadl:doc
+                                xmlns="http://docbook.org/ns/docbook"
+                                xml:lang="EN">
+                                <para>
+                                    The unique identifier for a volume transfer.
+                                </para>
+                            </wadl:doc>
+                        </param>
+                        <method href="#showVolumeTransfer"/>
+                        <method href="#deleteVolumeTransfer"/>
+                        <resource path="accept" id="accept">
+                            <method href="#acceptVolumeTransfer"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <method name="POST" id="createVolumeTransfer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create volume transfer">
+            <para role="shortdesc">
+                Creates a volume transfer.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfer-create-request.json"
+                    />
+                </wadl:doc>
+                <param name="volume_id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The volume transfer name.</para></wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfer-create-response.json"
+                    />
+                </wadl:doc>
+                <param name="id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="created_at" style="plain" type="xsd:datetime"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Date and time when the volume was created.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The volume transfer name.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="volume_id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="auth_key" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The authentication key for the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:list"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Links for the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listVolumeTransfer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List volume transfers">
+            <para role="shortdesc">
+                Lists volume transfers.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfers-list-response.json"
+                    />
+                </wadl:doc>
+                <param name="id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The name of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="volume_id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:list"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Links for the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listVolumeTransferDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List volume transfers, with details">
+            <para role="shortdesc">
+                Lists volume transfers, with details.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfers-list-detailed-response.json"
+                    />
+                </wadl:doc>
+                <param name="id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="created_at" style="plain" type="xsd:datetime"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Date and time when the volume was created.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The name of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="volume_id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:list"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Links for the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showVolumeTransfer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show volume transfer details">
+            <para role="shortdesc">
+                Shows details for a volume transfer.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfer-show-response.json"
+                    />
+                </wadl:doc>
+                <param name="id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="created_at" style="plain" type="xsd:datetime"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Date and time when the volume was created.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The name of the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="volume_id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The UUID of the volume.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:list"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            Links for the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteVolumeTransfer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete volume transfer">
+            <para role="shortdesc">
+                Deletes a volume transfer.
+            </para>
+        </wadl:doc>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="acceptVolumeTransfer">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Accept volume transfer">
+            <para role="shortdesc">
+                Accepts a volume transfer.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfer-accept-request.json"
+                    />
+                </wadl:doc>
+                <param name="auth_key" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>
+                            The authentication key for the volume transfer.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/os-volume-transfer/volume-transfer-accept-response.json"
+                    />
+                </wadl:doc>
+                <param name="id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The UUID of the volume transfer.</para></wadl:doc>
+                </param>
+                <param name="name" style="plain" type="xsd:string"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The name of the volume transfer.</para></wadl:doc>
+                </param>
+                <param name="volume_id" style="plain" type="csapi:UUID"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>The UUID of the volume.</para></wadl:doc>
+                </param>
+                <param name="links" style="plain" type="xsd:list"
+                    required="true">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN">
+                        <para>Links for the volume transfer.</para></wadl:doc>
+                </param>
+            </representation>
+        </response>
+    </method>
+</application>

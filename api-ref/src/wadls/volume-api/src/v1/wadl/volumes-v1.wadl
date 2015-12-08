@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2012-2015 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../../v2/common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/api/openstack-block-storage/v1"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <resources base="https://volume.example.com/" xml:id="volume-v1">
+        <resource id="versions" path="//">
+            <method href="#listVersionsv1"/>
+        </resource>
+        <resource id="version" type="#VersionDetails" path="//v1">
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenant_idTemplateParameter;
+                <resource id="volumes" path="volumes">
+                    <method href="#createVolume"/>
+                    <method href="#listVolumesSimple"/>
+                    <resource path="detail" id="detail-volume">
+                        <method href="#listVolumesDetail"/>
+                    </resource>
+                    <resource path="{volume_id}" id="volume_id">
+                        &volume_idTemplateParameter;
+                        <method href="#showVolume"/>
+                        <method href="#deleteVolume"/>
+                    </resource>
+                </resource>
+                <resource id="types" path="types">
+                    <method href="#listVolumeTypes"/>
+                    <method href="#createVolumeType"/>
+                    <resource path="{volume_type_id}" id="volume_type_id">
+                        &vol_type_idTemplateParameter;
+                        <method href="#updateVolumeType"/>
+                        <method href="#updateVolumeTypeExtraSpecs"/>
+                        <method href="#showVolumeType"/>
+                        <method href="#deleteVolumeType"/>
+                    </resource>
+                </resource>
+                <resource id="snapshots" path="snapshots">
+                    <method href="#createSnapshot"/>
+                    <method href="#listSnapshotsSimple"/>
+                    <resource path="detail" id="detail-snapshots">
+                        <method href="#listSnapshotsDetail"/>
+                    </resource>
+                    <resource path="{snapshot_id}" id="snapshot_id">
+                        &snapshot_idTemplateParameter;
+                        <method href="#showSnapshot"/>
+                        <method href="#deleteSnapshot"/>
+                        <resource path="metadata" id="snapshot-metadata">
+                            <method href="#showSnapshotMetadata"/>
+                            <method href="#updateSnapshotMetadata"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <resource_type id="VersionDetails">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Version details">
+            <para>
+                API version details.
+            </para>
+        </wadl:doc>
+        <method href="#showVersionDetailsv1"/>
+    </resource_type>
+    <method name="GET" id="listVersionsv1">
+        <wadl:doc xml:lang="EN" title="List API versions" xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists information about all Block Storage API versions.
+            </para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/versions-list-response.json"/>
+                </wadl:doc>
+            </representation>
+            <!-- The following call fails - opened bug #1311243 -->
+            <!-- <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/volumes/cinder-versions-response.xml"
+                    />
+                </wadl:doc>
+            </representation>-->
+        </response>
+    </method>
+    <method name="GET" id="showVersionDetailsv1">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show API v1 details">
+            <para role="shortdesc">
+                Shows Block Storage API v1 details.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/version-show-response.json"/>
+                </wadl:doc>
+            </representation>
+            <!-- this call fails - opened bug 1311243 -->
+            <!--<representation mediaType="application/xml"
+                element="common:version">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/version-show-resp.xml"/>
+                </wadl:doc>
+                <param name="location" style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Location"><para>Full URL
+                            to a service or server.</para></wadl:doc>
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
+            </representation>-->
+        </response>
+        <response status="203">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/version-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create volume">
+            <para role="shortdesc">
+                Creates a volume.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-create-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-create-request.json"/>
+                </wadl:doc>
+                <param name="volume" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A partial representation of a volume that the
+                            creation process uses.
+                        </para>
+                    </wadl:doc>
+                </param>
+                &createVolumeParameters;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-show-response.json"/>
+                </wadl:doc>
+                <param name="volume" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>A <code>volume</code> object.</para>
+                    </wadl:doc>
+                </param>
+                &volumeDetailResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listVolumesSimple">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List volumes">
+            <para role="shortdesc">
+                Lists volumes.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volumes-list-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volumes-list-response.json"/>
+                </wadl:doc>
+                <param name="volumes" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>A <code>volumes</code> object.</para>
+                    </wadl:doc>
+                </param>
+                &volumeSimpleResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listVolumesDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List volumes, with details">
+            <para role="shortdesc">
+                Lists all volumes, with details.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volumes-list-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volumes-list-response.json"/>
+                </wadl:doc>
+                <param name="volumes" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>A <code>volumes</code> object.</para>
+                    </wadl:doc>
+                </param>
+                &volumeDetailResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show volume details">
+            <para role="shortdesc">
+                Shows details for a volume.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-show-response.json"/>
+                </wadl:doc>
+                <param name="volume" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A <code>volume</code> object.
+                        </para>
+                    </wadl:doc>
+                </param>
+                &volumeDetailResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteVolume">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete volume">
+            <para role="shortdesc">
+                Deletes a volume.
+            </para>
+        </wadl:doc>
+        <response status="202"/>
+    </method>
+    <method name="GET" id="listVolumeTypes">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List volume types">
+            <para role="shortdesc">
+                Lists volume types.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-types-list-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-types-list-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="createVolumeType">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create volume type">
+            <para role="shortdesc">
+                Creates a volume type.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-create-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-create-request.json"/>
+                </wadl:doc>
+                <param name="volume_type" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A partial representation of a volume type that the
+                            creation process uses.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="updateVolumeType">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update volume type">
+            <para role="shortdesc">
+                Updates a volume type.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-create-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-create-request.json"/>
+                </wadl:doc>
+                <param name="volume_type" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            Use volume types to categorize
+                            or group volumes.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="updateVolumeTypeExtraSpecs">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update extra specs for a volume type">
+            <para role="shortdesc">
+                Updates the extra specifications for a volume type.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-create-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-create-request.json"/>
+                </wadl:doc>
+                <param name="volume_type" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A volume type. Use to categorize or group volumes.
+                        </para>
+                    </wadl:doc>
+                </param>
+                <param name="extra_specs" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A key and value pair that contains additional
+                            specifications for the volume type. Examples
+                            include capabilities, capacity, compression, and
+                            so on, depending on the storage driver in use.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.json"/>
+                </wadl:doc>
+                <param name="volume" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A partial representation of a volume that the
+                            creation process uses.
+                        </para>
+                    </wadl:doc>
+                </param>
+                &volumeDetailResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showVolumeType">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show volume type details">
+            <para role="shortdesc">
+                Shows details for a volume type.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/volume-type-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteVolumeType">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete volume type">
+            <para role="shortdesc">
+                Deletes a volume type.
+            </para>
+        </wadl:doc>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="createSnapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create snapshot">
+            <para role="shortdesc">
+                Creates a snapshot.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-create-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-create-request.json"/>
+                </wadl:doc>
+                <param name="snapshot" style="plain" required="true" type="csapi:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            A partial representation of a snapshot that the
+                            creation process uses.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listSnapshotsSimple">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List snapshots">
+            <para role="shortdesc">
+                Lists simple snapshots.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshots-list-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshots-list-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="listSnapshotsDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List snapshots with details">
+            <para role="shortdesc">Lists all snapshots, with details.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshots-list-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshots-list-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showSnapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show snapshot details">
+            <para role="shortdesc">
+                Shows details for a snapshot.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="DELETE" id="deleteSnapshot">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete snapshot">
+            <para role="shortdesc">
+                Deletes a snapshot.
+            </para>
+        </wadl:doc>
+        <response status="202"/>
+    </method>
+    <method name="GET" id="showSnapshotMetadata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show snapshot metadata">
+            <para role="shortdesc">
+                Shows metadata for a snapshot.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-metadata-show-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-metadata-show-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="PUT" id="updateSnapshotMetadata">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update snapshot metadata">
+            <para role="shortdesc">
+                Updates metadata for a snapshot.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-metadata-update-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-metadata-update-request.json"/>
+                </wadl:doc>
+                <param name="metadata" style="plain" type="xsd:string" required="false">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            One or more metadata key and value pairs to set or unset for the
+                            snapshot.
+                        </para>
+                        <para>
+                            To unset a metadata key value, specify only the key name.
+                        </para>
+                        <para>
+                            To set a metadata key value, specify the key and value pair.
+                        </para>
+                        <para>
+                            The Block Storage server does not respect case-
+                            sensitive key names. For example, if you specify
+                            both <code>"key": "v1"</code> and <code>"KEY":
+                            "V1"</code>, the server sets and returns only the
+                            <code>KEY</code> key and value pair.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-metadata-update-response.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/volumes/snapshot-metadata-update-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+</application>
