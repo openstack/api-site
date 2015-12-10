@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application[
-    <!ENTITY % common  SYSTEM "common.ent">
-    %common;
-    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
-    %common_project;
-]>
+   <!ENTITY % common  SYSTEM "../common.ent">
+   %common;
+   <!ENTITY % common_project  SYSTEM "../../../../../common_project.ent">
+   %common_project;
+   ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:common="http://docs.openstack.org/common/api/v1.0"
     xmlns:csapi="http://docs.openstack.org/share/api/v1.0"
@@ -14,21 +14,21 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
-   <resources base="https://share_server_id.example.com/" xml:id="os-share-v1.0">
+   <resources base="https://share_server_id.example.com/" xml:id="os-share-v2.0-experimental">
       <resource id="versions" path="/">
          <param name="X-Openstack-Manila-Api-Version" style="header" type="xsd:string">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>A valid Shared File Systems API micro-version.
-                  For example,
-                  <code>"X-Openstack-Manila-Api-Version: 2.6"</code>.
-                  If you omit this header, the default micro-version is 2.0.
+               <para>
+                  A valid Shared File Systems API micro-version. For example,
+                  <code>"X-Openstack-Manila-Api-Version: 2.6"</code>. If you
+                  omit this header, the default micro-version is 2.0.
                </para>
             </wadl:doc>
          </param>
-         <method href="#share-listVersions" />
+         <method href="#listVersions-v2-experimental" />
          <resource id="version" path="v2">
             <resource id="extensions" path="extensions">
-               <method href="#getExtensions" />
+               <method href="#listExtensions" />
             </resource>
             <resource id="tenant_id" path="{tenant_id}">
                <param name="X-OpenStack-Manila-API-Experimental" style="header" type="xsd:bool"
@@ -36,15 +36,16 @@
                   <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                      <para>
                         Indicates that this is an experimental Shared File
-                        Systems API request. Set to <code>true</code>.
-                        For example,
-                        <code>"X-OpenStack-Manila-API-Experimental: true"</code>.
+                        Systems API request. Set to <code>true</code>. For
+                        example, <code>"X-OpenStack-Manila-API-Experimental:
+                        true"</code>.
                      </para>
                   </wadl:doc>
                </param>
                <param name="tenant_id" style="template" type="csapi:UUID">
                   <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                     <para>The tenant ID in a multi-tenancy cloud.</para>
+                     <para>
+                        The tenant ID in a multi-tenancy cloud.</para>
                   </wadl:doc>
                </param>
                <resource id="shares" path="shares">
@@ -63,9 +64,9 @@
                </resource>
                <resource id="consistency-groups" path="consistency-groups">
                   <method href="#createConsistencyGroup" />
-                  <method href="#getConsistencyGroups" />
+                  <method href="#listConsistencyGroups" />
                   <resource path="detail" id="detail-consistency-groups">
-                     <method href="#getConsistencyGroupsDetails" />
+                     <method href="#listConsistencyGroupsDetails" />
                   </resource>
                   <resource path="{consistency_group_id}" id="consistency_group_id">
                      <param name="consistency_group_id" style="template" type="csapi:UUID">
@@ -73,7 +74,7 @@
                            <para>The UUID of the consistency group.</para>
                         </wadl:doc>
                      </param>
-                     <method href="#getConsistencyGroup" />
+                     <method href="#showConsistencyGroup" />
                      <method href="#updateConsistencyGroup" />
                      <method href="#deleteConsistencyGroup" />
                      <resource id="consistency-groups-action" path="action">
@@ -84,9 +85,9 @@
                </resource>
                <resource id="cgsnapshots" path="cgsnapshots">
                   <method href="#createConsistencyGroupSnapshot" />
-                  <method href="#getConsistencyGroupSnapshots" />
+                  <method href="#listConsistencyGroupsnapshots" />
                   <resource path="detail" id="detail-cgsnapshots">
-                     <method href="#getConsistencyGroupSnapshotsDetails" />
+                     <method href="#listConsistencyGroupsnapshotsDetails" />
                   </resource>
                   <resource path="{cgsnapshot_id}" id="cgsnapshot_id">
                      <param name="cgsnapshot_id" style="template" type="csapi:UUID">
@@ -94,12 +95,12 @@
                            <para>The UUID of the consistency group snapshot.</para>
                         </wadl:doc>
                      </param>
-                     <resource path="members" id="cgsnapshot-members">
-                        <method href="#getConsistencyGroupSnapshotMembers" />
-                     </resource>
-                     <method href="#getConsistencyGroupSnapshot" />
+                     <method href="#listConsistencyGroupsnapshot" />
                      <method href="#updateConsistencyGroupSnapshot" />
                      <method href="#deleteConsistencyGroupSnapshot" />
+                     <resource path="members" id="cgsnapshot-members">
+                        <method href="#listConsistencyGroupsnapshotMembers" />
+                     </resource>
                      <resource id="cgsnapshots-action" path="action">
                         <method href="#resetConsistencyGroupSnapshotState" />
                         <method href="#force-deleteConsistencyGroupSnapshot" />
@@ -116,18 +117,17 @@
             Migrates a share from one back end to another.
          </para>
          <para>
-            You can migrate a share from one back end to another but
-            both back ends must set the
-            <code>driver_handles_share_servers</code> parameter to
-            <code>False</code>. This action is not supported if one of the
-            back ends is handled by a share driver. You can configure a back
-            end in the <code>manila.conf</code> file.
+            You can migrate a share from one back end to another but both back
+            ends must set the <code>driver_handles_share_servers</code>
+            parameter to <code>False</code>. If a share driver handles one of
+            the back ends, this action is not supported. You can configure a
+            back end in the <code>manila.conf</code> file.
          </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-share-actions-migrate-request.json" />
+               <xsdxt:code href="../samples/manila-share-actions-migrate-request.json" />
             </wadl:doc>
             &migrateShareRequestParameters;
          </representation>
@@ -141,7 +141,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-create-request.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-create-request.json" />
             </wadl:doc>
             &createConsistencyGroupRequestParameters;
          </representation>
@@ -149,26 +149,26 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-create-response.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-create-response.json" />
             </wadl:doc>
             &createConsistencyGroupResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroups">
+   <method name="GET" id="listConsistencyGroups">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List consistency groups">
          <para role="shortdesc">Lists all consistency groups.</para>
       </wadl:doc>
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-list-response.json" />
+               <xsdxt:code href="../samples/manila-consistency-groups-list-response.json" />
             </wadl:doc>
-            &getConsistencyGroupsResponseParameters;
+            &listConsistencyGroupsResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroupsDetails">
+   <method name="GET" id="listConsistencyGroupsDetails">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="List consistency groups with details">
          <para role="shortdesc">Lists all consistency groups with details.</para>
@@ -176,13 +176,13 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-list-detailed-response.json" />
+               <xsdxt:code href="../samples/manila-consistency-groups-list-detailed-response.json" />
             </wadl:doc>
             &createConsistencyGroupResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroup">
+   <method name="GET" id="showConsistencyGroup">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Show consistency group details">
          <para role="shortdesc">Shows details for a consistency group.</para>
@@ -190,7 +190,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-show-response.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-show-response.json" />
             </wadl:doc>
             &createConsistencyGroupResponseParameters;
          </representation>
@@ -217,7 +217,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-update-request.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-update-request.json" />
             </wadl:doc>
             &updateConsistencyGroupRequestParameters;
          </representation>
@@ -225,7 +225,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-update-response.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-update-response.json" />
             </wadl:doc>
             &createConsistencyGroupResponseParameters;
          </representation>
@@ -241,13 +241,19 @@
    <method name="POST" id="resetConsistencyGroupState">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Reset consistency group state">
-         <para role="shortdesc">Administrator only. Explicitly updates the state of a consistency group.</para>
-         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+         <para role="shortdesc">
+            Administrator only. Explicitly updates the state of a consistency
+            group.
+         </para>
+         <para>
+            Use the <code>policy.json</code> file to grant permissions for
+            this action to other roles.
+         </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-reset-state-request.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-reset-state-request.json" />
             </wadl:doc>
             &resetConsistencyGroupStateRequestParameter;
          </representation>
@@ -257,13 +263,18 @@
    <method name="POST" id="force-deleteConsistencyGroup">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Force-delete consistency group">
-         <para role="shortdesc">Administrator only. Force-deletes a consistency group.</para>
-         <para>Use the <code>policy.json</code> file to grant permissions for this action to other roles.</para>
+         <para role="shortdesc">
+            Administrator only. Force-deletes a consistency group.
+         </para>
+         <para>
+            Use the <code>policy.json</code> file to grant permissions for
+            this action to other roles.
+         </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-consistency-group-force-delete-request.json" />
+               <xsdxt:code href="../samples/manila-consistency-group-force-delete-request.json" />
             </wadl:doc>
             &force-deleteConsistencyGroupRequestParameter;
          </representation>
@@ -282,7 +293,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-create-request.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-create-request.json" />
             </wadl:doc>
             &createConsistencyGroupSnapshotRequestParameters;
          </representation>
@@ -290,13 +301,13 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-create-response.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-create-response.json" />
             </wadl:doc>
             &createConsistencyGroupSnapshotResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroupSnapshots">
+   <method name="GET" id="listConsistencyGroupsnapshots">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="List consistency group snapshots">
          <para role="shortdesc">Lists all consistency group snapshots.</para>
@@ -304,13 +315,13 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-list-response.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshots-list-response.json" />
             </wadl:doc>
-            &getConsistencyGroupSnapshotsResponseParameters;
+            &listConsistencyGroupSnapshotsResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroupSnapshotsDetails">
+   <method name="GET" id="listConsistencyGroupsnapshotsDetails">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="List consistency group snapshots with details">
          <para role="shortdesc">Lists all consistency group snapshots with details.</para>
@@ -318,13 +329,13 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-list-detailed-response.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshots-list-detailed-response.json" />
             </wadl:doc>
             &createConsistencyGroupSnapshotResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroupSnapshot">
+   <method name="GET" id="listConsistencyGroupsnapshot">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Show consistency group snapshot details">
          <para role="shortdesc">Shows details for a consistency group snapshot.</para>
@@ -332,13 +343,13 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-show-response.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-show-response.json" />
             </wadl:doc>
             &createConsistencyGroupSnapshotResponseParameters;
          </representation>
       </response>
    </method>
-   <method name="GET" id="getConsistencyGroupSnapshotMembers">
+   <method name="GET" id="listConsistencyGroupsnapshotMembers">
       <wadl:doc xmlns="http://docbook.org/ns/docbook"
        xml:lang="EN" title="Show consistency group snapshot member">
          <para role="shortdesc">Shows information about a consistency group snapshot member.</para>
@@ -346,9 +357,9 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-list-members-response.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshots-list-members-response.json" />
             </wadl:doc>
-            &getConsistencyGroupSnapshotMembersResponseParameters;
+            &listConsistencyGroupSnapshotMembersResponseParameters;
          </representation>
       </response>
    </method>
@@ -373,7 +384,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-update-request.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-update-request.json" />
             </wadl:doc>
             &updateConsistencyGroupSnapshotRequestParameters;
          </representation>
@@ -381,7 +392,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-update-response.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-update-response.json" />
             </wadl:doc>
             &createConsistencyGroupSnapshotResponseParameters;
          </representation>
@@ -409,7 +420,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-reset-state-request.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-reset-state-request.json" />
             </wadl:doc>
             &resetConsistencyGroupSnapshotStateRequestParameter;
          </representation>
@@ -429,7 +440,7 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="samples/manila-cg-snapshot-force-delete-request.json" />
+               <xsdxt:code href="../samples/manila-cg-snapshot-force-delete-request.json" />
             </wadl:doc>
             &force-deleteConsistencyGroupSnapshotRequestParameter;
          </representation>
