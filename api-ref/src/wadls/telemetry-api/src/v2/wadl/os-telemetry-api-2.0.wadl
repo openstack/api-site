@@ -8,9 +8,9 @@
 <!--        xmllint -noent os-telemetry-api-2.0.wadl       -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
-    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -28,15 +28,7 @@
                 <method href="#listAlarms"/>
                 <method href="#createAlarm"/>
                 <resource path="{alarm_id}" id="alarm_id">
-                    <param xmlns="http://wadl.dev.java.net/2009/02" name="alarm_id" required="true"
-                        style="template" type="xsd:string">
-                        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>
-                                The UUID of the alarm.
-                            </para>
-                        </wadl:doc>
-                    </param>
+                    &alarm_idTemplateParameter;
                     <method href="#showAlarm"/>
                     <method href="#updateAlarm"/>
                     <method href="#deleteAlarm"/>
@@ -52,30 +44,14 @@
             <resource path="events" id="events">
                 <method href="#listEvents"/>
                 <resource path="{message_id}" id="message_id">
-                    <param xmlns="http://wadl.dev.java.net/2009/02" name="message_id" required="true"
-                        style="template" type="csapi:UUID">
-                        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>
-                                The UUID of the message.
-                            </para>
-                        </wadl:doc>
-                    </param>
+                    &message_idTemplateParameter;
                     <method href="#showEvent"/>
                 </resource>
             </resource>
             <resource path="meters" id="meters">
                 <method href="#listMeters"/>
                 <resource path="{meter_name}" id="meter_name">
-                    <param xmlns="http://wadl.dev.java.net/2009/02" name="meter_name" required="true"
-                        style="template" type="xsd:string">
-                        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>
-                                The name of the meter.
-                            </para>
-                        </wadl:doc>
-                    </param>
+                    &nameTemplateParameter;
                     <method href="#listSamplesforMeter"/>
                     <method href="#addSamplesToMeter"/>
                     <resource path="statistics" id="statistics">
@@ -86,30 +62,14 @@
             <resource path="samples" id="samples">
                 <method href="#listSamples"/>
                 <resource path="{sample_id}" id="sample_id">
-                    <param xmlns="http://wadl.dev.java.net/2009/02" name="sample_id" required="true"
-                        style="template" type="csapi:UUID">
-                        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>
-                                The UUID of the sample.
-                            </para>
-                        </wadl:doc>
-                    </param>
+                    &sample_idTemplateParameter;
                     <method href="#showSample"/>
                 </resource>
             </resource>
             <resource path="resources" id="resources">
                 <method href="#listResources"/>
                 <resource path="{resource_id}" id="resource_id">
-                    <param xmlns="http://wadl.dev.java.net/2009/02" name="resource_id" required="true"
-                        style="template" type="csapi:UUID">
-                        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>
-                                The UUID of the resource.
-                            </para>
-                        </wadl:doc>
-                    </param>
+                    &resource_idTemplateParameter;
                     <method href="#showResource"/>
                 </resource>
             </resource>
@@ -118,6 +78,9 @@
             </resource>
         </resource>
     </resources>
+    <!-- ***************** -->
+    <!-- METHODS           -->
+    <!-- ***************** -->
     <method id="listCapabilities" name="GET">
         <wadl:doc title="List capabilities" xml:lang="EN"
             xmlns="http://docbook.org/ns/docbook">
@@ -131,13 +94,13 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/capabilities.json"/>
+                    <xsdxt:code href="../samples/capabilities-list-response.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/capabilities.xml"/>
+                    <xsdxt:code href="../samples/capabilities-list-response.xml"/>
                 </wadl:doc> &capabilitiesListParameters;
             </representation>
         </response>
@@ -168,13 +131,13 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_resource.json"/>
+                    <xsdxt:code href="../samples/resources-list-response.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_resource.xml"/>
+                    <xsdxt:code href="../samples/resources-list-response.xml"/>
                 </wadl:doc>
                 &resourceParameters; &userIdParameter;
             </representation>
@@ -191,14 +154,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/resource.json"/>
+                    <xsdxt:code href="../samples/resource-show-response.json"/>
                 </wadl:doc>
                 &resourceParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/resource.xml"/>
+                    <xsdxt:code href="../samples/resource-show-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -220,14 +183,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_meter.json"/>
+                    <xsdxt:code href="../samples/meters-list-response.json"/>
                 </wadl:doc>
                 &meterParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_meter.xml"/>
+                    <xsdxt:code href="../samples/meters-list-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -249,14 +212,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.json"/>
+                    <xsdxt:code href="../samples/samples-list-response.json"/>
                 </wadl:doc>
                 &meterSamplesParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.xml"/>
+                    <xsdxt:code href="../samples/samples-list-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -276,7 +239,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/new_sample.json"/>
+                    <xsdxt:code href="../samples/sample-create-request.json"/>
                 </wadl:doc>
                 <param name="direct" required="false" style="query"
                     type="xsd:string">
@@ -303,7 +266,7 @@
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/new_sample.xml"/>
+                    <xsdxt:code href="../samples/sample-create-request.xml"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -311,14 +274,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.json"/>
+                    <xsdxt:code href="../samples/sample-show-response.json"/>
                 </wadl:doc>
                 &meterSamplesParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_sample.xml"/>
+                    <xsdxt:code href="../samples/sample-show-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -345,7 +308,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_statistics.json"/>
+                    <xsdxt:code href="../samples/statistics-list-response.json"/>
                 </wadl:doc>
                 <param name="aggregate" required="false" style="plain"
                     type="xsd:dict">
@@ -560,7 +523,7 @@
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_statistics.xml"/>
+                    <xsdxt:code href="../samples/statistics-list-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -582,14 +545,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_samples.json"/>
+                    <xsdxt:code href="../samples/samples-list-response.json"/>
                 </wadl:doc>
                 &meterSamplesParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_samples.xml"/>
+                    <xsdxt:code href="../samples/samples-list-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -605,14 +568,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/new_sample.json"/>
+                    <xsdxt:code href="../samples/sample-show-response.json"/>
                 </wadl:doc>
                 &meterSamplesParameters; &userIdParameter;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/new_sample.xml"/>
+                    <xsdxt:code href="../samples/sample-show-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -633,14 +596,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_alarm.json"/>
+                    <xsdxt:code href="../samples/alarms-list-response.json"/>
                 </wadl:doc>
                 &alarmResponseParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_alarm.xml"/>
+                    <xsdxt:code href="../samples/alarms-list-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -670,14 +633,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.json"/>
+                    <xsdxt:code href="../samples/alarm-show-response.json"/>
                 </wadl:doc>
                 &alarmResponseParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.xml"/>
+                    <xsdxt:code href="../samples/alarm-show-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -693,14 +656,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.json"/>
+                    <xsdxt:code href="../samples/alarm-show-response.json"/>
                 </wadl:doc>
                 &alarmResponseParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.xml"/>
+                    <xsdxt:code href="../samples/alarm-show-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -730,14 +693,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.json"/>
+                    <xsdxt:code href="../samples/alarm-show-response.json"/>
                 </wadl:doc>
                 &alarmResponseParameters;
             </representation>
             <representation mediaType="application/xml">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/alarm.xml"/>
+                    <xsdxt:code href="../samples/alarm-show-response.xml"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -816,7 +779,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_event.json"/>
+                    <xsdxt:code href="../samples/events-list-response.json"/>
                 </wadl:doc>
                 &eventResponseParameters;
             </representation>
@@ -834,7 +797,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="./samples/list_event.json"/>
+                    <xsdxt:code href="../samples/event-show-response.json"/>
                 </wadl:doc>
                 &eventResponseParameters;
             </representation>
