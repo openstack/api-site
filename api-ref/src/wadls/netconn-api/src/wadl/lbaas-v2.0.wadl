@@ -28,6 +28,9 @@
                 <method href="#createLoadBalancerv2"/>
                 <resource id="lb_id" path="{loadbalancer_id}">
                     <method href="#showLoadBalancerv2"/>
+                    <resource id="loadbalancer_id" path="statuses">
+                       <method href="#showLoadBalancerStatusTree"/>
+                    </resource>
                     <method href="#updateLoadBalancerv2"/>
                     <method href="#deleteLoadBalancerv2"/>
                 </resource>
@@ -77,26 +80,63 @@
     <!-- load balancer -->
     <method name="GET" id="listLoadBalancersv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List load balancers">
-            <para role="shortdesc">Lists load balancers.</para>
-            <para>
-                Lists all load balancers that are associated with your tenant
-                account.
+            <para role="shortdesc">
+                Lists all load balancers for the tenant account.
             </para>
             <para>
-                This operation returns a list, which might be empty. Each
-                element in the list is a load balancer that can contain the
-                following attributes:
+                The list might be empty. Each load balancer element in the
+                list can contain these attributes:
             </para>
-            <itemizedlist><listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>vip_subnet_id</code></para></listitem>
-                <listitem><para><code>vip_address</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>listeners</code></para></listitem>
-                <listitem><para><code>provisioning_status</code></para></listitem>
-                <listitem><para><code>operating_status</code></para></listitem>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code></para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>vip_subnet_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>vip_address</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>listeners</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>provisioning_status</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>operating_status</code>
+                    </para>
+                </listitem>
             </itemizedlist>
         </wadl:doc>
         <response status="200">
@@ -112,15 +152,14 @@
                 Shows details for a load balancer.
             </para>
             <para>
-                This operation returns a load balancer object identified by
-                <code>loadbalancer_id</code>. If the user is not an
-                administrative user and the load balancer object does not
-                belong to her tenant account, the service returns the HTTP
-                <code>Forbidden (403)</code> response code.
+                This operation returns a load balancer object, by ID. If you
+                are not an administrative user and the load balancer object
+                does not belong to your tenant account, the service returns
+                the HTTP <code>Forbidden (403)</code> response code.
             </para>
             <para>
                 If this operation succeeds, it returns a load balancer element
-                that can contain the following attributes:
+                that can contain these attributes:
             </para>
             <itemizedlist>
                 <listitem>
@@ -174,9 +213,6 @@
                     </para>
                 </listitem>
             </itemizedlist>
-            <para>
-                <emphasis role="bold">Example: Show load balancer details</emphasis>
-            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -186,72 +222,84 @@
         </response> &fault401; &fault403; &fault404; &fault409; &fault413; &fault500; &fault503; </method>
     <method name="POST" id="createLoadBalancerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create load balancer">
-            <para role="shortdesc">Creates a load balancer.</para>
-            <para>
-                This operation provisions a new load balancer based on the
-                configuration defined in the request object. After the request
-                is validated and progress has started on the provisioning
-                process, a response object is returned. The object contains a
-                unique identifier and the status of provisioning the load
-                balancer.
+            <para role="shortdesc">
+                Creates a load balancer.
             </para>
             <para>
-                The <code>provisioning_status</code> of the load balancer in
-                the response can have one of the following values:
+                This operation provisions a new load balancer by using the
+                configuration that you define in the request object. After the
+                API validates the request and starts the provisioning process,
+                the API returns a response object that contains a unique ID
+                and the status of provisioning the load balancer.
+            </para>
+            <para>
+                In the response, the load balancer provisioning status is
                 <code>ACTIVE</code>, <code>PENDING_CREATE</code>, or
                 <code>ERROR</code>.
             </para>
             <para>
-                If the status is <code>PENDING_CREATE</code>, the caller can
-                view the progress of the provisioning operation by performing
-                a &GET; on <code>/lbaas/loadbalancers/loadbalancer_id</code>.
-                When the status of the load balancer changes to
-                <code>ACTIVE</code>, the load balancer was successfully
-                provisioned and is operational for traffic handling.
+                If the status is <code>PENDING_CREATE</code>, issue &GET;
+                <code>/lbaas/loadbalancers/loadbalancer_id</code> to view the
+                progress of the provisioning operation. When the load balancer
+                status changes to <code>ACTIVE</code>, the load balancer is
+                successfully provisioned and operational for traffic handling.
             </para>
-            <!--  <para>The caller of this operation must specify these load balancer attributes, at a minimum:</para> -->
             <para>
-                If the request cannot be fulfilled due to insufficient or
-                invalid data, the service returns the HTTP <code>Bad Request
-                (400)</code> response code with information about the failure
-                in the response body. Validation errors require that you
-                correct the error and submit the request again.
+                If the API cannot fulfill the request due to insufficient data
+                or data that is not valid, the service returns the HTTP
+                <code>Bad Request (400)</code> response code with information
+                about the failure in the response body. Validation errors
+                require that you correct the error and submit the request
+                again.
             </para>
             <para>
                 You can configure all documented features of the load balancer
                 at creation time by specifying the additional elements or
                 attributes in the request.
             </para>
-            <para>Users with an administrative role can create load balancers on behalf
-            of other tenants by specifying a <code>tenant_id</code> attribute different
-            than their own.</para>
+            <para>
+                Administrative users can specify a tenant ID that is different
+                than their own to create load balancers for other tenants.
+            </para>
             <para><emphasis role="bold">Example: Create a load balancer</emphasis></para>
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>tenant_id</code>. only required if the caller
-                        has an administrative role and wants to create a load
+                        <code>tenant_id</code>. Admin only. Required to create a load
                         balancer for another tenant.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
                         <code>vip_subnet_id</code>. The network on which to
-                        allocate the VIP address for the load balancer. A
-                        tenant can only create load balancer VIPs on networks
-                        that are authorized by the policy, such as her own
-                        networks or shared or provider networks.
+                        allocate the VIP address for the load balancer. A tenant can only create load
+                        balancer VIPs on networks that the policy authorizes, such as her own networks
+                        or shared or provider networks.
                     </para>
                 </listitem>
             </itemizedlist>
-            <para>Some attributes receive default values if you omit them from the request:</para>
+            <para>
+                Some attributes receive default values if you omit them from the request:
+            </para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>. Default is <code>true</code>.</para></listitem>
-                <listitem><para><code>name</code>. Default is an empty string.</para></listitem>
-                <listitem><para><code>description</code>. Default is an empty string.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>. Default is <code>true</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>. Default is an empty string.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>. Default is an empty string.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
-                If the request cannot be fulfilled due to insufficient data or
+                If the API cannot fulfill the request due to insufficient data or
                 data that is not valid, the service returns the HTTP <code>Bad
                 Request (400)</code> response code with information about the
                 failure in the response body. Validation errors require that
@@ -263,9 +311,8 @@
                 attributes in the request.
             </para>
             <para>
-                Users with an administrative role can create load balancers on
-                behalf of other tenants by specifying a <code>tenant_id</code>
-                attribute that is different than their own.
+                Administrative users can specify a tenant ID that is different
+                than their own to create load balancers for other tenants.
             </para>
             <para>
                 If you own the subnet where you want to create the load
@@ -286,76 +333,163 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../samples/lbaas/loadbalancer-create-request.json"/>
-                </wadl:doc>&lbCreateRequestParams; </representation>
+                </wadl:doc>&lbCreateRequestParams;
+            </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../samples/lbaas/loadbalancer-create-response.json"/>
-                </wadl:doc> &lbLoadbalancerParam; &lbResponseParams; </representation>
+                </wadl:doc> &lbLoadbalancerParam; &lbResponseParams;
+            </representation>
         </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503;
     </method>
     <method name="PUT" id="updateLoadBalancerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update load balancer">
-            <para role="shortdesc">Updates a load balancer.</para>
+            <para role="shortdesc">
+                Updates a load balancer.
+            </para>
             <para>
                 If the request is valid, the service returns the
                 <code>Accepted (202)</code> response code. To confirm the
-                update, check that the load balancer
-                <code>provisioning_status</code> is <code>ACTIVE</code>. If
-                the load balancer <code>provisioning_status</code> is
+                update, check that the load balancer provisioning status is
+                <code>ACTIVE</code>. If the status is
                 <code>PENDING_UPDATE</code>, use a &GET; operation to poll the
                 load balancer object for changes.
             </para>
             <para>
-                The update operation enables you to change one or more
-                of the following load balancer attributes:
+                You can change one or more of these load balancer attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
-                This operation returns the updated load balancer object. The
-                <code>provisioning_status</code> value can be
-                <code>ACTIVE</code>, <code>PENDING_UPDATE</code>, or
-                <code>ERROR</code>.
+                This operation returns the updated load balancer object with
+                the <code>ACTIVE</code>, <code>PENDING_UPDATE</code>, or
+                <code>ERROR</code> provisioning status.
             </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:code href="../samples/lbaas/loadbalancer-update-request.json"/>
-                </wadl:doc> &lbLoadbalancerParam; &lbUpdateRequestParams; </representation>
+                </wadl:doc> &lbLoadbalancerParam; &lbUpdateRequestParams;
+            </representation>
         </request>
-        <response status="200"><representation mediaType="application/json">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                <xsdxt:code href="../samples/lbaas/loadbalancer-update-response.json"/>
-            </wadl:doc> &lbLoadbalancerParam; &lbResponseParams; </representation>
-        </response> &fault400; &fault401; &fault413; &fault500; &fault503; </method>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/lbaas/loadbalancer-update-response.json"/>
+                </wadl:doc> &lbLoadbalancerParam; &lbResponseParams;
+            </representation>
+        </response> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
     <method name="DELETE" id="deleteLoadBalancerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove load balancer">
-            <para role="shortdesc">Removes a load balancer and its
-                associated configuration from the tenant account.
+            <para role="shortdesc">
+                Removes a load balancer and its associated configuration from
+                the tenant account.
             </para>
             <para>
-                Any and all
-                configuration data is immediately purged and cannot be
-                recovered.
+                The API immediately purges any and all configuration data. You
+                cannot recover it.
             </para>
             <para>Example: Delete a load balancer</para>
         </wadl:doc>
         <response status="204"/> &fault400; &fault401; &fault413; &fault500; &fault503; </method>
+     <method name="GET" id="showLoadBalancerStatusTree">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show load balancer status tree">
+            <para role="shortdesc">
+                Shows the status tree for a load balancer.
+            </para>
+            <para>
+                This operation returns a status tree for a load balancer
+                object, by load balancer ID. If you are not an
+                administrative user and the load balancer object does not
+                belong to the tenant account, the API returns the
+                <code>Forbidden (403)</code> response code.
+            </para>
+            <para>
+                If the operation succeeds, the returned element is a status
+                tree that contains the load balancer and all provisioning
+                and operating statuses for its children.
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>listeners</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>pools</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>members</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>healthmonitor</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>provisioning_status</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>operating_status</code>
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/lbaas/loadbalancer-status-tree.json"/>
+                </wadl:doc> &lbstatusestreeResponseParams;</representation>
+        </response> &fault401;&fault403;&fault413; &fault500; &fault503;</method>
     <!--Listeners-->
     <method name="POST" id="createListenerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create listener">
-            <para role="shortdesc">Creates a listener.</para>
+            <para role="shortdesc">
+                Creates a listener.
+            </para>
             <para>
-                This operation provisions a new listener based on the
-                configuration defined in the request object. After the request
-                is validated and the provisioning process begins, a response
-                object is returned. The object contains a unique identifier.
+                This operation provisions a new listener by using the
+                configuration that you define in the request object. After the
+                request is validated and the provisioning process begins, a
+                response object is returned. The object contains a unique
+                identifier.
             </para>
             <para>
                 At a minimum, you must specify these listener attributes:
@@ -363,17 +497,15 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>tenant_id</code>. Required only if the caller
-                        has an administrative role and wants to create a
-                        listener for another tenant.
+                        <code>tenant_id</code>. Admin only. Required to create a listener for another tenant.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
                         <code>loadbalancer_id</code>. The load balancer on
-                        which this listener is provisioned. A tenant can only
-                        create listeners on load balancers authorized by
-                        policy. For example, her own load balancers.
+                        which to provision this listener. A tenant can only
+                        create listeners on load balancers that the policy authorizes. For example,
+                        her own load balancers.
                     </para>
                 </listitem>
                 <listitem>
@@ -411,7 +543,7 @@
                 <listitem>
                     <para>
                         <code>sni_container_refs</code>. A list of references
-                        to containers that hold TLS secrets that are used for Server Name Indication
+                        to containers that hold TLS secrets for server name indication
                         (SNI). This parameter is required for the <code>TERMINATED_HTTPS</code>
                         protocol.
                     </para>
@@ -439,11 +571,12 @@
                 </listitem>
             </itemizedlist>
             <para>
-                If the request cannot be fulfilled due to insufficient or
-                invalid data, the service returns the HTTP <code>Bad Request
-                (400)</code> response code with information about the
-                failure in the response body. Validation errors require that
-                you correct the error and submit the request again.
+                If the API cannot fulfill the request due to insufficient data
+                or data that is not valid, the service returns the HTTP
+                <code>Bad Request (400)</code> response code with information
+                about the failure in the response body. Validation errors
+                require that you correct the error and submit the request
+                again.
             </para>
             <para>
                 You can configure all documented features of the listener at
@@ -451,16 +584,13 @@
                 attributes in the request.
             </para>
             <para>
-                Users with an administrative role can create listeners on
-                behalf of other tenants by specifying a <code>tenant_id</code>
-                attribute different than their own.
+                Administrative users can specify a tenant ID that is different
+                than their own to create listeners for other tenants.
             </para>
             <para>
                 To update a listener, the load balancer to which to attach
-                must have a <code>provisioning_status</code> of
-                <code>ACTIVE</code>.
+                must have an <code>ACTIVE</code> provisioning status.
             </para>
-            <para>Example: Create a listener</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -477,28 +607,78 @@
         </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503; </method>
     <method name="GET" id="listListenersv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List listeners">
-            <para role="shortdesc">Lists listeners.</para>
+            <para role="shortdesc">
+                Lists all listeners.
+            </para>
             <para>
                 This operation lists all listeners that are associated with
                 your tenant account.
             </para>
             <para>
-                This operation returns a list, which might be empty. Each list
-                element is a listener that can contain the following
-                attributes:
+                The list might be empty. Each listener element in the list can
+                contain these attributes:
             </para>
-            <itemizedlist><listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>protocol</code></para></listitem>
-                <listitem><para><code>protocol_port</code></para></listitem>
-                <listitem><para><code>connection_limit</code></para></listitem>
-                <listitem><para><code>default_pool_id</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>loadbalancers</code></para></listitem>
-                <listitem><para><code>default_tls_container_ref</code></para></listitem>
-                <listitem><para><code>sni_container_refs</code></para></listitem>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol_port</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>connection_limit</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>default_pool_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>loadbalancers</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>default_tls_container_ref</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>sni_container_refs</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: List listeners</para>
         </wadl:doc>
@@ -512,30 +692,80 @@
     <method name="GET" id="showListenerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show listener details">
-            <para role="shortdesc">Shows details for a listener.</para>
-            <para>
-                This operation returns a listener object identified by
-                <code>listener_id</code>. If the user is not an administrative
-                user and the listener object does not belong to her tenant
-                account, the call returns the HTTP <code>Forbidden
-                (403)</code> response code.
+            <para role="shortdesc">
+                Shows details for a listener.
             </para>
             <para>
-                If this operation succeeds, it returns a listener element that
-                can contain the following attributes:
+                This operation returns a listener object, by ID. If
+                you are not an administrative user and the listener object
+                does not belong to your account, the API returns the HTTP
+                <code>Forbidden (403)</code> response code.
             </para>
-            <itemizedlist><listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>protocol</code></para></listitem>
-                <listitem><para><code>protocol_port</code></para></listitem>
-                <listitem><para><code>connection_limit</code></para></listitem>
-                <listitem><para><code>default_pool_id</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>loadbalancers</code></para></listitem>
-                <listitem><para><code>default_tls_container_ref</code></para></listitem>
-                <listitem><para><code>sni_container_refs</code></para></listitem>
+            <para>
+                This operations returns a listener element that
+                can contain these attributes:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol_port</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>connection_limit</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>default_pool_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>loadbalancers</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>default_tls_container_ref</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>sni_container_refs</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: Show listener details</para>
         </wadl:doc>
@@ -548,38 +778,63 @@
         </response> &fault401; &fault403; &fault404; &fault409; &fault413; &fault500; &fault503;</method>
     <method name="PUT" id="updateListenerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update listener">
-            <para role="shortdesc">Updates a listener.</para>
+            <para role="shortdesc">
+                Updates a listener.
+            </para>
             <para>
                 This operation updates the attributes of a listener.
                 Upon successful validation of the request, the service returns
                 the HTTP <code>Accepted (202)</code> response code.
             </para>
             <para>
-                The update operation enables the caller to change one or more
-                of the following listener attributes:
+                Use the update operation to change one or more of these
+                listener attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>connection_limit</code></para></listitem>
-                <listitem><para><code>default_tls_container_ref</code></para></listitem>
-                <listitem><para><code>sni_container_refs</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>connection_limit</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>default_tls_container_ref</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>sni_container_refs</code>
+                    </para>
+                </listitem>
             </itemizedlist>
-            <para>Example: Update a listener</para>
             <para>
                 Note: You cannot update the <code>listener_id</code>,
                 <code>tenant_id</code>, <code>loadbalancer_id</code>,
                 <code>loadbalancers</code>, <code>default_pool_id</code>,
-                <code>protocol</code>, and <code>protocol_port</code> listener
+                <code>protocol</code>, and <code>protocol_port</code>
                 attributes. Attempting to update an immutable attribute
                 results in the HTTP <code>Immutable (422)</code> response
                 code.
             </para>
             <para>
                 Note: You cannot update a listener if the load balancer to
-                which the listener is attached does not have a
-                <code>provisioning_status</code> of <code>ACTIVE</code>.
+                which the listener is attached does not have an
+                <code>ACTIVE</code> provisioning status.
             </para>
         </wadl:doc>
         <request>
@@ -596,17 +851,17 @@
         </response> &fault500; &fault503; &fault401; &fault400;&fault413;</method>
     <method name="DELETE" id="deleteListenerv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove listener">
-            <para role="shortdesc">Removes a listener.</para>
+            <para role="shortdesc">
+                Removes a listener.
+            </para>
             <para>
                 This operation removes a listener and its associated
-                configuration from the tenant account. Any and all
-                configuration data is immediately purged and cannot be
-                recovered.
+                configuration from the tenant account. The API immediately
+                purges any and all configuration data. You cannot recover it.
             </para>
             <para>
                 You cannot delete a listener if the load balancer to which it
-                is attached does not have a <code>provisioning_status</code>
-                of <code>ACTIVE</code>.
+                is attached does not have an <code>ACTIVE</code> provisioning status.
             </para>
             <para>Example: Delete a listener</para>
         </wadl:doc>
@@ -615,47 +870,46 @@
     <method name="POST" id="createPoolv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create pool">
-            <para role="shortdesc">Creates a pool.</para>
-            <para>
-                This operation provisions a new pool based on the
-                configuration defined in the request object. After the request
-                is validated and progress has started on the provisioning
-                process, a response object is returned. The object contains a
-                unique identifier.
+            <para role="shortdesc">
+                Creates a pool.
             </para>
             <para>
-                The caller of this operation must specify these pool
-                attributes, at a minimum:
+                This operation provisions a pool by using the
+                configuration that you define in the request object. After the
+                API validates the request and starts the provisioning process,
+                the API returns a response object, which contains a
+                unique ID.
+            </para>
+            <para>
+                At a minimum, you must specify these pool attributes:
             </para>
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>tenant_id</code>. Required only if the caller
-                        has an administrative role and wants to create a pool
+                        <code>tenant_id</code>. Admin only. Required to create a pool
                         for another tenant.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
                         <code>protocol</code>. The protocol for which this
-                        pool and its members listen. A valid value is TCP, HTTP, or HTTPS.
+                        pool and its members listen. A valid value is <code>TCP</code>,
+                        <code>HTTP</code>, or <code>HTTPS</code>.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <code>lb_algorithm</code>. The load-balancer algorithm,
-                        such as <code>ROUND_ROBIN</code>,
-                        <code>LEAST_CONNECTIONS</code>, and <code>SOURCE_IP</code>,
-                       that is used to distribute traffic to the pool members.
-                       This value, which must be supported, is dependent on
-                       the load-balancer provider.
+                        <code>lb_algorithm</code>. The load-balancer
+                        algorithm, such as <code>ROUND_ROBIN</code>, <code>LEAST_CONNECTIONS</code>,
+                        and <code>SOURCE_IP</code>, that distributes traffic to the pool members. The
+                        load-balancer provider must support this algorithm.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
                         <code>listener_id</code>. The UUID of the listener in
                         which this pool becomes the default pool. Each
-                        listener can have only one default pool.
+                        listener has only one default pool.
                     </para>
                 </listitem>
             </itemizedlist>
@@ -663,17 +917,34 @@
                 Some attributes receive default values if you omit them from the request:
             </para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>. Default is <code>true</code>.</para></listitem>
-                <listitem><para><code>name</code>. Default is an empty string.</para></listitem>
-                <listitem><para><code>description</code>. Default is an empty string.</para></listitem>
-                <listitem><para><code>session_persistence</code>. Default is an empty dictionary.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>. Default is <code>true</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>. Default is an empty string.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>. Default is an empty string.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>session_persistence</code>. Default is an empty dictionary.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
-                If the request cannot be fulfilled due to insufficient or
-                invalid data, the service returns the HTTP <code>Bad Request
-                (400)</code> response code with information about the failure
-                in the response body. Validation errors require that you
-                correct the error and submit the request again.
+                If the API cannot fulfill the request due to insufficient data
+                or data that is not valid, the service returns the HTTP
+                <code>Bad Request (400)</code> response code with information
+                about the failure in the response body. Validation errors
+                require that you correct the error and submit the request
+                again.
             </para>
             <para>
                 Users can configure all documented features at creation time
@@ -681,16 +952,13 @@
                 request.
             </para>
             <para>
-                Users with an administrative role can create pools on behalf
-                of other tenants by specifying a <code>tenant_id</code>
-                attribute that is different than their own.
+                Administrative users can specify a tenant ID that is different
+                than their own to create pools for other tenants.
             </para>
             <para>
                 To update a pool, the load balancer to which to attach must
-                have a <code>provisioning_status</code> of
-                <code>ACTIVE</code>.
+                have an <code>ACTIVE</code> provisioning status.
             </para>
-            <para>Example: Create a pool</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -706,26 +974,70 @@
         </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503; </method>
     <method name="GET" id="listPoolsv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List pools">
-            <para role="shortdesc">Lists all pools that are associated with your
+            <para role="shortdesc">
+                Lists all pools that are associated with your
                 tenant account.
             </para>
             <para>
-                This operation returns a response body that contains a list,
-                which might be empty. Each pool element in the list can
-                contain the following attributes:
+                The list might be empty. Each pool element in the list can contain
+                these attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>protocol</code></para></listitem>
-                <listitem><para><code>lb_algorithm</code></para></listitem>
-                <listitem><para><code>session_persistence</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>listeners</code></para></listitem>
-                <listitem><para><code>members</code></para></listitem>
-                <listitem><para><code>health_monitor_id</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>lb_algorithm</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>session_persistence</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>listeners</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>members</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>health_monitor_id</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: List pools</para>
         </wadl:doc>
@@ -738,30 +1050,75 @@
     <method name="GET" id="showPoolv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show pool details">
-            <para role="shortdesc">Shows details for a pool.</para>
+            <para role="shortdesc">
+                Shows details for a pool.
+            </para>
             <para>
-                This operation returns a pool object identified by
-                <code>pool_id</code>. If the user is not an administrative
-                user and the pool object does not belong to her tenant
-                account, the call returns the HTTP <code>Forbidden
-                (403)</code> response code.
+                This operation shows details for a pool, by ID. If you
+                are not an administrative user and the pool object does not
+                belong to your tenant account, the call returns the HTTP
+                <code>Forbidden (403)</code> response code.
             </para>
             <para>
                 If this operation succeeds, it returns a <code>pool</code>
-                element that can contain the following attributes:
+                element that can contain these attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>protocol</code></para></listitem>
-                <listitem><para><code>lb_algorithm</code></para></listitem>
-                <listitem><para><code>session_persistence</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>listeners</code></para></listitem>
-                <listitem><para><code>members</code></para></listitem>
-                <listitem><para><code>health_monitor_id</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>lb_algorithm</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>session_persistence</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>listeners</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>members</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>health_monitor_id</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: Show pool details</para>
         </wadl:doc>
@@ -774,22 +1131,44 @@
     </method>
     <method name="PUT" id="updatePoolv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update pool">
-            <para role="shortdesc">Updates a pool.</para>
+            <para role="shortdesc">
+                Updates a pool.
+            </para>
             <para>
                 This operation updates the attributes of a pool.
                 Upon successful validation of the request, the service returns
                 the HTTP <code>Accepted (202)</code> response code.
             </para>
             <para>
-                The update operation enables the caller to change one or more
-                of the following pool attributes:
+                You can change one or more
+                of these pool attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>name</code></para></listitem>
-                <listitem><para><code>description</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>lb_algorithm</code></para></listitem>
-                <listitem><para><code>session_persistence</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>name</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>description</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>lb_algorithm</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>session_persistence</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
                 Note: You cannot update the pool UUID, <code>tenant_id</code>,
@@ -801,10 +1180,8 @@
             </para>
             <para>
                 Note: You cannot update a pool if the load balancer to which
-                it is attached does not have a
-                <code>provisioning_status</code> of <code>ACTIVE</code>.
+                it is attached does not have an <code>ACTIVE</code> provisioning status.
             </para>
-            <para>Example: Update a pool</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -820,18 +1197,19 @@
         </response>  &fault400; &fault401; &fault413; &fault500; &fault503;</method>
     <method name="DELETE" id="deletePoolv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove pool">
-            <para role="shortdesc">Removes a pool.</para>
+            <para role="shortdesc">
+                Removes a pool.
+            </para>
             <para>
-                This operation removes a pool and its associated
-                configuration from the tenant account. Any and all
-                configuration data is immediately purged and cannot be recovered.
+                This operation removes a pool and its associated configuration
+                from the tenant account. The API immediately purges any and
+                all configuration data. You cannot recover it.
             </para>
             <para>
                 You cannot delete a pool if the load balancer to which it is
-                attached does not have a <code>provisioning_status</code> of
-                <code>ACTIVE</code>.
+                attached does not have an <code>ACTIVE</code> provisioning
+                status.
             </para>
-            <para>Example: Delete a pool</para>
         </wadl:doc>
         <response status="204"/> &fault400; &fault401; &fault409; &fault413; &fault500; &fault503; </method>
     <!-- member -->
@@ -840,20 +1218,20 @@
             title="Add member to pool">
             <para role="shortdesc">Adds a member to a pool.</para>
             <para>
-                This operation provisions a new member and adds it to a pool
-                based on the configuration defined in the request object. After
-                the request is validated and progress has started on the
-                provisioning process, a response object is returned. The object
-                contains a unique identifier.
+                This operation provisions a member and adds it to a pool
+                by using the configuration that you define in the request
+                object. After the API validates the request and starts the
+                provisioning process, it returns a response object, which
+                contains a unique ID.
             </para>
             <para>
-                At a minimum, you must specify the following pool attributes:</para>
+                At a minimum, you must specify these pool attributes:
+            </para>
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>tenant_id</code>. Only required if the caller
-                        has an administrative role and wants to create a pool
-                        for another tenant.
+                        <code>tenant_id</code>. Admin only. Required to create a pool for
+                        another tenant.
                     </para>
                 </listitem>
                 <listitem>
@@ -864,15 +1242,24 @@
                 </listitem>
                 <listitem>
                     <para>
-                        <code>protocol_port</code> The port on which the member is
-                        listening to receive traffic.
+                        <code>protocol_port</code> The port on which the member listens for traffic.
                     </para>
                 </listitem>
             </itemizedlist>
-            <para>Some attributes receive default values if you omit them from the request:</para>
+            <para>
+                Some attributes receive default values if you omit them from the request:
+            </para>
             <itemizedlist>
-                <listitem><para><code>admin_state_up</code>. Default is <code>true</code>.</para></listitem>
-                <listitem><para><code>weight</code>. Default is <code>1</code>.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>. Default is <code>true</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>weight</code>. Default is <code>1</code>.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
                 If you omit the <code>subnet_id</code> parameter, LBaaS
@@ -890,20 +1277,21 @@
                 specify additional elements or attributes in the request.
             </para>
             <para>
-                Users with an administrative role can create members on behalf
-                of other tenants by specifying a <code>tenant_id</code>
-                attribute that is different than their own.
+                Administrative users can specify a tenant ID that is different
+                than their own to create members for other tenants.
             </para>
             <para>
-                To update a member, the load balancer must have a
-                <code>provisioning_status</code> of <code>ACTIVE</code>.
+                To update a member, the load balancer must have an
+                <code>ACTIVE</code> provisioning status.
             </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Add member to a pool: JSON request">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN" title="Add member to a pool: JSON request">
                     <xsdxt:code href="../samples/lbaas/member-create-request.json"/>
-                </wadl:doc> &memberObject; &memberCreatev2RequestParams; </representation>
+                </wadl:doc> &memberObject; &memberCreatev2RequestParams;
+            </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
@@ -913,7 +1301,9 @@
         </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503; </method>
     <method name="GET" id="listMembersv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List pool members">
-            <para role="shortdesc">Lists members of a pool.</para>
+            <para role="shortdesc">
+                Lists members of a pool.
+            </para>
             <para>
                 Lists all members that are associated with a pool that is
                 associated with your tenant account. The list of members
@@ -921,18 +1311,45 @@
                 identified by <code>pool_id</code>.
             </para>
             <para>
-                This operation returns a list, which might be empty. Each
-                element in the list is a member that can contain the following
-                attributes:
+                The list might be empty. Each member element in the list can
+                contain these attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>address</code></para></listitem>
-                <listitem><para><code>protocol_port</code></para></listitem>
-                <listitem><para><code>weight</code></para></listitem>
-                <listitem><para><code>subnet_id</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>address</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol_port</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>weight</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>subnet_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: List pool members</para>
         </wadl:doc>
@@ -945,27 +1362,57 @@
     <method name="GET" id="showMemberv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show pool member details">
-            <para role="shortdesc">Shows details for a pool member.</para>
+            <para role="shortdesc">
+                Shows details for a pool member.
+            </para>
             <para>
                 This operation returns a member object identified by
                 <code>member_id</code> that belongs to a pool object
-                identified by <code>pool_id</code>. If the user is not an
+                identified by <code>pool_id</code>. If you are not an
                 administrative user and the pool or member object does not
-                belong to her tenant account, the service returns the HTTP
+                belong to your tenant account, the service returns the HTTP
                 <code>Forbidden (403)</code> response code.
             </para>
             <para>
                 If this operation succeeds, it returns a pool element that can
-                contain the following attributes:
+                contain these attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>address</code></para></listitem>
-                <listitem><para><code>protocol_port</code></para></listitem>
-                <listitem><para><code>weight</code></para></listitem>
-                <listitem><para><code>subnet_id</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>address</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>protocol_port</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>weight</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>subnet_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: Show pool member details</para>
         </wadl:doc>
@@ -979,18 +1426,28 @@
     <method name="PUT" id="updateMemberv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update pool member">
-            <para role="shortdesc">Updates attributes of a pool member.</para>
+            <para role="shortdesc">
+                Updates attributes for a pool member.
+            </para>
             <para>
                 Upon successful validation of the request, the service returns
                 the HTTP <code>OK (200)</code> response code.
             </para>
             <para>
-                The update operation enables you to change one or more of
+                You can change one or more of
                 these pool attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>weight</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>weight</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
                 Note: You cannot update the member UUID, <code>tenant_id</code>,
@@ -1001,8 +1458,7 @@
             </para>
             <para>
                 Note: You cannot update a member if the attached load balancer
-                does not have a <code>provisioning_status</code> of
-                <code>ACTIVE</code>.
+                does not have an <code>ACTIVE</code> provisioning status.
             </para>
         </wadl:doc>
         <request>
@@ -1019,17 +1475,17 @@
         </response> &fault400; &fault401;  &fault413; &fault500; &fault503; </method>
     <method name="DELETE" id="deleteMemberv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove member from pool">
-            <para role="shortdesc">Removes a member from a pool and its associated
+            <para role="shortdesc">
+                Removes a member from a pool and its associated
                 configuration from the tenant account.
             </para>
             <para>
-                Any and all
-                configuration data is immediately purged and cannot be recovered.
+                The API immediately purges any and all configuration data. You
+                cannot recover it.
             </para>
             <para>
-                A member cannot be deleted if the attached load balancer does
-                not have a <code>provisioning_status</code> of
-                <code>ACTIVE</code>.
+                You cannot delete a member if the attached load balancer does
+                not have an <code>ACTIVE</code> provisioning status.
             </para>
             <para>Example: Remove a member from a pool</para>
         </wadl:doc>
@@ -1038,22 +1494,53 @@
     <method name="POST" id="createHealthMonitorv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create health monitor">
-            <para role="shortdesc">Creates a health monitor.</para>
-            <para>
-                This operation provisions a new health monitor based on the
-                configuration defined in the request object. After the request
-                is validated and progress has started on the provisioning
-                process, a response object is returned. The object contains a
-                unique identifier.
+            <para role="shortdesc">
+                Creates a health monitor.
             </para>
-            <para>The caller of this operation must specify these health monitor attributes, at a minimum:</para>
+            <para>
+                This operation provisions a health monitor by using the
+                configuration that you define in the request object. After the
+                API validates the request and start the provisioning process,
+                it returns a response object. The object contains a unique
+                identifier.
+            </para>
+            <para>
+                At a minimum, you must specify these health monitor attributes:
+            </para>
             <itemizedlist>
-                <listitem><para><code>tenant_id</code>. Only required if the caller has an administrative role and wants to create a health monitor for another tenant.</para></listitem>
-                <listitem><para><code>type</code>. The type of health monitor. Must be one of TCP, HTTP, HTTPS</para></listitem>
-                <listitem><para><code>delay</code>. The interval in seconds between health checks.</para></listitem>
-                <listitem><para><code>timeout</code>. The time in seconds that a health check times out.</para></listitem>
-                <listitem><para><code>max_retries</code>. Number of failed health checks before marked as OFFLINE.</para></listitem>
-                <listitem><para><code>pool_id</code>. The pool that this health monitor will monitor.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>. Admin only. Required to create a health
+                        monitor for another tenant.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>type</code>. The type of health monitor. A valid value is
+                        <code>TCP</code>, <code>HTTP</code>, or
+                        <code>HTTPS</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>delay</code>. The interval, in seconds, between health checks.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>timeout</code>. The time, in seconds, after which a health check times out.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>max_retries</code>. Number of failed health checks before marked as OFFLINE.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>pool_id</code>. The pool to monitor.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
                 Some attributes receive default values if you omit them from
@@ -1061,18 +1548,34 @@
                 monitor type of HTTP(S):
             </para>
             <itemizedlist>
-                <listitem><para><code>http_method</code>. Default is GET.</para></listitem>
-                <listitem><para><code>url_path</code>. Default is <code>/</code>.</para></listitem>
-                <listitem><para><code>expected_codes</code>. The expected http status codes to get from a successful health check. Default is 200.</para></listitem>
-                <listitem><para><code>admin_state_up</code>. Default is true.</para></listitem>
+                <listitem>
+                    <para>
+                        <code>http_method</code>. Default is <code>GET</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>url_path</code>. Default is <code>/</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>expected_codes</code>. The expected HTTP status codes to get from a successful health check. Default is <code>200</code>.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>. Default is <code>true</code>.
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
-                If the request cannot be fulfilled due to insufficient data or
-                data that is not valid, an HTTP 400 (Bad Request) error
-                response is returned with information regarding the nature of
-                the failure in the response body. Failures in the validation
-                process are non-recoverable and require the caller to correct
-                the cause of the failure and &POST; the request again.
+                If the API cannot fulfill the request due to insufficient data
+                or data that is not valid, it returns the <code>Bad Request
+                (400)</code> response code with information about the nature
+                of the failure in the response body. Failures in the
+                validation process are non-recoverable and require that you
+                correct the cause of the failure and submit the request again.
             </para>
             <para>
                 You can configure all documented features of the health
@@ -1080,15 +1583,13 @@
                 or attributes in the request.
             </para>
             <para>
-                Users with an administrative role can create health monitors
-                on behalf of other tenants by specifying a
-                <code>tenant_id</code> attribute different than their own.
+                Administrative users can specify a tenant ID that is different
+                than their own to create health monitors for other tenants.
             </para>
             <para>
-                To update a health monitor, the load balancer to which it is
-                being attached must have an ACTIVE provisioning status.
+                To update a health monitor, the load balancer to which to
+                attach must have an <code>ACTIVE</code> provisioning status.
             </para>
-            <para>Example: Create a health monitor</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"><wadl:doc
@@ -1105,23 +1606,77 @@
     <method name="GET" id="listHealthMonitors">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List health monitors">
             <para role="shortdesc">Lists health monitors.</para>
-            <para>This operation lists all health monitors associated with your tenant account.</para>
-            <para>This operation returns a list, which might be empty, each element in the list is a health monitor that can contain the following attributes:</para>
+            <para>
+                This operation lists all health monitors that are associated
+                with your tenant account.
+            </para>
+            <para>
+                This operation returns a list, which might be empty. Each
+                health monitor element in the list can contain these
+                attributes:
+            </para>
             <itemizedlist>
-                <listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>type</code></para></listitem>
-                <listitem><para><code>delay</code></para></listitem>
-                <listitem><para><code>timeout</code></para></listitem>
-                <listitem><para><code>max_retries</code></para></listitem>
-                <listitem><para><code>http_method</code></para></listitem>
-                <listitem><para><code>url_path</code></para></listitem>
-                <listitem><para><code>expected_codes</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>pool_id</code></para></listitem>
-                <listitem><para><code> pools</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>type</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>delay</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>timeout</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>max_retries</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>http_method</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>url_path</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>expected_codes</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>pool_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code> pools</code>
+                    </para>
+                </listitem>
             </itemizedlist>
-            <para>Example: List health monitors</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -1134,29 +1689,77 @@
             title="Show health monitor details">
             <para role="shortdesc">Shows details for a health monitor.</para>
             <para>
-                This operation returns a health monitor object identified by
-                <code>health_monitor_id</code>. If the user is not an
-                administrative user and the health monitor object does not
-                belong to her tenant account, the service returns the HTTP
-                <code>Forbidden (403)</code> response code.
+                This operation returns a health monitor object, by health
+                monitor ID. If you are not an administrative user and the
+                health monitor object does not belong to your tenant account,
+                the service returns the HTTP <code>Forbidden (403)</code>
+                response code.
             </para>
             <para>
                 If this operation succeeds, it returns a health monitor
-                element that can contain the following attributes:
+                element that can contain these attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>id</code></para></listitem>
-                <listitem><para><code>tenant_id</code></para></listitem>
-                <listitem><para><code>type</code></para></listitem>
-                <listitem><para><code>delay</code></para></listitem>
-                <listitem><para><code>timeout</code></para></listitem>
-                <listitem><para><code>max_retries</code></para></listitem>
-                <listitem><para><code>http_method</code></para></listitem>
-                <listitem><para><code>url_path</code></para></listitem>
-                <listitem><para><code>expected_codes</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
-                <listitem><para><code>pool_id</code></para></listitem>
-                <listitem><para><code> pools</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>tenant_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>type</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>delay</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>timeout</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>max_retries</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>http_method</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>url_path</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>expected_codes</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>pool_id</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code> pools</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>Example: Show health monitor details</para>
         </wadl:doc>
@@ -1175,17 +1778,44 @@
                 service returns the HTTP <code>Accepted (202)</code> response code.
             </para>
             <para>
-                The update operation enables you to change one or more health
-                monitor attributes:
+                You can change one or more of these health monitor attributes:
             </para>
             <itemizedlist>
-                <listitem><para><code>delay</code></para></listitem>
-                <listitem><para><code>timeout</code></para></listitem>
-                <listitem><para><code>max_retries</code></para></listitem>
-                <listitem><para><code>http_method</code></para></listitem>
-                <listitem><para><code>url_path</code></para></listitem>
-                <listitem><para><code>expected_codes</code></para></listitem>
-                <listitem><para><code>admin_state_up</code></para></listitem>
+                <listitem>
+                    <para>
+                        <code>delay</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>timeout</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>max_retries</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>http_method</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>url_path</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>expected_codes</code>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <code>admin_state_up</code>
+                    </para>
+                </listitem>
             </itemizedlist>
             <para>
                 Note: The health monitor UUID, <code>tenant_id</code>,
@@ -1209,17 +1839,17 @@
         </response> &fault400; &fault401; &fault413; &fault500; &fault503; </method>
     <method name="DELETE" id="deleteHealthMonitorv2">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Remove health monitor">
-            <para role="shortdesc">Removes a health monitor and its
+            <para role="shortdesc">
+                Removes a health monitor and its
                 associated configuration from the tenant account.
             </para>
             <para>
-                Any and all
-                configuration data is immediately purged and cannot be recovered.
+                The API immediately purges any and all configuration data. You cannot recover it.
             </para>
             <para>
                 You cannot delete a health monitor if the attached load
-                balancer does not have a <code>provisioning_status</code>
-                value of <code>ACTIVE</code>.
+                balancer does not have an <code>ACTIVE</code> provisioning
+                status.
             </para>
             <para>Example: Delete a health monitor</para>
         </wadl:doc>
