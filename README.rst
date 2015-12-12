@@ -151,7 +151,7 @@ We welcome all types of contributions, from blueprint designs to documentation
 to testing to deployment scripts.
 
 To contribute to the documents, see
-`Documentation HowTo <https://wiki.openstack.org/wiki/Documentation/HowTo>`_.
+`OpenStack Documentation Contributor Guide <http://docs.openstack.org/contributor-guide/>`_.
 
 Bugs
 ====
