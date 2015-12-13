@@ -585,7 +585,7 @@ OpenStack contribution process.
 
       A Compute back-end database table that contains the current
       workload, amount of free RAM, and number of VMs running on each host.
-      Used to determine on which VM a host starts.
+      Used to determine on which host a VM starts.
 
    capacity updater
 
