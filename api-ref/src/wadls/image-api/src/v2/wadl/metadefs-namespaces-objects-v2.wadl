@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
-<!--*******************************************************-->
-<!--         Import Common XML Entities                    -->
-<!--                                                       -->
-<!--     You can resolve the entities with xmllint          -->
-<!--                                                       -->
-<!--        xmllint -noent os-image-2.2.wadl               -->
-<!--*******************************************************-->
+<!--***********************************************************-->
+<!--         Import Common XML Entities                        -->
+<!--                                                           -->
+<!--     You can resolve the entities with xmllint             -->
+<!--                                                           -->
+<!--        xmllint -noent metadefs-namespaces-objects-v2.wadl -->
+<!--***********************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
-    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -24,8 +24,8 @@
     xmlns:imageapi="http://docs.openstack.org/image/api/v2"
     xmlns:csapi="http://docs.openstack.org/image/api/v2">
     <grammars>
-        <include href="xsd/api.xsd"/>
-        <include href="xsd/api-common.xsd"/>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
     </grammars>
     <!--*******************************************************-->
     <!--             All Resources                             -->
@@ -48,7 +48,7 @@
                                        <para>The name of the object.</para>
                                     </wadl:doc>
                                 </param>
-                                <method href="#getObject-v2"/>
+                                <method href="#showObject-v2"/>
                                 <method href="#updateObject-v2"/>
                                 <method href="#deleteObject-v2"/>
                             </resource>
@@ -74,7 +74,7 @@
                 element="image">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="samples/metadef-object-create-req.json"/>
+                    <xsdxt:code href="../samples/metadef-object-create-request.json"/>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02"
                     name="namespace" style="plain" type="xsd:string"
@@ -157,7 +157,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-object-create-response.json"/>
+                        href="../samples/metadef-object-create-response.json"/>
                 </wadl:doc> &metadefNamespaceParameter; &metadefNSDisplayNameParameter;
                 &metadefNSDescParameter; &metadefNSVisibilityParameter;
                 &metadefNSProtectedParameter; &metadefPropertiesParameter;
@@ -167,9 +167,10 @@
     </method>
     <method name="GET" id="listObjects-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List objects">
-            <para role="shortdesc">Lists object definitions within
-                a namespace.</para>
+            title="List object definitions">
+            <para role="shortdesc">
+                Lists object definitions in a namespace.
+            </para>
             <para>
                 Returns a subset of the larger collection of namespaces and a
                 link that you can use to get the next set of namespaces. You
@@ -184,15 +185,15 @@
                 parameters.
             </para>
             <para>
-                The list operation accepts <code>resource_types</code> and
-                <code>visibility</code> as query parameters that let you
-                filter the results of the returned collection.
+                Use the <code>resource_types</code> and
+                <code>visibility</code> query parameters to filter the
+                response.
             </para>
             <para>
-                For example, sending a <code>resource_types</code> filter of
-                <code>OS::Glance::Image,OS::Nova::Flavor</code> filters the
-                namespaces to include only namespaces that are associated to
-                the given resource types.
+                For example, set the <code>resource_types</code> query
+                parameter to <code>OS::Glance::Image,OS::Nova::Flavor</code>
+                to filter the response to include only namespaces that are
+                associated with the given resource types.
             </para>
             <para>
                 You can sort the results of this operation by using the
@@ -210,26 +211,29 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-object-list-response.json"/>
+                        href="../samples/metadef-objects-list-response.json"/>
                 </wadl:doc> &namespacesParameter; &metadefNamespaceParameter;
                  &metadefNSDisplayNameParameter; &metadefNSDescParameter;
                  &metadefNSVisibilityParameter; &metadefNSProtectedParameter;
                  &metadefResTypeAssocsParameter; </representation>
         </response>
     </method>
-    <method name="GET" id="getObject-v2">
+    <method name="GET" id="showObject-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get object definition">
-            <para role="shortdesc">Gets the definition for an object.
-                </para>
-            <para>Response body is a single object entity.</para>
+            title="Show object definition">
+            <para role="shortdesc">
+                Shows the definition for an object.
+            </para>
+            <para>
+                The response body shows a single object entity.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-object-details-response.json"/>
+                        href="../samples/metadef-object-details-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -238,8 +242,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update object definition">
             <para role="shortdesc">
-                Updates an object definition in a
-                namespace.
+                Updates an object definition in a namespace.
             </para>
         </wadl:doc>
         <request>
@@ -247,7 +250,7 @@
                 element="image">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="samples/metadef-object-update-req.json"/>
+                    <xsdxt:code href="../samples/metadef-object-update-request.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -256,7 +259,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-object-update-response.json"/>
+                        href="../samples/metadef-object-update-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -265,23 +268,21 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Delete property definition">
             <para role="shortdesc">
-                Deletes an object definition within a namespace.
+                Deletes an object definition from a namespace.
             </para>
             <para>
-                You cannot delete objects in a namespace with the 'protected'
-                attribute set to true (boolean); the response returns
-                the HTTP 403 status code.
+                To delete a protected object from a namespace, you must
+                first set the <code>protected</code> attribute to false
+                (boolean) on the namespace and then perform the delete. If you
+                try to delete a protected object, the call returns the
+                <code>403</code> response code.
             </para>
             <para>
-                You must first set the <code>protected</code> attribute to
-                false (boolean) on the namespace and then perform the delete.
-                The response is empty and returns the HTTP 204 status code.
+                When you successfully delete an object from a namespace, the
+                response is empty and and the response code is
+                <code>204</code>.
             </para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                 </representation>
-        </request>
         <response status="204"/>
         <response status="403"/>
     </method>
