@@ -48,31 +48,62 @@ Anyone with a programming background can easily read the code in this guide.
 Although this guide focuses on a particular SDK, you can use other languages
 and toolkits with the OpenStack cloud:
 
-============== ============= ================================================================= ====================================================
-Language        Name          Description                                                       URL
-============== ============= ================================================================= ====================================================
-Python         Libcloud      A Python-based library managed by the Apache Foundation.
-                             This library enables you to work with multiple types of clouds.    https://libcloud.apache.org
-Python         OpenStack SDK A Python-based library specifically developed for OpenStack.       http://git.openstack.org/cgit/openstack/python-openstacksdk
-Python         Shade         A Python-based library developed by OpenStack Infra team to        http://git.openstack.org/cgit/openstack-infra/shade
-                             operate multiple OpenStack clouds.
-Java           jClouds       A Java-based library. Like Libcloud, it is also managed by the     https://jclouds.apache.org
-                             Apache Foundation and works with multiple types of clouds.
-Ruby           fog           A Ruby-based SDK for multiple clouds.                              https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
-node.js        pkgcloud      A Node.js-based SDK for multiple clouds.                           https://github.com/pkgcloud/pkgcloud
-PHP            php-opencloud A library for developers using PHP to work with OpenStack clouds.  http://php-opencloud.com/
-.NET Framework OpenStack SDK A .NET-based library enables you to write C++ or C# code for       https://www.nuget.org/packages/openstack.net
-               for Microsoft Microsoft applications.
-               .NET
-============== ============= ================================================================= ====================================================
+
+.. list-table:: OpenStack SDKs
+   :header-rows: 1
+   :widths: 10, 10, 40, 40
+
+   * - Language
+     - Name
+     - Description
+     - URL
+   * - Python
+     - `Libcloud <https://libcloud.apache.org>`_
+     - A Python-based library that the Apache Foundation manages.
+       Use it to work with multiple cloud types.
+     - https://libcloud.readthedocs.org/en/latest/compute/drivers/openstack.html
+   * - Python
+     - OpenStack SDK
+     - A Python-based library for OpenStack.
+     - http://git.openstack.org/cgit/openstack/python-openstacksdk
+   * - Python
+     - Shade
+     - A Python-based library developed by OpenStack Infra team.
+       Use it to operate multiple OpenStack clouds.
+     - http://git.openstack.org/cgit/openstack-infra/shade
+   * - Java
+     - `jClouds <https://jclouds.apache.org>`_
+     - A Java-based library that the Apache Foundation manages.
+       Use it to work with multiple cloud types.
+     - https://jclouds.apache.org/guides/openstack/
+   * - Ruby
+     - `fog <http://fog.io/>`_
+     - A Ruby-based SDK.
+       Use it to work with multiple clouds.
+     - https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
+   * - node.js
+     - `pkgcloud <https://github.com/pkgcloud/pkgcloud>`_
+     - A Node.js-based SDK.
+       Use it work with multiple clouds.
+     - https://github.com/pkgcloud/pkgcloud/tree/master/docs/providers/openstack
+   * - PHP
+     - `php-opencloud <http://php-opencloud.com/>`_
+     - A PHP-based library.
+       Use it to write PHP code that works with OpenStack clouds.
+     - http://php-opencloud.readthedocs.org/en/latest/getting-started-with-openstack.html
+   * - .NET Framework
+     - OpenStack SDK for Microsoft .NET
+     - A .NET-based library.
+       Use it to write C++ or C# code for Microsoft applications.
+     - https://www.nuget.org/packages/openstack.net
 
 For a list of available SDKs, see `Software Development Kits <https://wiki.openstack.org/wiki/SDKs>`_.
 
-Other versions of this guide show you how to use the other SDKs and
-languages to complete these tasks. If you are a developer for another toolkit
-that you would like this guide to include, feel free to submit code snippets.
-You can contact `OpenStack Documentation team <https://wiki.openstack.org/Documentation>`_
-members for more information.
+Other versions of this guide show you how to use the other SDKs and languages
+to complete these tasks. If you are a developer for another toolkit that you
+would like this guide to include, feel free to submit code snippets. For more
+information, contact
+`OpenStack Documentation team <https://wiki.openstack.org/Documentation>`_ members.
 
 What you need
 -------------
@@ -1008,8 +1039,8 @@ Deploy the application to a new instance
 
 Now that you know how to create and delete instances, you can deploy the
 sample application. The instance that you create for the application is
-similar to the first instance that you created, but this time, we will briefly
-introduce a few extra concepts.
+similar to the first instance that you created, but this time, we introduce a
+few extra concepts.
 
 .. note:: Internet connectivity from your cloud instance is required
           to download the application.
