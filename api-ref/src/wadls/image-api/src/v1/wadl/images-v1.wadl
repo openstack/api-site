@@ -3,14 +3,14 @@
 <!--*******************************************************-->
 <!--         Import Common XML Entities                    -->
 <!--                                                       -->
-<!--     You can resolve the entities with xmllint          -->
+<!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent os-image-1.0.wadl               -->
+<!--        xmllint -noent images-v1.wadl                  -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-   <!ENTITY % common  SYSTEM "common.ent">
+   <!ENTITY % common  SYSTEM "../common.ent">
    %common;
-   <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+   <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
    %common_project;
    ]>
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,8 +23,8 @@
     xmlns:common="http://docs.openstack.org/common/api/v1.0"
     xmlns:csapi="http://docs.openstack.org/image/api/v1.0">
     <grammars>
-        <include href="../v2/xsd/api.xsd"/>
-        <include href="../v2/xsd/api-common.xsd"/>
+        <include href="../../v2/xsd/api.xsd"/>
+        <include href="../../v2/xsd/api-common.xsd"/>
     </grammars>
     <!--*******************************************************-->
     <!--             All Resources                             -->
@@ -44,8 +44,8 @@
                     id="detail"/>
                 <resource path="{image_id}" id="image_id">
                     &image_idRequestParameter;
-                    <method href="#getImage-v1"/>
-                    <method href="#getImageHeaders-v1"/>
+                    <method href="#showImage-v1"/>
+                    <method href="#showImageHeaders-v1"/>
                     <method href="#updateImage-v1"/>
                     <method href="#deleteImage-v1"/>
                     <resource id="members" path="members">
@@ -61,7 +61,7 @@
             <resource id="shared-images" path="shared-images">
                 <resource path="{owner_id}" id="owner-2">
                     &owner_idRequestParameter;
-                    <method href="#getSharedImages-v1"/>
+                    <method href="#listSharedImages-v1"/>
                 </resource>
             </resource>
         </resource>
@@ -70,16 +70,18 @@
     <!--               Resource Types                          -->
     <!--*******************************************************-->
     <resource_type id="ImageList">
-        <method href="#listImage-v1"/>
+        <method href="#listImages-v1"/>
     </resource_type>
     <resource_type id="DetailImageList">
-        <method href="#listDetailImage-v1"/>
+        <method href="#listImagesDetailed-v1"/>
     </resource_type>
     <resource_type id="VersionDetails">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Version details">
-            <para>Details for a version.</para>
+            <para>
+                Details for a version.
+            </para>
         </wadl:doc>
         <method href="#showVersionDetails-image-v1"/>
     </resource_type>
@@ -89,9 +91,10 @@
     <method name="GET" id="listVersions-image-null-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN" title="List API versions"><para
-                role="shortdesc">Lists information about available Image
-                service API versions.</para>
+            xml:lang="EN" title="List API versions">
+            <para role="shortdesc">
+                Lists information about all Image service API versions.
+            </para>
         </wadl:doc>
         <response status="300">
             <representation mediaType="application/json">
@@ -99,7 +102,7 @@
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/image-versions-response.json"/>
+                        href="../samples/image-versions-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -107,9 +110,10 @@
     <method name="GET" id="listVersions-image-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN" title="List API versions"><para
-                role="shortdesc">Lists information about available Image
-                service API versions.</para>
+            xml:lang="EN" title="List API versions">
+            <para role="shortdesc">
+                Shows details for the Image service API v1.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -117,7 +121,7 @@
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/image-versions-response.json"/>
+                        href="../samples/image-versions-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -126,8 +130,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Create image">
-            <para role="shortdesc">Registers a virtual machine (VM)
-                image.</para>
+            <para role="shortdesc">
+                Registers a virtual machine (VM) image.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
@@ -138,11 +143,12 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
                         xml:lang="EN" title="Images name">
-                        <para>Name for the image. Note that the name
-                            of an image is not unique to a Glance
-                            node. The API cannot expect users to know
-                            the names of images owned by
-                            others.</para>
+                        <para>
+                            Name for the image. Note that the name of an image
+                            is not unique to an Image service node. The API
+                            cannot expect users to know the names of images
+                            that other users own.
+                        </para>
                     </wadl:doc>
                 </param>
                 &disk_formatRequestParameter;
@@ -162,8 +168,7 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
                         xml:lang="EN" title="Image Location">
-                        <para>A location for the image identified by a
-                            URI.</para>
+                        <para>A URI location for the image.</para>
                     </wadl:doc>
                     <link resource_type="#createImage" rel="self"/>
                 </param>
@@ -191,7 +196,7 @@
             <representation mediaType="application/json"/>
         </response>
     </method>
-    <method name="GET" id="getImage-v1">
+    <method name="GET" id="showImage-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show image details and image binary">
@@ -206,7 +211,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
-                    <xsdxt:code href="samples/imagedetails.json"/>
+                    <xsdxt:code href="../samples/images-list-details-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -220,13 +225,13 @@
         </wadl:doc>
         <response status="204"/>
     </method>
-    <method name="GET" id="getSharedImages-v1">
+    <method name="GET" id="listSharedImages-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List shared images">
             <para role="shortdesc">
-                Lists the VM images that are shared with an owner.
-                The owner ID is the tenant ID.
+                Lists the VM images that an owner shares. The owner ID is the
+                tenant ID.
             </para>
         </wadl:doc>
         <response status="200">
@@ -240,16 +245,16 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
-                    <xsdxt:code href="samples/shared-images.json"/>
+                    <xsdxt:code href="../samples/shared-images-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="GET" id="listImage-v1">
+    <method name="GET" id="listImages-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List images">
-            <para role="shortdesc">Lists public VM images.</para>
+            <para role="shortdesc">Lists all public VM images.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -263,17 +268,17 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
-                    <xsdxt:code href="samples/imagelist.json"/>
+                    <xsdxt:code href="../samples/images-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="GET" id="listDetailImage-v1">
+    <method name="GET" id="listImagesDetailed-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN" title="List image details">
-            <para role="shortdesc">Lists details for available
-                images.</para>
+            xml:lang="EN" title="List images with details">
+            <para role="shortdesc">Lists all available
+                images with details.</para>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -311,7 +316,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
-                    <xsdxt:code href="samples/imagedetails.json"/>
+                    <xsdxt:code href="../samples/images-list-details-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -319,8 +324,10 @@
     <method name="PUT" id="addMember-v1">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xml:lang="EN" title="Add member">
-            <para role="shortdesc">Adds a member to an image.</para>
+            xml:lang="EN" title="Add members to image">
+            <para role="shortdesc">
+                Adds one or more members to an image.
+            </para>
             <para>
                 If you omit the request body, this call adds the membership to
                 the image, leaves the existing memberships unmodified, and
@@ -334,7 +341,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xmlns:wadl="http://wadl.dev.java.net/2009/02"
                     xml:lang="EN">
-                    <xsdxt:code href="samples/imagememberships.json"/>
+                    <xsdxt:code href="../samples/image-members-add-request.json"/>
                 </wadl:doc>
                 &can_shareRequestParameter;
             </representation>
@@ -345,8 +352,9 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Replace member">
-            <para role="shortdesc">Replaces a membership list for an
-                image.</para>
+            <para role="shortdesc">
+                Replaces a membership list for an image.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
@@ -354,7 +362,7 @@
                 <param xmlns="http://wadl.dev.java.net/2009/02"
                     name="memberships" style="plain" required="true"/>
                 &can_shareRequestParameter;
-                <xsdxt:code href="samples/imagemembershiplist.json"/>
+                <xsdxt:code href="../samples/image-members-add-request.json"/>
             </representation>
         </request>
         <response status="204"/>
@@ -371,12 +379,14 @@
                 element="image">
                 <param xmlns="http://wadl.dev.java.net/2009/02"
                     name="member_id" style="plain" required="true"
-                    type="csapi:uuid">
+                    type="csapi:UUID">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
                         xml:lang="EN">
-                        <para>ID of member with which an image is
-                            shared.</para>
+                        <para>
+                            The UUID of the member with which an image is
+                            shared.
+                        </para>
                     </wadl:doc>
                 </param>
             </representation>

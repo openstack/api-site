@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
-<!--*******************************************************-->
-<!--         Import Common XML Entities                    -->
-<!--                                                       -->
-<!--     You can resolve the entities with xmllint          -->
-<!--                                                       -->
-<!--        xmllint -noent os-image-2.2.wadl               -->
-<!--*******************************************************-->
+<!--**************************************************************-->
+<!--         Import Common XML Entities                           -->
+<!--                                                              -->
+<!--     You can resolve the entities with xmllint                -->
+<!--                                                              -->
+<!--        xmllint -noent metadefs-namespaces-properties-v2.wadl -->
+<!--**************************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
-    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -24,8 +24,8 @@
     xmlns:imageapi="http://docs.openstack.org/image/api/v2"
     xmlns:csapi="http://docs.openstack.org/image/api/v2">
     <grammars>
-        <include href="xsd/api.xsd"/>
-        <include href="xsd/api-common.xsd"/>
+        <include href="../xsd/api.xsd"/>
+        <include href="../xsd/api-common.xsd"/>
     </grammars>
     <!--*******************************************************-->
     <!--             All Resources                             -->
@@ -41,7 +41,7 @@
                             <method href="#createProperty-v2"/>
                             <method href="#listProperties-v2"/>
                             <resource path="{property_name}" id="property_name">
-                                <method href="#getProperty-v2"/>
+                                <method href="#showProperty-v2"/>
                                 <method href="#updateProperty-v2"/>
                                 <method href="#deleteProperty-v2"/>
                             </resource>
@@ -59,10 +59,10 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Create property">
             <para role="shortdesc">
-                Creates a property definition within a namespace.
+                Creates a property definition in a namespace.
             </para>
             <para>
-                The schema is a subset of JSON property definition schema.
+                The schema is a subset of the JSON property definition schema.
             </para>
         </wadl:doc>
         <request>
@@ -70,7 +70,7 @@
                 element="image">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="samples/metadef-property-create-req.json"/>
+                    <xsdxt:code href="../samples/metadef-property-create-request.json"/>
                 </wadl:doc>
                 &metadefPropertyNameParameter;
                 &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
@@ -90,7 +90,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-property-create-response.json"/>
+                        href="../samples/metadef-property-create-response.json"/>
                 </wadl:doc> &metadefPropertyNameParameter;
                 &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
                 &metadefPropertyEnumParameter; &metadefPropertyItemsParameter;
@@ -107,11 +107,10 @@
     </method>
     <method name="GET" id="listProperties-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List properties">
-            <para role="shortdesc">Lists property definitions within
-                a namespace.</para>
-            <para>Returns a list of property definitions in a
-                namespace.</para>
+            title="List property definitions">
+            <para role="shortdesc">
+                Lists property definitions in a namespace.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -122,7 +121,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-property-list-response.json"/>
+                        href="../samples/metadef-properties-list-response.json"/>
                 </wadl:doc> &metadefPropertyListParameter;
                 &metadefPropertyNameParameter;
                 &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
@@ -138,19 +137,22 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="getProperty-v2">
+    <method name="GET" id="showProperty-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get property definition">
-            <para role="shortdesc">Gets the definition for a property.
+            title="Show property definition">
+            <para role="shortdesc">
+                Shows the definition for a property.
             </para>
             <para>
-                If you include the <code>resource_type</code> query
-                parameter, the prefix of the included resource type is removed
-                from the property name before the query is submitted. This
-                enables you to look for a property name that starts with a
-                prefix from an associated resource type.
+                If you use the <code>resource_type</code> query parameter, the
+                API removes the prefix of the resource type from the property
+                name before it submits the query. This enables you to look for
+                a property name that starts with a prefix from an associated
+                resource type.
             </para>
-            <para>Response body shows a single property entity.</para>
+            <para>
+                The response body shows a single property entity.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -168,7 +170,7 @@
                         from an associated resource type.
                     </para>
                     <para>
-                        The prefix of the included resource type is removed
+                        The API removes the prefix of the resource type
                         from the property name in the response.
                     </para>
                 </wadl:doc>
@@ -180,7 +182,7 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-property-details-response.json"/>
+                        href="../samples/metadef-property-details-response.json"/>
                 </wadl:doc>
                 &metadefPropertyNameParameter;
                 &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
@@ -199,15 +201,16 @@
     <method name="PUT" id="updateProperty-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update property definition">
-            <para role="shortdesc">Updates a property definition.
-                </para>
+            <para role="shortdesc">
+                Updates a property definition.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
                 element="image">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:code href="samples/metadef-property-create-req.json"/>
+                    <xsdxt:code href="../samples/metadef-property-create-request.json"/>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02"
                     name="name" style="plain" type="xsd:string"
@@ -393,9 +396,9 @@
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="samples/metadef-property-update-response.json"/>
+                        href="../samples/metadef-property-update-response.json"/>
                 </wadl:doc>
-                 &metadefPropertyNameParameter;
+                &metadefPropertyNameParameter;
                 &metadefPropertyTitleParameter; &metadefPropertyTypeParameter;
                 &metadefPropertyEnumParameter; &metadefPropertyItemsParameter;
                 &metadefPropertyDescParameter; &metadefPropertyOperParameter;

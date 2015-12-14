@@ -5,12 +5,12 @@
 <!--                                                       -->
 <!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent os-image-v2.wadl                -->
+<!--        xmllint -noent images-v2.wadl                  -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-   <!ENTITY % common  SYSTEM "common.ent">
+   <!ENTITY % common  SYSTEM "../common.ent">
    %common;
-   <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+   <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
    %common_project;
    ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -24,25 +24,22 @@
    xmlns:imageapi="http://docs.openstack.org/image/api/v2"
    xmlns:csapi="http://docs.openstack.org/image/api/v2">
    <grammars>
-      <include href="xsd/api.xsd"/>
-      <include href="xsd/api-common.xsd"/>
+      <include href="../xsd/api.xsd"/>
+      <include href="../xsd/api-common.xsd"/>
    </grammars>
    <!--*******************************************************-->
    <!--             All Resources                             -->
    <!--*******************************************************-->
    <resources base="https://glance.example.com/" xml:id="os-image-v2">
-      <resource id="versions" path="/">
-         <method href="#listVersions-image-null-v2"/>
-         <resource id="versionspath" path="versions">
-            <method href="#listVersions-image-v2"/>
-         </resource>
+      <resource id="versions" path="//">
+         <method href="#listVersions-image-v2"/>
       </resource>
       <resource id="version" path="//v2">
-         <resource id="Images" type="#ImageList" path="images">
+         <resource id="images" type="#ImageList" path="images">
             <method href="#createImage-v2"/>
             <resource path="{image_id}" id="image_id">
                &image_idParameter;
-               <method href="#getImage-v2"/>
+               <method href="#showImage-v2"/>
                <method href="#updateImage-v2"/>
                <method href="#deleteImage-v2"/>
                <resource id="actions" path="actions">
@@ -55,7 +52,7 @@
                </resource>
                <resource id="file" path="file">
                   <method href="#storeImageFile-v2"/>
-                  <method href="#getImageFile-v2"/>
+                  <method href="#showImageFile-v2"/>
                </resource>
                <resource id="Tags" path="tags">
                   <resource path="{tag}" id="tag">
@@ -69,7 +66,7 @@
                   <method href="#createImageMember-v2"/>
                   <resource path="{member_id}" id="member_id">
                      &member_idParameter;
-                     <method href="#getImageMember-v2"/>
+                     <method href="#showImageMember-v2"/>
                      <method href="#deleteImageMember-v2"/>
                      <method href="#updateImageMember-v2"/>
                   </resource>
@@ -77,10 +74,10 @@
             </resource>
          </resource>
          <resource id="Tasks" path="tasks">
-            <method href="#createTasks-v2"/>
+            <method href="#createTask-v2"/>
             <method href="#listTasks-v2"/>
             <resource path="{task_id}" id="task_id">
-               <method href="#showTasks-v2"/>
+               <method href="#showTask-v2"/>
             </resource>
          </resource>
       </resource>
@@ -97,36 +94,19 @@
    <!--*******************************************************-->
    <!--               All Methods                             -->
    <!--*******************************************************-->
-   <method name="GET" id="listVersions-image-null-v2">
+   <method name="GET" id="listVersions-image-v2">
       <wadl:doc xml:lang="EN" title="List API versions"
          xmlns="http://docbook.org/ns/docbook">
-         <para role="shortdesc">Lists information about available Image
+         <para role="shortdesc">
+            Lists information about available Image
             service API versions.
          </para>
       </wadl:doc>
       <response status="300">
          <representation mediaType="application/json">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-               xml:lang="EN">
+            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                <xsdxt:code
-                  href="samples/image-versions-response.json"/>
-            </wadl:doc>
-         </representation>
-      </response>
-   </method>
-   <method name="GET" id="listVersions-image-v2">
-      <wadl:doc xml:lang="EN" title="List API versions"
-         xmlns="http://docbook.org/ns/docbook">
-         <para role="shortdesc">Lists information about available Image
-            service API versions.
-         </para>
-      </wadl:doc>
-      <response status="200">
-         <representation mediaType="application/json">
-            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-               xml:lang="EN">
-               <xsdxt:code
-                  href="samples/image-versions-response.json"/>
+                  href="../samples/image-versions-response.json"/>
             </wadl:doc>
          </representation>
       </response>
@@ -151,27 +131,27 @@
             <code>marker</code> parameters.
          </para>
          <para>
-            The list operation accepts several types of query parameters that
-            let you filter the results of the returned collection.
+            The list operation accepts several query parameters. Use these
+            parameters to filter the response.
          </para>
          <para>
-            A client can provide direct comparison filters using most image
+            A client can provide direct comparison filters by using most image
             attributes, such as <code>name=Ubuntu</code>,
-            <code>visibility=public</code>, and so on. A client cannot filter
-            on tags or anything defined as a <code>link</code> in the json-
-            schema, such as self, file, or schema.
+            <code>visibility=public</code>, and so on. A client cannot use
+            tags or any <code>link</code> in the json-schema, such as self, file,
+            or schema, to filter the response.
          </para>
          <para>
             You can use the <code>size_min</code> and <code>size_max</code>
-            query parameters to perform greater-than and less-than filtering
-            of images based on their <code>size</code> attribute. The size is
-            measured in bytes and refers to the size of an image when it is
-            stored on disk.
+            query parameters to filter images that are greater than or less
+            than the image size. The size, in bytes, is the size of an image
+            on disk.
          </para>
          <para>
-            For example, sending a <code>size_min</code> filter of 1048576 and
-            <code>size_max</code> of 4194304 filters the container to include
-            only images that are between 1 and 4 MB.
+            For example, to filter the container to include only images that
+            are from 1 to 4 MB, set the <code>size_min</code> query
+            parameter to <code>1048576</code> and the <code>size_max</code>
+            query parameter to <code>4194304</code>.
          </para>
          <para>
             You can list VM images that have a status of <code>active</code>,
@@ -183,9 +163,8 @@
          <itemizedlist>
             <listitem>
                <para>
-                  <code>sort_key</code>. Sorts by the requested image
-                  attribute. Sorts in the natural sorting direction of the image attribute that
-                  is provided as the <code>sort_key</code>.
+                  <code>sort_key</code>. Sorts by an image
+                  attribute. Sorts in the natural sorting direction of the image attribute.
                </para>
             </listitem>
             <listitem>
@@ -204,10 +183,10 @@
          <para>To specify the <code>sort_key</code> and
             <code>sort_dir</code> query parameters to sort the results:
          </para>
-            <programlisting language="json">GET /v2/images?sort_key=name&amp;sort_dir=asc&amp;sort_key=status&amp;sort_dir=desc</programlisting>
+<programlisting language="json">GET /v2/images?sort_key=name&amp;sort_dir=asc&amp;sort_key=status&amp;sort_dir=desc</programlisting>
          <para>To specify the <code>sort</code> query parameter to sort the results:
          </para>
-            <programlisting language="json">GET /v2/images?sort=name:asc,status:desc</programlisting>
+<programlisting language="json">GET /v2/images?sort=name:asc,status:desc</programlisting>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
@@ -220,7 +199,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-list-response.json"/>
+                  href="../samples/images-list-response.json"/>
             </wadl:doc>
             &imagesParameter; &statusParameter;
             &nameParameter; &tagsParameter; &container_formatParameter;
@@ -244,9 +223,10 @@
          <para role="shortdesc">(Since Image API v2.0) Creates a virtual machine (VM)
             image.
          </para>
-         <para>Created with a <code>Location</code> header that
-            contains the newly-created URI for the image. Response
-            body represents the created image entity.
+         <para>
+            The response includes a <code>Location</code> response header that
+            contains the URI for the image. The response body contains the new
+            image entity.
          </para>
          <para>Synchronous Postconditions</para>
          <itemizedlist>
@@ -257,10 +237,10 @@
                </para>
             </listitem>
             <listitem>
-               <para>With correct permissions, you can see
-                  the image status as <code>active</code> through API
-                  calls if you created the image with
-                  <code>Location</code> header.
+               <para>
+                  If you create the image with the <code>Location</code>
+                  header and you have correct permissions, you can use API
+                  calls to see the image status as <code>active</code>.
                </para>
             </listitem>
          </itemizedlist>
@@ -270,7 +250,7 @@
             element="image">
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
-               <xsdxt:code href="samples/image-create-req.json"/>
+               <xsdxt:code href="../samples/image-create-request.json"/>
             </wadl:doc>
             <param xmlns="http://wadl.dev.java.net/2009/02"
                name="name" style="plain" type="xsd:string"
@@ -279,14 +259,15 @@
                xmlns:wadl="http://wadl.dev.java.net/2009/02"
                xml:lang="EN">
                <para>
-                  Name for the image. The name of an image is not unique to an
-                  Image service node. The API cannot expect users to know the
-                  names of images owned by others.
+                  Name for the image. Note that the name of an image
+                  is not unique to an Image service node. The API
+                  cannot expect users to know the names of images
+                  that other users own.
                </para>
             </wadl:doc>
             </param>
             <param xmlns="http://wadl.dev.java.net/2009/02"
-               name="id" style="plain" type="csapi:uuid"
+               name="id" style="plain" type="csapi:UUID"
                required="false">
             <wadl:doc xmlns="http://docbook.org/ns/docbook"
                xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -339,7 +320,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-create-response.json"/>
+                  href="../samples/image-create-response.json"/>
             </wadl:doc>
             &statusParameter; &container_formatParameter;
             &min_ramParameter; &updated_at-ResponseParameter;
@@ -384,7 +365,7 @@
                   </td>
                   <td>
                      <para>
-                        A new value is inserted into the array at the index.
+                        The API inserts a new value into the array at the index.
                      </para>
                   </td>
                </tr>
@@ -396,7 +377,7 @@
                   </td>
                   <td>
                      <para>
-                        A new member is added to the object.
+                        The API adds a member to the object.
                      </para>
                   </td>
                </tr>
@@ -438,19 +419,20 @@
             </listitem>
             <listitem>
                <para>
-                  A member to add to an object. The value is added to that
-                  object at that location. If the member already exists, it is
-                  replaced by the value.
+                  A member value to add to an object. The API adds the value
+                  to the object at the location. If the member already exists,
+                  the API replaces it with the value.
                </para>
             </listitem>
             <listitem>
                <para>
-                  An element to add to the array. The value is added to the
-                  array at the location. Any element that is at or above the
-                  index is shifted one position to the right. The index must
-                  not be greater than the number of elements in the array. If
-                  you use the hyphen (-) character to index the end of the
-                  array, the value is appended to the array. See <link
+                  An element to add to the array. The API adds the element
+                  value to the array at the location. The API shifts any
+                  element that is at or above the index one position to the
+                  right. The index must not be greater than the number of
+                  elements in the array. If you use the hyphen (-) character
+                  to index the end of the array, the API appends the value to
+                  the array. See <link
                   xlink:href="http://tools.ietf.org/html/rfc6901">JavaScript
                   Object Notation (JSON) Pointer</link>.
                </para>
@@ -538,7 +520,7 @@
          <representation mediaType="application/json">
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
-               <xsdxt:code href="samples/image-update-req.json"/>
+               <xsdxt:code href="../samples/image-update-request.json"/>
             </wadl:doc>
             &pathParameter; &valueParameter; &opParameter;
             &urlParameter; &metadataParameter;
@@ -549,7 +531,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-update-response.json"/>
+                  href="../samples/image-update-response.json"/>
             </wadl:doc>
             &statusParameter;
             &nameParameter; &tagsParameter; &container_formatParameter;
@@ -564,7 +546,7 @@
          </representation>
       </response>
    </method>
-   <method name="GET" id="getImage-v2">
+   <method name="GET" id="showImage-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Show image details">
          <para role="shortdesc">(Since Image API v2.0) Shows details for an image.
@@ -582,7 +564,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-details-response.json"/>
+                  href="../samples/image-show-response.json"/>
             </wadl:doc>
             &statusParameter;
             &nameParameter; &tagsParameter; &container_formatParameter;
@@ -619,7 +601,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-details-response.json"/>
+                  href="../samples/image-show-response.json"/>
             </wadl:doc>
          </representation>
       </response>
@@ -630,9 +612,10 @@
          <para role="shortdesc">(Since Image API v2.0) Deactivates an image.
          </para>
          <para>
-            If you try to download a deactivated image, the 403 Forbidden
-            error is returned. Also, image locations are not visible for
-            deactivated images unless the user is an administrative user.
+            If you try to download a deactivated image, the call returns the
+            <code>Forbidden (403)</code> response code. Also, only
+            administrative users can view image locations for deactivated
+            images.
          </para>
          <para>
             The deactivate operation returns an error if the image status is
@@ -650,7 +633,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-details-deactivate-response.json"/>
+                  href="../samples/image-details-deactivate-response.json"/>
             </wadl:doc>
          </representation>
       </response>
@@ -686,13 +669,13 @@
                </para>
             </listitem>
             <listitem>
-               <para>The image is deleted in images index.
+               <para>The API deletes the image from the images index.
                </para>
             </listitem>
             <listitem>
-               <para>The binary image data managed by OpenStack
-                  Image service is deleted from the storage node if the
-                  deleted image stores image data in the node.
+               <para>
+                  If the image stores binary image data in the storage node,
+                  the OpenStack Image service deletes the data from the node.
                </para>
             </listitem>
          </itemizedlist>
@@ -775,10 +758,10 @@
          <itemizedlist>
             <listitem>
                <para>
-                  If you cannot store the data, your request might lack
-                  information or you exceeded your allotted quota. Ensure that
-                  you meet the preconditions and run the request again. If the
-                  request fails again, review your API request.
+                  If you cannot store the data, either your request lacks
+                  required information or you exceeded your allotted quota.
+                  Ensure that you meet the preconditions and run the request
+                  again. If the request fails again, review your API request.
                </para>
             </listitem>
             <listitem>
@@ -791,7 +774,7 @@
       </wadl:doc>
       <response status="204"/>
    </method>
-   <method name="GET" id="getImageFile-v2">
+   <method name="GET" id="showImageFile-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Download binary image data">
          <para role="shortdesc">(Since
@@ -802,12 +785,10 @@
             $image_url/v2/images/{image_id}/file</code>
          </para>
          <para>
-            The response body contains the raw binary data that represents the
-            actual virtual disk. The <code>Content-Type</code> header contains
-            the <code>application/octet-stream</code> value. The <code
-            >Content-MD5</code> header contains an MD5 checksum of the image
-            data. Clients are encouraged to use this checksum to verify the
-            integrity of the image data that they receive.
+            The response body contains the raw binary data that represents the actual virtual disk.
+            The <code>Content-Type</code> header contains the <code>application/octet-stream</code>
+            value. The <code>Content-MD5</code> header contains an MD5 checksum of the image data.
+            Use this checksum to verify the integrity of the image data.
          </para>
          <para></para>
          <para>Preconditions</para>
@@ -865,7 +846,7 @@
       <response status="204"/>
    </method>
    <!-- images/{image_id}/members methods -->
-   <method name="GET" id="getImageMember-v2">
+   <method name="GET" id="showImageMember-v2">
       <wadl:doc xml:lang="EN" title="Show image member details"
          xmlns="http://docbook.org/ns/docbook">
          <para role="shortdesc">(Since Image API v2.2) Shows image member details.</para>
@@ -889,7 +870,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-member-details-response.json"
+                  href="../samples/image-member-details-response.json"
                   />
             </wadl:doc>
            <!--  &memberListParameter; -->
@@ -899,16 +880,16 @@
    <method name="GET" id="listImageMembers-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="List image members">
-         <para role="shortdesc">(Since Image API v2.1) Lists the tenants with whom this
-            image has been shared.
+         <para role="shortdesc">
+            (Since Image API v2.1) Lists the tenants that share this image.
          </para>
-         <para>If a user with whom this image is shared makes this
-            call, the member list contains only information for
-            that user.
+         <para>
+            If a user who shares this image makes this call, the
+            member list contains only information for that user.
          </para>
-         <para>If a user with whom this image has not been shared
-            makes this call, the call returns the HTTP 404 status
-            code.
+         <para>
+            If a user who does not share this image makes this call, the call
+            returns the HTTP 404 response code.
          </para>
          <para>Preconditions</para>
          <itemizedlist>
@@ -928,7 +909,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-members-list-response.json"
+                  href="../samples/image-members-list-response.json"
                   />
             </wadl:doc>
             <!--  &memberListParameter; -->
@@ -999,7 +980,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-member-create-request.json"
+                  href="../samples/image-member-create-request.json"
                   />
             </wadl:doc>
          </representation>
@@ -1009,7 +990,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-member-create-response.json"
+                  href="../samples/image-member-create-response.json"
                   />
             </wadl:doc>
           <!--   &memberListParameter; -->
@@ -1047,15 +1028,16 @@
          <para>Synchronous Postconditions</para>
          <itemizedlist>
             <listitem>
-               <para>If you update the member status to
-                  <code>accepted</code> and have the correct permissions,
-                  you see the image in list images responses.
+               <para>
+                  If you update the member status to <code>accepted</code> and
+                  have the correct permissions, you see the image in list
+                  images responses.
                </para>
             </listitem>
             <listitem>
-               <para>With correct permissions, you can see
-                  the updated member status of the image through API
-                  calls.
+               <para>
+                  With correct permissions, you can make API calls to see the
+                  updated member status of the image.
                </para>
             </listitem>
          </itemizedlist>
@@ -1065,7 +1047,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-member-update-request.json"
+                  href="../samples/image-member-update-request.json"
                   />
             </wadl:doc>
             <param xmlns="http://wadl.dev.java.net/2009/02"
@@ -1086,7 +1068,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/image-member-update-response.json"
+                  href="../samples/image-member-update-response.json"
                   />
             </wadl:doc>
            <!--  &memberListParameter; -->
@@ -1115,7 +1097,7 @@
          <para>Synchronous Postconditions</para>
          <itemizedlist>
             <listitem>
-               <para>The member is removed from
+               <para>The API removes the member from
                   the image members.
                </para>
             </listitem>
@@ -1155,14 +1137,14 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/tasks-list-response.json"/>
+                  href="../samples/tasks-list-response.json"/>
             </wadl:doc>
          </representation>
       </response>
    </method>
-   <method name="POST" id="createTasks-v2">
+   <method name="POST" id="createTask-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-         title="Create tasks">
+         title="Create task">
          <para role="shortdesc">Creates a task.</para>
       </wadl:doc>
       <request>
@@ -1170,16 +1152,16 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/tasks-create-request.json"/>
+                  href="../samples/task-create-request.json"/>
             </wadl:doc>
          </representation>
       </request>
       <response status="201">
       </response>
    </method>
-   <method name="GET" id="showTasks-v2">
+   <method name="GET" id="showTask-v2">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-         title="Show tasks">
+         title="Show task details">
          <para role="shortdesc">Shows details for a task.
          </para>
       </wadl:doc>
@@ -1193,7 +1175,7 @@
             <wadl:doc xml:lang="EN"
                xmlns="http://docbook.org/ns/docbook">
                <xsdxt:code
-                  href="samples/tasks-show-response.json"/>
+                  href="../samples/task-show-response.json"/>
             </wadl:doc>
          </representation>
       </response>
