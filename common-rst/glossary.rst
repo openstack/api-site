@@ -176,10 +176,6 @@ OpenStack contribution process.
       The most common web server software currently used on the
       Internet.
 
-   API
-
-      Application programming interface.
-
    API endpoint
 
       The daemon, worker, or service that a client communicates with
@@ -2342,7 +2338,7 @@ OpenStack contribution process.
    Mitaka
 
       The code name for the thirteenth release of OpenStack.
-      The design summit will take place in Tokyo, Japan. Mitaka
+      The design summit took place in Tokyo, Japan. Mitaka
       is a city in Tokyo.
 
    monasca
