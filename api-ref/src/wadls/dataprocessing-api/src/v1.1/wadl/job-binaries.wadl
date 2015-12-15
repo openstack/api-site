@@ -27,20 +27,16 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenant_idTemplateParameter;
                 <resource id="job-binaries" path="job-binaries">
-                    <method href="#job-binaries-list"/>
-                    <method href="#job-binaries-create"/>
-                    <resource id="job-binaries-id" path="{job_binaries_id}">
-                        <param name="job_binaries_id" style="template" type="capi:UUID">
-                            <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                                <para>The ID of the job binary.</para>
-                            </wadl:doc>
-                        </param>
-                        <method href="#job-binaries-show"/>
-                        <method href="#job-binaries-delete"/>
-                        <method href="#job-binaries-update"/>
+                    <method href="#listJobBinaries"/>
+                    <method href="#jcreateJobBinary"/>
+                    <resource id="job-binary-id" path="{job_binary_id}">
+                        &job_binary_idTemplateParameter;
                         <resource id="job-binaries-id-data" path="data">
-                          <method href="#job-binaries-data"/>
+                          <method href="#showJobBinaryData"/>
                         </resource>
+                        <method href="#showJobBinary"/>
+                        <method href="#updateJobBinary"/>
+                        <method href="#deleteJobBinary"/>
                     </resource>
                 </resource>
             </resource>
@@ -49,16 +45,18 @@
     <!-- *******************************************************-->
     <!--             Job binary actions                         -->
     <!-- *******************************************************-->
-    <method name="GET" id="job-binaries-list">
+    <method name="GET" id="listJobBinaries">
         <wadl:doc xml:lang="EN" title="List job binaries"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists the available job binaries.</para>
+            <para role="shortdesc">
+                Lists the available job binaries.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/job-binaries/list-resp.json"
+                        href="../samples/job-binaries/list-response.json"
                     />
                 </wadl:doc>
                 &binariesParameter;
@@ -70,13 +68,15 @@
     <method name="POST" id="job-binaries-create">
         <wadl:doc xml:lang="EN" title="Create job binary"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Creates a job binary.</para>
+            <para role="shortdesc">
+                Creates a job binary.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/job-binaries/create-req.json"
+                        href="../samples/job-binaries/create-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -85,7 +85,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/job-binaries/create-resp.json"
+                        href="../samples/job-binaries/create-response.json"
                     />
                 </wadl:doc>
                 &jobbinaryResponseParameters;
@@ -96,14 +96,15 @@
     <method name="GET" id="job-binaries-show">
         <wadl:doc xml:lang="EN" title="Show job binary details"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Shows details for a
-              job binary.</para>
+            <para role="shortdesc">
+                Shows details for a job binary.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/job-binaries/show-resp.json"
+                        href="../samples/job-binaries/show-response.json"
                     />
                 </wadl:doc>
                 &jobbinaryResponseParameters;
@@ -118,15 +119,18 @@
         </wadl:doc>
         <response status="204"/>
     </method>
-    <method name="GET" id="job-binaries-data">
-        <wadl:doc xml:lang="EN" title="Get job binary data"
+    <method name="GET" id="showJobBinaryData">
+        <wadl:doc xml:lang="EN" title="Show job binary data"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Gets data for a job
-                binary.</para>
-            <para>The response body shows the job binary raw data and
-                    the response headers show the data length.</para>
+            <para role="shortdesc">
+                Shows data for a job binary.
+            </para>
+            <para>
+                The response body shows the job binary raw data and the
+                response headers show the data length.
+            </para>
             <para>Example response:</para>
-            <para><programlisting>HTTP/1.1 200 OK
+<programlisting>HTTP/1.1 200 OK
 Connection: keep-alive
 Content-Length: 161
 Content-Type: text/html; charset=utf-8
@@ -134,14 +138,16 @@ Date: Sat, 28 Mar 2015 02:42:48 GMT
 
 A = load '$INPUT' using PigStorage(':') as (fruit: chararray);
 B = foreach A generate com.hadoopbook.pig.Trim(fruit);
-store B into '$OUTPUT' USING PigStorage();</programlisting></para>
+store B into '$OUTPUT' USING PigStorage();</programlisting>
         </wadl:doc>
         <response status="200">
              <representation mediaType="application/json">
                 <param name="Content-Length" style="header" type="xsd:string"
                 required="true">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>The length of the returned data in bytes.</para>
+                        <para>
+                            The length of the data, in bytes.
+                        </para>
                     </wadl:doc>
                 </param>
                 <!-- the following element is present to suppress the output
@@ -152,14 +158,16 @@ store B into '$OUTPUT' USING PigStorage();</programlisting></para>
     <method name="PUT" id="job-binaries-update">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update job binary">
-            <para role="shortdesc">Updates a job binary.</para>
+            <para role="shortdesc">
+                Updates a job binary.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Update job binary : JSON request">
                     <xsdxt:code
-                        href="../samples/job-binaries/update-req.json"
+                        href="../samples/job-binaries/update-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -168,7 +176,7 @@ store B into '$OUTPUT' USING PigStorage();</programlisting></para>
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/job-binaries/update-resp.json"
+                        href="../samples/job-binaries/update-response.json"
                     />
                 </wadl:doc>
             </representation>
