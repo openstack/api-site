@@ -99,8 +99,10 @@
             </para>
         </wadl:doc>
         <request>
+          <representation mediaType="application/xml">
             &info-requestParameter;
             &swiftinfo_expires-QueryParameter;
+          </representation>
         </request>
         <!--No request body is provided-->
         <response status="200">
@@ -175,14 +177,13 @@
                         Show account details and list containers and ask for
                         a JSON response:
                     </para>
-<programlisting>curl -i $publicURL?format=json -X GET -H "X-Auth-Token: $token"</programlisting>
+<para><programlisting>curl -i $publicURL?format=json -X GET -H "X-Auth-Token: $token"</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>List containers and ask for an XML response:
                     </para>
-<programlisting>curl -i $publicURL?format=xml -X GET
-                            -H "X-Auth-Token:
-                        $token"</programlisting>
+                    <para><programlisting>curl -i $publicURL?format=xml -X GET -H "X-Auth-Token: $token"</programlisting>
+                    </para>
                     </listitem></itemizedlist>
             <para>The response body returns a list of containers. The
                 default response (<code>text/plain</code>) returns one
@@ -239,10 +240,9 @@
                     xml:lang="EN"
                     title="List containers response: HTTP and JSON">
                     <xsdxt:code
-                        href="samples/account-containers-list-http-response-json.txt"
-                        /><xsdxt:code
-                        href="samples/account-containers-list-response.json"
-                    />
+                        href="samples/account-containers-list-http-response-json.txt"/>
+                    <xsdxt:code
+                        href="samples/account-containers-list-response.json"/>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/xml">
@@ -254,7 +254,8 @@
                     <xsdxt:code
                         href="samples/account-containers-list-response.xml"
                     />
-                </wadl:doc> &content-length-responseHeader-NAMES;
+                </wadl:doc>
+                &content-length-responseHeader-NAMES;
                 &content-type-responseHeader-NAMES;
                 &account-object-count-responseHeader;
                 &account-bytes-used-responseHeader;
@@ -265,7 +266,8 @@
                 &account-meta-temp-url-key-2-responseHeader;
                 &trans-id-responseHeader; &Date-ResponseHeader;
                 &name-responseField; &count-responseField;
-                &bytes-responseField; </representation>
+                &bytes-responseField;
+            </representation>
         </response>
     </method>
     <method name="POST" id="updateAccountMeta">
@@ -310,37 +312,38 @@
                     <para>
                         Create account metadata:
                     </para>
-<programlisting>curl -i $publicURL -X POST -H "X-Auth-Token: $token" -H "X-Account-Meta-Book: MobyDick" -H "X-Account-Meta-Subject: Literature"</programlisting>
+<para><programlisting>curl -i $publicURL -X POST -H "X-Auth-Token: $token" -H "X-Account-Meta-Book: MobyDick" -H "X-Account-Meta-Subject: Literature"</programlisting></para>
 <para></para>
+<para>
 <programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx8c2dd6aee35442a4a5646-0052d954fb
-Date: Fri, 17 Jan 2014 16:06:19 GMT</programlisting>
+Date: Fri, 17 Jan 2014 16:06:19 GMT</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
                         Update account metadata:
                     </para>
-<programlisting>curl -i $publicURL -X POST -H "X-Auth-Token: $token" -H "X-Account-Meta-Subject: AmericanLiterature"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>curl -i $publicURL -X POST -H "X-Auth-Token: $token" -H "X-Account-Meta-Subject: AmericanLiterature"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx1439b96137364ab581156-0052d95532
-Date: Fri, 17 Jan 2014 16:07:14 GMT</programlisting>
+Date: Fri, 17 Jan 2014 16:07:14 GMT</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
                         Delete account metadata:
                     </para>
-<programlisting>curl -i $publicURL -X POST -H "X-Auth-Token: $token" -H "X-Remove-Account-Meta-Subject: x"</programlisting>
-                <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>curl -i $publicURL -X POST -H "X-Auth-Token: $token" -H "X-Remove-Account-Meta-Subject: x"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx411cf57701424da99948a-0052d9556f
-Date: Fri, 17 Jan 2014 16:08:15 GMT</programlisting>
+Date: Fri, 17 Jan 2014 16:08:15 GMT</programlisting></para>
                 </listitem>
             </itemizedlist>
             <para>
@@ -352,16 +355,25 @@ Date: Fri, 17 Jan 2014 16:08:15 GMT</programlisting>
                 request.
             </para>
         </wadl:doc>
-        <request> &auth-token-requestHeader-required;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-required;
             &account-meta-temp-url-key-requestHeader;
             &account-meta-temp-url-key-2-requestHeader;
             &account-meta-name-requestHeader;
             &content-type-requestHeader;
-            &detect-content-type-requestHeader; </request>
-        <response status="204"> &content-length-responseHeader-OP;
-            &content-type-responseHeader-OP;  &X-Timestamp-ResponseHeader;
+            &detect-content-type-requestHeader;
+          </representation>
+        </request>
+        <response status="204">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP;
+            &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &Date-ResponseHeader; </response>
+            &Date-ResponseHeader;
+          </representation>
+        </response>
     </method>
     <method name="HEAD" id="showAccountMeta">
         <!-- show account metadata -->
@@ -400,9 +412,9 @@ Date: Fri, 17 Jan 2014 16:08:15 GMT</programlisting>
             <para>
                 Show account metadata request:
             </para>
-<programlisting>curl -i $publicURL -X HEAD -H "X-Auth-Token: $token"</programlisting>
+<para><programlisting>curl -i $publicURL -X HEAD -H "X-Auth-Token: $token"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 X-Account-Object-Count: 1
 X-Account-Meta-Book: MobyDick
@@ -412,16 +424,22 @@ X-Account-Container-Count: 2
 Content-Type: text/plain; charset=utf-8
 Accept-Ranges: bytes
 X-Trans-Id: txafb3504870144b8ca40f7-0052d955d4
-Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting>
+Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
             <para>
                 If the account or authentication token is not valid, the
                 operation returns the <code>Unauthorized
                 (401)</code> response code.
             </para>
         </wadl:doc>
-        <request> &auth-token-requestHeader-required;
-            &newest-requestHeader; </request>
-        <response status="204"> &account-object-count-responseHeader;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-required;
+            &newest-requestHeader;
+          </representation>
+        </request>
+        <response status="204">
+          <representation mediaType="application/json">
+            &account-object-count-responseHeader;
             &account-container-count-responseHeader;
             &account-bytes-used-responseHeader;
             &account-meta-name-responseHeader;
@@ -431,6 +449,7 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting>
             &content-length-responseHeader-OP;
             &content-type-responseHeader-OP; &trans-id-responseHeader;
             &Date-ResponseHeader;
+          </representation>
         </response>
         &fault401;
     </method>
@@ -507,7 +526,8 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting>
                         href="samples/objects-list-http-response-xml.txt"/>
                     <xsdxt:code
                         href="samples/objects-list-response.xml"/>
-                </wadl:doc> &content-length-responseHeader-NAMES;
+                </wadl:doc>
+                &content-length-responseHeader-NAMES;
                 &container-object-count-responseHeader;
                 &accept-ranges-responseHeader;
                 &container-meta-name-responseHeader;
@@ -543,29 +563,31 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting>
                     <para>
                         Create a container with no metadata:
                     </para>
-<programlisting>curl -i $publicURL/steven -X PUT -H "Content-Length: 0" -H "X-Auth-Token: $token"</programlisting>
+<para><programlisting>curl -i $publicURL/steven -X PUT -H "Content-Length: 0" -H "X-Auth-Token: $token"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 201 Created
+<para><programlisting>HTTP/1.1 201 Created
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx7f6b7fa09bc2443a94df0-0052d58b56
-Date: Tue, 14 Jan 2014 19:09:10 GMT</programlisting>
+Date: Tue, 14 Jan 2014 19:09:10 GMT</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
                         Create a container with metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain -X PUT -H "X-Auth-Token: $token" -H "X-Container-Meta-Book: TomSawyer"</programlisting>
+<para><programlisting>curl -i $publicURL/marktwain -X PUT -H "X-Auth-Token: $token" -H "X-Container-Meta-Book: TomSawyer"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 201 Created
+<para><programlisting>HTTP/1.1 201 Created
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx06021f10fc8642b2901e7-0052d58f37
-Date: Tue, 14 Jan 2014 19:25:43 GMT</programlisting>
+Date: Tue, 14 Jan 2014 19:25:43 GMT</programlisting></para>
                 </listitem>
             </itemizedlist>
         </wadl:doc>
-        <request> &auth-token-requestHeader-required;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-required;
             &container-read-requestHeader;
             &container-write-requestHeader;
             &container-sync-to-requestHeader;
@@ -576,11 +598,16 @@ Date: Tue, 14 Jan 2014 19:25:43 GMT</programlisting>
             &detect-content-type-requestHeader;
             &container-meta-temp-url-key-requestHeader;
             &container-meta-temp-url-key-2-requestHeader;
+          </representation>
         </request>
-        <response status="201 204"> &content-length-responseHeader-OP;
-            &content-type-responseHeader-OP; &X-Timestamp-ResponseHeader;
+        <response status="201 204">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
+            &content-type-responseHeader-OP;
+            &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
             &Date-ResponseHeader;
+          </representation>
         </response>
     </method>
     <method name="POST" id="updateContainerMeta">
@@ -620,37 +647,40 @@ Date: Tue, 14 Jan 2014 19:25:43 GMT</programlisting>
                     <para>
                         Create container metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain -X POST -H "X-Auth-Token: $token" -H "X-Container-Meta-Author: MarkTwain" -H "X-Container-Meta-Web-Directory-Type: text/directory" -H "X-Container- Meta-Century: Nineteenth"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para>
+<programlisting>curl -i $publicURL/marktwain -X POST -H "X-Auth-Token: $token" -H "X-Container-Meta-Author: MarkTwain" -H "X-Container-Meta-Web-Directory-Type: text/directory" -H "X-Container-Meta-Century: Nineteenth"</programlisting>
+</para>
+<para></para>
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx05dbd434c651429193139-0052d82635
-Date: Thu, 16 Jan 2014 18:34:29 GMT</programlisting>
+Date: Thu, 16 Jan 2014 18:34:29 GMT
+</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
                         Update container metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain -X POST -H "X-Auth-Token: $token" -H "X-Container-Meta-Author: SamuelClemens"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>curl -i $publicURL/marktwain -X POST -H "X-Auth-Token: $token" -H "X-Container-Meta-Author: SamuelClemens"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: txe60c7314bf614bb39dfe4-0052d82653
-Date: Thu, 16 Jan 2014 18:34:59 GMT</programlisting>
+Date: Thu, 16 Jan 2014 18:34:59 GMT</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
                         Delete container metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain -X POST -H "X-Auth-Token: $token" -H "X-Remove-Container-Meta-Century: x"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>curl -i $publicURL/marktwain -X POST -H "X-Auth-Token: $token" -H "X-Remove-Container-Meta-Century: x"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx7997e18da2a34a9e84ceb-0052d826d0
-Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting>
+Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting></para>
                 </listitem>
             </itemizedlist>
             <para>
@@ -662,7 +692,9 @@ Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting>
                 request.
             </para>
         </wadl:doc>
-        <request> &auth-token-requestHeader-required;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-required;
             &container-read-requestHeader;
             &remove-container-name-requestHeader;
             &container-write-requestHeader;
@@ -678,12 +710,17 @@ Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting>
             &detect-content-type-requestHeader;
             &container-meta-temp-url-key-requestHeader;
             &container-meta-temp-url-key-2-requestHeader;
+          </representation>
         </request>
-        <response status="204"> &content-length-responseHeader-OP;
+        <response status="204">
+          <representation mediaType="application/xml">
+            &content-length-responseHeader-OP;
             &content-type-responseHeader-OP;
             &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &Date-ResponseHeader; </response>
+            &Date-ResponseHeader;
+          </representation>
+        </response>
     </method>
     <method name="HEAD" id="showContainerMeta">
         <!-- show container metadata -->
@@ -696,9 +733,9 @@ Date: Thu, 16 Jan 2014 18:37:04 GMT</programlisting>
             <para>
                 Show container metadata request:
             </para>
-<programlisting>curl -i $publicURL/marktwain -X HEAD -H "X-Auth-Token: $token"</programlisting>
-            <para></para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>curl -i $publicURL/marktwain -X HEAD -H "X-Auth-Token: $token"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 X-Container-Object-Count: 1
 Accept-Ranges: bytes
@@ -708,18 +745,23 @@ X-Container-Meta-Author: SamuelClemens
 X-Container-Bytes-Used: 14
 Content-Type: text/plain; charset=utf-8
 X-Trans-Id: tx0287b982a268461b9ec14-0052d826e2
-Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting>
+Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting></para>
             <para>
                 If the request succeeds, the operation returns the
                 <code>No Content (204)</code> response code.
             </para>
         </wadl:doc>
-        <request> &auth-token-requestHeader-optional;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-optional;
             &newest-requestHeader;
             &container-meta-temp-url-key-requestHeader;
             &container-meta-temp-url-key-2-requestHeader;
+          </representation>
         </request>
-        <response status="204"> &content-length-responseHeader-OP;
+        <response status="204">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
             &container-object-count-responseHeader;
             &accept-ranges-responseHeader;
             &container-meta-name-responseHeader;
@@ -736,6 +778,7 @@ Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting>
             &Date-ResponseHeader;
             &container-meta-temp-url-key-responseHeader;
             &container-meta-temp-url-key-2-responseHeader;
+          </representation>
         </response>
     </method>
     <method name="DELETE" id="deleteContainer">
@@ -747,40 +790,46 @@ Date: Thu, 16 Jan 2014 18:37:22 GMT</programlisting>
                 An empty container has no objects.</para>
             <para>Delete the <code>steven</code>
                     container:</para>
-<programlisting>curl -i $publicURL/steven -X DELETE -H "X-Auth-Token: $token"</programlisting>
+<para><programlisting>curl -i $publicURL/steven -X DELETE -H "X-Auth-Token: $token"</programlisting></para>
             <para>If the container does not exist, the response
                 is:</para>
-<programlisting>HTTP/1.1 404 Not Found
+<para><programlisting>HTTP/1.1 404 Not Found
 Content-Length: 70
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx4d728126b17b43b598bf7-0052d81e34
-Date: Thu, 16 Jan 2014 18:00:20 GMT</programlisting>
+Date: Thu, 16 Jan 2014 18:00:20 GMT</programlisting></para>
             <para>If the container exists and the deletion succeeds,
                 the response is:</para>
-<programlisting>HTTP/1.1 204 No Content
+<para><programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: txf76c375ebece4df19c84c-0052d81f14
-Date: Thu, 16 Jan 2014 18:04:04 GMT</programlisting>
+Date: Thu, 16 Jan 2014 18:04:04 GMT</programlisting></para>
             <para>If the container exists but is not empty, the
                 response is:</para>
-<programlisting>HTTP/1.1 409 Conflict
+<para><programlisting>HTTP/1.1 409 Conflict
 Content-Length: 95
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx7782dc6a97b94a46956b5-0052d81f6b
 Date: Thu, 16 Jan 2014 18:05:31 GMT
 
-&lt;html>&lt;h1>Conflict&lt;/h1>&lt;p>There was a conflict when trying to complete your request.&lt;/p>&lt;/html></programlisting>
+&lt;html>&lt;h1>Conflict&lt;/h1>&lt;p>There was a conflict when trying to complete your request.&lt;/p>&lt;/html></programlisting></para>
         </wadl:doc>
-        <request> &auth-token-requestHeader-required;
-            &container-meta-temp-url-key-requestHeader;
-            &container-meta-temp-url-key-2-requestHeader;
+        <request>
+          <representation mediaType="application/xml">
+              &auth-token-requestHeader-required;
+              &container-meta-temp-url-key-requestHeader;
+              &container-meta-temp-url-key-2-requestHeader;
+          </representation>
         </request>
-        <response status="204"> &content-length-responseHeader-OP;
+        <response status="204">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
             &content-type-responseHeader-OP;
             &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
             &Date-ResponseHeader;
+          </representation>
         </response>
         &fault404; &fault409;
     </method>
@@ -809,9 +858,9 @@ Date: Thu, 16 Jan 2014 18:05:31 GMT
                             <code>goodbye</code> object in the
                             <code>marktwain</code> container:
                         </para>
-<programlisting>curl -i $publicURL/marktwain/goodbye -X GET -H "X-Auth-Token: $token"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 200 OK
+<para><programlisting>curl -i $publicURL/marktwain/goodbye -X GET -H "X-Auth-Token: $token"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 200 OK
 Content-Length: 14
 Accept-Ranges: bytes
 Last-Modified: Wed, 15 Jan 2014 16:41:49 GMT
@@ -822,34 +871,40 @@ Content-Type: application/octet-stream
 X-Trans-Id: tx8145a190241f4cf6b05f5-0052d82a34
 Date: Thu, 16 Jan 2014 18:51:32 GMT
 
-Goodbye World!</programlisting>
+Goodbye World!</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>Show object details for the
                             <code>goodbye</code> object, which does
                         not exist, in the <code>janeausten</code>
                         container:</para>
-<programlisting>curl -i $publicURL/janeausten/goodbye -X GET -H "X-Auth-Token: $token"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 404 Not Found
+<para><programlisting>curl -i $publicURL/janeausten/goodbye -X GET -H "X-Auth-Token: $token"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 404 Not Found
 Content-Length: 70
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx073f7cbb850c4c99934b9-0052d82b04
 Date: Thu, 16 Jan 2014 18:55:00 GMT
 
-&lt;html>&lt;h1>Not Found&lt;/h1>&lt;p>The resource could not be found.&lt;/p>&lt;/html></programlisting>
+&lt;html>&lt;h1>Not Found&lt;/h1>&lt;p>The resource could not be found.&lt;/p>&lt;/html></programlisting></para>
                 </listitem>
             </itemizedlist>
         </wadl:doc>
-        <request> &auth-token-requestHeader-optional;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-optional;
             &newest-requestHeader; &temp_url_sig-requestParameter;
             &temp_url_expires-RequestParameter; &filename-requestParameter;
             &multipart-manifest-get-requestParameter;
             &range-requestHeader; &if-match-requestHeader;
             &if-none-match-requestHeader;
             &if-modified-since-requestHeader;
-            &if-unmodified-since-requestHeader; </request>
-        <response status="200"> &content-length-responseHeader;
+            &if-unmodified-since-requestHeader;
+          </representation>
+        </request>
+        <response status="200">
+          <representation mediaType="application/json">
+            &content-length-responseHeader;
             &accept-ranges-responseHeader;
             &Last-Modified-ResponseHeader;
             &X-Timestamp-ResponseHeader;
@@ -862,6 +917,7 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
             &object-manifest-responseHeader;
             &static-large-object-responseHeader;
             &trans-id-responseHeader; &Date-ResponseHeader;
+          </representation>
         </response> &fault404; </method>
     <method name="PUT" id="createOrReplaceObject">
         <!-- create, replace object -->
@@ -886,26 +942,27 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
             <para>Example requests and responses:</para>
             <itemizedlist>
                 <listitem><para>Create object:</para>
-<programlisting>curl -i $publicURL/janeausten/helloworld.txt -X PUT -H "Content-Length: 1" -H "Content-Type: text/html; charset=UTF-8" -H "X-Auth-Token: $token"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 201 Created
+<para><programlisting>curl -i $publicURL/janeausten/helloworld.txt -X PUT -H "Content-Length: 1" -H "Content-Type: text/html; charset=UTF-8" -H "X-Auth-Token: $token"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 201 Created
 Last-Modified: Fri, 17 Jan 2014 17:28:35 GMT
 Content-Length: 116
 Etag: d41d8cd98f00b204e9800998ecf8427e
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx4d5e4f06d357462bb732f-0052d96843
-Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting>
+Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para>
                 </listitem>
                 <listitem><para>Replace object:</para>
-<programlisting>curl -i $publicURL/janeausten/helloworld -X PUT -H "Content-Length: 0" -H "X-Auth-Token: $token"</programlisting>
+<para><programlisting>curl -i $publicURL/janeausten/helloworld -X PUT -H "Content-Length: 0" -H "X-Auth-Token: $token"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 201 Created
+<para><programlisting>HTTP/1.1 201 Created
 Last-Modified: Fri, 17 Jan 2014 17:28:35 GMT
 Content-Length: 116
 Etag: d41d8cd98f00b204e9800998ecf8427e
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx4d5e4f06d357462bb732f-0052d96843
-Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></listitem>
+Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></para>
+                </listitem>
             </itemizedlist>
             <para>The <code>Created (201)</code> response code indicates a
                 successful write.</para>
@@ -921,7 +978,9 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></listitem>
                     <code>Unprocessable Entity (422)</code> response
                 code.</para>
         </wadl:doc>
-        <request> &multipart-manifest-put-requestParameter;
+        <request>
+          <representation mediaType="application/xml">
+            &multipart-manifest-put-requestParameter;
             &temp_url_sig-requestParameter; &temp_url_expires-RequestParameter;
             &filename-requestParameter;
             &object-manifest-requestHeader;
@@ -935,12 +994,17 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></listitem>
             &content-encoding-requestHeader; &X-Delete-At-RequestHeader;
             &X-Delete-After-RequestHeader;
             &object-meta-name-requestHeader;
-            &if-none-match-requestHeader;</request>
-        <response status="201"> &last_modified-ResponseParameter;
+            &if-none-match-requestHeader;
+          </representation>
+        </request>
+        <response status="201">
+          <representation mediaType="application/json">
+            &last_modified-ResponseParameter;
             &content-length-responseHeader-OP;
             &ETag-responseHeader-PUT; &content-type-responseHeader;
             &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader; &Date-ResponseHeader;
+          </representation>
         </response> &fault408; &fault411; &fault422; </method>
     <method name="COPY" id="copyObject">
         <!-- copy object -->
@@ -991,9 +1055,9 @@ Date: Fri, 17 Jan 2014 17:28:35 GMT</programlisting></listitem>
                         <code>marktwain</code> container to the
                         <code>janeausten</code> container:
                     </para>
-<programlisting>curl -i $publicURL/marktwain/goodbye -X COPY -H "X-Auth- Token: $token" -H "Destination: janeausten/goodbye"</programlisting>
-                    <para></para>
-<programlisting>HTTP/1.1 201 Created
+<para><programlisting>curl -i $publicURL/marktwain/goodbye -X COPY -H "X-Auth- Token: $token" -H "Destination: janeausten/goodbye"</programlisting></para>
+<para></para>
+<para><programlisting>HTTP/1.1 201 Created
 Content-Length: 0
 X-Copied-From-Last-Modified: Thu, 16 Jan 2014 21:19:45 GMT
 X-Copied-From: marktwain/goodbye
@@ -1002,7 +1066,7 @@ Etag: 451e372e48e0f6b1114fa0724aa79fa1
 Content-Type: text/html; charset=UTF-8
 X-Object-Meta-Movie: AmericanPie
 X-Trans-Id: txdcb481ad49d24e9a81107-0052d97501
-Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting>
+Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
@@ -1013,9 +1077,9 @@ Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting>
                         requires a <code>Content-Length</code> header, even if
                         it is set to zero (0).
                     </para>
-<programlisting>curl -i $publicURL/janeausten/goodbye -X PUT -H "X-Auth-Token: $token" -H "X-Copy-From: /marktwain/goodbye" -H "Content-Length: 0"</programlisting>
+<para><programlisting>curl -i $publicURL/janeausten/goodbye -X PUT -H "X-Auth-Token: $token" -H "X-Copy-From: /marktwain/goodbye" -H "Content-Length: 0"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 201 Created
+<para><programlisting>HTTP/1.1 201 Created
 Content-Length: 0
 X-Copied-From-Last-Modified: Thu, 16 Jan 2014 21:19:45 GMT
 X-Copied-From: marktwain/goodbye
@@ -1024,25 +1088,29 @@ Etag: 451e372e48e0f6b1114fa0724aa79fa1
 Content-Type: text/html; charset=UTF-8
 X-Object-Meta-Movie: AmericanPie
 X-Trans-Id: txdcb481ad49d24e9a81107-0052d97501
-Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting>
+Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting></para>
                 </listitem>
             </itemizedlist>
-            <note>
                 <para>
                     When several replicas exist, the system copies from the
                     most recent replica. That is, the &COPY; operation behaves
                     as though the <code>X-Newest</code> header is in the
                     request.
                 </para>
-            </note>
         </wadl:doc>
-        <request> &auth-token-requestHeader-optional;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-optional;
             &destination-requestHeader; &content-type-requestHeader;
             &content-encoding-requestHeader;
             &content-disposition-requestHeader;
             &object-meta-name-requestHeader;
-            &fresh-metadata-requestHeader; </request>
-        <response status="201"> &content-length-responseHeader-OP;
+            &fresh-metadata-requestHeader;
+          </representation>
+        </request>
+        <response status="201">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
             &X-Copied-From-Last-Modified-ResponseHeader;
             &copied-from-responseHeader;
             &Last-Modified-ResponseHeader; &ETag-responseHeader-COPY;
@@ -1050,6 +1118,7 @@ Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting>
             &X-Timestamp-ResponseHeader;
             &object-meta-name-responseHeader;
             &trans-id-responseHeader; &Date-ResponseHeader;
+          </representation>
         </response>
     </method>
     <method name="DELETE" id="deleteObject">
@@ -1077,13 +1146,16 @@ Date: Fri, 17 Jan 2014 18:22:57 GMT</programlisting>
                         Delete the <code>helloworld</code> object from the
                         <code>marktwain</code> container:
                     </para>
-<programlisting>curl -i $publicURL/marktwain/helloworld -X DELETE -H "X-Auth-Token: $token"</programlisting>
+<para><programlisting>curl -i $publicURL/marktwain/helloworld -X DELETE -H "X-Auth-Token: $token"</programlisting></para>
 <para></para>
+<para>
 <programlisting>HTTP/1.1 204 No Content
 Content-Length: 0
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx36c7606fcd1843f59167c-0052d6fdac
-Date: Wed, 15 Jan 2014 21:29:16 GMT</programlisting>
+Date: Wed, 15 Jan 2014 21:29:16 GMT
+</programlisting>
+</para>
                 </listitem>
             </itemizedlist>
             <para>
@@ -1093,13 +1165,22 @@ Date: Wed, 15 Jan 2014 21:29:16 GMT</programlisting>
                 segment objects and the status of their &DELETE; operations.
             </para>
         </wadl:doc>
-        <request> &multipart-manifest-delete-requestParameter;
-            &auth-token-requestHeader-optional; </request>
-        <response> &content-length-responseHeader-OP;
+        <request>
+          <representation mediaType="application/xml">
+            &multipart-manifest-delete-requestParameter;
+            &auth-token-requestHeader-optional;
+          </representation>
+        </request>
+        <!-- this status code was missing, what should it be -->
+        <response status="204">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
             &content-type-responseHeader;
             &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &Date-ResponseHeader; </response>
+            &Date-ResponseHeader;
+          </representation>
+        </response>
     </method>
     <method name="HEAD" id="showObjectMeta">
         <!-- show object metadata -->
@@ -1121,9 +1202,12 @@ Date: Wed, 15 Jan 2014 21:29:16 GMT</programlisting>
                     <para>
                         Show object metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain/goodbye -X HEAD -H "X-Auth-Token: $token"</programlisting>
-<para></para>
-<programlisting>HTTP/1.1 200 OK
+                    <para>
+                      <programlisting>curl -i $publicURL/marktwain/goodbye -X HEAD -H "X-Auth-Token: $token"
+                      </programlisting>
+                    </para>
+                    <para></para>
+<para><programlisting>HTTP/1.1 200 OK
 Content-Length: 14
 Accept-Ranges: bytes
 Last-Modified: Thu, 16 Jan 2014 21:12:31 GMT
@@ -1132,17 +1216,29 @@ X-Timestamp: 1389906751.73463
 X-Object-Meta-Book: GoodbyeColumbus
 Content-Type: application/octet-stream
 X-Trans-Id: tx37ea34dcd1ed48ca9bc7d-0052d84b6f
-Date: Thu, 16 Jan 2014 21:13:19 GMT</programlisting>
+Date: Thu, 16 Jan 2014 21:13:19 GMT
+</programlisting></para>
                 </listitem>
             </itemizedlist>
             <para>If the request succeeds, the operation returns the
                     <code>200</code> response code.</para>
         </wadl:doc>
-        <request> &auth-token-requestHeader-required;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-required;
             &temp_url_sig-requestParameter; &temp_url_expires-RequestParameter;
             &filename-requestParameter;
-            &newest-requestHeader; </request>
-        <response status="200"> &Last-Modified-ResponseHeader;
+            &newest-requestHeader;
+            </representation>
+          </request>
+          <response status="200">
+            <representation mediaType="application/json">
+              &Last-Modified-ResponseHeader;
+            </representation>
+          </response>
+        <response status="204">
+          <representation mediaType="application/json">
+            &Last-Modified-ResponseHeader;
             &content-length-responseHeader;
             &content-length-responseHeader-HEAD;
             &content-type-responseHeader;
@@ -1154,7 +1250,9 @@ Date: Thu, 16 Jan 2014 21:13:19 GMT</programlisting>
             &object-manifest-responseHeader;
             &object-meta-name-responseHeader;
             &static-large-object-responseHeader;
-            &trans-id-responseHeader; &Date-ResponseHeader;</response>
+            &trans-id-responseHeader; &Date-ResponseHeader;
+          </representation>
+        </response>
     </method>
     <method name="POST" id="updateObjectMeta">
         <!-- create, update object metadata -->
@@ -1209,42 +1307,50 @@ Date: Thu, 16 Jan 2014 21:13:19 GMT</programlisting>
                     <para>
                         Create object metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain/goodbye -X POST -H "X-Auth-Token: $token" -H "X-Object-Meta-Book: GoodbyeColumbus"</programlisting>
+<para><programlisting>curl -i $publicURL/marktwain/goodbye -X POST -H "X-Auth-Token: $token" -H "X-Object-Meta-Book: GoodbyeColumbus"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 202 Accepted
+<para><programlisting>HTTP/1.1 202 Accepted
 Content-Length: 76
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: txb5fb5c91ba1f4f37bb648-0052d84b3f
 Date: Thu, 16 Jan 2014 21:12:31 GMT
 
-&lt;html>&lt;h1>Accepted&lt;/h1>&lt;p>The request is accepted for processing.&lt;/p>&lt;/html></programlisting>
+&lt;html>&lt;h1>Accepted&lt;/h1>&lt;p>The request is accepted for processing.&lt;/p>&lt;/html></programlisting></para>
                 </listitem>
                 <listitem>
                     <para>
                         Update object metadata:
                     </para>
-<programlisting>curl -i $publicURL/marktwain/goodbye -X POST -H "X-Auth-Token: $token" H "X-Object-Meta-Book: GoodbyeOldFriend"</programlisting>
+<para><programlisting>curl -i $publicURL/marktwain/goodbye -X POST -H "X-Auth-Token: $token" H "X-Object-Meta-Book: GoodbyeOldFriend"</programlisting></para>
 <para></para>
-<programlisting>HTTP/1.1 202 Accepted
+<para><programlisting>HTTP/1.1 202 Accepted
 Content-Length: 76
 Content-Type: text/html; charset=UTF-8
 X-Trans-Id: tx5ec7ab81cdb34ced887c8-0052d84ca4
 Date: Thu, 16 Jan 2014 21:18:28 GMT
 
-&lt;html>&lt;h1>Accepted&lt;/h1>&lt;p>The request is accepted for processing.&lt;/p>&lt;/html></programlisting>
+&lt;html>&lt;h1>Accepted&lt;/h1>&lt;p>The request is accepted for processing.&lt;/p>&lt;/html></programlisting></para>
 </listitem>
             </itemizedlist>
         </wadl:doc>
-        <request> &auth-token-requestHeader-optional;
+        <request>
+          <representation mediaType="application/xml">
+            &auth-token-requestHeader-optional;
             &object-meta-name-requestHeader; &X-Delete-At-RequestHeader;
             &content-disposition-requestHeader;
             &content-encoding-requestHeader;
             &X-Delete-After-RequestHeader; &content-type-requestHeader;
-            &detect-content-type-requestHeader; </request>
-        <response status="202"> &content-length-responseHeader-OP;
+            &detect-content-type-requestHeader;
+          </representation>
+        </request>
+        <response status="202">
+          <representation mediaType="application/json">
+            &content-length-responseHeader-OP;
             &content-type-responseHeader;
             &X-Timestamp-ResponseHeader;
             &trans-id-responseHeader;
-            &Date-ResponseHeader; </response>
+            &Date-ResponseHeader;
+          </representation>
+        </response>
     </method>
 </application>
