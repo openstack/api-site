@@ -27,22 +27,22 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenant_idTemplateParameter;
                 <resource id="clusters" path="clusters">
-                    <method href="#clusters-list"/>
-                    <method href="#clusters-create"/>
+                    <method href="#listClusters"/>
+                    <method href="#createCluster"/>
                     <resource id="multiple-clusters" path="multiple">
-                        <method href="#multiple-clusters-create"/>
+                        <method href="#createMultipleClusters"/>
                     </resource>
-                    <resource id="cluster_id"
-                        path="{cluster_id}">
+                    <resource id="cluster_id" path="{cluster_id}">
                         <param name="cluster_id" style="template" type="csapi:UUID">
                             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                                 <para>The ID of the cluster</para>
                             </wadl:doc>
                         </param>
-                        <method href="#clusters-get"/>
-                        <method href="#clusters-delete"/>
-                        <method href="#clusters-scale"/>
-                        <method href="#clusters-update"/>
+                        <method href="#showCluster"/>
+                        <method href="#scaleCluster"/>
+                        <method href="#updateCluster"/>
+                        <method href="#showClusterProgress"/>
+                        <method href="#deleteCluster"/>
                     </resource>
                 </resource>
             </resource>
@@ -51,7 +51,7 @@
     <!-- *******************************************************-->
     <!--             OS Cluster actions           -->
     <!--******************************************************-->
-    <method name="GET" id="clusters-list">
+    <method name="GET" id="listClusters">
         <wadl:doc xml:lang="EN" title="List available clusters"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">Lists available clusters.</para>
@@ -60,7 +60,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-list.json"
+                        href="../samples/clusters/clusters-list-response.json"
                     />
                 </wadl:doc>
                 &clustersResponseParameters;
@@ -68,23 +68,23 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="clusters-get">
+    <method name="GET" id="clusters-show">
         <wadl:doc xml:lang="EN" title="Show details of a cluster"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Shows cluster by ID.</para>
+            <para role="shortdesc">Shows details for a cluster, by ID.</para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-get.json"
+                        href="../samples/clusters/cluster-show-response.json"
                     />
                 </wadl:doc>
                 &clustersResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="POST" id="clusters-create">
+    <method name="POST" id="createCluster">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create cluster">
             <para role="shortdesc">Creates a cluster.</para>
@@ -94,7 +94,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN" title="Create cluster: JSON request">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-create-req.json"
+                        href="../samples/clusters/cluster-create-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -103,14 +103,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-create-resp.json"
+                        href="../samples/clusters/cluster-create-response.json"
                     />
                 </wadl:doc>
                 &clustersResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="POST" id="multiple-clusters-create">
+    <method name="POST" id="createMultipleClusters">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create multiple clusters">
             <para role="shortdesc">Creates multiple clusters.</para>
@@ -120,7 +120,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/clusters/multiple-clusters-create-req.json"
+                        href="../samples/clusters/multiple-clusters-create-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -129,20 +129,20 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/clusters/multiple-clusters-create-resp.json"
+                        href="../samples/clusters/multiple-clusters-create-response.json"
                     />
                 </wadl:doc>
             </representation>
         </response>
     </method>
-    <method name="DELETE" id="clusters-delete">
+    <method name="DELETE" id="deleteCluster">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Delete a cluster">
             <para role="shortdesc">Deletes a cluster.</para>
         </wadl:doc>
         <response status="204"/>
     </method>
-    <method name="PUT" id="clusters-scale">
+    <method name="PUT" id="scaleCluster">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Scale cluster">
             <para role="shortdesc">Scales a cluster.</para>
@@ -150,9 +150,9 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Scale cluster : JSON request">
+                    xml:lang="EN" title="Scale cluster: JSON request">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-scale-req.json"
+                        href="../samples/clusters/cluster-scale-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -161,14 +161,14 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-scale-resp.json"
+                        href="../samples/clusters/cluster-scale-response.json"
                     />
                 </wadl:doc>
                 &clustersResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="PATCH" id="clusters-update">
+    <method name="PATCH" id="updateCluster">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update cluster">
             <para role="shortdesc">Updates a cluster.</para>
@@ -176,9 +176,9 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN" title="Update cluster : JSON request">
+                    xml:lang="EN" title="Update cluster: JSON request">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-update-req.json"
+                        href="../samples/clusters/cluster-update-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -187,10 +187,32 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../samples/clusters/clusters-update-resp.json"
+                        href="../samples/clusters/cluster-update-response.json"
                     />
                 </wadl:doc>
                 &clustersResponseParameters;
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showCluster-progress">
+        <wadl:doc xml:lang="EN" title="Show progress"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Shows provisioning progress for a cluster.</para>
+        </wadl:doc>
+        <request>
+            <param name="show-progress" style="plain" type="xsd:boolean" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>Cluster provisioning progress.</para>
+                </wadl:doc>
+            </param>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/event-log/cluster-progress-response.json"
+                    />
+                </wadl:doc>
             </representation>
         </response>
     </method>
