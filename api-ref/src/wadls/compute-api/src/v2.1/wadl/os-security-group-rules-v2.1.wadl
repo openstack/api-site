@@ -6,228 +6,220 @@
     %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
-             xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
-             xmlns:wadl="http://wadl.dev.java.net/2009/02"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
-    <resources base="https://servers.api.openstack.com/"
-               xml:id="os-security-group-rules-v2.1">
-        <resource id="v2.1" path="//v2.1">
-            <resource id="tenant_id" path="{tenant_id}">
-                &tenantIdRequestParameter;
-                <resource path="os-security-group-rules"
-                          id="os-security-group-rules2">
-                    <method href="#createSecGroupRule" />
-                    <resource id="security_group_rule_id"
-                              path="{security_group_rule_id}">
-                        <param name="security_group_rule_id"
-                               style="template" type="xsd:int">
-                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                      xml:lang="EN"
-                                      title="Security group ID">
-                                <para>
-                                  The ID of the security group rule.
-                                </para>
-                            </wadl:doc>
-                        </param>
-                        <method href="#deleteSecGroupRule" />
-                    </resource>
-                </resource>
-            </resource>
+  xmlns:csapi="http://docs.openstack.org/compute/api/v1.1"
+  xmlns:wadl="http://wadl.dev.java.net/2009/02"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+  <resources base="https://servers.api.openstack.com/"
+    xml:id="os-security-group-rules-v2.1">
+    <resource id="v2.1" path="//v2.1">
+      <resource id="tenant_id" path="{tenant_id}">
+        &tenant_idTemplateParameter;
+        <resource path="os-security-group-rules"
+          id="os-security-group-rules2">
+          <method href="#createSecGroupRule" />
+          <resource id="security_group_rule_id"
+            path="{security_group_rule_id}">
+            &security_group_rule_idTemplateParameter;
+            <method href="#deleteSecGroupRule" />
+          </resource>
         </resource>
-    </resources>
-    <method name="POST" id="createSecGroupRule">
+      </resource>
+    </resource>
+  </resources>
+  <method name="POST" id="createSecGroupRule">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xml:lang="EN" title="Create security group rule">
+      <para role="shortdesc">
+        Creates a rule for a security group.
+      </para>
+    </wadl:doc>
+    <request>
+      <representation mediaType="application/json">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                  xml:lang="EN" title="Create security group rule">
-            <para role="shortdesc">
-              Creates a rule for a security group.
-            </para>
+          xml:lang="EN"
+          title="Create security group rule: JSON request">
+          <xsdxt:code
+            href="../samples/os-security-group-rules/security-group-rule-create-request.json" />
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                          xml:lang="EN"
-                          title="Create security group rule: JSON request">
-                    <xsdxt:code href="../api_samples/os-security-group-rules/security-group-rules-create-req.json" />
-                </wadl:doc>
-                <param name="security_group_rule" style="plain"
-                       type="xsd:dict" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN"
-                              title="Security group rule object in request">
-                        <para>
-                          A <code>security_group_rule</code> object.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="parent_group_id" style="plain"
-                       type="csapi:UUID" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN"
-                              title="Security group rule ID in request">
-                        <para>
-                          Security group ID.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="ip_protocol" style="plain" type="xsd:string"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="IP protocol">
-                        <para>
-                          The IP protocol: ICMP, TCP, or UDP.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="from_port" style="plain" type="xsd:int"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="From port">
-                        <para>
-                          Port at start of range.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="to_port" style="plain" type="xsd:int"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="To port">
-                        <para>
-                          Port at end of range.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="cidr" style="plain" type="xsd:string"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="CIDR">
-                        <para>
-                          The CIDR for address range.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="group_id" style="plain" type="csapi:UUID"
-                       required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="Group ID">
-                        <para>
-                          Source security group ID.
-                        </para>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                          xml:lang="EN"
-                          title="Create security group rule: JSON response">
-                    <xsdxt:code href="../api_samples/os-security-group-rules/security-group-rules-create-resp.json" />
-                </wadl:doc>
-                <param name="security_group_rule" style="plain"
-                       type="csapi:UUID" required="true">
-                   <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                             xml:lang="EN"
-                             title="Security group rule object in response">
-                       <para>
-                         A <code>security_group_rule</code> object.
-                       </para>
-                   </wadl:doc>
-                </param>
-                <param name="ip_protocol" style="plain" type="xsd:string"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="IP protocol">
-                        <para>
-                          The IP protocol: ICMP, TCP, or UDP.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="from_port" style="plain" type="xsd:int"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="From port">
-                        <para>
-                          Port at start of range.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="to_port" style="plain" type="xsd:int"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="To port">
-                        <para>
-                          Port at end of range.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="ip_range" style="plain"
-                       type="xsd:string" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="IP range object">
-                        <para>
-                          An <code>ip_range</code> object.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="cidr" style="plain" type="xsd:string"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="CIDR">
-                        <para>
-                          The CIDR for address range.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="id" style="plain" type="xsd:int"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN"
-                              title="Security group rule ID in response">
-                        <para>
-                          The security group ID.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="group" style="plain" type="xsd:string"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="Group object">
-                        <para>
-                          A <code>group</code> object. Includes the tenant
-                          ID and the source security group name.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="tenant_id" style="plain" type="csapi:UUID"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="Tenant ID">
-                        <para>
-                          The ID of the tenant who owns the source security
-                          group.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="name" style="plain" type="xsd:string"
-                       required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                              xml:lang="EN" title="Name">
-                        <para>
-                          The source security group name.
-                        </para>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </response>
-    </method>
-    <method name="DELETE" id="deleteSecGroupRule">
+        <param name="security_group_rule" style="plain"
+          type="xsd:dict" required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN"
+            title="Security group rule object in request">
+            <para>
+              A <code>security_group_rule</code> object.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="parent_group_id" style="plain"
+          type="csapi:UUID" required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN"
+            title="Security group rule ID in request">
+            <para>
+              Security group ID.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="ip_protocol" style="plain" type="xsd:string"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="IP protocol">
+            <para>
+              The IP protocol: ICMP, TCP, or UDP.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="from_port" style="plain" type="xsd:int"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="From port">
+            <para>
+              The port at start of range.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="to_port" style="plain" type="xsd:int"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="To port">
+            <para>
+              The port at end of range.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="cidr" style="plain" type="xsd:string"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="CIDR">
+            <para>
+              The CIDR for address range.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="group_id" style="plain" type="csapi:UUID"
+          required="false">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Group ID">
+            <para>
+              The source security group ID.
+            </para>
+          </wadl:doc>
+        </param>
+      </representation>
+    </request>
+    <response status="200">
+      <representation mediaType="application/json">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                  xml:lang="EN" title="Delete security group rule">
-            <para role="shortdesc">
-              Deletes a security group rule.
-            </para>
+          xml:lang="EN"
+          title="Create security group rule: JSON response">
+          <xsdxt:code
+            href="../samples/os-security-group-rules/security-group-rule-create-response.json" />
         </wadl:doc>
-        <response status="202" />
-    </method>
+        <param name="security_group_rule" style="plain"
+          type="csapi:UUID" required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN"
+            title="Security group rule object in response">
+            <para>
+              A <code>security_group_rule</code> object.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="ip_protocol" style="plain" type="xsd:string"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="IP protocol">
+            <para>
+              The IP protocol: ICMP, TCP, or UDP.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="from_port" style="plain" type="xsd:int"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="From port">
+            <para>
+              Port at start of range.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="to_port" style="plain" type="xsd:int"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="To port">
+            <para>
+              The port at end of range.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="ip_range" style="plain"
+          type="xsd:string" required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="IP range object">
+            <para>
+              An <code>ip_range</code> object.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="cidr" style="plain" type="xsd:string"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="CIDR">
+            <para>
+              The CIDR for address range.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="id" style="plain" type="xsd:int"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN"
+            title="Security group rule ID in response">
+            <para>
+              The security group ID.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="group" style="plain" type="xsd:string"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Group object">
+            <para>
+              A <code>group</code> object. Includes the tenant ID and the source
+              security group name.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="tenant_id" style="plain" type="csapi:UUID"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Tenant ID">
+            <para>
+              The UUID of the tenant who owns the source security group.
+            </para>
+          </wadl:doc>
+        </param>
+        <param name="name" style="plain" type="xsd:string"
+          required="true">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Name">
+            <para>
+              The source security group name.
+            </para>
+          </wadl:doc>
+        </param>
+      </representation>
+    </response>
+  </method>
+  <method name="DELETE" id="deleteSecGroupRule">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xml:lang="EN" title="Delete security group rule">
+      <para role="shortdesc">
+        Deletes a security group rule.
+      </para>
+    </wadl:doc>
+    <response status="202" />
+  </method>
 </application>

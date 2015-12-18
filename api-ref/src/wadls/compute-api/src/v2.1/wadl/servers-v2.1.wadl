@@ -15,13 +15,13 @@
    <resources base="https://servers.api.openstack.com" xml:id="os-compute-v2.1">
       <resource id="v2.1" path="//v2.1">
          <resource id="tenant_id" path="{tenant_id}">
-            &tenantIdRequestParameter;
+            &tenant_idTemplateParameter;
             <resource id="Servers" type="#ServerList" path="servers">
                <method href="#createServer"/>
                <resource id="server_detail" path="detail" type="#DetailServerList"/>
                   <resource id="server_id" path="{server_id}">
-                     &serverIdRequestParameter;
-                     <method href="#getServer"/>
+                     &server_idTemplateParameter;
+                     <method href="#showServer"/>
                      <method href="#updateServer"/>
                      <method href="#deleteServer"/>
                   </resource>
@@ -37,7 +37,7 @@
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Detail server list">
          <para>A detailed server list.</para>
       </wadl:doc>
-      <method href="#listDetailServers"/>
+      <method href="#listServersDetailed"/>
    </resource_type>
    <resource_type id="ServerList">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Server list">
@@ -152,7 +152,7 @@
       <request>
          <representation element="csapi:server" mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/servers/server-post-req.json"/>
+               <xsdxt:code href="../samples/servers/server-create-request.json"/>
             </wadl:doc>
             &serverCreateParameters; &diskConfigRequestParameter;
          </representation>
@@ -160,7 +160,7 @@
       <response status="202">
          <representation mediaType="application/json" element="csapi:server">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/servers/server-post-resp.json"/>
+               <xsdxt:code href="../samples/servers/server-create-response.json"/>
             </wadl:doc>
            <!--  &serverCreateResponseParameters; -->
          </representation>
@@ -304,17 +304,17 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/servers/servers-list-resp.json"/>
+               <xsdxt:code href="../samples/servers/servers-list-response.json"/>
             </wadl:doc>
             &x-compute-request-idHeader;
          </representation>
       </response>
       <!-- Common Faults and Header --> &commonFaults;
    </method>
-   <method name="GET" id="listDetailServers">
+   <method name="GET" id="listServersDetailed">
       <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
          title="List details for servers">
-         <para role="shortdesc">Lists details for all servers.</para>
+         <para role="shortdesc">Lists all servers with details.</para>
          <para>
             The compute provisioning algorithm has an anti-affinity property
             that attempts to spread customer VMs across hosts. Under certain
@@ -339,7 +339,7 @@
          </para>
          <para>
             To hide <code>addresses</code> information for instances in a
-            specified state, set the
+            certain state, set the
             <code>osapi_hide_server_address_states</code> configuration
             option. Set this option to a valid VM state in the
             <code>nova.conf</code> configuration file.
@@ -360,7 +360,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/servers/servers-details-resp.json"/>
+               <xsdxt:code href="../samples/servers/servers-list-details-response.json"/>
             </wadl:doc>
             &serversObjectParameter;
             &serverResponseParameters;
@@ -369,8 +369,8 @@
       <!-- Common Faults -->
       &commonFaults;
    </method>
-   <method name="GET" id="getServer">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get server details">
+   <method name="GET" id="showServer">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show server details">
          <para role="shortdesc">
             Shows details for a server.
          </para>
@@ -390,7 +390,7 @@
          </para>
          <para>
             To hide <code>addresses</code> information for instances in a
-            specified state, set the
+            certain state, set the
             <code>osapi_hide_server_address_states</code> configuration
             option. Set this option to a valid VM state in the
             <code>nova.conf</code> configuration file.
@@ -411,7 +411,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/servers/server-get-resp.json"/>
+               <xsdxt:code href="../samples/servers/server-show-response.json"/>
             </wadl:doc>
             &x-compute-request-idHeader;
             &serverObjectParameter;
@@ -434,19 +434,19 @@
          <representation mediaType="application/json" element="csapi:server">
             <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
                title="Update server name: JSON request">
-               <xsdxt:code href="../api_samples/servers/server-put-req.json"/>
+               <xsdxt:code href="../samples/servers/server-update-request.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/json">
             <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
                title="Update server IP addresses: JSON request">
-               <xsdxt:code href="../api_samples/servers/server-put-req-ad.json"/>
+               <xsdxt:code href="../samples/servers/server-update-address-request.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/json">
             <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
                title="Update server OS-DCF:diskConfig parameter: JSON request">
-               <xsdxt:code href="../api_samples/all_extensions/server-put-req-diskconfig.json"/>
+               <xsdxt:code href="../samples/servers/server-update-diskconfig-request.json"/>
             </wadl:doc>
          </representation>
       </request>
@@ -454,13 +454,13 @@
          <representation mediaType="application/json" element="csapi:server">
             <wadl:doc xml:lang="EN" title="Update server name: JSON response"
                xmlns="http://docbook.org/ns/docbook">
-               <xsdxt:code href="../api_samples/servers/server-put-resp.json"/>
+               <xsdxt:code href="../samples/servers/server-update-response.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/json">
             <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
                title="Update server IP addresses: JSON response">
-               <xsdxt:code href="../api_samples/servers/server-put-resp-ad.json"/>
+               <xsdxt:code href="../samples/servers/server-update-address-response.json"/>
             </wadl:doc>
          </representation>
       </response>

@@ -14,14 +14,14 @@
   role="api-reference">
   <title>Compute API (CURRENT)</title>
   <para>
-    This documentation supports the API v2.1 base version. If all extensions
-    are enabled, the Compute API v1.1 and v2.0 requests and responses match
-    the API v2.1 requests and responses.
+    This documentation supports the API v2.1 base version. If you enable all
+    extensions, the Compute API v1.1 and v2.0 requests and responses match the
+    API v2.1 requests and responses.
   </para>
   <para>
-    Each API version lists its required extensions for the full request and
-    responses to be available. API v2.1 must enable all extensions all the
-    time. It uses micro-version headers to expose any additional
+    Each API version lists the extensions that it requires to make the full
+    request and responses available. API v2.1 must enable all extensions all
+    the time. It uses micro-version headers to expose any additional
     functionality.
   </para>
   <note>
@@ -61,18 +61,17 @@
       </para>
       <para>
         If you do not specify a password, the API generates and assigns a
-        random password that it returns in the response object. This
-        password is guaranteed to meet the security requirements set by the
-        compute provider. For security reasons, the password is not returned
-        in subsequent &GET; calls.
+        random password that it returns in the response object. This password
+        meets the security requirements set by the compute provider. For
+        security reasons, subsequent &GET; calls do not require this password.
       </para>
       <para><emphasis role="bold">Server metadata</emphasis></para>
       <para>
         You can specify custom server metadata at server launch time. The
         maximum size for each metadata key-value pair is 255 bytes. The
-        compute provider determines the maximum number of key-value pairs
-        that can be supplied for each server. You can query this value
-        through the <code>maxServerMeta</code> absolute limit.
+        compute provider determines the maximum number of key-value pairs for
+        each server. You can query this value through the
+        <code>maxServerMeta</code> absolute limit.
       </para>
       <para><emphasis role="bold">Server networks</emphasis></para>
       <para>
@@ -108,16 +107,14 @@
         </listitem>
         <listitem>
           <para>
-            Encode the file contents as a Base64 string. The compute
-            provider determines the maximum size of the file contents. This
-            value can vary based on the image that is used to create the
-            server.
+            Encode the file contents as a Base64 string. The compute provider
+            determines the maximum size of the file contents. The image that
+            you use to create the server determines this value.
           </para>
           <note>
             <para>
-              The maximum limit refers to the number of bytes in the
-              decoded data and not to the number of characters in
-              the encoded data.
+              The maximum limit refers to the number of bytes in the decoded
+              data and not to the number of characters in the encoded data.
             </para>
           </note>
         </listitem>
@@ -131,16 +128,15 @@
         </listitem>
         <listitem>
           <para>
-            The <code>maxPersonalitySize</code> absolute limit is a
-            byte limit that is guaranteed to apply to all images in
-            the deployment. Providers can set additional per-image
-            personality limits.
+            The <code>maxPersonalitySize</code> absolute limit is a byte limit
+            that applies to all images in the deployment. Providers can set
+            additional per-image personality limits.
           </para>
         </listitem>
       </itemizedlist>
       <para>
         The file injection might not occur until after the server
-        is built and booted.
+        builds and boots.
       </para>
       <para>
         After file injection, only system administrators can access
@@ -153,14 +149,14 @@
         In a hybrid environment, the underlying implementation might not
         control the IP address of a server. Instead, the access IP address
         might be part of the dedicated hardware; for example, a router/NAT
-        device. In this case, the addresses provided by the implementation
-        cannot actually be used to access the server (from outside the local
-        LAN). Here, a separate <firstterm>access address</firstterm> might
-        be assigned at creation time to provide access to the server. This
-        address might not be directly bound to a network interface on the
+        device. In this case, you cannot use the addresses that the
+        implementation provides to access the server from outside the local
+        LAN. Instead, the API might assign a separate <firstterm>access
+        address</firstterm> at creation time to provide access to the server.
+        This address might not be directly bound to a network interface on the
         server and might not necessarily appear when you query the server
-        addresses. Nonetheless, clients that must access the server directly
-        are encouraged to do so through an access address.
+        addresses. However, clients should use an access address to access the
+        server directly.
       </para>
       <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02"
         href="../wadls/compute-api/src/v2.1/wadl/servers-v2.1.wadl"/>
@@ -202,7 +198,7 @@
         <wadl:method href="#forceDelete"/>
       </wadl:resource>
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/servers-action-console-output-v2.1.wadl#action">
-        <wadl:method href="#getConsoleOutput"/>
+        <wadl:method href="#showConsoleOutput"/>
       </wadl:resource>
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/servers-action-remote-consoles-v2.1.wadl#action">
         <wadl:method href="#getRDPConsole"/>
@@ -257,7 +253,7 @@
   <section xml:id="diagnostics-v2.1">
     <title>Servers diagnostics (servers, diagnostics)</title>
     <para>
-      Gets the usage data for a server.
+      Shows the usage data for a server.
     </para>
     <wadl:resources
       href="../wadls/compute-api/src/v2.1/wadl/diagnostics-v2.1.wadl"
@@ -266,7 +262,7 @@
   <section xml:id="server-ips-v2.1">
     <title>Servers IPs (servers, ips)</title>
     <para>
-       Lists the IP addresses assigned to an instance and shows details for
+       Lists the IP addresses for an instance and shows details for
        an IP address.
     </para>
     <wadl:resources
@@ -311,7 +307,7 @@
   <section xml:id="os-server-password-v2.1">
     <title>Servers password (servers, os-server-password)</title>
     <para>
-       Gets the encrypted administrative password. Also, clears the
+       Shows the encrypted administrative password. Also, clears the
        encrypted administrative password for a server, which removes it from
        the metadata server.
     </para>
@@ -328,7 +324,7 @@
       href="../wadls/compute-api/src/v2.1/wadl/os-virtual-interfaces-v2.1.wadl"
       xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
   </section>
-  <section xml:id="os-volume_attachments-v2.1">
+  <!-- <section xml:id="os-volume-attachments-v2.1">
     <title>Servers with volume attachments (servers, os-volume_attachments)</title>
     <para>
       Attaches volumes that are created through the volume API to server
@@ -336,9 +332,9 @@
       details for a volume attachment, and detaches a volume.
     </para>
     <wadl:resources
-      href="../wadls/compute-api/src/v2.1/wadl/os-volume_attachments-v2.1.wadl"
+      href="../wadls/compute-api/src/v2.1/wadl/os-volume-attachments-v2.1.wadl"
       xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
-  </section>
+  </section> -->
   <section xml:id="os-flavors-v2.1">
     <title>Flavors with extended attributes (flavors)</title>
     <para>
@@ -355,11 +351,11 @@
     </para>
     <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-flavor-access-v2.1.wadl#os-flavor-access">
-        <wadl:method href="#list-flavor-accesslist"/>
+        <wadl:method href="#listFlavorAccess"/>
       </wadl:resource>
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/os-flavor-access-v2.1.wadl#action">
-        <wadl:method href="#add-flavoraccess-to-tenant"/>
-        <wadl:method href="#remove-flavoraccess-from-tenant"/>
+        <wadl:method href="#addFlavorAccess"/>
+        <wadl:method href="#removeFlavorAccess"/>
       </wadl:resource>
     </wadl:resources>
   </section>
@@ -435,7 +431,7 @@
         <wadl:method href="#listDetailImages"/>
       </wadl:resource>
       <wadl:resource href="../wadls/compute-api/src/v2.1/wadl/images-v2.1.wadl#image_id">
-        <wadl:method href="#getImage"/>
+        <wadl:method href="#showImage"/>
         <wadl:method href="#deleteImage"/>
       </wadl:resource>
     </wadl:resources>
@@ -454,7 +450,7 @@
       </wadl:resource>
       <wadl:resource
       href="../wadls/compute-api/src/v2.1/wadl/images-v2.1.wadl#imageMetadataKey">
-        <wadl:method href="#getImageMetadataItem"/>
+        <wadl:method href="#showImageMetadataItem"/>
         <wadl:method href="#setImageMetadataItem"/>
         <wadl:method href="#deleteImageMetadataItem"/>
       </wadl:resource>
@@ -464,11 +460,11 @@
     <title>Guest agents (os-agents)</title>
     <para>
       Creates, lists, updates, and deletes guest agent builds. Use guest
-      agents to access files on the disk, configure networking, or run
-      other applications or scripts in the guest while the agent runs. This
-      hypervisor-specific extension is not currently enabled for KVM. Use
-      of guest agents is possible only if the underlying service provider
-      uses the Xen driver.
+      agents to access files on the disk, configure networking, or run other
+      applications or scripts in the guest while the agent runs. This
+      hypervisor-specific extension is not currently enabled for KVM. Use of
+      guest agents is possible only if the underlying service provider uses
+      the Xen driver.
     </para>
     <wadl:resources
       href="../wadls/compute-api/src/v2.1/wadl/os-agents-v2.1.wadl"
@@ -502,7 +498,7 @@
   <section xml:id="os-availability-zone-v2.1">
     <title>Availability zones (os-availability-zone)</title>
     <para>
-       Gets availability zone information.
+       Shows availability zone information.
     </para>
     <wadl:resources
        href="../wadls/compute-api/src/v2.1/wadl/os-availability-zone-v2.1.wadl"
@@ -526,7 +522,7 @@
    <section xml:id="os-cells-v2.1">
       <title>Cells (os-cells, capacities)</title>
       <para>
-         Adds neighbor cells, lists neighbor cells, and gets the capabilities
+         Adds neighbor cells, lists neighbor cells, and shows the capabilities
          of the local cell.
       </para>
       <wadl:resources
@@ -567,9 +563,8 @@
    <section xml:id="os-floating-ip-dns-v2.1">
       <title>Floating IP DNS records (os-floating-ip-dns)</title>
       <para>
-         Manages DNS records associated with IP addresses allocated by the
-         floating IPs extension. Requests are dispatched to a DNS driver
-         selected at startup.
+         Manages DNS records associated with floating IP addresses. The API
+         dispatches requests to a DNS driver that is selected at startup.
       </para>
       <wadl:resources
          href="../wadls/compute-api/src/v2.1/wadl/os-floating-ip-dns-v2.1.wadl"
@@ -587,25 +582,27 @@
    <section xml:id="os-floating-ips-v2.1">
       <title>Floating IPs (os-floating-ips)</title>
       <para>
-        Lists floating IP addresses that are associated with a project. Also,
-        creates (allocates) a floating IP address for a project, shows
-        floating IP address details, and deletes (deallocates) a floating IP
-        address from a project.
+        Lists floating IP addresses for a project. Also, creates (allocates) a
+        floating IP address for a project, shows floating IP address details,
+        and deletes (deallocates) a floating IP address from a project.
       </para>
       <para>
-        A pool of floating IP addresses, configured by the cloud
-        administrator, is available in OpenStack Compute. The project quota
-        defines the maximum number of floating IP addresses that you can
-        allocate to the project. After you <link
-        xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#createFloatingIP">allocate a floating IP address</link>
-        for a project, you can:
+
+        The cloud administrator configures a pool of floating IP addresses in
+        OpenStack Compute. The project quota defines the maximum number of
+        floating IP addresses that you can allocate to the project.
+        After you <link
+        xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#createFloatingIP">allocate
+        a floating IP address</link> for a project, you can:
       </para>
       <itemizedlist>
         <listitem>
           <para>
-            <link xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#addFloatingIp">Add (associate) the floating
-            IP address</link> with an instance in the project. Only one
-            floating IP address can be associated with an instance at a time.
+            <link
+            xlink:href="http://developer.openstack.org/api-ref-compute-v2.1.html#addFloatingIp">Add
+            (associate) the floating
+            IP address</link> with an instance in the project. You can associate only one
+            floating IP address with an instance at a time.
           </para>
         </listitem>
         <listitem>
@@ -753,7 +750,7 @@
    <section xml:id="os-server-external-events-v2.1">
         <title>Create external events (os-server-external-events)</title>
         <para>
-          Creates one or more external events. Each event is dispatched to a
+          Creates one or more external events. The API dispatches each event to a
           server instance.
         </para>
         <wadl:resources

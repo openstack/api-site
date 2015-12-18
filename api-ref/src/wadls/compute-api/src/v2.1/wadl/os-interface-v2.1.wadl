@@ -16,31 +16,15 @@
     <resources base="https://servers.api.openstack.com" xml:id="os-interface-v2.1">
         <resource id="version" type="#VersionDetails" path="//v2.1">
             <resource id="tenantID" path="{tenant_id}">
-                <param name="tenant_id" style="template" type="xsd:string">
-                    <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            The ID for the tenant or account in a multi-tenancy cloud.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &tenant_idTemplateParameter;
                 <resource id="Servers" path="servers">
                     <resource path="{server_id}" id="server_id">
-                        <param name="server_id" style="template" type="csapi:UUID">
-                            <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                                <para>
-                                    The UUID for the server of interest to you.
-                                </para>
-                            </wadl:doc>
-                        </param>
+                        &server_idTemplateParameter;
                         <resource path="os-interface" id="os-interface">
                             <method href="#createAttachInterface"/>
                             <method href="#listAttachedInterfaces"/>
                             <resource path="{attachment_id}" id="attachment_id">
-                                <param name="attachment_id" style="template" type="csapi:UUID">
-                                    <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
-                                        <para>The interface ID.</para>
-                                    </wadl:doc>
-                                </param>
+                                &attachment_idTemplateParameter;
                                 <method href="#showAttachedInterface"/>
                                 <method href="#deleteAttachedInterface"/>
                             </resource>
@@ -61,7 +45,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-interface/attach-interfaces-create-req.json"
+                        href="../samples/os-interface/port-interface-create-request.json"
                     />
                 </wadl:doc>
                 <param name="interfaceAttachment" style="plain" type="xsd:string" required="true">
@@ -72,7 +56,7 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="port_id" style="plain" type="csapi:uuid" required="false">
+                <param name="port_id" style="plain" type="csapi:UUID" required="false">
                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                         <para>
                             The ID of the port for which you want to create an
@@ -90,7 +74,7 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="net_id" style="plain" type="csapi:uuid" required="false">
+                <param name="net_id" style="plain" type="csapi:UUID" required="false">
                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                         <para>
                             The ID of the network for which you want to create
@@ -124,7 +108,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-interface/attach-interfaces-create-resp.json"
+                        href="../samples/os-interface/port-interface-create-response.json"
                     />
                 </wadl:doc>
                 <param name="fixed_ips" style="plain" type="xsd:string" required="true">
@@ -137,12 +121,12 @@
                         <para>The MAC address.</para>
                     </wadl:doc>
                 </param>
-                <param name="net_id" style="plain" type="csapi:uuid" required="true">
+                <param name="net_id" style="plain" type="csapi:UUID" required="true">
                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                         <para>The network ID.</para>
                     </wadl:doc>
                 </param>
-                <param name="port_id" style="plain" type="csapi:uuid" required="true">
+                <param name="port_id" style="plain" type="csapi:UUID" required="true">
                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                         <para>The port ID.</para>
                     </wadl:doc>
@@ -157,16 +141,16 @@
         &commonFaults; &postPutFaults;
     </method>
     <method name="GET" id="listAttachedInterfaces">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List interfaces">
-            <para role="shortdesc">Lists port interfaces
-                that are attached to a server.
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List port interfaces">
+            <para role="shortdesc">
+                Lists port interfaces that are attached to a server.
             </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-interface/attach-interfaces-list-resp.json"
+                        href="../samples/os-interface/port-interfaces-list-response.json"
                     />
                 </wadl:doc>
                 <param name="port_state" style="plain" type="xsd:string" required="true">
@@ -184,12 +168,12 @@
                         <para>The MAC address.</para>
                     </wadl:doc>
                 </param>
-                <param name="net_id" style="plain" type="csapi:uuid" required="true">
+                <param name="net_id" style="plain" type="csapi:UUID" required="true">
                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                         <para>The network ID.</para>
                     </wadl:doc>
                 </param>
-                <param name="port_id" style="plain" type="csapi:uuid" required="true">
+                <param name="port_id" style="plain" type="csapi:UUID" required="true">
                     <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                         <para>The port ID.</para>
                     </wadl:doc>
@@ -210,7 +194,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
-                        href="../api_samples/os-interface/attach-interfaces-show-resp.json"
+                        href="../samples/os-interface/port-interface-show-response.json"
                     />
                 </wadl:doc>
             </representation>
