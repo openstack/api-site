@@ -23,16 +23,23 @@
                         <resource id="action" path="action">
                             <method href="#addFloatingIp"/>
                             <method href="#attach"/>
+                            <method href="#changePassword"/>
                             <method href="#confirmResize"/>
                             <method href="#createImage"/>
-                            <method href="#start"/>
-                            <method href="#stop"/>
+                            <method href="#lock"/>
+                            <method href="#pause"/>
                             <method href="#reboot"/>
                             <method href="#rebuild"/>
                             <method href="#removeFloatingIp"/>
                             <method href="#rescue"/>
                             <method href="#resize"/>
+                            <method href="#resume"/>
                             <method href="#revertResize"/>
+                            <method href="#start"/>
+                            <method href="#stop"/>
+                            <method href="#suspend"/>
+                            <method href="#unlock"/>
+                            <method href="#unpause"/>
                             <method href="#unrescue"/>
                         </resource>
                     </resource>
@@ -187,6 +194,36 @@
         &commonFaults;
         &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
     </method>
+    <method name="POST" id="changePassword">
+        <wadl:doc xml:lang="EN" title="Change administrative password (changePassword action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Changes the administrative password for a server.
+            </para>
+            <para>
+                Specify the <code>changePassword</code> action in the request
+                body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/servers-action-admin/changePassword-request.json"
+                    />
+                </wadl:doc>
+                &changePasswordActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
     <method name="POST" id="confirmResize">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
          title="Confirm resized server (confirmResize action)">
@@ -300,6 +337,63 @@
         </response>
         &commonFaults;
         &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+    <method name="POST" id="lock">
+        <wadl:doc xml:lang="EN" title="Lock server (lock action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Locks a server.
+            </para>
+            <para>
+                Specify the <code>lock</code> action in the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/servers-action-admin/lock-request.json"
+                    />
+                </wadl:doc>
+                &lockActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="pause">
+        <wadl:doc xml:lang="EN" title="Pause server (pause action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Pauses a server. Changes its status
+                to <code>PAUSED</code>.</para>
+            <para>
+                Specify the <code>pause</code> action in the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/servers-action-admin/pause-request.json"
+                    />
+                </wadl:doc>
+                &pauseActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
     </method>
     <method name="POST" id="start">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -631,6 +725,36 @@
         <response status="202"/>
         &commonFaults; &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
     </method>
+    <method name="POST" id="resume">
+        <wadl:doc xml:lang="EN" title="Resume suspended server (resume action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Resumes a suspended server and changes its status to
+                <code>ACTIVE</code>.
+            </para>
+            <para>
+                Specify the <code>resume</code> action in the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/servers-action-admin/resume-request.json"
+                    />
+                </wadl:doc>
+                &resumeActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
     <method name="POST" id="revertResize">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
          title="Revert resized server (revertResize action)">
@@ -679,6 +803,93 @@
         <response status="202"/>
         &commonFaults;
         &getFaults; &postPutFaults; &buildFaults; &inProgressFault;
+    </method>
+    <method name="POST" id="suspend">
+        <wadl:doc xml:lang="EN" title="Suspend server (suspend action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Suspends a server and changes its status to
+                <code>SUSPENDED</code>.
+            </para>
+            <para>
+                Specify the <code>suspend</code> action in the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/servers-action-admin/suspend-request.json"
+                    />
+                </wadl:doc>
+                &suspendActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="unlock">
+        <wadl:doc xml:lang="EN" title="Unlock server (unlock action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">Unlocks a server.</para>
+            <para>
+                Specify the <code>unlock</code> action in the request body.
+            </para>
+            <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                       href="../samples/servers-action-admin/unlock-request.json"
+                    />
+                </wadl:doc>
+                &unlockActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+    </method>
+    <method name="POST" id="unpause">
+        <wadl:doc xml:lang="EN" title="Unpause server (unpause action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Unpauses a paused server and changes its status to
+                <code>ACTIVE</code>.
+            </para>
+            <para>
+                Specify the <code>unpause</code> action in the request body.
+            </para>
+             <para>
+                Policy defaults enable only users with the administrative role
+                or the owner of the server to perform this operation. Cloud
+                providers can change these permissions through the
+                <code>policy.json</code> file.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                        href="../samples/servers-action-admin/unpause-request.json"
+                    />
+                </wadl:doc>
+                &unpauseActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
     </method>
     <method name="POST" id="unrescue">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
