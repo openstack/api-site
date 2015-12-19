@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application[
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
-    <!ENTITY % common_project SYSTEM "../../../common_project.ent">
+    <!ENTITY % common_project SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
@@ -116,7 +116,8 @@
         </resource>
     </resources>
     <method name="GET" id="getVersions-senlin-v1">
-        <wadl:doc xml:lang="EN" title="List versions" xmlns="http://docbook.org/ns/docbook">
+        <wadl:doc xml:lang="EN" title="List versions"
+            xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
                 Lists information for all Clustering API versions.
             </para>
@@ -124,13 +125,14 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/senlin_versions_resp.json"/>
+                    <xsdxt:code href="../samples/senlin-versions-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
     </method>
     <method name="GET" id="listClusters">
-        <wadl:doc xml:lang="EN" title="List clusters" xmlns="http://docbook.org/ns/docbook">
+        <wadl:doc xml:lang="EN" title="List clusters"
+            xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
                 Lists clusters.
             </para>
@@ -235,7 +237,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/cluster_list_resp.json"/>
+                    <xsdxt:code href="../samples/clusters-list-response.json"/>
                 </wadl:doc>
                 <param name="clusters" style="plain" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
@@ -263,7 +265,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/cluster_create.json"/>
+                    <xsdxt:code href="../samples/cluster-create-request.json"/>
                 </wadl:doc>
                 &clusterRequestParameters;
             </representation>
@@ -271,7 +273,7 @@
         <response status="202">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/cluster_create_resp.json" />
+                    <xsdxt:code href="../samples/cluster-create-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="cluster" style="plain" required="true"
@@ -297,7 +299,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/cluster_get_resp.json"/>
+                    <xsdxt:code href="../samples/cluster-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -312,7 +314,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/cluster_update.json"/>
+                    <xsdxt:code href="../samples/cluster-update-request.json"/>
                 </wadl:doc>
                 &updateClusterRequestParameters;
             </representation>
@@ -320,7 +322,7 @@
         <response status="202">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/cluster_update_resp.json" />
+                    <xsdxt:code href="../samples/cluster-update-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="cluster" style="plain" required="true"
@@ -349,74 +351,78 @@
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                         <para>
-                            The action to trigger. Supported actions include:
+                            The action to trigger.
+                        </para>
+                        <para>
+                            Each action takes a different set of parameters.
+                        </para>
+                        <para>
+                            Supported actions include:
                         </para>
                         <itemizedlist>
                             <listitem>
                                 <para>
-                                    <code>add_nodes</code> Add nodes to a
-                                    cluster. Provide a list of nodes. For example:
-                                    <xsdxt:code href="samples/cluster_add_nodes.json"/>
+                                    <code>add_nodes</code> Add one or more
+                                    nodes, as a list, to a cluster. For
+                                    example: <xsdxt:code href="../samples/cluster-add-nodes-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>del_nodes</code> Delete nodes from
-                                    a cluster. Provide a list of nodes.
-                                    <xsdxt:code href="samples/cluster_del_nodes.json"/>
+                                    <code>del_nodes</code> Delete one or more
+                                    nodes, as a list, from
+                                    a cluster. For example:
+                                    <xsdxt:code href="../samples/cluster-delete-nodes-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>scale_out</code> Enlarge the cluster
-                                    by <code>count</code> number of nodes.
-                                    <xsdxt:code href="samples/cluster_scale_out.json"/>
+                                    by <code>count</code> number of nodes. For example:
+                                    <xsdxt:code href="../samples/cluster-scale-out-nodes-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>scale_in</code> Shrink the cluster
-                                    by <code>count</code> number of nodes.
-                                    <xsdxt:code href="samples/cluster_scale_in.json"/>
+                                    by <code>count</code> number of nodes. For example:
+                                    <xsdxt:code href="../samples/cluster-scale-in-nodes-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>resize</code> Change the size of the
                                     cluster by <code>adjustment_type</code>, <code>number</code>,
-                                    <code>min_step</code>, <code>min_size</code>, <code>max_size</code> or
-                                    <code>strict</code>.
-                                    <xsdxt:code href="samples/cluster_resize.json"/>
+                                    <code>min_step</code>, <code>min_size</code>, <code>max_size</code>, or
+                                    <code>strict</code> values. For example:
+                                    <xsdxt:code href="../samples/cluster-resize-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>policy_attach</code> Attach a policy
                                     to a cluster. The request body contains
-                                    parameters for the policy attachment.
-                                    <xsdxt:code href="samples/cluster_policy_attach.json"/>
+                                    parameters for the policy attachment:
+                                    <xsdxt:code href="../samples/cluster-policy-attach-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>policy_detach</code> Detach a policy
-                                    from the cluster. The request body
-                                    contains the ID of the policy.
-                                    <xsdxt:code href="samples/cluster_policy_attach.json"/>
+                                    from a cluster. The request body
+                                    contains the ID of the policy:
+                                    <xsdxt:code href="../samples/cluster-policy-detach-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>updatePolicy</code> Update the
                                     policy attachment. Specify the policy ID and
-                                    property settings in the request body.
-                                    <xsdxt:code href="samples/cluster_policy_update.json"/>
+                                    property settings in the request body:
+                                    <xsdxt:code href="../samples/cluster-policy-update-request.json"/>
                                 </para>
                             </listitem>
                         </itemizedlist>
-                        <para>
-                            Each action takes a different set of parameters.
-                        </para>
                     </wadl:doc>
                 </param>
             </representation>
@@ -513,7 +519,7 @@
                         cluster-related fields, the policy, and the binding
                         itself.
                     </para>
-                    <xsdxt:code href="samples/cluster_policy_list_resp.json"/>
+                    <xsdxt:code href="../samples/cluster-policies-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -536,7 +542,7 @@
                         on. The key values are attributes for the policy that
                         is attached to the cluster.
                     </para>
-                    <xsdxt:code href="samples/cluster_policy_get_resp.json"/>
+                    <xsdxt:code href="../samples/cluster-policy-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -573,7 +579,7 @@
                     <para>
                         A list of supported profile types.
                     </para>
-                    <xsdxt:code href="samples/profile_type_list_resp.json"/>
+                    <xsdxt:code href="../samples/profile-types-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -588,7 +594,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/profile_type_get_resp.json"/>
+                    <xsdxt:code href="../samples/profile-type-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -606,7 +612,7 @@
                     <para>
                         A list of supported policy types.
                     </para>
-                    <xsdxt:code href="samples/policy_type_list_resp.json"/>
+                    <xsdxt:code href="../samples/policy-types-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -621,7 +627,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/policy_type_get_resp.json"/>
+                    <xsdxt:code href="../samples/policy-type-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -644,7 +650,7 @@
                             Sorts the list by the <code>name</code>,
                             <code>type</code>, <code>created_time</code>,
                             <code>updated_time</code>,
-                            <code>deleted_time</code>, <code>permission</code>
+                            <code>deleted_time</code>, <code>permission</code>,
                             or <code>metadata</code> attribute.
                         </para>
                     </wadl:doc>
@@ -710,7 +716,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/profile_list_resp.json"/>
+                    <xsdxt:code href="../samples/profiles-list-response.json"/>
                 </wadl:doc>
                 <param name="profiles" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
@@ -736,51 +742,15 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/profile_create.json"/>
+                    <xsdxt:code href="../samples/profile-create-request.json"/>
                 </wadl:doc>
-                <param name="profile" style="plain" required="true"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            A map with details for the profile.
-                        </para>
-                        <itemizedlist xml:id="profile_body">
-                            <title>Profile Body</title>
-                            <listitem>
-                                <para>
-                                    <code>name</code> Name for the profile (required).
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>spec</code> Detailed specification
-                                    based on the chosen profile type
-                                    (required).
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>permission</code> A string
-                                    representing the default permission of
-                                    the profile (optional).
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>metadata</code> A list of key and
-                                    value pairs to associate with the profile
-                                    (optional).
-                                </para>
-                            </listitem>
-                        </itemizedlist>
-                    </wadl:doc>
-                </param>
+                &createProfileRequestParameters;
             </representation>
         </request>
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/profile_create_resp.json" />
+                    <xsdxt:code href="../samples/profile-create-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="profile" style="plain" required="true"
@@ -880,7 +850,7 @@
                         <code>spec</code>, <code>permission</code>,
                         <code>metadata</code>, and so on.
                     </para>
-                    <xsdxt:code href="samples/profile_get_resp.json"/>
+                    <xsdxt:code href="../samples/profile-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -894,7 +864,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/profile_update.json"/>
+                    <xsdxt:code href="../samples/profile-update-request.json"/>
                 </wadl:doc>
                 <param name="name" style="plain" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
@@ -930,7 +900,7 @@
                         <code>spec</code>, <code>permission</code>,
                         <code>metadata</code>, and so on.
                     </para>
-                    <xsdxt:code href="samples/profile_update_resp.json"/>
+                    <xsdxt:code href="../samples/profile-update-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -1026,7 +996,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/policy_list_resp.json"/>
+                    <xsdxt:code href="../samples/policies-list-response.json"/>
                 </wadl:doc>
                 <param name="policies" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
@@ -1052,7 +1022,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/policy_create.json"/>
+                    <xsdxt:code href="../samples/policy-create-request.json"/>
                 </wadl:doc>
                 <param name="policy" style="plain" required="true"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
@@ -1069,7 +1039,7 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/policy_create_resp.json" />
+                    <xsdxt:code href="../samples/policy-create-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="policy" style="plain" required="true"
@@ -1166,7 +1136,7 @@
                         <code>cooldown</code>, <code>created_time</code>,
                         <code>deleted_time</code>, and so on.
                     </para>
-                    <xsdxt:code href="samples/policy_get_resp.json"/>
+                    <xsdxt:code href="../samples/policy-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -1180,7 +1150,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/policy_update.json"/>
+                    <xsdxt:code href="../samples/policy-update-request.json"/>
                 </wadl:doc>
                 <param name="policy" style="plain" required="true"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
@@ -1223,7 +1193,7 @@
                         <code>updated_time</code>, <code>deleted_time</code>,
                         and so on.
                     </para>
-                    <xsdxt:code href="samples/policy_update_resp.json"/>
+                    <xsdxt:code href="../samples/policy-update-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -1319,7 +1289,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/node_list_resp.json"/>
+                    <xsdxt:code href="../samples/nodes-list-response.json"/>
                 </wadl:doc>
                 <param name="nodes" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
@@ -1348,7 +1318,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/node_create.json"/>
+                    <xsdxt:code href="../samples/node-create-request.json"/>
                 </wadl:doc>
                 <param name="node" style="plain" required="true"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
@@ -1394,7 +1364,7 @@
         <response status="202">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/node_create_resp.json" />
+                    <xsdxt:code href="../samples/node-create-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="node" style="plain" required="true"
@@ -1419,7 +1389,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/node_update.json"/>
+                    <xsdxt:code href="../samples/node-update-request.json"/>
                 </wadl:doc>
                 <param name="node" style="plain" required="true"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
@@ -1459,7 +1429,7 @@
         <response status="202">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/node_update_resp.json" />
+                    <xsdxt:code href="../samples/node-update-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="node" style="plain" required="true"
@@ -1495,13 +1465,13 @@
                             <listitem>
                                 <para>
                                     <code>join</code> Adds current node to a cluster.
-                                    <xsdxt:code href="samples/node_join.json"/>
+                                    <xsdxt:code href="../samples/node-join-request.json"/>
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
                                     <code>leave</code> Deletes the current node from its cluster.
-                                    <xsdxt:code href="samples/node_leave.json"/>
+                                    <xsdxt:code href="../samples/node-leave-request.json"/>
                                 </para>
                             </listitem>
                         </itemizedlist>
@@ -1569,7 +1539,7 @@
                         <code>status_reason</code>, <code>metadata</code>,
                         <code>updated_time</code>, and so on.
                     </para>
-                    <xsdxt:code href="samples/node_get_resp.json"/>
+                    <xsdxt:code href="../samples/node-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -1672,7 +1642,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/webhook_list_resp.json"/>
+                    <xsdxt:code href="../samples/webhooks-list-response.json"/>
                 </wadl:doc>
                 <param name="nodes" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
@@ -1701,7 +1671,7 @@
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/webhook_create.json"/>
+                    <xsdxt:code href="../samples/webhook-create-request.json"/>
                 </wadl:doc>
                 <param name="webhook" style="plain" required="true"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
@@ -1761,7 +1731,7 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/webhook_create_resp.json" />
+                    <xsdxt:code href="../samples/webhook-create-response.json" />
                 </wadl:doc>
                 &resourceLocationParameter;
                 <param name="webhook" style="plain" required="true"
@@ -1795,7 +1765,7 @@
                         <code>user</code>, <code>project</code>,
                         <code>domain</code>, and so on.
                     </para>
-                    <xsdxt:code href="samples/webhook_get_resp.json"/>
+                    <xsdxt:code href="../samples/webhook-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -1955,7 +1925,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/event_list_resp.json"/>
+                    <xsdxt:code href="../samples/events-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -1974,7 +1944,7 @@
                         of an event such as <code>TIMESTAMP</code> or
                         <code>LEVEL</code>.
                     </para>
-                    <xsdxt:code href="samples/event_get_resp.json"/>
+                    <xsdxt:code href="../samples/event-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -2063,7 +2033,7 @@
                         that meet the criteria. Each record provides detailed
                         data about an action.
                     </para>
-                    <xsdxt:code href="samples/action_list_resp.json"/>
+                    <xsdxt:code href="../samples/actions-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -2081,7 +2051,7 @@
                         An <code>action</code> map. Contains fields, such as <code>id</code>,
                         <code>action</code>, and so on.
                     </para>
-                    <xsdxt:code href="samples/action_get_resp.json"/>
+                    <xsdxt:code href="../samples/action-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -2095,7 +2065,7 @@
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="samples/build_info.json"/>
+                    <xsdxt:code href="../samples/build-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
