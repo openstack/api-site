@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2014 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent ports.wadl                      -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xref="http://www.w3.org/1999/xref"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/"
+        xml:id="os-ports-v2.0">
+        <resource id="version" path="//v2.0">
+            <resource id="ports" path="ports">
+                <method href="#listPorts"/>
+                <method href="#createPort"/>
+                <method href="#bulkCreatePorts"/>
+                <resource path="{port_id}" id="port_id">
+                    &port_idTemplateParameter;
+                    <method href="#showPort"/>
+                    <method href="#updatePort"/>
+                    <method href="#removePort"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="GET" id="listPorts">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List ports">
+            <para role="shortdesc">Lists ports to which the tenant has
+                access.</para>
+            <para>Default policy settings return only those ports
+                that are owned by the tenant who submits the request,
+                unless the request is submitted by a user with
+                administrative rights. Users can control which
+                attributes are returned by using the fields query
+                parameter. Additionally, you can filter results by
+                using query string parameters. For information, see <link
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and Column Selection</link>.</para>
+        </wadl:doc>
+        <request> &portListQueryParams; </request>
+        <response status="200"> &portListResponseParams;
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="../samples/ports/ports-list-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; </method>
+    <method name="POST" id="createPort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create port">
+            <para role="shortdesc">Creates a port on a
+                network.</para>
+            <para>
+                To define the network in which to create the port, specify the
+                <code>network_id</code> attribute in the request body.
+            </para>
+        </wadl:doc>
+        <request> &portCreateRequestParams; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/ports/port-create-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"> &portCreateResponseParams;
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/ports/port-create-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault403; &fault404;
+        &fault503macGeneration; &fault503; </method>
+    <method name="POST" id="bulkCreatePorts">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Bulk create ports">
+            <para role="shortdesc">Creates multiple ports in a single
+                request. Specify a list of ports in the request
+                body.</para>
+            <para>Guarantees the atomic completion of the bulk
+                operation.</para>
+        </wadl:doc>
+        <request> &portsObject; &portCommonRequestParams; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/ports/ports-bulk-create-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201">  &portsObject; &portCommonResponseParams;
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/ports/ports-bulk-create-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault403; &fault404;
+        &fault409conflict; &fault503macGeneration; </method>
+    <method name="GET" id="showPort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show port details">
+            <para role="shortdesc">Shows details for a
+                port.</para>
+        </wadl:doc>
+        <response status="200"> &portShowResponseParams;
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="../samples/ports/port-show-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; &fault404; </method>
+    <method name="PUT" id="updatePort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update port">
+            <para role="shortdesc">Updates a port.</para>
+            <para>
+                You can update information for a port, such as its symbolic
+                name and associated IPs. When you update IPs for a port, any
+                previously associated IPs are removed, returned to the
+                respective subnet allocation pools, and replaced by the IPs
+                in the request body. Therefore, this operation replaces the
+                <code>fixed_ip</code> attribute when you specify it in
+                the request body. If the updated IP addresses are not valid or are
+                already in use, the operation fails and the existing IP
+                addresses are not removed from the port.
+            </para>
+            <para>
+                When you update security groups for a port and the operation
+                succeeds, any associated security groups are removed and
+                replaced by the security groups in the request body.
+                Therefore, this operation replaces the
+                <code>security_groups</code> attribute when you specify it in
+                the request body. If the security groups are not valid, the
+                operation fails and the existing security groups are not
+                removed from the port.
+            </para>
+        </wadl:doc>
+        <request> &portUpdateRequestParams; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/ports/port-update-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200"> &portUpdateResponseParams;
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/ports/port-update-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault403; &fault404;
+        &fault409conflict; </method>
+    <method name="DELETE" id="removePort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete port">
+            <para role="shortdesc">Deletes a port.</para>
+            <para>Any IP addresses that are associated with the port
+                are returned to the respective subnets allocation
+                pools.</para>
+        </wadl:doc>
+        <response status="204"/> &fault401; &fault403; &fault404;
+    </method>
+</application>

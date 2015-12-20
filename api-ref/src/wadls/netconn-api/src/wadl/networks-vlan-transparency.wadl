@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 Cisco Systems Inc, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--  xmllint -noent networks-vlan-transparency.wadl       -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/"
+        xml:id="os-networks-vlan-transparency-ext-v2.0">
+        <resource id="version" path="//v2.0">
+            <resource id="VLANnetworks" path="networks">
+                <method href="#listVTNetworks"/>
+                <method href="#createVTNetwork"/>
+                <resource path="{network_id}" id="network_id">
+                    &network_idTemplateParameter;
+                    <method href="#showVTNetwork"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="GET" id="listVTNetworks">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List networks with VLAN transparency attribute">
+            <para role="shortdesc">
+                Lists networks. The response shows the VLAN transparency
+                attribute.
+            </para>
+        </wadl:doc>
+        <response status="200"> &networkListResponseParams;
+            &networkVlanTransparentParameters;
+                <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/networks-vlan-transparent-list-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401;
+    </method>
+    <method name="POST" id="createVTNetwork">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Create VLAN-transparent network"
+            xml:lang="EN">
+            <para role="shortdesc">
+                Creates a VLAN-transparent network.
+            </para>
+        </wadl:doc>
+        <request> &networkObject; &networkCommonRequestParams;
+            &networkVlanTransparentParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-vlan-transparent-create-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"> &networkCreateResponseParams;
+            &networkVlanTransparentParameters; <representation
+                mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-vlan-transparent-create-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401;
+    </method>
+    <method name="GET" id="showVTNetwork">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Show VLAN-transparent network details">
+            <para role="shortdesc">
+                Shows details for a VLAN-transparent network.
+            </para>
+        </wadl:doc>
+        <response status="200"> &networkShowResponseParams;
+            &networkVlanTransparentParameters;
+                <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-vlan-transparent-show-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; &fault404;
+    </method>
+</application>

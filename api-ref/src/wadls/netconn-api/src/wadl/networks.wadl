@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent networks.wadl                   -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/" xml:id="os-networks-v2.0">
+        <resource id="networks-versions" path="//">
+            <method href="#networks-listVersions"/>
+        </resource>
+        <resource id="networks-version" type="#networks-versionDetails" path="//v2">
+            <resource id="extensions" path="extensions">
+                <method href="#listExtensions"/>
+                <resource id="extension" path="{alias}">
+                    <param name="alias" style="template"
+                        type="xsd:string">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Extension Alias">
+                            <para>The alias of an extension.</para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#showExtension"/>
+                </resource>
+            </resource>
+            <resource id="networks" type="#NetworkList"
+                path="networks">
+                <method href="#createNetwork"/>
+                <method href="#bulkCreateNetwork"/>
+                <resource path="{network_id}" id="network_id">
+                    <param xmlns="http://wadl.dev.java.net/2009/02" name="network_id" style="template"
+                        type="csapi:UUID">
+                        <wadl:doc
+                            xmlns="http://docbook.org/ns/docbook"
+                            xml:lang="EN" title="Network UUID">
+                            <para>The UUID of the network.</para>
+                        </wadl:doc>
+                    </param>
+                    <method href="#showNetwork"/>
+                    <method href="#updateNetwork"/>
+                    <method href="#deleteNetwork"/>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <resource_type id="networks-versionDetails">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Version details">
+            <para>
+                Details for a version.
+            </para>
+        </wadl:doc>
+        <method href="#showVersionDetails"/>
+    </resource_type>
+    <resource_type id="NetworkList">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Network list">
+            <para>A list of networks.</para>
+        </wadl:doc>
+        <method href="#listNetworks"/>
+    </resource_type>
+    <resource_type id="ExtensionList">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Extension List">
+            <para>A list of supported extensions.</para>
+        </wadl:doc>
+        <method href="#listExtensions"/>
+    </resource_type>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="GET" id="networks-listVersions">
+        <wadl:doc xml:lang="EN" title="List API versions"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists information about all Networking API versions.
+            </para>
+        </wadl:doc>
+        <response status="200 300">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/versions-list-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="GET" id="showVersionDetails">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show API v2 details">
+            <para role="shortdesc">
+                Shows details for Networking API v2.0.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/version-show-response.json"
+                    />
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="location"
+                    style="plain" type="xsd:anyURI"
+                    required="true"
+                    path="/common:version/atom:link[@rel='self']/@href">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="Location">
+                        <para>
+                            Full URL to a service or server.
+                        </para>
+                    </wadl:doc>
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
+            </representation>
+        </response>
+        <response status="203"/>
+    </method>
+    <!-- Extensions -->
+    <method name="GET" id="listExtensions">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List extensions">
+            <para>Lists available Networking API extensions.</para>
+        </wadl:doc>
+        <response status="200">
+            <param xmlns="http://wadl.dev.java.net/2009/02" name="next" style="plain" type="xsd:anyURI"
+                path="/capi:extensions/atom:link[@rel='next']/@href">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        Moves to the next item in the list.
+                    </para>
+                </wadl:doc>
+                <link resource_type="#ExtensionList" rel="next"/>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" name="previous" style="plain" type="xsd:anyURI"
+                path="/capi:extensions/atom:link[@rel='previous']/@href">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        Moves to the previous item in the list.
+                    </para>
+                </wadl:doc>
+                <link resource_type="#ExtensionList" rel="previous"/>
+            </param>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="List extensions: JSON response">
+                        <xsdxt:code href="../samples/networks/extensions-list-response.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="203"/>
+        &commonFaults; </method>
+    <method name="GET" id="showExtension">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show extension details">
+            <para>Shows details for an
+                extension.</para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample
+                        title="Get extension details: JSON response">
+                        <xsdxt:code href="../samples/networks/extension-show-response.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation>
+        </response>
+        <response status="203"/>
+        &commonFaults; </method>
+    <method name="GET" id="listNetworks">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="List networks">
+            <para role="shortdesc">Lists networks to which the
+             tenant has access.</para>
+            <para>You can control which response parameters are returned by
+                using the fields query parameter. For information, see <link
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and column selection</link>.</para>
+        </wadl:doc>
+        <response status="200">
+            &networksObject;
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="admin_state_up" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The administrative state of the network, which is up
+                        (<code>true</code>) or down (<code>false</code>).
+                    </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>The UUID of the network.</para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="name" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    name.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="shared" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>Indicates whether this network
+                        is shared across all tenants. By default, only
+                        administrative users can change this
+                        value.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="status" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    status.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="subnets" style="plain"
+                type="xsd:dict">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The associated
+                    subnets.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="tenant_id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the tenant.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"
+                element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/networks-list-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &fault401; </method>
+    <method name="POST" id="createNetwork">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Create network">
+            <para role="shortdesc">Creates a network.</para>
+            <para>
+                A request body is optional. An administrative user can
+                specify another tenant UUID, which is the tenant who owns the
+                network, in the request body.
+            </para>
+        </wadl:doc>
+        <request>
+            &networkObject;
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="false" name="admin_state_up"
+                style="plain" type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The administrative state of the network, which is up
+                        (<code>true</code>) or down (<code>false</code>).
+                    </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="false" name="name" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The network name. A request body is optional: If you
+                        include it, it can specify this optional attribute.
+                    </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="false" name="shared" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network
+                        is shared across all tenants. By default, only
+                        administrative users can change this
+                        value.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="false" name="tenant_id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Admin-only. The UUID of the
+                        tenant that will own the network. This tenant
+                        can be different from the tenant that makes
+                        the create network request. However, only
+                        administrative users can specify a tenant UUID
+                        other than their own. You cannot change this
+                        value through authorization
+                    policies.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"
+                element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-create-request.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201">
+            &networkObject;
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="admin_state_up" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The administrative state of
+                        the network, which is up (<code>true</code>)
+                        or down
+                    (<code>false</code>).</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the network.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="name" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    name.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="shared" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network
+                        is shared across all tenants. By default, only
+                        administrative users can change this
+                        value.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="status" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    status.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="subnets" style="plain"
+                type="xsd:dict">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The associated
+                    subnets.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="tenant_id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the tenant.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="router:external" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this
+                        network is externally
+                        accessible.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"
+                element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-create-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; </method>
+    <method name="POST" id="bulkCreateNetwork">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Bulk create networks">
+            <para role="shortdesc">Creates multiple networks in a
+                single request.</para>
+            <para>In the request body, specify a list of
+                networks.</para>
+            <para>The bulk create operation is always atomic. Either
+                all or no networks in the request body are
+                created.</para>
+        </wadl:doc>
+        <request> &networksObject; &networkCommonRequestParams;
+            <representation
+                mediaType="application/json" element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/networks-bulk-create-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="201"> &networksObject; &networkCommonResponseParams;
+            <representation mediaType="application/json"
+                element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/networks-bulk-create-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; </method>
+    <method name="GET" id="showNetwork">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Show network details">
+            <para role="shortdesc">Shows details for a
+                network.</para>
+            <para>You can control which response parameters are returned by
+                using the fields query parameter. For information, see <link
+                    xlink:href="http://specs.openstack.org/openstack/neutron-specs/specs/api/networking_general_api_information.html#filtering-and-column-selection"
+                    >Filtering and column selection</link>.</para>
+            <para>
+                In addition to the following response parameters, the response
+                might show extension response parameters. For information, see <link
+                xlink:href="http://developer.openstack.org/api-ref-networking-v2-ext.html#showProviderNetwork">Networks multiple provider extension (networks)</link>.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            &networkObject;
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="admin_state_up" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The administrative state of the network, which is up
+                        (<code>true</code>) or down (<code>false</code>).
+                    </para>
+                </wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the network.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="name" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    name.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="shared" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network
+                        is shared across all tenants. By default, only
+                        administrative users can change this
+                        value.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="status" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    status.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="subnets" style="plain"
+                type="xsd:dict">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The associated
+                    subnets.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="tenant_id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the tenant.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"
+                element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-show-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault401; &fault404; </method>
+    <method name="PUT" id="updateNetwork">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Update network">
+            <para role="shortdesc">Updates a network.</para>
+        </wadl:doc>
+        <request>
+            &networkObject; &networkUpdateParameters;
+            <representation
+                mediaType="application/json" element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-update-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            &networkObject;
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="admin_state_up" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The administrative state of
+                        the network, which is up (<code>true</code>)
+                        or down
+                    (<code>false</code>).</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the network.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="name" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    name.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="shared" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this network
+                        is shared across all tenants. By default, only
+                        administrative users can change this
+                        value.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="status" style="plain"
+                type="xsd:string">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The network
+                    status.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="subnets" style="plain"
+                type="xsd:dict">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The associated
+                    subnets.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="tenant_id" style="plain"
+                type="csapi:UUID">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>The UUID of the tenant.</para></wadl:doc>
+            </param>
+            <param xmlns="http://wadl.dev.java.net/2009/02" required="true" name="router:external" style="plain"
+                type="xsd:bool">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN"><para>Indicates whether this
+                        network is externally
+                        accessible.</para></wadl:doc>
+            </param>
+            <representation mediaType="application/json"
+                element="csapi:network">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/networks/network-update-response.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &fault400; &fault401; &fault403; &fault404; </method>
+    <method name="DELETE" id="deleteNetwork">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Delete network">
+            <para role="shortdesc">Deletes a network and its
+                associated resources.</para>
+        </wadl:doc>
+        <response status="204"/> &fault401; &fault404;
+        &fault409conflict; </method>
+</application>
