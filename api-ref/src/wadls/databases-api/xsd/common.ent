@@ -68,5 +68,449 @@
         <response status="415" xmlns="http://wadl.dev.java.net/2009/02">
             <representation mediaType="application/xml" element="dbaas:badMediaType"/>
             <representation mediaType="application/json"/>
-        </response>
-           '>
+        </response>'>
+<!ENTITY accountIdTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="accountId" style="template"
+    type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The account ID of the owner of the instance.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY instanceIdTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="instanceId" style="template"
+    type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The ID for the database instance.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY databaseNameTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="databaseName"
+    style="template" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The name for the database.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY userNameTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="userName" style="template"
+    type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The name for the user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY flavorIdTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="flavorId" style="template"
+    type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The ID for the flavor.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY datastoreNameTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="datastoreName" style="template"
+    type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>         
+            The name of the data store for which to list versions.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY datastoreVersionIdTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="datastoreVersionId" style="template"
+    type="xsd:uuid">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The UUID of the data store version.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY parameterNameTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="parameterName" style="template"
+    type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The name of the parameter for which to show details.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- REQUEST PARAMETERS -->
+<!ENTITY instanceRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="instance" style="plain" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            An <code>instance</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY flavorRefRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="flavorRef" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            Reference (href), which is the actual URI to a
+            flavor as it appears in the list flavors response.
+        </para>
+        <para>
+            Rather than the flavor URI, you can also pass the
+            flavor ID (integer) as the  <code>flavorRef</code>
+            value. For example, <code>1</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY sizeRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="size" style="plain" type="xsd:int"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The volume size, in gigabytes (GB). A valid value
+            is from 1 to 50.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY databasesRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="databases" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>databases</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY instance-nameRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+    type="xsd:string" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            Name of the instance to create. A valid value is
+            up to 255 characters long. All characters are
+            permitted.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY databaseNameRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+    type="xsd:string" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A database name.
+        </para>
+        <para>
+            You cannot use the <code>lost+found</code>,
+            <code>information_schema</code>, or <code>mysql</code> database
+            name to create a database because these names are reserved for
+            system databases.
+        </para>
+        <para>
+            Valid characters in a database name are:
+        </para>
+        <itemizedlist>
+            <listitem>
+                Upper and lower case letters.
+            </listitem>
+            <listitem>
+                Numbers.
+            </listitem>
+            <listitem>
+                <code>@</code>, <code>?</code>, <code>#</code>, and spaces
+                except at the beginning or end of the database name.
+            </listitem>
+            <listitem>
+                <code>_</code> is allowed anywhere in the database name.
+            </listitem>
+        </itemizedlist>
+        <para>
+            You cannot use these characters in a database name:
+        </para>
+        <para>
+            The maximum length of a database name is 64 characters.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY characterSetRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="characterSet" style="plain"
+    type="xsd:string" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A set of symbols and encodings. Default is <code>utf8</code>.
+        </para>
+        <para>
+            For information about supported character sets and collations, see <link
+            xlink:href="http://dev.mysql.com/doc/refman/5.1/en/charset-mysql.html">Character Sets
+            and Collations in MySQL</link>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY collateRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="collate" style="plain" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A set of rules for comparing characters in a character set.
+            Default is <code>utf8_general_ci</code>.
+        </para>
+        <para>
+            For information about supported character sets and collations, see <link
+            xlink:href="http://dev.mysql.com/doc/refman/5.1/en/charset-mysql.html">Character Sets
+            and Collations in MySQL</link>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY usersRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="users" style="plain" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>users</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-nameRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+    type="xsd:string" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The user name for the database on instance creation.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-passwordRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="password"
+    style="plain" type="xsd:string" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The password for those users on instance
+            creation.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- RESPONSE PARAMETERS -->
+<!ENTITY instanceResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="instance" style="plain" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            An <code>instance</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY flavorResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="flavor" style="plain"
+    type="xsd:dict" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>flavor</code> object, which includes the flavor ID
+            (integer) and flavor relative links.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY sizeResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="size" style="plain" type="xsd:int"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The volume size, in gigabytes (GB). A valid value
+            is from 1 to 50.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY databasesResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="databases" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>databases</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY instance-nameResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="name" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            Name of the instance to create. A valid value is
+            up to 255 characters long. All characters are
+            permitted.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY databaseNameResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="name" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A database name.
+        </para>
+        <para>
+            You cannot use the <code>lost+found</code>,
+            <code>information_schema</code>, or <code>mysql</code> database
+            name to create a database because these names are reserved for
+            system databases.
+        </para>
+        <para>
+            Valid characters in a database name are:
+        </para>
+        <itemizedlist>
+            <listitem>
+                Upper and lower case letters.
+            </listitem>
+            <listitem>
+                Numbers.
+            </listitem>
+            <listitem>
+                <code>@</code>, <code>?</code>, <code>#</code>, and spaces
+                except at the beginning or end of the database name.
+            </listitem>
+            <listitem>
+                <code>_</code> is allowed anywhere in the database name.
+            </listitem>
+        </itemizedlist>
+        <para>
+            You cannot use these characters in a database name:
+        </para>
+        <para>
+            The maximum length of a database name is 64 characters.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY characterSetResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="characterSet" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A set of symbols and encodings. Default is <code>utf8</code>.
+        </para>
+        <para>
+            For information about supported character sets and collations, see <link
+            xlink:href="http://dev.mysql.com/doc/refman/5.1/en/charset-mysql.html">Character Sets
+            and Collations in MySQL</link>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY collateResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="collate" style="plain" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A set of rules for comparing characters in a character set.
+            Default is <code>utf8_general_ci</code>.
+        </para>
+        <para>
+            For information about supported character sets and collations, see <link
+            xlink:href="http://dev.mysql.com/doc/refman/5.1/en/charset-mysql.html">Character Sets
+            and Collations in MySQL</link>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY usersResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="users" style="plain" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            A <code>users</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-nameResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="name" id="user-name" style="plain"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The user name for the database on instance creation.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY user-passwordResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="password"
+    style="plain" type="xsd:string" required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The password for those users on instance
+            creation.
+        </para>
+    </wadl:doc>
+</param>'>
+

@@ -2,6 +2,8 @@
 <!DOCTYPE application [
     <!ENTITY % common  SYSTEM "common.ent">
     %common;
+    <!ENTITY % common_project  SYSTEM "../../common_project.ent">
+    %common_project;
 ]>
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -15,20 +17,12 @@
     </grammars>
     <resources base="http://docs.openstack.org/database/api/v1.0" xml:id="dbaas-v1">
         <resource id="dbaas-versions-v1" path="//">
-            <method href="#getVersions"/>
+            <method href="#listVersions-dbaas-v1"/>
         </resource>
         <resource id="dbaas-version-v1" path="//v1.0">
-            <method href="#getVersionInfo"/>
+            <method href="#showVersionInfo-dbaas-v1"/>
             <resource id="accountID" path="{accountId}">
-                <param name="accountId" style="template"
-                    type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            The account ID of the owner of the instance.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &accountIdTemplateParameter;
                 <!-- add later when trove extensions are supported -->
                 <!--<resource id="extensions" type="#ExtensionList"
                     path="extensions">
@@ -50,20 +44,10 @@
                 </resource>-->
                 <resource id="instances" path="instances">
                     <method href="#createInstance"/>
-                    <method href="#getInstance"/>
+                    <method href="#listInstances"/>
                     <resource id="instanceId" path="{instanceId}">
-                        <param name="instanceId" style="template"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">
-                                <para>
-                                    The instance ID for the database
-                                    instance.
-                                </para>
-                            </wadl:doc>
-                        </param>
-                        <method href="#getInstanceById"/>
+                        &instanceIdTemplateParameter;
+                        <method href="#showInstanceById"/>
                         <method href="#attachConfigGroup"/>
                         <method href="#detachConfigGroup"/>
                         <method href="#deleteInstance"/>
@@ -75,94 +59,48 @@
                         </resource>
                         <resource id="databases" path="databases">
                             <method href="#createDatabase"/>
-                            <method href="#getDatabases"/>
+                            <method href="#listDatabases"/>
                             <resource id="databaseName"
                                 path="{databaseName}">
-                                <param name="databaseName"
-                                   style="template" type="xsd:string">
-                                   <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The name for
-                                   the
-                                   database.</para></wadl:doc>
-                                </param>
+                                &databaseNameTemplateParameter;
                                 <method href="#deleteDatabase"/>
                             </resource>
                         </resource>
                         <resource id="users" path="users">
                             <method href="#createUser"/>
-                            <method href="#getUsers"/>
+                            <method href="#listUsers"/>
                             <resource id="name" path="{name}">
-                                <param name="name" style="template"
-                                   type="xsd:string">
-                                   <wadl:doc
-                                   xmlns="http://docbook.org/ns/docbook"
-                                   xml:lang="EN"><para>The name for
-                                   the
-                                   user.</para></wadl:doc>
-                                </param>
+                                &userNameTemplateParameter;
                                 <method href="#deleteUser"/>
                             </resource>
                         </resource>
-                        <resource id="root" path="root">
+                        <resource id="root-dbaas" path="root">
                             <method href="#createRoot"/>
                             <method href="#isRootEnabled"/>
                         </resource>
                     </resource>
                 </resource>
                 <resource id="flavors" path="flavors">
-                    <method href="#getFlavors"/>
+                    <method href="#listFlavors"/>
                     <resource id="flavorId" path="{flavorId}">
-                        <param name="flavorId" style="template"
-                            type="xsd:string">
-                            <wadl:doc
-                                xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN"><para>The flavor ID for
-                                   the
-                                flavor.</para></wadl:doc>
-                        </param>
-                        <method href="#getFlavorById"/>
+                        &flavorIdTemplateParameter;
+                        <method href="#showFlavorById"/>
                     </resource>
                 </resource>
                 <resource id="datastores" path="datastores">
                     <resource id="datastore_name" path="{datastore_name}">
-                        <param name="datastore_name" style="template"
-                            type="xsd:uuid">
-                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                xml:lang="EN">
-                                <para>
-                                    The name of the data store whose versions
-                                    you want to list.
-                                </para>
-                            </wadl:doc>
-                        </param>
+                        &datastoreNameTemplateParameter;
                         <resource id="datastore_versions" path="versions">
                             <method href="#listDatastoreVersions"/>
                         </resource>
                     </resource>
                     <resource id="versions" path="versions">
                         <resource id="datastore_version_id" path="{datastore_version_id}">
-                            <param name="datastore_version_id" style="template"
-                                type="xsd:uuid">
-                                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                    xml:lang="EN">
-                                    <para>
-                                        The ID of the data store version.
-                                   </para>
-                               </wadl:doc>
-                            </param>
+                            &datastoreVersionIdTemplateParameter;
                             <resource id="parameters" path="parameters">
                                 <method href="#listParameters"/>
                                 <resource id="parameter_name" path="{parameter_name}">
-                                    <param name="parameter_name" style="template"
-                                        type="xsd:uuid">
-                                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                            xml:lang="EN">
-                                            <para>
-                                                Name of the parameter whose details you want.
-                                            </para>
-                                        </wadl:doc>
-                                    </param>
+                                    &parameterNameTemplateParameter;
                                     <method href="#showParameterDetails"/>
                                 </resource>
                             </resource>
@@ -184,19 +122,19 @@
         <method href="#list_dbaasExtensionsv1"/>
     </resource_type>-->
     <!-- Version -->
-    <method name="GET" id="getVersionInfo">
+    <method name="GET" id="showVersionInfo-dbaas-v1">
         <wadl:doc xml:lang="EN" title="Show version details"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Shows details for the Database
-                Service API v1.0.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Shows details for the Database Service API v1.0.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/db-version-request-json-http.txt"
-                    />
+                        href="samples/db-version-request-json-http.txt"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -210,20 +148,21 @@
                         href="samples/db-version-response.json"/>
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getVersions">
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="listVersions-dbaas-v1">
         <wadl:doc xml:lang="EN" title="List versions"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Lists information about all Database
-                Service API versions.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists information about all Database Service API versions.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/db-versions-request-json-http.txt"
-                    />
+                        href="samples/db-versions-request-json-http.txt"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -237,7 +176,8 @@
                         href="samples/db-versions-response.json"/>
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <!-- Instance -->
     <method name="POST" id="createInstance">
         <wadl:doc xml:lang="EN" title="Create database instance"
@@ -246,7 +186,7 @@
                 Creates a database instance.
             </para>
             <para>
-                Asynchronously provisions a new database instance. You must
+                Asynchronously provisions a database instance. You must
                 specify a flavor and a volume size. The service provisions the
                 instance with a volume of the requested size, which serves as
                 storage for the database instance.
@@ -257,14 +197,13 @@
                     <listitem>
                         <para>
                             You can create only one database instance per
-                            <command>POST</command> request.
+                            &POST; request.
                         </para>
                     </listitem>
                     <listitem>
                         <para>
                             You can create a database instance with one or
-                            more databases, and users associated to those
-                            databases.
+                            more databases. You associate users with each database.
                         </para>
                     </listitem>
                     <listitem>
@@ -285,101 +224,17 @@
                     <xsdxt:code
                         href="samples/db-create-instance-request.json"/>
                 </wadl:doc>
-                <param name="instance" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            An <code>instance</code> object.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="flavorRef" style="plain"
-                    type="xsd:string" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Reference (href), which is the actual URI to a
-                            flavor as specified in the response from the list
-                            flavors API call.
-                        </para>
-                        <para>
-                            Rather than the flavor URI, you can also pass the
-                            flavor id (integer) as the value for
-                            <code>flavorRef</code>. For example, the flavor ID
-                            for the flavor URI shown above is <code>1</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="size" style="plain" type="xsd:int"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            The volume size, in gigabytes (GB). A valid value
-                            is from 1 to 50.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="databases" style="plain"
-                    type="xsd:string" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A <code>databases</code>
-                            object.</para></wadl:doc>
-                </param>
-                <param name="name" id="instance-name" style="plain"
-                    type="xsd:string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Name of the instance to create. A valid value is
-                            up to 255 characters long. All characters are
-                            permitted.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="name" id="database-name" style="plain"
-                    type="xsd:string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Specifies database names
-                            for creating databases on instance
-                            creation.</para></wadl:doc>
-                </param>
-                <param name="character_set" style="plain"
-                    type="xsd:string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Set of symbols and
-                            encodings. The default character set is
-                                <code>utf8</code>.</para></wadl:doc>
-                </param>
-                <param name="collate" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>Set of rules for comparing
-                            characters in a character set. The default
-                            value for collate is
-                                <code>utf8_general_ci</code>.</para></wadl:doc>
-                </param>
-                <param name="users" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>A <code>users</code>
-                            object.</para></wadl:doc>
-                </param>
-                <param name="name" id="user-name" style="plain"
-                    type="xsd:string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The user name for the
-                            database on instance
-                        creation.</para></wadl:doc>
-                </param>
-                <param name="password" id="user-password"
-                    style="plain" type="xsd:string" required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN"><para>The password for those
-                            users on instance
-                        creation.</para></wadl:doc>
-                </param>
+                &instanceRequestParameter;
+                &flavorRefRequestParameter;
+                &sizeRequestParameter;
+                &databasesRequestParameter;
+                &instance-nameRequestParameter;
+                &databaseNameRequestParameter;
+                &characterSetRequestParameter;
+                &collateRequestParameter;
+                &usersRequestParameter;
+                &user-nameRequestParameter;
+                &user-passwordRequestParameter;
             </representation>
         </request>
         <response status="200">
@@ -394,17 +249,40 @@
                         The previous response examples show resources that
                         contain links to themselves that enable a client to
                         easily obtain resource URIs rather than construct
-                        them. There are two kinds of link relations associated
-                        with resources. A <code>self</code> link contains a
-                        <emphasis>versioned</emphasis> link to the resource.
-                        These links should be used in cases where the link
-                        will be followed immediately. A <code>bookmark</code>
-                        link provides a permanent link to a resource that is
-                        appropriate for long-term storage.
+                        them. Resources can have these link relations:
                     </para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                A <code>self</code> link contains a
+                                <emphasis>versioned</emphasis> link to the resource.
+                                Use these links in cases where the link
+                                will be followed immediately.
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                A <code>bookmark</code>
+                                link provides a permanent link to a resource that is
+                                appropriate for long-term storage.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
                 </wadl:doc>
+                &instanceResponseParameter;
+                &createdResponseParameter;
+                &flavorResponseParameter;
+                &databasesResponseParameter;
+                &instance-nameResponseParameter;
+                &databaseNameResponseParameter;
+                &characterSetResponseParameter;
+                &collateResponseParameter;
+                &usersResponseParameter;
+                &user-nameResponseParameter;
+                &updatedResponseParameter;
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <method name="DELETE" id="deleteInstance">
         <wadl:doc xml:lang="EN" title="Delete database instance"
             xmlns="http://docbook.org/ns/docbook"><para
@@ -417,8 +295,9 @@
                 the previous note.</remark>-->
             <note>
                 <para>
-                    This operation is not permitted when the instance state is
-                    either <code>REBUILDING</code> or <code>BUILDING</code>.
+                    You cannot complete this operation when the instance state
+                    is either <code>REBUILDING</code> or
+                    <code>BUILDING</code>.
                 </para>
             </note>
         </wadl:doc>
@@ -427,8 +306,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/db-delete-instance-request-json-http.txt"
-                    />
+                        href="samples/db-delete-instance-request-json-http.txt" />
                 </wadl:doc>
             </representation>
         </request>
@@ -438,12 +316,11 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/db-delete-instance-response-json-http.txt"
-                    />
+                        href="samples/db-delete-instance-response-json-http.txt"/>
                 </wadl:doc>
             </representation>
         </response> &getFaults; </method>
-    <method name="GET" id="getInstance">
+    <method name="GET" id="listInstances">
         <wadl:doc xml:lang="EN" title="List database instances"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -459,8 +336,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/db-instances-index-request-json-http.txt"
-                    />
+                        href="samples/db-instances-index-request-json-http.txt"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -475,8 +351,9 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getInstanceById">
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="showInstanceById">
         <wadl:doc xml:lang="EN" title="Show database instance details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -495,21 +372,20 @@
                     After instance creation, the <code>used</code> value is
                     greater than 0, which is expected and due to the automatic
                     creation of non-empty transaction logs for MySQL
-                    optimization. The <code>used</code> attribute is
-                    <emphasis>not</emphasis> returned in the response when the
-                    instance status is <code>BUILD</code>,
-                    <code>REBOOT</code>, <code>RESIZE</code>, or
-                    <code>ERROR</code>.
+                    optimization. The response does not include the
+                    <code>used</code> attribute when the instance status is
+                    <code>BUILD</code>, <code>REBOOT</code>,
+                    <code>RESIZE</code>, or <code>ERROR</code>.
                 </para>
             </note>
             <para>
-                The list operations return a DNS-resolvable host name that is
-                associated with the database instance rather than an IP
-                address. Because the host name always resolves to the correct
-                IP address for the database instance, you do not need to
-                maintain the mapping. Although the IP address might change
-                when you resize, migrate, or perform other operations, the
-                host name always resolves to the correct database instance.
+                The list operations return a DNS-resolvable host name for the
+                database instance rather than an IP address. Because the host
+                name always resolves to the correct IP address for the
+                database instance, you do not need to maintain the mapping.
+                Although the IP address might change when you resize, migrate,
+                or perform other operations, the host name always resolves to
+                the correct database instance.
             </para>
         </wadl:doc>
         <request>
@@ -534,7 +410,8 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <!-- Instance Actions -->
     <method name="POST" id="restartInstance">
         <wadl:doc xml:lang="EN" title="Restart instance"
@@ -554,7 +431,8 @@
                 </para>
             </note>
             <para>
-                If the operation succeeds, it returns a 202 Accepted response.
+                If the operation succeeds, it returns the <code>Accepted
+                (202)</code> response code.
             </para>
         </wadl:doc>
         <request>
@@ -663,148 +541,12 @@
     <method name="POST" id="createDatabase">
         <wadl:doc xml:lang="EN" title="Create database"
             xmlns="http://docbook.org/ns/docbook">
-            <para
-                role="shortdesc">
-                Creates a database within an
-                instance.
+            <para role="shortdesc">
+                Creates a database within an instance.
             </para>
             <para>
-                This operation creates a database within an instance.
+                The <code>name</code> of the database is a required attribute.
             </para>
-            <para>
-                The <code>name</code> of the
-                database is a required attribute.
-            </para>
-            <para>
-                You can specify these additional attributes for each database:
-                <code>collate</code> and <code>character_set</code>.
-            </para>
-            <table
-                rules="all">
-                <caption>Required and optional attributes for creating a database</caption>
-                <thead>
-                    <tr>
-                        <td colspan="1">Name</td>
-                        <td colspan="3">Description</td>
-                        <td colspan="1">Required</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="1">name</td>
-                        <td colspan="3">Specifies the database name
-                            for creating the database. See the request
-                            examples for the required xml/json
-                            format.</td>
-                        <td colspan="1">Yes</td>
-                    </tr>
-                    <tr>
-                        <td colspan="1">character_set</td>
-                        <td colspan="3">Set of symbols and encodings.
-                            The default character set is
-                                <code>utf8</code>.</td>
-                        <td colspan="1">No</td>
-                    </tr>
-                    <tr>
-                        <td colspan="1">collate</td>
-                        <td colspan="3">Set of rules for comparing
-                            characters in a character set. The default
-                            value for collate is
-                                <code>utf8_general_ci</code>.</td>
-                        <td colspan="1">No</td>
-                    </tr>
-                </tbody>
-            </table>
-            <para>
-                For information about supported character sets and collations,
-                see the MySQL documentation at <link
-                xlink:href="http://dev.mysql.com/doc/refman/5.1/en/charset-mysql.html">Character
-                Sets and Collations in MySQL</link>.
-            </para>
-            <note>
-                <para>
-                    The <code>lost+found</code>,
-                    <code>information_schema</code>, and <code>mysql</code>
-                    database names are reserved and cannot be used to create
-                    databases.
-                </para>
-            </note>
-            <para>
-                See the following tables for information about characters that
-                are valid for creating database names.
-            </para>
-            <table rules="all"
-                width="40%">
-                <caption>Valid characters in a database name</caption>
-                <col width="100%"/>
-                <thead>
-                    <tr>
-                        <td>Character</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Letters (upper and lower cases
-                            allowed)</td>
-                    </tr>
-                    <tr>
-                        <td>Numbers</td>
-                    </tr>
-                    <tr>
-                        <td>'@', '?', '#', and spaces are allowed, but
-                                <emphasis>not</emphasis> at the
-                            beginning and end of the database
-                            name</td>
-                    </tr>
-                    <tr>
-                        <td>'_' is allowed anywhere in the database
-                            name</td>
-                    </tr>
-                </tbody></table><table rules="all" width="40%">
-                <?dbfo keep-together="always"?>
-                <caption>Characters that <emphasis>cannot</emphasis> be used in a database name</caption>
-                <col width="100%"/>
-                <thead>
-                    <tr>
-                        <td>Character</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Single quotes</td>
-                    </tr>
-                    <tr>
-                        <td>Double quotes</td>
-                    </tr>
-                    <tr>
-                        <td>Back quotes</td>
-                    </tr>
-                    <tr>
-                        <td>Semicolons</td>
-                    </tr>
-                    <tr>
-                        <td>Commas</td>
-                    </tr>
-                    <tr>
-                        <td>Back slashes</td>
-                    </tr>
-                    <tr>
-                        <td>Forward slashes</td>
-                    </tr>
-                </tbody></table><table rules="all">
-                <caption>Length restrictions for database name</caption>
-                <thead>
-                    <tr>
-                        <td>Restriction</td>
-                        <td>Value</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Database-name maximum length</td>
-                        <td>64</td>
-                    </tr>
-                </tbody></table>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
@@ -817,6 +559,9 @@
                         href="samples/db-create-databases-request.json"
                     />
                 </wadl:doc>
+                &databaseNameRequestParameter;
+                &characterSetRequestParameter;
+                &collateRequestParameter;
             </representation>
         </request>
         <response status="202">
@@ -828,17 +573,23 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getDatabases">
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="listDatabases">
         <wadl:doc xml:lang="EN" title="List instance databases"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Lists databases for an
-                instance.</para>
-                <note><para>This operation returns
-                    only the user-defined databases, not the system
-                    databases. The system databases (mysql,
-                    information_schema, lost+found) can only be viewed
-                    by a database administrator.</para></note>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists databases for an instance.
+            </para>
+                <note>
+                    <para>
+                        This operation returns only the user-defined databases
+                        and not the system databases. Only the database
+                        administrator can view the <code>mysql</code>,
+                        <code>information_schema</code>, and
+                        <code>lost+found</code> system databases.
+                    </para>
+                </note>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -862,14 +613,18 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <method name="DELETE" id="deleteDatabase">
         <wadl:doc xml:lang="EN" title="Delete database"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Deletes a
-                database.</para>
-            <para>Note that all data associated with the
-                database is also deleted.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes a database.
+            </para>
+            <para>
+                This operation also deletes all data that is associated with
+                the database.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -890,18 +645,21 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <!-- User -->
     <method name="POST" id="createUser">
         <wadl:doc xml:lang="EN" title="Create user"
             xmlns="http://docbook.org/ns/docbook"><para
                 role="shortdesc">Creates a user for a
                 database instance.</para>
-            <para>Asynchronously provisions a new user for the
-                database instance based on the configuration defined
-                in the request object. After the request is validated
-                and progress begins on the provisioning process,
-                a 202 Accepted response object is returned.</para>
+            <para>
+                Asynchronously provisions a new user for the database instance
+                by using the configuration that you define in the request
+                object. After the API validates the request and starts
+                progress on the provisioning process, the call returns the
+                <code>Accepted (202)</code> response code.
+            </para>
             <!-- <remark>Writer: please add the following note back into
                 the doc once the list User details call is added back
                 into the API: Using the identifier, the caller can
@@ -909,21 +667,22 @@
                 GET on users/name (for more details on this operation
                 see the "List User details" section of this
                 document).</remark> -->
-            <para>If the corresponding request cannot be fulfilled due
-                to insufficient or invalid data, an HTTP 400 "Bad
-                Request" error response is returned with information
-                regarding the nature of the failure. Failures in the
-                validation process are non-recoverable and require the
-                caller to correct the cause of the failure and POST
-                the request again.</para>
-            <para>The following table lists the required attributes
-                for creating user. See the request examples for the
-                required xml/json format:</para>
+            <para>
+                If the API cannot fulfill the corresponding request due to
+                insufficient data or data that is not valid, the API returns
+                the <code>Bad Request (400)</code>response code with
+                information about the nature of the failure. You cannot
+                recover from validation errors. You must correct the cause of
+                the failure and <!-- &POST; --> the request again.
+            </para>
+            <para>
+                This table lists the required attributes for creating users:
+            </para>
             <table rules="all" width="500">
-                <caption>Required attributes for creating a user</caption>
+                <caption>Required attributes for user</caption>
                 <thead>
                     <tr>
-                        <td colspan="1">Applies To</td>
+                        <td colspan="1">Applies to</td>
                         <td colspan="1">Name</td>
                         <td colspan="2">Description</td>
                         <td colspan="1">Required</td>
@@ -952,22 +711,27 @@
                     </tr>
                 </tbody>
             </table>
-            <note><title>Notes</title><itemizedlist>
+            <note>
+                <title>Notes</title>
+                <itemizedlist>
                     <listitem>
-                        <para>A user is granted all privileges on the
-                            specified databases.</para>
+                        <para>
+                            The operation grants the user all privileges on the databases.
+                        </para>
                     </listitem>
                     <listitem>
-                        <para>The following user name is reserved and
-                            cannot be used for creating users:
-                            root.</para>
+                        <para>
+                            Do not use the <code>root</code> user name, which is reserved.
+                        </para>
                     </listitem>
-                </itemizedlist></note>
-            <para>See the following tables for information about
-                characters that are valid/invalid for creating
-                database names, user names, and passwords.</para>
+                </itemizedlist>
+            </note>
+            <para>
+                These tables list the valid characters for database names,
+                user names, and passwords.
+            </para>
             <table rules="all" width="40%">
-                <caption>Valid characters in a database name, user name, and password</caption>
+                <caption>Valid characters in database name, user name, and password</caption>
                 <col width="100%"/>
                 <thead>
                     <tr>
@@ -983,17 +747,17 @@
                         <td>Numbers</td>
                     </tr>
                     <tr>
-                        <td>'@', '?', '#', and spaces are allowed, but
+                        <td><code>@</code>, <code>?</code>, <code>#</code>, and spaces are allowed, but
                                 <emphasis>not</emphasis> at the
                             beginning and end of the database name,
                             user name, and password</td>
                     </tr>
                     <tr>
-                        <td>"_" is allowed anywhere in the database
+                        <td><code>_</code> is allowed anywhere in the database
                             name, user name, and password</td>
                     </tr>
                 </tbody></table><table rules="all" width="40%">
-                <caption>Characters that <emphasis>cannot</emphasis> be used in a database name, user name, and
+                <caption>Characters that are not allowed in database name, user name, and
                     password</caption>
                 <col width="100%"/>
                 <thead>
@@ -1070,24 +834,27 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getUsers">
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="listUsers">
         <wadl:doc xml:lang="EN" title="List database instance users"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Lists the users in a database instance, along with the
-                associated databases for that user.
+                Lists the users in a database instance and the associated
+                databases for that user.
             </para>
             <note>
                 <para>
-                    This operation does not return the system users (database
-                    administrators that administer the health of the
-                    database). Also, this operation returns the "root" user
-                    only if "root" user is enabled.
+                    This operation does not return system users. A system
+                    user is a database administrator who administers the
+                    health of the database. Also, this operation returns the
+                    <code>root</code> user only if it is enabled.
                 </para>
             </note>
-            <para>The following notes apply
-                to MySQL users:</para><itemizedlist spacing="compact">
+            <para>
+                The following notes apply to MySQL users:
+            </para>
+            <itemizedlist spacing="compact">
                 <listitem>
                     <para>User names can be up to 16 characters
                         long.</para>
@@ -1124,24 +891,26 @@
                         href="samples/db-list-users-response.json"/>
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <method name="DELETE" id="deleteUser">
         <wadl:doc xml:lang="EN" title="Delete user"
             xmlns="http://docbook.org/ns/docbook"><para
                 role="shortdesc">Deletes a user for a
                  database instance.</para>
-            <warning><para>There is a bug in a Python library that
-                    Rackspace is using that can cause incorrect user
-                    deletions to occur if a period (.) is used in the
-                    user name. In this case, the user name is
-                    truncated to remove the portion of the name from
-                    the period to the end, leaving only the portion
-                    from the beginning up to the period. For example,
-                    for a user named "my.userA", the bug would
-                    truncate the user name to "my", and if the user
-                    "my" exists, that user will be incorrectly
-                    deleted. To avoid the problem, do not use periods
-                    in user names.</para></warning>
+            <warning>
+                <para>
+                    Do not use periods in user names. A bug in a Python
+                    library that Rackspace uses that can cause incorrect user
+                    deletions to occur if you use a period (.) in the user
+                    name. In this case, the bug in the library truncates the
+                    user name to the portion from the beginning up to the
+                    period. For example, for the <code>my.userA</code> user,
+                    the bug truncates the user name to <code>my</code>, and if
+                    the <code>user</code> exists, that user is incorrectly
+                    deleted.
+                </para>
+            </warning>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -1162,27 +931,30 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <!-- Root -->
     <method name="POST" id="createRoot">
         <wadl:doc xml:lang="EN" title="Enable root user"
-            xmlns="http://docbook.org/ns/docbook"><para
-                role="shortdesc">Enables the root user for a
-                database instance and returns the root
-                password.</para><para>This operation enables login
-                from any host for the root user and provides the user
-                with a generated root password.</para>
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Enables the root user for a database instance and returns the
+                root password.
+            </para>
+            <para>
+                This operation generates a root password for the root user and
+                enables the root user to log in from any host.
+            </para>
             <note>
                 <para>
-                    Changes that you make as a root user can have detrimental
-                    effects on the database instance and unpredictable
-                    behavior for API operations. When you enable the root
-                    user, you accept the possibility that we will not be able
-                    to support your database instance. We may not be able to
-                    assist you if you change core MySQL settings. These
-                    changes can be, but are not limited to, turning off bin
-                    logs, removing users that we use to access your instance,
-                    and so on.
+                    Changes that you make as a root user can impact the
+                    database instance and API operations in unpredictable and
+                    detrimental ways. When you enable the root user, you
+                    accept the possibility that we cannot support your
+                    database instance. We might not be able to assist you if you
+                    change core MySQL settings. These changes can be, but are
+                    not limited to, turning off bin logs, removing users that
+                    we use to access your instance, and so on.
                 </para>
             </note>
         </wadl:doc>
@@ -1208,7 +980,8 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <method name="GET" id="isRootEnabled">
         <wadl:doc xml:lang="EN"
             title="Show root-enabled status for database instance"
@@ -1226,8 +999,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="samples/db-check-root-user-request-json-http.txt"
-                    />
+                        href="samples/db-check-root-user-request-json-http.txt"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -1243,9 +1015,10 @@
                     />
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
+        </response> &commonFaults; &getFaults;
+    </method>
     <!-- Flavor -->
-    <method name="GET" id="getFlavors">
+    <method name="GET" id="listFlavors">
         <wadl:doc xml:lang="EN" title="List flavors"
             xmlns="http://docbook.org/ns/docbook"><para
                 role="shortdesc">Lists information for all available
@@ -1280,19 +1053,25 @@
                         href="samples/db-flavors-response.json"/>
                 </wadl:doc>
             </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="getFlavorById">
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="showFlavorById">
         <wadl:doc xml:lang="EN" title="Show flavor details"
             xmlns="http://docbook.org/ns/docbook"><para
                 role="shortdesc">Shows flavor details with details of the RAM.</para>
-            <para>This resource is identical to the flavors found in
-                the OpenStack Compute API, but without the disk
-                property.</para>
-            <note><para>The flavorId parameter should be an integer.
-                    If a floating point value is used for the flavorId
-                    parameter, the decimal portion is truncated and
-                    the integer portion is used as the value of the
-                    flavorId.</para></note>
+            <para>
+                This resource is identical to the flavors found in the
+                OpenStack Compute API, but without the disk property.
+            </para>
+            <note>
+                <para>
+                    The <code>flavorId</code> parameter must be an integer
+                    value. If you use a floating point value for this
+                    parameter, this call truncates the decimal portion and
+                    uses the integer portion as the <code>flavorId</code>
+                    value.
+                </para>
+            </note>
             <remark>Writer: need to confirm that this behavior is not
                 changed in subsequent releases, and if it is
                 prevented, remove the Note above.</remark>
@@ -1446,7 +1225,7 @@
                         xml:lang="EN">
                         <para>
                             Data store assigned to the configuration group.
-                            Required if default data store is not configured.
+                            Required if you did not configure the default data store.
                         </para>
                     </wadl:doc>
                 </param>
@@ -1596,9 +1375,9 @@
                 an instance.
             </para>
             <para>
-                When you pass in only an instance ID and omit the configuration ID,
-                this operation detaches any configuration group
-                that was attached to the instance.
+                When you pass in only an instance ID and omit the
+                configuration ID, this operation detaches any configuration
+                group that was attached to the instance.
             </para>
         </wadl:doc>
         <request>
@@ -1615,7 +1394,8 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xml:lang="EN">
                         <para>
-                            To detach a configuration group, set the configuration parameter to null.
+                            To detach a configuration group, set the
+                            configuration parameter to null.
                         </para>
                     </wadl:doc>
                 </param>
