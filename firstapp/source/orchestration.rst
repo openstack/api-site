@@ -234,7 +234,7 @@ To verify that ceilometer is installed, list the known meters:
 
     $ ceilometer meter-list
 
-This command returns a very long list of meters. After you create a meter, it
+This command returns a very long list of meters. Once a meter is created, it
 is never thrown away!
 
 Launch the stack with auto-scaling workers:
@@ -267,7 +267,7 @@ Wait for it to reach the :code:`CREATE_COMPLETE` status:
     | 0db2c026-fb9a-4849-b51d-b1df244096cd | faafo_autoscaling_workers | CREATE_COMPLETE | 2015-11-17T05:12:06Z |
     +--------------------------------------+---------------------------+-----------------+----------------------+
 
-Run the :code:`nova list` command. The template creates three instances:
+Run the :code:`nova list` command. This template created three instances:
 
 ::
 
@@ -384,7 +384,7 @@ See the state of the alarms set up by the template:
     +--------------------------------------+---------------------------------------+-------+----------+---------+------------+--------------------------------+------------------+
 
 Run the :code:`nova list` command to confirm that the
-:code:`OS::Heat::AutoScalingGroup` created more instances:
+:code:`OS::Heat::AutoScalingGroup` has created more instances:
 
 ::
 
