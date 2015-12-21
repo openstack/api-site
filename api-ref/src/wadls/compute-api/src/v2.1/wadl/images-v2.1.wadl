@@ -30,30 +30,17 @@
       <resource id="versions" path="/">
          <resource id="version" path="v2.1">
             <resource id="tenant_id" path="{tenant_id}">
-            &tenantIdRequestParameter;
+               &tenant_idTemplateParameter;
                <resource id="Images" type="#ImageList" path="images">
                   <resource id="image_detail" path="detail" type="#DetailImageList" />
                   <resource id="image_id" path="{image_id}">
-                     <param name="image_id" style="template" type="csapi:UUID">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="image_id">
-                           <para>
-                              The UUID for the image.
-                           </para>
-                        </wadl:doc>
-                     </param>
-                     <method href="#getImage" />
+                     &image_idTemplateParameter;
+                     <method href="#showImage" />
                      <method href="#deleteImage" />
                      <resource id="image_metadata" path="metadata" type="#ImageMetadataDetails">
                         <resource id="imageMetadataKey" path="{key}">
-                           <param name="key" style="template" type="csapi:imageMetadataKey">
-                              <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Metadata item key">
-                                 <para>
-                                    The metadata item key, as a string.
-                                    Maximum length is 255 characters.
-                                 </para>
-                              </wadl:doc>
-                           </param>
-                           <method href="#getImageMetadataItem" />
+                           &keyTemplateParameter;
+                           <method href="#showImageMetadataItem" />
                            <method href="#setImageMetadataItem" />
                            <method href="#deleteImageMetadataItem" />
                         </resource>
@@ -113,7 +100,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/images-details-get-resp.json"/>
+               <xsdxt:code href="../samples/images/images-list-details-response.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/xml">
@@ -121,7 +108,8 @@
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the next metadata item.
+               <para>
+                  Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#DetailImageList" rel="next"/>
@@ -129,7 +117,8 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the previous metadata item.
+               <para>
+                  Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#DetailImageList" rel="previous"/>
@@ -155,7 +144,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/images-list-get-resp.json"/>
+               <xsdxt:code href="../samples/images/images-list-response.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/xml">
@@ -163,14 +152,16 @@
             <param name="images" style="plain" required="true"
                type="csapi:ImagesWithOnlyIDsNamesLinks" path="/csapi:images">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Image information.
+               <para>
+                  Image information.
                </para>
             </wadl:doc>
             </param>
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:images/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the next metadata item.
+               <para>
+                  Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageList" rel="next"/>
@@ -189,16 +180,16 @@
       </response>
       &commonFaults;
    </method>
-   <method name="GET" id="getImage">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get image details">
+   <method name="GET" id="showImage">
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show image details">
          <para role="shortdesc">
-            Gets details for an image.
+            Shows details for an image.
          </para>
       </wadl:doc>
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-get-resp.json"/>
+               <xsdxt:code href="../samples/images/image-show-response.json"/>
             </wadl:doc>
             &x-compute-request-idHeader;
          </representation>
@@ -226,7 +217,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-get-resp.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-show-response.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/xml">
@@ -262,28 +253,29 @@
             Updates metadata items, by key, for an image.
          </para>
          <para>
-            Replaces items that match the a keys and does not modify items not
+            Replaces items that match keys. Does not modify items not
             in the request.
          </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-post-req.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-create-request.json"/>
             </wadl:doc>
          </representation>
       </request>
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-post-resp.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-create-response.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/xml">
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the next metadata item.
+               <para>
+                  Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="next"/>
@@ -291,7 +283,8 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the previous metadata item.
+               <para>
+                  Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="previous"/>
@@ -308,28 +301,29 @@
             Creates or replaces metadata for an image.
          </para>
          <para>
-            Replaces items that match specified keys. If you omit a key that
+            Replaces items that match keys. If you omit a key that
             already exists, this key retains its value.
          </para>
       </wadl:doc>
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-put-req.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-update-request.json"/>
             </wadl:doc>
          </representation>
       </request>
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-put-resp.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-update-response.json"/>
             </wadl:doc>
          </representation>
          <representation mediaType="application/xml" element="csapi:metadata">
             <param name="next" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='next']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the next metadata item.
+               <para>
+                  Moves to the next metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="next"/>
@@ -337,7 +331,8 @@
             <param name="previous" style="plain" type="xsd:anyURI"
                path="/csapi:metadata/atom:link[@rel='previous']/@href">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <para>Moves to the previous metadata item.
+               <para>
+                  Moves to the previous metadata item.
                </para>
             </wadl:doc>
             <link resource_type="#ImageMetadataDetails" rel="previous"/>
@@ -347,7 +342,7 @@
       &commonFaults; &getFaults; &postPutFaults;
       &inProgressFault;
    </method>
-   <method name="GET" id="getImageMetadataItem">
+   <method name="GET" id="showImageMetadataItem">
       <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
          title="Show image metadata item details">
          <para role="shortdesc">
@@ -357,7 +352,7 @@
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-get-detail-resp.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-item-show-response.json"/>
             </wadl:doc>
             &x-compute-request-idHeader;
          </representation>
@@ -376,14 +371,14 @@
       <request>
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-put-req.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-item-update-request.json"/>
             </wadl:doc>
          </representation>
       </request>
       <response status="200">
          <representation mediaType="application/json">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-               <xsdxt:code href="../api_samples/images/image-metadata-put-resp.json"/>
+               <xsdxt:code href="../samples/images/image-metadata-item-update-response.json"/>
             </wadl:doc>
          </representation>
       </response>
