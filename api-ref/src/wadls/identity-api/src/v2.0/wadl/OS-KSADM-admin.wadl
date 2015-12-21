@@ -8,20 +8,21 @@
 <!--        xmllint -noent OS-KSADM-admin.wadl             -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
-    xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0">
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0">
     <grammars>
         <include href="../xsd/OS-KSADM.xsd"/>
     </grammars>
@@ -30,7 +31,7 @@
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
     <resources base="http://localhost:35357" xml:id="OS-KSADM-admin-v2.0">
-      <resource id="version-v2.0" path="//v2.0">
+      <resource id="versions-ksadm-v2" path="//v2.0">
          <param name="X-Auth-Token" style="header" type="xsd:string" required="true">
             <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                <para>A valid authentication token for an administrative user.</para>
@@ -70,7 +71,7 @@
                         <para>The service ID.</para>
                      </wadl:doc>
                   </param>
-                  <method href="#listUserRoles" />
+                  <method href="#listUserGlobalRoles" />
                   <resource id="user-roles-OS-KSADM-v2.0" path="OS-KSADM">
                      <resource id="userRoleById-v2.0" path="{roleId}">
                         <param name="roleId" style="template" type="xsd:int">
@@ -120,7 +121,7 @@
                </resource>
             </resource>
          </resource>
-         <resource id="role-service-OS-KSADM-v2.0" path="OS-KSADM/roles">
+         <resource id="role-service-OS-KSADM-v2.0" path="OS-KSADM">
             <resource id="roles-v2.0" path="roles">
               <resource id="name" path="{role_name}">
                  <param name="name" style="template" type="xsd:string">
@@ -176,7 +177,6 @@
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-
     <!-- Tenant Operations -->
     <method name="POST" id="createTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -188,7 +188,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/tenantwithoutid.json"
+                        href="../samples/OS-KSADM/tenantwithoutid-create-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -197,7 +197,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/tenant.json"
+                    <xsdxt:code href="../samples/OS-KSADM/tenant-show-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -211,7 +211,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/tenant.json"
+                    <xsdxt:code href="../samples/OS-KSADM/tenant-update-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -220,7 +220,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/tenant.json"
+                    <xsdxt:code href="../samples/OS-KSADM/tenant-show-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -245,7 +245,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/users.json"
+                    <xsdxt:code href="../samples/OS-KSADM/users-list-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -280,7 +280,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/users.json"
+                    <xsdxt:code href="../samples/OS-KSADM/users-list-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -296,7 +296,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/userwithoutid.json"
+                        href="../samples/OS-KSADM/userwithoutid-create-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -305,7 +305,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/user-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; &postPutFaults; </method>
@@ -318,7 +318,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/user-update-request.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -326,7 +326,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/user-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
@@ -346,7 +346,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/userwithenabledonly.json"
+                        href="../samples/OS-KSADM/userwithenabledonly-enable-request.json"
                     />
                 </wadl:doc>
             </representation>
@@ -355,16 +355,17 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/user.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/user-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
     <!-- User Roles -->
-    <method name="GET" id="listUserRoles">
+    <method name="GET" id="listUserGlobalRoles">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List global roles for user">
-            <para role="shortdesc">Lists global roles for a
-                user.</para>
+            <para role="shortdesc">
+                Lists global roles for a user.
+            </para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -374,7 +375,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/user-role-list-resp.json"
+                        href="../samples/OS-KSADM/user-roles-list-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -408,7 +409,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/roles.json"
+                    <xsdxt:code href="../samples/OS-KSADM/roles-list-response.json"
                     />
                 </wadl:doc>
                 <param name="roles" style="plain" required="true"
@@ -434,7 +435,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/role.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/role-create-request.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -442,7 +443,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/role.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/role-show-response.json"/>
                 </wadl:doc>
                 <param name="Location" type="xsd:anyURI"
                     style="header">
@@ -460,7 +461,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/role.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/role-show-response.json"/>
                 </wadl:doc> &roleResponse; <param name="Location"
                     type="xsd:anyURI" style="header">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -479,7 +480,7 @@
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
-                    <xsdxt:code href="../OS-KSADM/samples/role.json"/>
+                    <xsdxt:code href="../samples/OS-KSADM/role-show-response.json"/>
                 </wadl:doc> &roleResponse; <param name="Location"
                     type="xsd:anyURI" style="header">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
@@ -508,7 +509,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/services.json"/>
+                        href="../samples/OS-KSADM/services-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -517,7 +518,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/services.json"/>
+                        href="../samples/OS-KSADM/services-list-response.json"/>
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; </method>
@@ -531,7 +532,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/service.json"/>
+                        href="../samples/OS-KSADM/service-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -546,7 +547,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/service.json"/>
+                        href="../samples/OS-KSADM/service-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
@@ -561,7 +562,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/service.json"/>
+                        href="../samples/OS-KSADM/service-create-request.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -570,7 +571,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSADM/samples/service.json"/>
+                        href="../samples/OS-KSADM/service-show-response.json"/>
                 </wadl:doc>
                 <param name="Location" type="xsd:anyURI"
                     style="header">

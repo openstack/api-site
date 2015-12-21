@@ -8,7 +8,7 @@
 <!-- xmllint -noent OS-INHERIT.wadl                        -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
@@ -37,27 +37,33 @@
     <!-- We should use SSL in production -->
     <resources base="http://localhost:5000" xml:id="OS-INHERIT-v3">
         <!-- FYI: double slash needed in path to get a single slash to display -->
-        <resource id="v3" path="//v3">
+        <resource id="versions-inherit-v3" path="//v3">
             <resource id="role_assignments" path="role_assignments">
                 <param name="group.id" style="query" type="xsd:string"
                     xmlns="http://wadl.dev.java.net/2009/02"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Filters on group ID.
-                            Specify <code>group.id={group_id}</code>
-                            to list all role assignments for the
-                             group.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                            Filters the response by a group, by ID. For
+                            example, to list all role assignments for a group,
+                            specify <code>group.id={group_id}</code>.
+                        </para>
+                     </wadl:doc>
                 </param>
                 <param name="role.id" style="query" type="xsd:string"
                     xmlns="http://wadl.dev.java.net/2009/02"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Filters on role ID.
-                            Specify <code>role.id={role_id}</code> to
-                            list all role assignments for the
-                             role.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                            Filters the response by a role, by ID. For
+                            example, to list all role assignments for a role,
+                            specify <code>role.id={role_id}</code>.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="scope.domain.id" style="query"
                     type="xsd:string"
@@ -65,11 +71,14 @@
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Filters on domain ID.
-                            Specify
-                                <code>scope.domain.id={domain_id}</code>
-                            to list all role assignments for the
-                             domain.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                            Filters the response by a domain, by ID. For
+                            example, to list all role assignments for a
+                            domain, specify
+                            <code>scope.domain.id={domain_id}</code>.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="scope.project.id" style="query"
                     type="xsd:string"
@@ -77,39 +86,49 @@
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Filters on project ID.
-                            Specify
-                                <code>scope.project.id={project_id}</code>
-                            to list all role assignments for the
-                             project.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                            Filters the response by a project, by ID. For
+                            example, to list all role assignments for a
+                            project, specify
+                            <code>scope.project.id={project_id}</code>.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="user.id" style="query" type="xsd:string"
                     xmlns="http://wadl.dev.java.net/2009/02"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Filters on user ID.
-                            Specify <code>user.id={user_id}</code> to
-                            list all role assignments for the
-                             user.</para></wadl:doc>
+                        xml:lang="EN">
+                        <para>
+                            Filters the response by a user, by ID. For
+                            example, to list all role assignments for a user,
+                            specify <code>user.id={user_id}</code>.
+                        </para>
+                    </wadl:doc>
                 </param>
                 <param name="effective" style="query" type="xsd:key"
                     xmlns="http://wadl.dev.java.net/2009/02"
                     required="false">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook"
                         xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Lists effective
-                            assignments at the user, project, and
-                            domain level, allowing for the effects of
-                            group membership.</para>
-                        <para>The group role assignment entities
-                            themselves are not returned in the
-                            collection.</para>
-                        <para>This represents the effective role
-                            assignments that would be included in a
-                            scoped token. You can use the other query
-                            parameters with the <code>effective</code>
-                            parameter.</para>
+                        xml:lang="EN">
+                        <para>
+                            Lists effective assignments at the user, project,
+                            and domain level, allowing for the effects of
+                            group membership.
+                        </para>
+                        <para>
+                            The collection does not include the group role
+                            assignment entities themselves.
+                        </para>
+                        <para>
+                            This represents the effective role assignments
+                            that a scoped token includes. You can use the
+                            other query parameters with the
+                            <code>effective</code> parameter.
+                        </para>
                     </wadl:doc>
                 </param>
                 <method href="#listRoleAssignments"/>
@@ -118,18 +137,23 @@
                 <resource id="projects" path="projects">
                     <resource id="project_id" path="{project_id}">
                         <param name="project_id" style="template"
-                            type="csapi:uuid" required="true">
+                            type="csapi:UUID" required="true">
                             <wadl:doc xml:lang="EN"
-                                xmlns="http://docbook.org/ns/docbook"
-                                >The ID of the project.</wadl:doc>
+                                xmlns="http://docbook.org/ns/docbook">
+                                <para>
+                                    The UUID of the project.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <resource id="users" path="users">
                             <resource id="user_id" path="{user_id}">
                                 <param name="user_id" style="template"
-                                    type="csapi:uuid" required="true">
+                                    type="csapi:UUID" required="true">
                                     <wadl:doc xml:lang="EN"
                                         xmlns="http://docbook.org/ns/docbook">
-                                        <para>The ID of the user.</para>
+                                        <para>
+                                            The UUID of the user.
+                                        </para>
                                     </wadl:doc>
                                 </param>
                                 <resource id="roles" path="roles">
@@ -139,10 +163,12 @@
                                     </resource>
                                     <resource id="role_id" path="{role_id}">
                                         <param name="role_id" style="template"
-                                            type="csapi:uuid" required="true">
+                                            type="csapi:UUID" required="true">
                                             <wadl:doc xml:lang="EN"
                                                 xmlns="http://docbook.org/ns/docbook">
-                                                <para>The ID of the role.</para>
+                                                <para>
+                                                    The UUID of the role.
+                                                </para>
                                             </wadl:doc>
                                         </param>
                                         <resource id="inherited_to_projects2"
@@ -158,10 +184,12 @@
                         <resource id="groups" path="groups">
                             <resource id="group_id" path="{group_id}">
                                 <param name="group_id" style="template"
-                                    type="csapi:uuid" required="true">
+                                    type="csapi:UUID" required="true">
                                     <wadl:doc xml:lang="EN"
                                         xmlns="http://docbook.org/ns/docbook">
-                                        <para>The ID of the group.</para>
+                                        <para>
+                                            The UUID of the group.
+                                        </para>
                                     </wadl:doc>
                                 </param>
                                 <resource id="roles2" path="roles">
@@ -171,10 +199,12 @@
                                     </resource>
                                     <resource id="role_id2" path="{role_id}">
                                         <param name="role_id" style="template"
-                                            type="csapi:uuid" required="true">
+                                            type="csapi:UUID" required="true">
                                             <wadl:doc xml:lang="EN"
                                                 xmlns="http://docbook.org/ns/docbook">
-                                                <para>The ID of the role.</para>
+                                                <para>
+                                                    The UUID of the role.
+                                                </para>
                                             </wadl:doc>
                                         </param>
                                         <resource id="inherited_to_projects4"
@@ -192,18 +222,23 @@
                 <resource id="domains" path="domains">
                     <resource id="domain_id" path="{domain_id}">
                         <param name="domain_id" style="template"
-                            type="csapi:uuid" required="true">
+                            type="csapi:UUID" required="true">
                             <wadl:doc xml:lang="EN"
-                                xmlns="http://docbook.org/ns/docbook"
-                                >The ID of the domain.</wadl:doc>
+                                xmlns="http://docbook.org/ns/docbook">
+                                <para>
+                                    The UUID of the domain.
+                                </para>
+                            </wadl:doc>
                         </param>
                         <resource id="users-domain" path="users">
                             <resource id="user_id2" path="{user_id}">
                                 <param name="user_id" style="template"
-                                    type="csapi:uuid" required="true">
+                                    type="csapi:UUID" required="true">
                                     <wadl:doc xml:lang="EN"
                                         xmlns="http://docbook.org/ns/docbook">
-                                        <para>The ID of the user.</para>
+                                        <para>
+                                            The UUID of the user.
+                                        </para>
                                     </wadl:doc>
                                 </param>
                                 <resource id="roles-domain" path="roles">
@@ -213,10 +248,12 @@
                                     </resource>
                                     <resource id="role_id-domain" path="{role_id}">
                                         <param name="role_id" style="template"
-                                            type="csapi:uuid" required="true">
+                                            type="csapi:UUID" required="true">
                                             <wadl:doc xml:lang="EN"
                                                 xmlns="http://docbook.org/ns/docbook">
-                                                <para>The ID of the role.</para>
+                                                <para>
+                                                    The UUID of the role.
+                                                </para>
                                             </wadl:doc>
                                         </param>
                                         <resource id="inherited_to_projects2-domain"
@@ -232,10 +269,12 @@
                         <resource id="groups-domain" path="groups">
                             <resource id="group_id-domain" path="{group_id}">
                                 <param name="group_id" style="template"
-                                    type="csapi:uuid" required="true">
+                                    type="csapi:UUID" required="true">
                                     <wadl:doc xml:lang="EN"
                                         xmlns="http://docbook.org/ns/docbook">
-                                        <para>The ID of the group.</para>
+                                        <para>
+                                            The UUID of the group.
+                                        </para>
                                     </wadl:doc>
                                 </param>
                                 <resource id="roles2-domain" path="roles">
@@ -245,10 +284,12 @@
                                     </resource>
                                     <resource id="role_id2-domain" path="{role_id}">
                                         <param name="role_id" style="template"
-                                            type="csapi:uuid" required="true">
+                                            type="csapi:UUID" required="true">
                                             <wadl:doc xml:lang="EN"
                                                 xmlns="http://docbook.org/ns/docbook">
-                                                <para>The ID of the role.</para>
+                                                <para>
+                                                    The UUID of the role.
+                                                </para>
                                             </wadl:doc>
                                         </param>
                                         <resource id="inherited_to_projects4-domain"
@@ -274,16 +315,16 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Assign role to user">
             <para role="shortdesc">
-                Assigns a role to a user on projects in a subtree.
+                Assigns a role to a user in projects in a subtree.
             </para>
             <para>
-                The inherited role assignment is anchored to a project and
-                applied to its subtree in the projects hierarchy to both
+                The API anchors the inherited role assignment to a project and
+                applies it to its subtree in the projects hierarchy to both
                 existing and future projects.
             </para>
             <para>
                 A user can have both a regular, non-inherited role assignment
-                and an inherited role assignment on the same project.
+                and an inherited role assignment in the same project.
             </para>
         </wadl:doc>
         <response status="204"/>
@@ -293,7 +334,7 @@
             title="Check role for user">
             <para role="shortdesc">
                 Checks whether a user has a role assignment with the
-                <code>inherited_to_projects</code> flag on a
+                <code>inherited_to_projects</code> flag in a
                 project.
             </para>
         </wadl:doc>
@@ -303,8 +344,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Revoke role from user">
             <para role="shortdesc">
-                Revokes an inherited role from a user on a
-                project.
+                Revokes an inherited role from a user in a project.
             </para>
         </wadl:doc>
         <response status="204"/>
@@ -313,11 +353,12 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List roles for user">
             <para role="shortdesc">
-                Lists the inherited project roles for a user on a
-                project.
+                Lists the project roles that a user in a project inherits from
+                a parent project.
             </para>
             <para>
-                The list shows only roles inherited from the parent project.
+                The list shows only roles that the user project inherits from
+                the parent project.
             </para>
         </wadl:doc>
         <response status="200">
@@ -325,7 +366,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-INHERIT/user_roles-GET-resp.json"
+                            href="../samples/OS-INHERIT/user-roles-list-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -336,16 +377,16 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Assign role to group">
             <para role="shortdesc">
-                Assigns a role to a group on projects in a subtree.
+                Assigns a role to a group in projects in a subtree.
             </para>
             <para>
-                The inherited role assignment is anchored to a project and
-                applied to its subtree in the projects hierarchy to both
+                The API anchors the inherited role assignment to a project and
+                applies it to its subtree in the projects hierarchy to both
                 existing and future projects.
             </para>
             <para>
                 A group can have both a regular, non-inherited role assignment
-                and an inherited role assignment on the same project.
+                and an inherited role assignment in the same project.
             </para>
         </wadl:doc>
         <response status="204"/>
@@ -355,7 +396,7 @@
             title="Check role for group">
             <para role="shortdesc">
                 Checks whether a group has a role assignment with the
-                <code>inherited_to_projects</code> flag on a
+                <code>inherited_to_projects</code> flag in a
                 project.
             </para>
         </wadl:doc>
@@ -365,8 +406,7 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Revoke role from group">
             <para role="shortdesc">
-                Revokes an inherited role from a group on a
-                 project.
+                Revokes an inherited role from a group in a project.
             </para>
         </wadl:doc>
         <response status="204"/>
@@ -375,11 +415,12 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List roles for group">
             <para role="shortdesc">
-                Lists the inherited project roles for a group on a
-                 project.
+                Lists the project roles that a group in a project inherits from
+                a parent project.
             </para>
             <para>
-                The list shows only roles inherited from the parent project.
+                The list shows only roles that the group project inherits from the
+                parent project.
             </para>
         </wadl:doc>
         <response status="200">
@@ -387,7 +428,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-INHERIT/group_roles-GET-resp.json"
+                            href="../samples/OS-INHERIT/group-roles-list-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -399,46 +440,41 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Assign role to user owned by domain projects">
             <para role="shortdesc">
-                Assigns a role to a user on projects owned by a
-                 domain.
+                Assigns a role to a user in projects owned by a domain.
             </para>
             <para>
-                The inherited role is applied to only the owned projects, both
-                existing and future, and does not appear as a role in a
-                domain-scoped token.
+                The API applies the inherited role to the existing and future
+                owned projects. The inherited role does not appear as a role
+                in a domain-scoped token.
             </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="HEAD" id="checkRoleForUser-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Check project role for user on domain">
+            title="Check project role for user in domain">
             <para role="shortdesc">
-                Checks whether a user has an inherited project role
-                on a domain.
+                Checks whether a user has an inherited project role in a
+                domain.
             </para>
         </wadl:doc>
         <response status="200"/>
     </method>
     <method name="DELETE" id="revokeRoleFromUser-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Revoke project role from user on domain">
+            title="Revoke project role from user in domain">
             <para role="shortdesc">
-                Revokes an inherited project role from a user on a
-                 domain.
+                Revokes an inherited project role from a user in a domain.
             </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="GET" id="listRolesForUser-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List project roles for user on domain">
+            title="List project roles for user in domain">
             <para role="shortdesc">
-                Lists the inherited project roles on a domain for a
-                 user.
-            </para>
-            <para>
-                The list shows only roles inherited from the parent project within the domain.
+                Lists the project roles that a user inherits from a parent
+                project in a domain.
             </para>
         </wadl:doc>
         <response status="200">
@@ -446,7 +482,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-INHERIT/user_roles-domain-GET-resp.json"
+                            href="../samples/OS-INHERIT/user-roles-domain-list-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -455,49 +491,43 @@
     </method>
     <method name="PUT" id="assignRoleToGroup-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Assign role to group on domain projects">
+            title="Assign role to group in domain projects">
             <para role="shortdesc">
-                Assigns a role to a group on projects owned by a
-             domain.
+                Assigns a role to a group in projects owned by a domain.
             </para>
             <para>
-                The inherited role is applied to only the owned projects, both
-                existing and future, and does not appear as a role in a
-                domain-scoped token.
+                The API applies the inherited role to owned projects, both
+                existing and future. The inherited role does not appear as a
+                role in a domain-scoped token.
             </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="HEAD" id="checkRoleForGroup-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Check project role for group on domain">
+            title="Check project role for group in domain">
             <para role="shortdesc">
                 Checks whether a group has an inherited project role
-                on a domain.
+                in a domain.
             </para>
         </wadl:doc>
         <response status="200"/>
     </method>
     <method name="DELETE" id="revokeRoleFromGroup-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Revoke project role from group on domain">
+            title="Revoke project role from group in domain">
             <para role="shortdesc">
-                Revokes an inherited project role from a group on a
-                 domain.
+                Revokes an inherited project role from a group in a domain.
             </para>
         </wadl:doc>
         <response status="204"/>
     </method>
     <method name="GET" id="listRolesForGroup-domain">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List project roles for group on domain">
+            title="List project roles for group in domain">
             <para role="shortdesc">
-                Lists the inherited project roles on a domain for a
-                 group.
-            </para>
-            <para>
-                The list shows only roles inherited from the parent project within the
-                domain.
+                Lists the project roles that a group inherits from a parent
+                project in a domain.
             </para>
         </wadl:doc>
         <response status="200">
@@ -505,7 +535,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-INHERIT/group_roles-domain-GET-resp.json"
+                            href="../samples/OS-INHERIT/group-roles-domain-list-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -553,18 +583,19 @@
         <para>For example, to determine what a user can actually
             do, issue this request: <code>GET
                 /role_assignments?user.id={user_id}&amp;effective</code></para>
-        <para>To return the equivalent set of role assignments
-            that would be included in the token response of a
-            project-scoped token, issue: <code>GET
-                /role_assignments?user.id={user_id}&amp;scope.project.id={project_id}&amp;effective</code></para>
+        <para>
+            To get the equivalent set of role assignments that would be
+            included in the token response of a project-scoped token, issue
+            <code>GET /role_assignments?user.id={user_id}&amp;scope.project.id={project_id}&amp;effective</code>
+        </para>
         <para>In the response, the entity <code>links</code>
             section for entities that are included by virtue of
             group members also contains a url that you can use to
             access the membership of the group.</para>
         <para>
-            An additional <code>scope.OS-INHERIT:inherited_to query</code>
-            filter enables filtering based on role assignments that are
-            inherited. The <code>scope.OS-INHERIT:inherited_to</code> value of
+            Use the <code>scope.OS-INHERIT:inherited_to</code> query parameter
+            to filter the response by inherited role assignments. The
+            <code>scope.OS-INHERIT:inherited_to</code> value of
             <code>projects</code> is currently supported. This value indicates
             that this role is inherited to all projects of the owning domain
             or parent project.
@@ -579,7 +610,7 @@
                 title="List all role assignments: JSON response">
                 <xsdxt:sample>
                     <xsdxt:code
-                        href="../samples/OS-INHERIT/RoleAssignmentsListResponse-ext.json"
+                        href="../samples/OS-INHERIT/role-assignments-list-response.json"
                     />
                 </xsdxt:sample>
             </wadl:doc>
@@ -589,7 +620,7 @@
                 title="List all role assignments: JSON response">
                 <xsdxt:sample>
                     <xsdxt:code
-                        href="../samples/OS-INHERIT/RoleAssignmentsEffectiveListResponse-ext.json"
+                        href="../samples/OS-INHERIT/role-assignments-effective-list-response.json"
                     />
                 </xsdxt:sample>
             </wadl:doc>

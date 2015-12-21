@@ -8,20 +8,21 @@
 <!--        xmllint -noent OS-KSS3-admin.wadl              -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
 ]>
-
 <application xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:identity="http://docs.openstack.org/identity/api/v2.0"
-    xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0"
     xmlns:capi="http://docs.openstack.org/common/api/v1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
-    xmlns:wadl="http://wadl.dev.java.net/2009/02">
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:HP-IDM="http://docs.openstack.org/identity/api/ext/HP-IDM/v1.0">
     <grammars>
         <include href="../xsd/api.xsd"/>
         <include href="../xsd/api-common.xsd"/>
@@ -34,22 +35,11 @@
     <!-- We should use SSL in production -->
     <resources base="http://localhost:35357"
         xml:id="OS-KSS3-admin-v2.0">
-        <resource id="version" path="//v2.0">
-            <param name="X-Auth-Token" style="header"
-                type="xsd:string" required="true">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN"><para>A valid authentication
-                        token.</para></wadl:doc>
-            </param>
+        <resource id="versions-kss3-v2" path="//v2.0">
+            &X-Auth-TokenRequestHeader;
             <resource id="users" path="users">
                 <resource id="userById" path="{userId}">
-                    <param name="userId" style="template"
-                        required="true" type="xsd:string">
-                        <wadl:doc
-                            xmlns="http://docbook.org/ns/docbook"
-                            xml:lang="EN"><para>The user
-                            ID.</para></wadl:doc>
-                    </param>
+                    &user_idTemplateParameter;
                     <resource id="user-OS-KSS3" path="OS-KSS3">
                         <resource id="userCredentials"
                             path="credentials">
@@ -57,7 +47,7 @@
                             <method href="#grantCredentialToUser"/>
                             <resource id="userCredentialsByType"
                                 path="s3credentials">
-                                <method href="#getUserCredential"/>
+                                <method href="#showUserCredential"/>
                                 <method href="#updateUserCredential"/>
                                 <method href="#revokeUserCredentials"/>
                                 <resource id="type" path="{type}">
@@ -94,7 +84,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/s3Credentials.json"/>
+                        href="../samples/OS-KSS3/s3Credentials-create-request.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -103,7 +93,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/s3Credentials.json"/>
+                        href="../samples/OS-KSS3/s3Credentials-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
@@ -121,7 +111,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/credentialswiths3.json"
+                        href="../samples/OS-KSS3/credentialswiths3-list-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -142,7 +132,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/credentialswiths3.json"
+                        href="../samples/OS-KSS3/credentialswiths3-list-response.json"
                     />
                 </wadl:doc>
             </representation>
@@ -160,7 +150,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/s3Credentials.json"/>
+                        href="../samples/OS-KSS3/s3Credentials-create-request.json"/>
                 </wadl:doc>
             </representation>
         </request>
@@ -169,7 +159,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/s3Credentials.json"/>
+                        href="../samples/OS-KSS3/s3Credentials-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &postPutFaults; &getFaults; </method>
@@ -183,7 +173,7 @@
         <response status="204"/> &commonFaults; &postPutFaults;
         &getFaults; </method>
 
-    <method name="GET" id="getUserCredential">
+    <method name="GET" id="showUserCredential">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Get user credentials">
             <para role="shortdesc" class="shortdesc">Gets user
@@ -194,7 +184,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../OS-KSS3/samples/s3Credentials.json"/>
+                        href="../samples/OS-KSS3/s3Credentials-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>

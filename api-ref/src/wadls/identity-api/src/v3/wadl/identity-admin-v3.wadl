@@ -8,7 +8,7 @@
 <!-- xmllint -noent identity-admin-v3.wadl                 -->
 <!-- ***************************************************** -->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
@@ -35,20 +35,15 @@
     <!--             All Resources                             -->
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
-    <resources base="http://localhost:5000"
-        xml:id="os-identity-admin-v3">
+    <resources base="http://localhost:5000" xml:id="os-identity-admin-v3">
         <!-- FYI: double slash needed in path to get a single slash to display -->
-        <resource id="versions" path="//">
-            <method href="#listIdentityVersions"/>
-        </resource>
-        <resource id="version" path="//v3">
-            <method href="#showIdentityV3Details"/>
+        <resource id="versions-v3" path="//v3">
             <resource id="credentials" path="credentials">
                 <method href="#createCredential"/>
                 <method href="#listCredentials"/>
                 <resource id="credential_id" path="{credential_id}">
                     &credential_idTemplateParameter;
-                    <method href="#getCredential"/>
+                    <method href="#showCredential"/>
                     <method href="#updateCredential"/>
                     <method href="#deleteCredential"/>
                 </resource>
@@ -58,7 +53,7 @@
                 <method href="#createDomain"/>
                 <resource id="domain_id" path="{domain_id}">
                     &domain_idTemplateParameter;
-                    <method href="#getDomain"/>
+                    <method href="#showDomain"/>
                     <method href="#updateDomain"/>
                     <method href="#deleteDomain"/>
                     <resource id="domains-users" path="users">
@@ -77,17 +72,17 @@
                         </resource>
                     </resource>
                     <resource id="config" path="config">
-                        <method href="#getDomainConfig"/>
+                        <method href="#showDomainConfig"/>
                         <method href="#updateDomainConfig"/>
                         <method href="#deleteDomainConfig"/>
                         <resource id="config-group" path="{group}">
                             &domain-groupTemplateParameter;
-                            <method href="#getDomainConfigGroup"/>
+                            <method href="#showDomainConfigGroup"/>
                             <method href="#updateDomainConfigGroup"/>
                             <method href="#deleteDomainConfigGroup"/>
                             <resource id="config-option" path="{option}">
                                 &domain-group-optionTemplateParameter;
-                                <method href="#getDomainConfigGroupOption"/>
+                                <method href="#showDomainConfigGroupOption"/>
                                 <method href="#updateDomainConfigGroupOption"/>
                                 <method href="#deleteDomainConfigGroupOption"/>
                             </resource>
@@ -115,7 +110,7 @@
                 <method href="#createEndpoint"/>
                 <resource id="endpoint_id" path="{endpoint_id}">
                     &endpoint_idTemplateParameter;
-                    <method href="#getEndpoint"/>
+                    <method href="#showEndpoint"/>
                     <method href="#updateEndpoint"/>
                     <method href="#deleteEndpoint"/>
                 </resource>
@@ -125,7 +120,7 @@
                 <method href="#listGroups"/>
                 <resource id="group-group_id" path="{group_id}">
                     &group_idTemplateParameter;
-                    <method href="#getGroup"/>
+                    <method href="#showGroup"/>
                     <method href="#updateGroup"/>
                     <method href="#deleteGroup"/>
                     <resource id="group-users" path="users">
@@ -148,7 +143,7 @@
                 <method href="#createPolicy"/>
                 <resource id="policy_id" path="{policy_id}">
                     &policy_idTemplateParameter;
-                    <method href="#getPolicy"/>
+                    <method href="#showPolicy"/>
                     <method href="#updatePolicy"/>
                     <method href="#deletePolicy"/>
                 </resource>
@@ -158,7 +153,7 @@
                 <method href="#createProject"/>
                 <resource id="project_id" path="{project_id}">
                     &project_idTemplateParameter;
-                    <method href="#getProject"/>
+                    <method href="#showProject"/>
                     <method href="#updateProject"/>
                     <method href="#deleteProject"/>
                     <resource id="cascade" path="cascade">
@@ -202,7 +197,7 @@
                 <method href="#createRegion"/>
                 <resource id="region_id" path="{region_id}">
                     &region_idTemplateParameter;
-                    <method href="#getRegion"/>
+                    <method href="#showRegion"/>
                     <method href="#updateRegion"/>
                     <method href="#deleteRegion"/>
                 </resource>
@@ -212,7 +207,7 @@
                 <method href="#createRole"/>
                 <resource id="roles-role_id" path="{role_id}">
                     &role_idTemplateParameter;
-                    <method href="#getRole"/>
+                    <method href="#showRole"/>
                     <method href="#updateRole"/>
                     <method href="#deleteRole"/>
                 </resource>
@@ -340,7 +335,7 @@
                 <method href="#createService"/>
                 <resource id="service_id" path="{service_id}">
                     &service_idTemplateParameter;
-                    <method href="#getService"/>
+                    <method href="#showService"/>
                     <method href="#updateService"/>
                     <method href="#deleteService"/>
                 </resource>
@@ -363,7 +358,7 @@
                 <method href="#createUser"/>
                 <resource id="users-user_id" path="{user_id}">
                     &user_idTemplateParameter;
-                    <method href="#getUser"/>
+                    <method href="#showUser"/>
                     <method href="#updateUser"/>
                     <method href="#deleteUser"/>
                     <resource id="password" path="password">
@@ -382,52 +377,6 @@
     <!-- ***************************************************** -->
     <!-- METHODS                                               -->
     <!-- ***************************************************** -->
-    <!-- ***************************************************** -->
-    <!-- VERSIONS                                              -->
-    <!-- ***************************************************** -->
-    <method name="GET" id="listIdentityVersions">
-        <wadl:doc xml:lang="EN" title="List versions"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Lists information about all Identity API versions.
-            </para>
-        </wadl:doc>
-        <response status="200 300">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/admin/identity-versions-response.json"/>
-                </wadl:doc>
-                &versionsResponseParameters;
-                &updatedResponseParameter;
-            </representation>
-        </response>
-        &getFaults;
-    </method>
-    <method name="GET" id="showIdentityV3Details">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show API v3 details">
-            <para role="shortdesc">
-                Shows details for the latest Identity API v3 micro-version.
-            </para>
-        </wadl:doc>
-        <request>
-            &AcceptRequestHeader;
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:sample>
-                        <xsdxt:code
-                            href="../samples/admin/identity-version-resp.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-                &versionResponseParameters;
-                &updatedResponseParameter;
-            </representation>
-        </response>
-        &getFaults;
-    </method>
     <!-- ***************************************************** -->
     <!-- CREDENTIALS                                           -->
     <!-- ***************************************************** -->
@@ -457,7 +406,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/CredentialCreateRequest.json"/>
+                            href="../samples/admin/credential-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &credentialObjectParameter;
@@ -473,7 +422,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/CredentialCreateResponse.json"/>
+                            href="../samples/admin/credential-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &credentialObjectParameter;
@@ -499,8 +448,7 @@
             </para>
             <para>
                 Optionally, you can include the <code>user_id</code> query
-                parameter in the URI to filter the response by a specified
-                user.
+                parameter in the URI to filter the response by a user.
             </para>
         </wadl:doc>
         <request>
@@ -514,7 +462,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/CredentialsListResponse.json"/>
+                            href="../samples/admin/credentials-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &credentialsObjectParameter;
@@ -532,7 +480,7 @@
     <!-- ***************************************************** -->
     <!-- SHOW CREDENTIAL DETAILS                               -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getCredential">
+    <method name="GET" id="showCredential">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show credential details">
@@ -546,7 +494,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/CredentialGetResponse.json"/>
+                            href="../samples/admin/credential-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &credentialObjectParameter;
@@ -577,7 +525,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/CredentialUpdateRequest.json"/>
+                            href="../samples/admin/credential-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &credentialObjectParameter;
@@ -593,7 +541,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/CredentialUpdateResponse.json"/>
+                            href="../samples/admin/credential-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &credentialObjectParameter;
@@ -647,7 +595,7 @@
                     title="List domains: JSON response">
                     <xsdxt:sample title="List domains: JSON response">
                         <xsdxt:code
-                            href="../samples/admin/DomainsListResponse.json"/>
+                            href="../samples/admin/domains-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domainsObjectParameter;
@@ -678,7 +626,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainCreateRequest.json"/>
+                            href="../samples/admin/domain-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domainObjectParameter;
@@ -693,7 +641,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainCreateResponse.json"/>
+                            href="../samples/admin/domain-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domainObjectParameter;
@@ -709,7 +657,7 @@
     <!-- ***************************************************** -->
     <!-- Show domain details                                   -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getDomain">
+    <method name="GET" id="showDomain">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show domain details">
@@ -723,7 +671,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainGetResponse.json"/>
+                            href="../samples/admin/domain-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domainObjectParameter;
@@ -753,7 +701,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainUpdateRequest.json"/>
+                            href="../samples/admin/domain-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domainObjectParameter;
@@ -768,7 +716,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainUpdateResponse.json"/>
+                            href="../samples/admin/domain-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domainObjectParameter;
@@ -820,7 +768,7 @@
     <!-- ***************************************************** -->
     <!-- Show domain configuration details                     -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getDomainConfig">
+    <method name="GET" id="showDomainConfig">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show domain configuration">
@@ -834,7 +782,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGetResponse.json"/>
+                            href="../samples/admin/domain-config-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -864,7 +812,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigUpdateRequest.json"/>
+                            href="../samples/admin/domain-config-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -881,7 +829,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigUpdateResponse.json"/>
+                            href="../samples/admin/domain-config-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -911,7 +859,7 @@
     <!-- ***************************************************** -->
     <!-- Show domain group configuration details                -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getDomainConfigGroup">
+    <method name="GET" id="showDomainConfigGroup">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show domain group configuration">
@@ -929,7 +877,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGroupGetResponse.json"/>
+                            href="../samples/admin/domain-config-group-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -965,7 +913,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGroupUpdateRequest.json"/>
+                            href="../samples/admin/domain-config-group-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -982,7 +930,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGroupUpdateResponse.json"/>
+                            href="../samples/admin/domain-config-group-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -1016,7 +964,7 @@
     <!-- ***************************************************** -->
     <!-- Show domain group option configuration details        -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getDomainConfigGroupOption">
+    <method name="GET" id="showDomainConfigGroupOption">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show domain group option configuration">
@@ -1037,7 +985,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGroupOptionGetResponse.json"/>
+                            href="../samples/admin/domain-config-group-option-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -1074,7 +1022,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGroupOptionUpdateRequest.json"/>
+                            href="../samples/admin/domain-config-group-option-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -1091,7 +1039,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainConfigGroupOptionUpdateResponse.json"/>
+                            href="../samples/admin/domain-config-group-option-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &domain-configObjectParameter;
@@ -1151,7 +1099,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/EndpointsListResponse.json"/>
+                            href="../samples/admin/endpoints-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &endpointsObjectParameter;
@@ -1185,7 +1133,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/EndpointCreateRequest.json"/>
+                            href="../samples/admin/endpoint-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &endpointObjectParameter;
@@ -1203,7 +1151,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/EndpointCreateResponse.json"/>
+                            href="../samples/admin/endpoint-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &endpointObjectParameter;
@@ -1223,7 +1171,7 @@
     <!-- ***************************************************** -->
     <!-- Show endpoint details                                 -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getEndpoint">
+    <method name="GET" id="showEndpoint">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show endpoint details">
@@ -1237,7 +1185,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/EndpointGetResponse.json"/>
+                            href="../samples/admin/endpoint-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &endpointObjectParameter;
@@ -1268,7 +1216,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/EndpointUpdateRequest.json"/>
+                            href="../samples/admin/endpoint-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &endpointObjectParameter;
@@ -1285,7 +1233,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/EndpointUpdateResponse.json"/>
+                            href="../samples/admin/endpoint-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &endpointObjectParameter;
@@ -1333,7 +1281,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupCreateRequest.json"/>
+                            href="../samples/admin/group-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &groupObjectParameter;
@@ -1348,7 +1296,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupCreateResponse.json"/>
+                            href="../samples/admin/group-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &groupObjectParameter;
@@ -1383,7 +1331,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupsListResponse.json"/>
+                            href="../samples/admin/groups-list-response.json"/>
                         </xsdxt:sample>
                 </wadl:doc>
                 &groups-linksResponseParameter;
@@ -1400,7 +1348,7 @@
     <!-- ***************************************************** -->
     <!-- Show group details                                    -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getGroup">
+    <method name="GET" id="showGroup">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show group details">
@@ -1414,7 +1362,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupGetResponse.json"/>
+                            href="../samples/admin/group-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &groupObjectParameter;
@@ -1449,7 +1397,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupUpdateRequest.json"/>
+                            href="../samples/admin/group-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &groupObjectParameter;
@@ -1464,7 +1412,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupUpdateResponse.json"/>
+                            href="../samples/admin/group-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &groupObjectParameter;
@@ -1550,7 +1498,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/GroupListUsersResponse.json"/>
+                            href="../samples/admin/group-users-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &usersObjectParameter;
@@ -1585,7 +1533,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/PolicyCreateRequest.json"/>
+                            href="../samples/admin/policy-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &policyObjectParameter;
@@ -1601,7 +1549,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/PolicyCreateResponse.json"/>
+                            href="../samples/admin/policy-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &policyObjectParameter;
@@ -1637,7 +1585,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/PoliciesListResponse.json"/>
+                            href="../samples/admin/policies-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &policiesObjectParameter;
@@ -1655,7 +1603,7 @@
     <!-- ***************************************************** -->
     <!-- Show policy details                                   -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getPolicy">
+    <method name="GET" id="showPolicy">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show policy details">
@@ -1669,7 +1617,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/PolicyGetResponse.json"/>
+                            href="../samples/admin/policy-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &policyObjectParameter;
@@ -1700,7 +1648,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/PolicyUpdateRequest.json"/>
+                            href="../samples/admin/policy-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &policyObjectParameter;
@@ -1716,7 +1664,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/PolicyUpdateResponse.json"/>
+                            href="../samples/admin/policy-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &policyObjectParameter;
@@ -1770,7 +1718,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectsListResponse.json"/>
+                            href="../samples/admin/projects-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projects-linksResponseParameter;
@@ -1804,7 +1752,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectCreateRequest.json"/>
+                            href="../samples/admin/project-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -1822,7 +1770,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectCreateResponse.json"/>
+                            href="../samples/admin/project-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -1841,7 +1789,7 @@
     <!-- ***************************************************** -->
     <!-- Show project details                                  -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getProject">
+    <method name="GET" id="showProject">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show project details">
@@ -1855,7 +1803,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectGetResponse.json"/>
+                            href="../samples/admin/project-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -1888,7 +1836,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectUpdateRequest.json"/>
+                            href="../samples/admin/project-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -1905,7 +1853,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectUpdateResponse.json"/>
+                            href="../samples/admin/project-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -1968,7 +1916,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectEnableRequest.json"/>
+                            href="../samples/admin/project-enable-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -1981,7 +1929,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectUpdateResponse.json"/>
+                            href="../samples/admin/project-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &projectObjectParameter;
@@ -2042,7 +1990,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RegionsListResponse.json"/>
+                            href="../samples/admin/regions-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &regions-linksResponseParameter;
@@ -2077,19 +2025,19 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>Not Found (404)</code>. The specified parent
+                        <code>Not Found (404)</code>. The parent
                         region ID does not exist.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <code>Conflict (409)</code>. The specified
+                        <code>Conflict (409)</code>. The
                         parent region ID would form a circular relationship.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <code>Conflict (409)</code>. The specified user-defined
+                        <code>Conflict (409)</code>. The user-defined
                         region ID is not unique to the OpenStack deployment.
                     </para>
                 </listitem>
@@ -2101,7 +2049,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RegionCreateRequest.json"/>
+                            href="../samples/admin/region-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &regionObjectParameter;
@@ -2116,7 +2064,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RegionCreateResponse.json"/>
+                            href="../samples/admin/region-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &regionObjectParameter;
@@ -2131,7 +2079,7 @@
     <!-- ***************************************************** -->
     <!-- Show region details                                   -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getRegion">
+    <method name="GET" id="showRegion">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show region details">
@@ -2145,7 +2093,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RegionGetResponse.json"/>
+                            href="../samples/admin/region-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &regionObjectParameter;
@@ -2177,7 +2125,7 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>Not Found (404)</code>. The specified parent
+                        <code>Not Found (404)</code>. The parent
                         region ID does not exist.
                     </para>
                 </listitem>
@@ -2189,7 +2137,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RegionUpdateRequest.json"/>
+                            href="../samples/admin/region-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &regionObjectParameter;
@@ -2203,7 +2151,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RegionUpdateResponse.json"/>
+                            href="../samples/admin/region-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &regionObjectParameter;
@@ -2231,7 +2179,7 @@
             <itemizedlist>
                 <listitem>
                     <para>
-                        <code>Conflict (409)</code>. The specified region
+                        <code>Conflict (409)</code>. The region
                         cannot be deleted because it has child regions.
                     </para>
                 </listitem>
@@ -2265,7 +2213,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RolesListResponse.json"/>
+                            href="../samples/admin/roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &roles-linksResponseParameter;
@@ -2294,7 +2242,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleCreateRequest.json"/>
+                            href="../samples/admin/role-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &roleObjectParameter;
@@ -2307,7 +2255,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleCreateResponse.json"/>
+                            href="../samples/admin/role-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &roleObjectParameter;
@@ -2321,7 +2269,7 @@
     <!-- ***************************************************** -->
     <!-- Show role details                                     -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getRole">
+    <method name="GET" id="showRole">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show role details">
@@ -2335,7 +2283,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleGetResponse.json"/>
+                            href="../samples/admin/role-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &roleObjectParameter;
@@ -2363,7 +2311,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleUpdateRequest.json"/>
+                            href="../samples/admin/role-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &roleObjectParameter;
@@ -2376,7 +2324,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleUpdateResponse.json"/>
+                            href="../samples/admin/role-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &roleObjectParameter;
@@ -2447,7 +2395,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainListUserRolesResponse.json"/>
+                            href="../samples/admin/domain-user-roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &rolesObjectParameter;
@@ -2476,7 +2424,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/DomainListGroupRolesResponse.json"/>
+                            href="../samples/admin/domain-group-roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -2584,7 +2532,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectListUserRolesResponse.json"/>
+                            href="../samples/admin/project-user-roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -2608,7 +2556,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ProjectListGroupRolesResponse.json"/>
+                            href="../samples/admin/project-group-roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -2690,12 +2638,12 @@
                     title="List all role assignments: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleAssignmentsList.txt"
+                            href="../samples/admin/role-assignments-list-response.txt"
                         />
                     </xsdxt:sample>
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleAssignmentsListResponse.json"/>
+                            href="../samples/admin/role-assignments-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 <param name="role_assignments" style="plain" type="xsd:string"
@@ -2715,12 +2663,12 @@
                     title="List effective role assignments: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleAssignmentsEffectiveList.txt"
+                            href="../samples/admin/role-assignments-effective-list-response.txt"
                         />
                     </xsdxt:sample>
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/RoleAssignmentsEffectiveListResponse.json"/>
+                            href="../samples/admin/role-assignments-effective-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -2752,7 +2700,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ServicesListResponse.json"/>
+                            href="../samples/admin/services-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &services-linksResponseParameter;
@@ -2784,7 +2732,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ServiceCreateRequest.json"/>
+                            href="../samples/admin/service-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &service-typeRequestParameter;
@@ -2800,7 +2748,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ServiceCreateResponse.json"/>
+                            href="../samples/admin/service-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &service-linksResponseParameter;
@@ -2816,7 +2764,7 @@
     <!-- ***************************************************** -->
     <!-- Show service detail                                   -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getService">
+    <method name="GET" id="showService">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show service details">
@@ -2830,7 +2778,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ServiceGetResponse.json"/>
+                            href="../samples/admin/service-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &service-linksResponseParameter;
@@ -2865,7 +2813,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ServiceUpdateRequest.json"/>
+                            href="../samples/admin/service-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &service-typeRequestParameter;
@@ -2880,7 +2828,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/ServiceUpdateResponse.json"/>
+                            href="../samples/admin/service-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &service-linksResponseParameter;
@@ -2940,14 +2888,14 @@
                     title="Password authentication with user ID: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-UnscopedRequest.json"/>
+                            href="../samples/admin/auth-password-unscoped-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     title="Password authentication with user name and domain: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-UserName-UnscopedRequest.json"/>
+                            href="../samples/admin/auth-password-unscoped-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &nocatalogQueryParameter;
@@ -2970,7 +2918,7 @@
                     title="Password authentication with user ID: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-UnscopedResponse.json"/>
+                            href="../samples/admin/auth-password-unscoped-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &subjectTokenResponseHeader;
@@ -3015,7 +2963,7 @@
                     title="Password authentication with project scope: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-Project-ScopedRequest.json"/>
+                            href="../samples/admin/auth-password-project-scoped-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &nocatalogQueryParameter;
@@ -3036,7 +2984,7 @@
                     title="Password authentication with project scope: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-Project-ScopedResponse.json"/>
+                            href="../samples/admin/auth-password-project-scoped-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &subjectTokenResponseHeader;
@@ -3099,7 +3047,7 @@
                     title="Password authentication explicit unscoped: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-Explicit-UnscopedRequest.json"/>
+                            href="../samples/admin/auth-password-explicit-unscoped-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &nocatalogQueryParameter;
@@ -3120,7 +3068,7 @@
                     title="Password authentication explicit unscoped: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Password-Explicit-UnscopedResponse.json"/>
+                            href="../samples/admin/auth-password-explicit-unscoped-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &subjectTokenResponseHeader;
@@ -3164,7 +3112,7 @@
                     title="Token authentication unscoped: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Token-UnscopedRequest.json"/>
+                            href="../samples/admin/auth-token-unscoped-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &nocatalogQueryParameter;
@@ -3181,7 +3129,7 @@
                     title="Token authentication unscoped: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Token-UnscopedResponse.json"/>
+                            href="../samples/admin/auth-token-unscoped-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &authTokenHeader;
@@ -3213,7 +3161,7 @@
                     title="Token authentication with project scope: JSON request">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Token-ScopedRequest.json"/>
+                            href="../samples/admin/auth-token-scoped-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &nocatalogQueryParameter;
@@ -3231,7 +3179,7 @@
                     title="Token authentication with project scope: JSON response">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Token-ScopedResponse.json"/>
+                            href="../samples/admin/auth-token-scoped-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &authTokenHeader;
@@ -3265,7 +3213,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/TokenValidateRequest.txt"/>
+                            href="../samples/admin/token-validate-request.txt"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &authTokenHeader;
@@ -3278,7 +3226,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/Auth-Token-UnscopedResponse.json"/>
+                            href="../samples/admin/auth-token-unscoped-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &authTokenHeader;
@@ -3330,7 +3278,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/TokenValidateRequest.txt"/>
+                            href="../samples/admin/token-validate-request.txt"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &authTokenHeader;
@@ -3367,7 +3315,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/TokenValidateRequest.txt"/>
+                            href="../samples/admin/token-validate-request.txt"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &authTokenHeader;
@@ -3396,7 +3344,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserCreateRequest.json"/>
+                            href="../samples/admin/user-create-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &userObjectParameter;
@@ -3415,7 +3363,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserCreateResponse.json"/>
+                            href="../samples/admin/user-create-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &userObjectParameter;
@@ -3454,7 +3402,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UsersListResponse.json"/>
+                            href="../samples/admin/users-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &usersObjectParameter;
@@ -3472,7 +3420,7 @@
     <!-- ***************************************************** -->
     <!-- Get user                                              -->
     <!-- ***************************************************** -->
-    <method name="GET" id="getUser">
+    <method name="GET" id="showUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="Show user details">
@@ -3486,7 +3434,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserGetResponse.json"/>
+                            href="../samples/admin/user-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &userObjectParameter;
@@ -3523,7 +3471,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserUpdateRequest.json"/>
+                            href="../samples/admin/user-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &userObjectParameter;
@@ -3542,7 +3490,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserUpdateResponse.json"/>
+                            href="../samples/admin/user-update-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &userObjectParameter;
@@ -3588,7 +3536,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserUpdatePasswordRequest.json"/>
+                            href="../samples/admin/user-password-update-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 &userObjectParameter;
@@ -3616,7 +3564,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserListProjectsResponse.json"/>
+                            href="../samples/admin/user-projects-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -3640,7 +3588,7 @@
                     xml:lang="EN">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/admin/UserListGroupsResponse.json"/>
+                            href="../samples/admin/user-groups-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>

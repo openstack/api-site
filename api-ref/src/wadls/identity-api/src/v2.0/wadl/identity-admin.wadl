@@ -7,7 +7,7 @@
 <!--        xmllint -noent identity-admin.wadl             -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
@@ -30,18 +30,7 @@
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
     <resources base="http://localhost:35357" xml:id="identity-admin-v2.0">
-        <resource id="admin-version" path="//v2.0">
-            <method href="#admin-getVersionInfo"/>
-            <resource id="admin-extensions" type="#ExtensionList" path="extensions">
-                <resource id="admin-extension" path="{alias}">
-                    <param name="alias" style="template" type="xsd:string">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                            <para>The extension name.</para>
-                        </wadl:doc>
-                    </param>
-                    <method href="#admin-getExtension-v2.0"/>
-                </resource>
-            </resource>
+        <resource id="version-admin-v2" path="//v2.0">
             <resource id="admin-tokens" path="tokens">
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="X-Auth-Token" style="header"
                     type="xsd:string" required="true">
@@ -214,7 +203,7 @@
                     </wadl:doc>
                 </param>
                 <method href="#admin-listTenants"/>
-                <method href="#admin-getTenantByName"/>
+                <method href="#admin-showTenantByName"/>
                 <resource id="admin-tenantById" path="{tenantId}">
                     <param xmlns="http://wadl.dev.java.net/2009/02" name="tenantId" style="template"
                         type="xsd:string" required="true">
@@ -224,9 +213,9 @@
                             </para>
                         </wadl:doc>
                     </param>
-                    <method href="#admin-getTenantById"/>
+                    <method href="#admin-showTenantById"/>
                     <resource id="admin-usersForTenant" path="users">
-                        <resource id="admin-getTenantUser" path="{userId}">
+                        <resource id="admin-showTenantUser" path="{userId}">
                             <param xmlns="http://wadl.dev.java.net/2009/02" name="userId"
                                 style="template" type="xsd:string" required="true">
                                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -244,137 +233,9 @@
             </resource>
         </resource>
     </resources>
-
-    <!--*******************************************************-->
-    <!--               Resource Types                          -->
-    <!--*******************************************************-->
-    <resource_type id="VersionDetails">
-        <method href="#admin-getVersionInfo"/>
-    </resource_type>
-    <resource_type id="ExtensionList">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="List extensions">
-            <para role="shortdesc">Lists supported extensions.</para>
-        </wadl:doc>
-        <method href="#admin-listExtensions-v2.0"/>
-    </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-    <!-- Version -->
-    <method name="GET" id="admin-getVersionInfo">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get version details">
-            <para>
-                Gets detailed information about a version of the Identity API.
-            </para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get version information: JSON response">
-                        <xsdxt:code href="../samples/version.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="location" style="plain"
-                    type="xsd:anyURI" required="true"
-                    path="/capi:version/atom:link[@rel='self']/@href">
-                    <link resource_type="#VersionDetails" rel="self"/>
-                </param>
-            </representation>
-        </response>
-        <response status="203">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get version information: JSON response">
-                        <xsdxt:code href="../samples/version.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="location" style="plain"
-                    type="xsd:anyURI" required="true"
-                    path="/capi:version/atom:link[@rel='self']/@href">
-                    <link resource_type="#VersionDetails" rel="self"/>
-                </param>
-            </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <!-- Extensions -->
-    <method name="GET" id="admin-listExtensions-v2.0">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="List extensions">
-            <para role="shortdesc">Lists available extensions.</para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/json" element="capi:extensions">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List extensions: JSON response">
-                        <xsdxt:code href="../samples/extensions.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-                <param name="next" style="plain" type="xsd:anyURI"
-                    path="/capi:extensions/atom:link[@rel='next']/@href">
-                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>Moves to the next item in the list.</para>
-                    </wadl:doc>
-                    <link resource_type="#ExtensionList" rel="next"/>
-                </param>
-                <param name="previous" style="plain" type="xsd:anyURI"
-                    path="/capi:extensions/atom:link[@rel='previous']/@href">
-                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>Moves to the previous item in the list.</para>
-                    </wadl:doc>
-                    <link resource_type="#ExtensionList" rel="previous"/>
-                </param>
-            </representation>
-        </response>
-        <response status="203">
-            <representation mediaType="application/json" element="capi:extensions">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List extensions: JSON response">
-                        <xsdxt:code href="../samples/extensions.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-                <param name="next" style="plain" type="xsd:anyURI"
-                    path="/capi:extensions/atom:link[@rel='next']/@href">
-                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>Moves to the next item in the list.</para>
-                    </wadl:doc>
-                    <link resource_type="#ExtensionList" rel="next"/>
-                </param>
-                <param name="previous" style="plain" type="xsd:anyURI"
-                    path="/capi:extensions/atom:link[@rel='previous']/@href">
-                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>Moves to the previous item in the list.</para>
-                    </wadl:doc>
-                    <link resource_type="#ExtensionList" rel="previous"/>
-                </param>
-            </representation>
-        </response> &commonFaults; &getFaults; </method>
-    <method name="GET" id="admin-getExtension-v2.0">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="Show extension details">
-            <para role="shortdesc">
-                Shows details for an extension.
-            </para>
-            <para>Specify the extension alias in the URI.</para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/json" element="capi:extension">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get extension details: JSON response">
-                        <xsdxt:code href="../samples/extension.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>
-        <response status="203">
-            <representation mediaType="application/json" element="capi:extension">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get extension details: JSON response">
-                        <xsdxt:code href="../samples/extension.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults; </method>
     <!-- Token Operations -->
     <method name="POST" id="admin-authenticate">
         <wadl:doc xml:lang="EN" title="Authenticate for admin API"
@@ -421,14 +282,14 @@
             <representation mediaType="application/json" element="identity:auth">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="Authenticate with credentials: JSON request">
-                        <xsdxt:code href="../samples/auth_credentials_admin.json"/>
+                        <xsdxt:code href="../samples/admin/authenticate-credentials-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
             <representation mediaType="application/json" element="identity:auth">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="Authenticate with token: JSON request">
-                        <xsdxt:code href="../samples/auth_token_request.json"/>
+                        <xsdxt:code href="../samples/admin/authenticate-token-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -437,7 +298,7 @@
             <representation mediaType="application/json" element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="Authenticate with credentials: JSON response">
-                        <xsdxt:code href="../samples/auth_admin.json"/>
+                        <xsdxt:code href="../samples/admin/authenticate-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="access" style="plain"
@@ -569,142 +430,7 @@
                 </param>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:access">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Authenticate with credentials: JSON response">
-                        <xsdxt:code href="../samples/auth_admin.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="access" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            An <code>access</code> object.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="token" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            A <code>token</code> object.
-                        </para>
-                    </wadl:doc>
-                </param>
-                &issued_at-ResponseParameter;
-                &expires-ResponseParameter;
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            The authentication token. In the example, the
-                            token is <code>my_id</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="tenant" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>tenant</code>
-                        object.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="description" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>The description of the
-                        tenant. If not set, this value is <code>null</code>.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="enabled" style="plain"
-                    required="true" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Indicates whether the
-                        tenant is enabled or disabled.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>The tenant
-                        ID.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>The tenant
-                        name.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="serviceCatalog" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            A <code>serviceCatalog</code> object.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="endpoints" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            One or more <code>endpoints</code> objects.
-                            Each object shows the <code>adminURL</code>,
-                            <code>region</code>, <code>internalURL</code>,
-                            <code>id</code>, and <code>publicURL</code> for
-                            the endpoint.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="endpoints_links" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Links for the
-                        endpoint.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="type" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Endpoint
-                        type.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Endpoint
-                        name.</para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="user" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>
-                            A <code>user</code> object, which shows the
-                            <code>username</code>, <code>roles_links</code>,
-                            <code>id</code>, <code>roles</code>, and
-                            <code>name</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="metadata" style="plain"
-                    required="true" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>metadata</code>
-                        object.</para></wadl:doc>
-                </param>
-                <param name="trust" style="plain" required="false" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>trust</code>
-                        object.</para></wadl:doc>
-                </param>
-                <param name="trustee_user_id" style="plain" required="false" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>The trustee user ID.</para>
-                    </wadl:doc>
-                </param>
-                <param name="id" style="plain" required="false" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>The ID of the trust.</para>
-                    </wadl:doc>
-                </param>
-                <param name="trustor_user_id" style="plain" required="false" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>The trustor user ID.</para>
-                    </wadl:doc>
-                </param>
-                <param name="impersonation" style="plain" required="false" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                        <para>The impersonation flag.</para>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </response>
+        <response status="203"/>
         <response status="403">
             <representation mediaType="application/json" element="identity:userDisabled"/>
         </response> &commonFaults; &getFaults; </method>
@@ -723,20 +449,14 @@
             <representation mediaType="application/json" element="identity:access">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="Validate token: JSON response">
-                        <xsdxt:code href="../samples/validatetoken.json"/>
+                        <xsdxt:code href="../samples/admin/token-validate-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:access">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Validate token: JSON response">
-                        <xsdxt:code href="../samples/validatetoken.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults; </method>
+        <response status="203"/>
+        &commonFaults; &getFaults;
+    </method>
     <method name="HEAD" id="admin-checkToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Validate token (admin)">
             <para role="shortdesc">Validates a token and confirms that it belongs to a
@@ -754,7 +474,9 @@
     <method name="GET" id="admin-listEndpointsForToken">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="List endoints for token">
-            <para role="shortdesc">Lists the endpoints associated with a token.</para>
+            <para role="shortdesc">
+                Lists the endpoints associated with a token.
+            </para>
         </wadl:doc>
         <!-- <request>
             &limitMarkerReqParameter;
@@ -763,20 +485,13 @@
             <representation mediaType="application/json" element="identity:endpoints">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="List endpoints for token: JSON response">
-                        <xsdxt:code href="../samples/endpoints.json"/>
+                        <xsdxt:code href="../samples/admin/endpoints-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:endpoints">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="List endpoints for token: JSON response">
-                        <xsdxt:code href="../samples/endpoints.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults; </method>
+        <response status="203"/>
+        &commonFaults; &getFaults; </method>
     <!--User Operations-->
     <method name="POST" id="admin-createUser">
         <wadl:doc xml:lang="EN" title="Create user" xmlns="http://docbook.org/ns/docbook">
@@ -787,7 +502,7 @@
         <request>
             <representation mediaType="application/json" element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/user-create-request.json"/>
+                    <xsdxt:code href="../samples/admin/user-create-request.json"/>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="X-Auth-Token" style="header"
                     type="xsd:string" required="true">
@@ -847,7 +562,7 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/user-create-resp.json"/>
+                    <xsdxt:code href="../samples/admin/user-create-response.json"/>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
                     type="xsd:string" required="true">
@@ -878,12 +593,14 @@
         </response> &commonFaults; &getFaults; &postPutFaults; </method>
     <method name="PUT" id="admin-updateUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update user">
-            <para role="shortdesc">Updates a user.</para>
+            <para role="shortdesc">
+                Updates a user.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json" element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/user-update.json"/>
+                    <xsdxt:code href="../samples/admin/user-update-request.json"/>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
                     type="xsd:string" required="true">
@@ -917,7 +634,7 @@
         <response status="201">
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/user-update-resp.json"/>
+                    <xsdxt:code href="../samples/admin/user-update-response.json"/>
                 </wadl:doc>
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
                     type="xsd:string" required="true">
@@ -953,9 +670,8 @@
                 Lists all users.
             </para>
             <para>
-                To get detailed information about a user by user
-                name, include the <code>name</code> query parameter in the
-                request.
+                To show detailed information about a user by name, include the
+                <code>name</code> query parameter in the request.
             </para>
         </wadl:doc>
         <request>
@@ -970,25 +686,19 @@
         <response status="200">
             <representation mediaType="application/json" element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/users.json"/>
-                    <xsdxt:code href="../samples/user.json"/>
+                    <xsdxt:code href="../samples/admin/users-list-response.json"/>
+                    <xsdxt:code href="../samples/admin/user-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:user">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/users.json"/>
-                    <xsdxt:code href="../samples/user.json"/>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults;
+        <response status="203"/>
+        &commonFaults; &getFaults;
     </method>
     <method name="GET" id="admin-showUser">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show user details">
             <para role="shortdesc">
-                Shows details for a user by ID.
+                Shows details for a user, by ID.
             </para>
             <para>
                 The <link
@@ -1003,7 +713,10 @@
             <orderedlist>
                 <listitem>
                     <para>
-                        <link xlink:href="#admin-listUsers">List all users</link>.
+                Issue the
+                <link
+                xlink:href="http://developer.openstack.org/api-ref-identity-admin-v2.html#admin-listUsers">List
+                all users</link> call.
                     </para>
                 </listitem>
                 <listitem>
@@ -1014,8 +727,8 @@
                 </listitem>
                 <listitem>
                     <para>
-                        Issue the <link xlink:href="#admin-showUser">show
-                        details for user</link> call.
+                Issue the
+                <link xlink:href="http://developer.openstack.org/api-ref-identity-admin-v2.html#admin-showUser">show details for user</link> call.
                     </para>
                 </listitem>
             </orderedlist>
@@ -1023,21 +736,17 @@
         <response status="200">
             <representation mediaType="application/json" element="identity:user">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/user.json"/>
+                    <xsdxt:code href="../samples/admin/user-show-response.json"/>
                 </wadl:doc>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:user">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:code href="../samples/user.json"/>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults; </method>
+        <response status="203"/>
+        &commonFaults; &getFaults; </method>
     <method name="GET" id="admin-listUserGlobalRoles">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List user global roles">
-            <para role="shortdesc">Lists global roles for a user. Excludes tenant
-                roles.</para>
+            <para role="shortdesc">
+                Lists global roles for a user. Excludes tenant roles.
+            </para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -1046,7 +755,7 @@
             <representation mediaType="application/json" element="identity:roles">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="List user global roles: JSON response">
-                        <xsdxt:code href="../samples/roles.json"/>
+                        <xsdxt:code href="../samples/admin/roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
@@ -1055,11 +764,13 @@
     <!-- Tenant Operations -->
     <method name="GET" id="admin-listTenants">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List tenants">
-            <para role="shortdesc">Lists all tenants.</para>
+            <para role="shortdesc">
+                Lists all tenants.
+            </para>
             <xsdxt:samples>
                 <xsdxt:sample xmlns="http://docs.rackspace.com/api"
                     title="Tenants Request with Auth Token">
-                    <xsdxt:code href="../samples/tenants-request-JSON.txt"/>
+                    <xsdxt:code href="../samples/admin/tenants-list-request-JSON.txt"/>
                 </xsdxt:sample>
             </xsdxt:samples>
         </wadl:doc>
@@ -1070,80 +781,65 @@
             <representation mediaType="application/json" element="identity:tenants">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="Get tenants: JSON response">
-                        <xsdxt:code href="../samples/tenants.json"/>
+                        <xsdxt:code href="../samples/admin/tenants-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:tenants">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get tenants: JSON response">
-                        <xsdxt:code href="../samples/tenants.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults; </method>
-    <method name="GET" id="admin-getTenantByName">
+        <response status="203"/>
+        &commonFaults; &getFaults; </method>
+    <method name="GET" id="admin-showTenantByName">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get tenant information by name">
-            <para role="shortdesc">Gets detailed information about a tenant by
-                name.</para>
+            title="Show tenant details, by name">
+            <para role="shortdesc">
+                Shows details for a tenant, by name.
+            </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/xml">
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="query"
-                    type="xsd:string" required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">The name of the
-                        tenant.</wadl:doc>
-                </param>
-            </representation>
+            <param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="query"
+                type="xsd:string" required="true">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        Filters the response by a tenant name.
+                    </para>
+                </wadl:doc>
+            </param>
         </request>
         <response status="200">
             <representation mediaType="application/json" element="identity:tenant">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get tenant by name: JSON response">
-                        <xsdxt:code href="../samples/tenant.json"/>
+                    <xsdxt:sample title="Show tenant by name: JSON response">
+                        <xsdxt:code href="../samples/admin/tenant-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </response>
-        <response status="203">
-            <representation mediaType="application/json" element="identity:tenant">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get tenant by name: JSON response">
-                        <xsdxt:code href="../samples/tenant.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>&commonFaults; &getFaults; </method>
-    <method name="GET" id="admin-getTenantById">
+        <response status="203"/>
+        &commonFaults; &getFaults; </method>
+    <method name="GET" id="admin-showTenantById">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Get tenant information by ID">
-            <para role="shortdesc">Gets detailed information about a tenant by ID.</para>
+            title="Show tenant details, by ID">
+            <para role="shortdesc">
+                Shows details for a tenant, by ID.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json" element="identity:tenant">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample title="Get tenant by ID: JSON response">
-                        <xsdxt:code href="../samples/tenant.json"/>
+                    <xsdxt:sample title="Show tenant by ID: JSON response">
+                        <xsdxt:code href="../samples/admin/tenant-show-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
             </response>
-            <response status="203">
-                    <representation mediaType="application/json" element="identity:tenant">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                            <xsdxt:sample title="Get tenant by ID: JSON response">
-                                <xsdxt:code href="../samples/tenant.json"/>
-                            </xsdxt:sample>
-                        </wadl:doc>
-            </representation>
-        </response> &commonFaults; &getFaults; </method>
+            <response status="203"/>
+            &commonFaults; &getFaults;
+    </method>
     <method name="GET" id="admin-listRolesForUserOnTenant">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List roles for user">
-            <para role="shortdesc">Lists roles for a user on a tenant. Excludes
-                global roles.</para>
+            <para role="shortdesc">
+                Lists roles for a user on a tenant. Excludes global roles.
+            </para>
         </wadl:doc>
         <request>
             &limitMarkerReqParameter;
@@ -1152,7 +848,7 @@
             <representation mediaType="application/json" element="identity:roles">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample title="List roles for user: JSON response">
-                        <xsdxt:code href="../samples/roles.json"/>
+                        <xsdxt:code href="../samples/admin/roles-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>

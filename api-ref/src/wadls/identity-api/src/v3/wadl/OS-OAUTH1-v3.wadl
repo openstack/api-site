@@ -8,7 +8,7 @@
 <!-- xmllint -noent OS-OAUTH1.wadl                         -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
@@ -37,7 +37,7 @@
     <!-- We should use SSL in production -->
     <resources base="http://localhost:5000" xml:id="OS-OAUTH1-v3">
         <!-- FYI: double slash needed in path to get a single slash to display -->
-        <resource id="v3" path="//v3">
+        <resource id="versions-oauth1-v3" path="//v3">
             <resource id="oauth1" path="OS-OAUTH1">
                 <resource id="consumers" path="consumers">
                     <param name="description" style="plain"
@@ -50,10 +50,10 @@
                     <method href="#createConsumer"/>
                     <resource id="consumer_id" path="{consumer_id}">
                         <param name="consumer_id" style="template"
-                            type="csapi:uuid" required="true">
+                            type="csapi:UUID" required="true">
                             <wadl:doc xml:lang="EN"
                                 xmlns="http://docbook.org/ns/docbook"
-                                >The ID of the consumer.</wadl:doc>
+                                >The UUID of the consumer.</wadl:doc>
                         </param>
                         <method href="#showConsumer"/>
                         <method href="#updateConsumer"/>
@@ -67,7 +67,7 @@
                         <wadl:doc xml:lang="EN"
                             xmlns="http://docbook.org/ns/docbook">
                             <para>
-                                Comma-separated list of role IDs for the roles
+                                Comma-separated list of role UUIDs for the roles
                                 that the consumer would like to delegate.
                                 For example,
                                 <code>requested_role_ids=a3b29b,49993e</code>.
@@ -78,7 +78,7 @@
                         type="xsd:dict" required="false">
                         <wadl:doc xml:lang="EN"
                             xmlns="http://docbook.org/ns/docbook">
-                            <para>The ID of the project to which to
+                            <para>The UUID of the project to which to
                                 assign the requested roles. Example:
                                    <code>requested_project_id=b9fca3</code>.</para>
                         </wadl:doc>
@@ -137,7 +137,7 @@
                                 sensitive) to indicate an out-of-band
                                 configuration.</para></wadl:doc>
                     </param>
-                    <method href="#getUnauthorizedRequestToken"/>
+                    <method href="#showUnauthorizedRequestToken"/>
                 </resource>
                 <!--<resource id="authorize" path="authorize">
                     <resource id="request_token_key"
@@ -209,10 +209,10 @@
                 <resource id="users" path="users">
                     <resource id="user_id" path="{user_id}">
                         <param name="user_id" style="template"
-                            type="csapi:uuid" required="true">
+                            type="csapi:UUID" required="true">
                             <wadl:doc xml:lang="EN"
                                 xmlns="http://docbook.org/ns/docbook">
-                                <para>The ID of the user.</para>
+                                <para>The UUID of the user.</para>
                             </wadl:doc>
                         </param>
                         <!--<resource id="oauth1a" path="OS-OAUTH1">-->
@@ -222,16 +222,16 @@
                             <resource id="access_token_id"
                                 path="{access_token_id}">
                                 <param name="access_token_id"
-                                   style="template" type="csapi:uuid"
+                                   style="template" type="csapi:UUID"
                                    required="true">
                                    <wadl:doc xml:lang="EN"
                                    xmlns="http://docbook.org/ns/docbook">
-                                   <para>The ID of the access
+                                   <para>The UUID of the access
                                    token.</para>
                                    </wadl:doc>
                                 </param>
                                 <method
-                                   href="#getAuthorizedAccessToken"/>
+                                   href="#showAuthorizedAccessToken"/>
                                 <method href="#revokeAccessToken"/>
                                 <resource id="roles" path="roles">
                                    <method
@@ -239,15 +239,15 @@
                                    <resource id="role_id"
                                    path="{role_id}">
                                    <param name="role_id"
-                                   style="template" type="csapi:uuid"
+                                   style="template" type="csapi:UUID"
                                    required="true">
                                    <wadl:doc xml:lang="EN"
                                    xmlns="http://docbook.org/ns/docbook">
-                                   <para>The ID of the role.</para>
+                                   <para>The UUID of the role.</para>
                                    </wadl:doc>
                                    </param>
                                    <method
-                                   href="#getRoleOfAccessToken"/>
+                                   href="#showRoleOfAccessToken"/>
                                    </resource>
                                 </resource>
                             </resource>
@@ -332,7 +332,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/consumers-POST-req.json"
+                            href="../samples/OS-OAUTH1/consumers-create-request.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -354,11 +354,11 @@
                     <para>The consumer description.</para>
                 </wadl:doc>
             </param>
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the consumer. In OpenStack, the ID
+                    <para>The UUID of the consumer. In OpenStack, the UUID
                         is the key.</para>
                 </wadl:doc>
             </param>
@@ -373,7 +373,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/consumers-POST-resp.json"
+                            href="../samples/OS-OAUTH1/consumers-create-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -392,11 +392,11 @@
                     <para>The consumer description.</para>
                 </wadl:doc>
             </param>
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the consumer. In OpenStack, the ID
+                    <para>The UUID of the consumer. In OpenStack, the UUID
                         is the key.</para>
                 </wadl:doc>
             </param>
@@ -427,7 +427,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/consumers-GET-resp.json"
+                            href="../samples/OS-OAUTH1/consumers-list-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -440,11 +440,11 @@
                 consumer.</para>
         </wadl:doc>
         <response status="200">
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the consumer. In OpenStack, the ID
+                    <para>The UUID of the consumer. In OpenStack, the UUID
                         is the key.</para>
                 </wadl:doc>
             </param>
@@ -466,7 +466,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/consumer-GET-resp.json"
+                            href="../samples/OS-OAUTH1/consumer-show-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -496,7 +496,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/consumer-PATCH-req.json"
+                            href="../samples/OS-OAUTH1/consumer-update-request.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -510,11 +510,11 @@
                     <para>The consumer description.</para>
                 </wadl:doc>
             </param>
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the consumer. In OpenStack, the ID
+                    <para>The UUID of the consumer. In OpenStack, the UUID
                         is the key.</para>
                 </wadl:doc>
             </param>
@@ -529,16 +529,16 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/consumer-PATCH-resp.json"
+                            href="../samples/OS-OAUTH1/consumer-update-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </response>
         &postPutDeleteFaults; </method>
-    <method name="POST" id="getUnauthorizedRequestToken">
+    <method name="POST" id="showUnauthorizedRequestToken">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get unauthorized request token">
+            title="Show unauthorized request token">
             <para role="shortdesc">Enables a consumer to get an
                 unauthorized request token.</para>
             <para>Supported signature methods: HMAC-SHA1.</para>
@@ -570,7 +570,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/request_token_POST-resp.txt"
+                            href="../samples/OS-OAUTH1/request-token-create-response.txt"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -613,7 +613,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/authorize-PUT-resp.json"
+                            href="../samples/OS-OAUTH1/authorize-PUT-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -663,7 +663,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/access_token-POST-resp.txt"
+                            href="../samples/OS-OAUTH1/access-token-create-response.txt"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -708,17 +708,17 @@
         </wadl:doc>
         <response status="200">
             <param name="consumer_id" style="template"
-                type="csapi:uuid" required="true">
+                type="csapi:UUID" required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the consumer.</para>
+                    <para>The UUID of the consumer.</para>
                 </wadl:doc>
             </param>
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID for the access
+                    <para>The UUID of the access
                     token.</para></wadl:doc>
             </param>
             &oauth_expires_at-RequestParameter;
@@ -729,32 +729,32 @@
                     <para>Access token links.</para>
                 </wadl:doc>
             </param>
-            <param name="project_id" style="plain" type="csapi:uuid"
+            <param name="project_id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the project.</para>
+                    <para>The UUID of the project.</para>
                 </wadl:doc>
             </param>
             <param name="authorizing_user_id" style="plain"
-                type="csapi:uuid" required="true">
+                type="csapi:UUID" required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the authorizing user.</para>
+                    <para>The UUID of the authorizing user.</para>
                 </wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/access_tokens-GET-resp.json"
+                            href="../samples/OS-OAUTH1/access-tokens-list-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
             </representation>
         </response>
         &getFaults; </method>
-    <method name="GET" id="getAuthorizedAccessToken">
+    <method name="GET" id="showAuthorizedAccessToken">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Get authorized access token">
             <para role="shortdesc">Gets an authorized access
@@ -762,17 +762,17 @@
         </wadl:doc>
         <response status="200">
             <param name="consumer_id" style="template"
-                type="csapi:uuid" required="true">
+                type="csapi:UUID" required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the consumer.</para>
+                    <para>The UUID of the consumer.</para>
                 </wadl:doc>
             </param>
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID for the access
+                    <para>The UUID of the access
                     token.</para></wadl:doc>
             </param>
             &oauth_expires_at-RequestParameter;
@@ -783,25 +783,25 @@
                     <para>Access token links.</para>
                 </wadl:doc>
             </param>
-            <param name="project_id" style="plain" type="csapi:uuid"
+            <param name="project_id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the project.</para>
+                    <para>The UUID of the project.</para>
                 </wadl:doc>
             </param>
             <param name="authorizing_user_id" style="plain"
-                type="csapi:uuid" required="true">
+                type="csapi:UUID" required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The ID of the authorizing user.</para>
+                    <para>The UUID of the authorizing user.</para>
                 </wadl:doc>
             </param>
             <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-OAUTH1/access_token-GET-resp.json"
+                            href="../samples/OS-OAUTH1/access-token-show-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -817,18 +817,18 @@
         </wadl:doc>
         <response status="200"/>
         &getFaults; </method>
-    <method name="GET" id="getRoleOfAccessToken">
+    <method name="GET" id="showRoleOfAccessToken">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Show role details for an access token">
             <para role="shortdesc">Shows details for a
                 role for an access token.</para>
         </wadl:doc>
         <response status="200">
-            <param name="id" style="plain" type="csapi:uuid"
+            <param name="id" style="plain" type="csapi:UUID"
                 required="true">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
-                    <para>The role ID.</para></wadl:doc>
+                    <para>The UUID of the role.</para></wadl:doc>
             </param>
             <param name="links" style="plain" type="xsd:dict"
                 required="true">

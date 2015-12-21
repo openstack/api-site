@@ -5,10 +5,10 @@
 <!--                                                       -->
 <!-- You can resolve the entities with xmllint             -->
 <!--                                                       -->
-<!-- xmllint -noent OS-KDS.wadl                            -->
+<!-- xmllint -noent OS-INHERIT.wadl                        -->
 <!--*******************************************************-->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "common.ent">
+    <!ENTITY % common  SYSTEM "../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
@@ -37,14 +37,13 @@
     <!-- We should use SSL in production -->
     <resources base="http://localhost:5000" xml:id="OS-KDS-v3">
         <!-- FYI: double slash needed in path to get a single slash to display -->
-        <resource id="v1" path="//v1">
+        <resource id="versions-kds-v3" path="//v3">
             <resource id="keys" path="keys">
                 <resource id="party-name" path="{name}">
                     <param name="name" style="template"
                         type="csapi:string" required="true">
                         <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook"
-                            >
+                            xmlns="http://docbook.org/ns/docbook">
                             <para>
                                 The name of the party that is associated with
                                 the key.
@@ -69,13 +68,12 @@
                 <method href="#generateTicket"/>
             </resource>
             <resource id="groups" path="groups">
-                <method href="#getGroupKey"/>
+                <method href="#showGroupKey"/>
                 <resource id="group-name" path="{name}">
                     <param name="name" style="template"
                         type="csapi:string" required="true">
                         <wadl:doc xml:lang="EN"
-                            xmlns="http://docbook.org/ns/docbook"
-                            >
+                            xmlns="http://docbook.org/ns/docbook">
                             <para>
                                 The name of the group.
                             </para>
@@ -90,7 +88,7 @@
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
-    <!--Consumers Operations-->
+    <!-- Consumers Operations -->
     <method name="POST" id="createKey">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Create key">
@@ -107,7 +105,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-KDS/KeyCreateRequest.json"
+                            href="../samples/OS-KDS/key-create-request.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -118,7 +116,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-KDS/KeyCreateResponse.json"
+                            href="../samples/OS-KDS/key-create-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -179,7 +177,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-KDS/TicketGenerateRequest.json"/>
+                            href="../samples/OS-KDS/ticket-generate-request.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
                 <param name="metadata" style="plain"
@@ -279,7 +277,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-KDS/TicketGenerateResponse.json"
+                            href="../samples/OS-KDS/ticket-generate-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -443,10 +441,10 @@
         </representation>
     </response> &postPutDeleteFaults;
     </method>
-    <method name="GET" id="getGroupKey">
+    <method name="GET" id="showGroupKey">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Get group key">
-            <para role="shortdesc">Gets the key for a group in the KDS.</para>
+            title="Show group key">
+            <para role="shortdesc">Shows the key for a group in the KDS.</para>
             <para>
                 When a ticket is requested where the destination is a group, a
                 group key is generated that is valid for a predetermined
@@ -461,7 +459,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-KDS/GroupGetKeyResponse.json"
+                            href="../samples/OS-KDS/group-key-show-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>
@@ -493,7 +491,7 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:sample>
                         <xsdxt:code
-                            href="../samples/OS-KDS/GroupCreateResponse.json"
+                            href="../samples/OS-KDS/group-create-response.json"
                         />
                     </xsdxt:sample>
                 </wadl:doc>

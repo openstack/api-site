@@ -1,0 +1,299 @@
+
+<!--
+ A collection of common faults, these are pretty much expected
+ in every request.
+-->
+<!ENTITY commonFaults '
+<response xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:identityFault"/>
+    <representation mediaType="application/json"/>
+</response>
+<response status="400" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:badRequest"/>
+    <representation mediaType="application/json"/>
+</response>
+<response status="401" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:unauthorized"/>
+    <representation mediaType="application/json"/>
+</response>
+<response status="403" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:forbidden"/>
+    <representation mediaType="application/json"/>
+</response>
+<response status="405" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:badMethod"/>
+    <representation mediaType="application/json"/>
+</response>
+<response status="413" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:overLimit"/>
+    <representation mediaType="application/json"/>
+</response>
+<response status="503" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:serviceUnavailable"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!--
+  Faults on GET
+-->
+<!ENTITY getFaults '
+<response status="404" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:itemNotFound"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!--
+  Faults on POST/PUT
+-->
+<!ENTITY postPutFaults '
+<response status="415" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="identity:badMediaType"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!-- HEADERS -->
+<!ENTITY X-Auth-TokenRequestHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="X-Auth-Token" style="header"
+    type="xsd:string" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A valid authentication token for an administrative user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- TEMPLATE PARAMETERS -->
+<!ENTITY aliasTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="alias" style="template" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The extension name.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY endpoint_idTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="endpoint_id"
+    style="template" type="xsd:string">
+    <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The endpoint ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- tenant_idTemplateParameter -->
+<!ENTITY tenant_idTemplateParameter '
+<param name="tenant_id" style="template" type="capi:UUID"
+  xmlns="http://wadl.dev.java.net/2009/02">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+    <para>
+      The UUID of the tenant in a multi-tenancy cloud.
+   </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY user_idTemplateParameter '
+<param name="userId" style="template"
+    required="true" type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xml:lang="EN">
+        <para>
+            The user ID.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY roleResponse '
+<param name="id" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN"><para>The role
+            ID.</para></wadl:doc>
+</param>
+<param name="name" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:string">
+    <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN"><para>The role
+            name.</para></wadl:doc>
+</param>
+<param name="description" style="plain"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:string">
+    <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+      <para>
+        The role description.
+      </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY serviceIdQueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="HP-IDM-serviceId" style="query"
+        type="xsd:string" required="false">
+  <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+    <para>
+      One or more service IDs. Specify multiple values as a comma-separated
+      list. The API checks roles against the service IDs. If a service ID is
+      not valid or no roles are associated with it, this call returns the
+      <code>unauthorized (401)</code> response code.
+    </para>
+  </wadl:doc>
+</param>'>
+<!-- Authenticate Parameters -->
+<!ENTITY authParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="username" style="plain" required="true" type="xsd:string">
+ <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+  <para>
+    The user name.
+  </para>
+ </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="password" style="plain" required="true" type="xsd:string">
+ <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+ <para>The password of the user.
+ </para>
+ </wadl:doc>
+ </param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="tenantName" style="plain" required="false" type="xsd:string">
+ <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The tenant name.
+        </para>
+  </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="tenantId" style="plain" required="false" type="capi:UUID">
+ <wadl:doc
+        xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            The UUID of the tenant.
+        </para>
+  </wadl:doc>
+</param>'>
+<!-- More Auth Parameters -->
+<!ENTITY trustResponseParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook">
+        <para>
+            The authentication token. In the example, the
+            token is <code>my_id</code>.
+        </para>
+    </wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="tenant" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>tenant</code>
+        object.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="description" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>The description of the
+        tenant. If not set, this value is <code>null</code>.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="enabled" style="plain"
+    required="true" type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Indicates whether the
+        tenant is enabled or disabled.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="id" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>The tenant
+        ID.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>The tenant
+        name.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="serviceCatalog" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A
+        <code>serviceCatalog</code> object.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="endpoints" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>One or more
+        <code>endpoints</code> objects. Each object shows the
+        <code>adminURL</code>, <code>region</code>,
+        <code>internalURL</code>, <code>id</code>, and <code>publicURL</code>
+        for the endpoint.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="endpoints_links" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Links for the
+        endpoint.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="type" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Endpoint
+        type.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="name" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>Endpoint
+        name.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="user" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>user</code>
+        object, which shows the <code>username</code>, <code>roles_links</code>,
+        <code>id</code>, <code>roles</code>, and
+        <code>name</code>.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02" name="metadata" style="plain"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>metadata</code>
+        object.</para></wadl:doc>
+</param>
+<param name="trust" style="plain" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"><para>A <code>trust</code>
+        object.</para></wadl:doc>
+</param>
+<param name="trustee_user_id" style="plain" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook">
+        <para>The trustee user ID.</para>
+    </wadl:doc>
+</param>
+<param name="id" style="plain" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook">
+        <para>The ID of the trust.</para>
+    </wadl:doc>
+</param>
+<param name="trustor_user_id" style="plain" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook">
+        <para>The trustor user ID.</para>
+    </wadl:doc>
+</param>
+<param name="impersonation" style="plain" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook">
+        <para>The impersonation flag.</para>
+    </wadl:doc>
+</param>'>

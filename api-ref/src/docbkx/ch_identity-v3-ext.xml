@@ -52,10 +52,9 @@ Trust extension (OS-TRUST)
             owning domain or projects that are higher in the hierarchy.
         </para>
         <para>
-            The OS-INHERIT extension was extended in API v3.4 to allow
-            inheritance from projects in addition to inheritance from domains.
-            To access project inheritance, the Identity service server must
-            run at least API v3.4.
+            (Since API v3.4) The OS-INHERIT extension allows inheritance from both
+            projects and domains. To access project inheritance, the Identity service
+            server must run at least API v3.4.
         </para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02"
                 href="../wadls/identity-api/src/v3/wadl/OS-INHERIT-v3.wadl"/>
@@ -141,25 +140,28 @@ Trust extension (OS-TRUST)
             </listitem>
             <listitem>
                 <para>
-                    When a source party requests a ticket for a destination party
-                    that is a group, KDS generates a short-lived group key and assigns it
-                    to the group. This group key is used to encrypt the payload in the
-                    ticket, which contains the information that the destination party
-                    uses to derive the shared signing and encryption keys.
+                    When a source party requests a ticket for a destination
+                    party that is a group, KDS generates a short-lived group
+                    key and assigns it to the group. This group key is used to
+                    encrypt the payload in the ticket, which contains the
+                    information that the destination party uses to derive the
+                    shared signing and encryption keys.
                 </para>
             </listitem>
             <listitem>
                 <para>
-                    When an individual destination party must decrypt the payload that
-                    it receives from the source party as a part of a group message, it
-                    makes an authenticated request to KDS to get the short-lived group
-                    key. If the requester is a member of the target group, KDS
-                    provides the short-lived group key encrypted with the long-term
-                    shared key associated with the individual destination party. The
-                    individual destination party can then decrypt the group key, which
-                    enables it to decrypt the payload and derive the shared signing
-                    and encryption keys to use to authenticate and decrypt the data
-                    sent by the source party.
+                    When an individual destination party must decrypt the
+                    payload that it receives from the source party as a part
+                    of a group message, it makes an authenticated request to
+                    KDS to get the short-lived group key. If the requester is
+                    a member of the target group, KDS provides the short-lived
+                    group key encrypted with the long-term shared key
+                    associated with the individual destination party. The
+                    individual destination party can then decrypt the group
+                    key, which enables it to decrypt the payload and derive
+                    the shared signing and encryption keys to use to
+                    authenticate and decrypt the data sent by the source
+                    party.
                 </para>
             </listitem>
             <listitem>
@@ -272,7 +274,7 @@ Trust extension (OS-TRUST)
                 <wadl:method href="#generateTicket"/>
             </wadl:resource>
             <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-KDS-v3.wadl#groups">
-                <wadl:method href="#getGroupKey"/>
+                <wadl:method href="#showGroupKey"/>
             </wadl:resource>
             <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-KDS-v3.wadl#group-name">
                 <wadl:method href="#createGroup"/>
@@ -282,22 +284,32 @@ Trust extension (OS-TRUST)
     </section>
     <section xml:id="identity_v3_OS-OAUTH1-ext">
         <title>OAuth extension (OS-OAUTH1)</title>
-        <para>Enables users to delegate roles to third-party consumers
-            through the <link xlink:href="http://tools.ietf.org/html/rfc5849"
-                >The OAuth 1.0 Protocol</link>.
+        <para>
+            Enables users to delegate roles to third-party consumers through
+            <link xlink:href="http://tools.ietf.org/html/rfc5849">The
+            OAuth 1.0 Protocol</link>.
         </para>
         <para>
             A user is an Identity API user who delegates its roles and who
-            authorizes request tokens. A consumer is a third-party application
-            that uses OAuth to access a protected resource. An OAuth-derived
-            token enables admin users to act on behalf of the authorizing
-            user. A request token is a token that the consumer uses to get
-            authorization from the user and exchanges with an OAuth verifier
-            for an access token. The OAuth verifier is a required string that
-            is provided with the corresponding request token in exchange for
-            an access token. An access token is a token that the consumer uses
-            to request Identity API tokens on behalf of the authorizing user
-            instead of using the credentials for the user.
+            authorizes request tokens.
+        </para>
+        <para>
+            A consumer is a third-party application that uses OAuth to access
+            a protected resource.
+        </para>
+        <para>
+            Administrative users use an OAuth-derived token to act on behalf
+            of the authorizing user.
+        </para>
+        <para>
+            The consumer uses a request token to get authorization from the
+            user. The consumer provides an OAuth verifier string with the
+            request token in exchange for an access token.
+        </para>
+        <para>
+            The consumer uses an access token to request Identity API tokens
+            on behalf of the authorizing user instead of using the credentials
+            for the user.
         </para>
         <para>
             Request and access tokens use token keys to identify themselves.
@@ -321,9 +333,10 @@ Trust extension (OS-TRUST)
                 <para>The user authorizes the request token.</para>
             </listitem>
             <listitem>
-                <para>The consumer exchanges the authorized request
-                    token and the OAuth verifier for an access
-                    token.</para>
+                <para>
+                    The consumer exchanges the authorized request token and
+                    the OAuth verifier for an access token.
+                </para>
                 <para>The authorizing user receives the request token
                     key from the consumer out-of-band.</para>
             </listitem>
@@ -346,15 +359,15 @@ Trust extension (OS-TRUST)
             and, optionally, impersonation through <code>keystone</code>. A
             trust extension defines a relationship between a trustor and
             trustee. A trustor is the user who delegates a limited set of
-            their own rights to another user. A trustee is the user whose
-            trust is being delegated to, for a limited time.
+            their own rights to another user, known as the trustee, for a
+            limited time.
         </para>
         <para>
             The trust can eventually enable the trustee to impersonate the
             trustor. For security reasons, some safety measures are added. For
-            example, if a trustor loses a given role, any trusts and the
-            related tokens that the user issued with that role are
-            automatically revoked.
+            example, if a trustor loses a given role, the API automatically
+            revokes any trusts and the related tokens that the user issued
+            with that role.
         </para>
         <para>
             For more information, see <link
@@ -362,7 +375,10 @@ Trust extension (OS-TRUST)
             trusts</link>.
         </para>
         <wadl:resources
-            href="../wadls/identity-api/src/v3/wadl/OS-TRUST-v3.wadl"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
+            xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-TRUST-v3.wadl#trusts">
+                <wadl:method href="#createTrust"/>
+            </wadl:resource>
+        </wadl:resources>
     </section>
 </chapter>
