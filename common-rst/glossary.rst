@@ -1169,7 +1169,7 @@ OpenStack contribution process.
 
    DNS
 
-      Domain Name Server. A hierarchical and distributed naming system
+      Domain Name System. A hierarchical and distributed naming system
       for computers, services, and resources connected to the Internet or a
       private network. Associates a human-friendly names to IP
       addresses.
@@ -1203,12 +1203,6 @@ OpenStack contribution process.
       Also, a domain is an entity or container of all DNS-related
       information containing one or more records.
 
-   Domain Name Service (DNS)
-
-      In Compute, the support that enables associating DNS entries
-      with floating IP addresses, nodes, or cells so that hostnames are
-      consistent across reboots.
-
    Domain Name System (DNS)
 
       A system by which Internet domain name-to-address and
@@ -1222,6 +1216,9 @@ OpenStack contribution process.
       invokes the slave. DNS servers might also be clustered or replicated
       such that changes made to one DNS server are automatically propagated
       to other active servers.
+      In Compute, the support that enables associating DNS entries
+      with floating IP addresses, nodes, or cells so that hostnames are
+      consistent across reboots.
 
    download
 
@@ -1351,10 +1348,6 @@ OpenStack contribution process.
       Essex is the code name for the fifth release of
       OpenStack. The design summit took place in
       Boston, Massachusetts, US and Essex is a nearby city.
-
-   ESX
-
-      An OpenStack-supported hypervisor.
 
    ESXi
 
@@ -1712,25 +1705,6 @@ OpenStack contribution process.
       Device plugged into a PCI slot, such as a fibre channel or
       network card.
 
-   HTTP
-
-      Hypertext Transfer Protocol. HTTP is an application protocol for
-      distributed, collaborative, hypermedia information systems. It is the
-      foundation of data communication for the World Wide Web. Hypertext is
-      structured text that uses logical links (hyperlinks) between nodes
-      containing text. HTTP is the protocol to exchange or transfer
-      hypertext.
-
-   HTTPS
-
-      Hypertext Transfer Protocol Secure (HTTPS) is a communications
-      protocol for secure communication over a computer network, with
-      especially wide deployment on the Internet. Technically, it is not a
-      protocol in and of itself; rather, it is the result of simply layering
-      the Hypertext Transfer Protocol (HTTP) on top of the SSL/TLS protocol,
-      thus adding the security capabilities of SSL/TLS to standard HTTP
-      communications.
-
    hybrid cloud
 
       A hybrid cloud is a composition of two or more clouds
@@ -1752,14 +1726,22 @@ OpenStack contribution process.
 
    Hypertext Transfer Protocol (HTTP)
 
-      The protocol that tells browsers where to go to find
-      information.
+      An application protocol for distributed, collaborative,
+      hypermedia information systems. It is the foundation of data
+      communication for the World Wide Web. Hypertext is structured
+      text that uses logical links (hyperlinks) between nodes containing
+      text. HTTP is the protocol to exchange or transfer hypertext.
 
    Hypertext Transfer Protocol Secure (HTTPS)
 
-      Encrypted HTTP communications using SSL or TLS; most OpenStack
-      API endpoints and many inter-component communications support HTTPS
-      communication.
+      An encrypted communications protocol for secure communication
+      over a computer network, with especially wide deployment on the
+      Internet. Technically, it is not a protocol in and of itself;
+      rather, it is the result of simply layering the Hypertext Transfer
+      Protocol (HTTP) on top of the TLS or SSL protocol, thus adding the
+      security capabilities of TLS or SSL to standard HTTP communications.
+      most OpenStack API endpoints and many inter-component communications
+      support HTTPS communication.
 
    hypervisor
 
@@ -3364,6 +3346,11 @@ OpenStack contribution process.
       physical device, offering improved performance over an equivalent
       virtual device. Currently supported in OpenStack Havana and later
       releases.
+
+   Service Level Agreement (SLA)
+
+      Contractual obligations that ensure the availability of a
+      service.
 
    SmokeStack
 
