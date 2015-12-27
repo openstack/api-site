@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2015 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent qos.wadl                        -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/" xml:id="os-qos-v2.0">
+        <resource id="version" path="//v2.0">
+            <resource id="qos" path="qos">
+                <resource id="policies" path="policies">
+                    <method href="#listPolicies"/>
+                    <method href="#createPolicy"/>
+                    <resource id="policy_id" path="{policy_id}">
+                        &policy_idTemplateParameter;
+                        <method href="#showPolicy"/>
+                        <method href="#updatePolicy"/>
+                        <method href="#deletePolicy"/>
+                        <resource id="bandwidth_limit_rules" path="bandwidth_limit_rules">
+                            <method href="#listBandwidthLimitRules"/>
+                            <method href="#createBandwidthLimitRule"/>
+                            <resource id="rule_id" path="{rule_id}">
+                                &rule_idTemplateParameter;
+                                <method href="#showBandwidthLimitRule"/>
+                                <method href="#updateBandwidthLimitRule"/>
+                                <method href="#deleteBandwidthLimitRule"/>
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="GET" id="listPolicies">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="List QoS policies">
+            <para role="shortdesc">
+                Lists all QoS policies that are associated with your tenant
+                account.
+            </para>
+            <para>
+                The list might be empty.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/policies-list-response.json"/>
+            </wadl:doc>
+            &qos-policiesObjectParameter;
+            &qos-policy-tenant_idResponseParameter;
+            &qos-policy-idResponseParameter;
+            &qos-policy-nameResponseParameter;
+            &qos-policy-descriptionResponseParameter;
+            &qos-policy-sharedResponseParameter;
+            &bandwidth_limit_rulesResponseParameter;
+            &qos-policy-rule-idResponseParameter;
+            &qos-policy-rule-policy_idResponseParameter;
+            &max_kbpsResponseParameter;
+            &max_burst_kbpsResponseParameter;
+        </representation>
+        </response> &fault401; &fault500; &fault503;
+    </method>
+    <method name="POST" id="createPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create QoS policy">
+            <para role="shortdesc">
+                Creates a QoS policy.
+            </para>
+            <para>
+                Creates a QoS policy by using the configuration that you
+                define in the request object. A response object is returned.
+                The object contains a unique ID.
+            </para>
+            <para>
+                If the caller is not an administrative user, this call returns
+                the HTTP <code>Forbidden (403)</code> response code.
+            </para>
+            <para>
+                Users with an administrative role can create policies on
+                behalf of other tenants by specifying a tenant UUID that is
+                different than their own.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/policy-create-request.json"/>
+                </wadl:doc>
+                &qos-policyObjectParameter;
+                &qos-policy-nameRequestParameter;
+                &qos-policy-descriptionRequestParameter;
+                &qos-policy-sharedRequestParameter;
+                &qos-policy-tenant_idRequestParameter;
+                &qos-policy-typeRequestParameter;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/policy-create-response.json"/>
+                </wadl:doc>
+                &qos-policyObjectParameter;
+                &qos-policy-tenant_idResponseParameter;
+                &qos-policy-idResponseParameter;
+                &qos-policy-nameResponseParameter;
+                &qos-policy-descriptionResponseParameter;
+                &qos-policy-sharedResponseParameter;
+            </representation>
+        </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503;
+    </method>
+    <method name="GET" id="showPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show QoS policy details">
+            <para role="shortdesc">
+                Shows details for a QoS policy.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/policy-show-response.json"/>
+            </wadl:doc>
+            &qos-policyObjectParameter;
+            &qos-policy-tenant_idResponseParameter;
+            &qos-policy-idResponseParameter;
+            &qos-policy-nameResponseParameter;
+            &qos-policy-descriptionResponseParameter;
+            &qos-policy-sharedResponseParameter;
+            &bandwidth_limit_rulesResponseParameter;
+            &qos-policy-rule-idResponseParameter;
+            &qos-policy-rule-policy_idResponseParameter;
+            &max_kbpsResponseParameter;
+            &max_burst_kbpsResponseParameter;
+        </representation>
+        </response> &fault401; &fault500; &fault503;
+    </method>
+    <method name="PUT" id="updatePolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update QoS policy">
+            <para role="shortdesc">
+                Updates a QoS policy.
+            </para>
+            <para>
+                If the request is valid, the service returns the
+                <code>Accepted (202)</code> response code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/policy-update-request.json"/>
+                </wadl:doc>
+                &qos-policyObjectParameter;
+                &qos-policy-nameRequestParameter;
+                &qos-policy-descriptionRequestParameter;
+                &qos-policy-sharedRequestParameter;
+                &qos-policy-tenant_idRequestParameter;
+                &qos-policy-typeRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/policy-update-response.json"/>
+                </wadl:doc>
+                &qos-policyObjectParameter;
+                &qos-policy-tenant_idResponseParameter;
+                &qos-policy-idResponseParameter;
+                &qos-policy-nameResponseParameter;
+                &qos-policy-descriptionResponseParameter;
+                &qos-policy-sharedResponseParameter;
+            </representation>
+        </response> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
+    <method name="DELETE" id="deletePolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete QoS policy">
+            <para role="shortdesc">
+                Deletes a QoS policy.
+            </para>
+        </wadl:doc>
+        <response status="204"/> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
+    <method name="GET" id="listBandwidthLimitRules">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="List bandwidth limit rules for QoS policy">
+            <para role="shortdesc">
+                Lists all bandwidth limit rules for a QoS policy.
+            </para>
+            <para>
+                The list might be empty.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/bandwidth_limit_rules-list-response.json"/>
+            </wadl:doc>
+            &bandwidth_limit_rulesResponseParameter;
+            &qos-policy-rule-idResponseParameter;
+            &qos-policy-rule-policy_idResponseParameter;
+            &max_kbpsResponseParameter;
+            &max_burst_kbpsResponseParameter;
+        </representation>
+        </response> &fault401; &fault500; &fault503;
+    </method>
+    <method name="POST" id="createBandwidthLimitRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create bandwidth limit rule">
+            <para role="shortdesc">
+                Creates a bandwidth limit rule for a QoS policy.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/bandwidth_limit_rule-create-request.json"/>
+                </wadl:doc>
+                &bandwidth_limit_ruleObject;
+                &qos-policy-rule-policy_idRequestParameter;
+                &max_kbpsRequestParameter;
+                &max_burst_kbpsRequestParameter;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/bandwidth_limit_rule-create-response.json"/>
+                </wadl:doc>
+                &bandwidth_limit_ruleObject;
+                &qos-policy-rule-idResponseParameter;
+                &qos-policy-rule-policy_idResponseParameter;
+                &max_kbpsResponseParameter;
+                &max_burst_kbpsResponseParameter;
+            </representation>
+        </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503;
+    </method>
+    <method name="GET" id="showBandwidthLimitRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show bandwidth limit rule details">
+            <para role="shortdesc">
+                Shows details for a bandwidth limit rule for a QoS policy.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/bandwidth_limit_rule-show-response.json"/>
+            </wadl:doc>
+            &bandwidth_limit_ruleObject;
+            &qos-policy-rule-idResponseParameter;
+            &qos-policy-rule-policy_idResponseParameter;
+            &max_kbpsResponseParameter;
+            &max_burst_kbpsResponseParameter;
+        </representation>
+        </response> &fault401; &fault500; &fault503;
+    </method>
+    <method name="PUT" id="updateBandwidthLimitRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update bandwidth limit rule">
+            <para role="shortdesc">
+                Updates a bandwidth limit rule for a QoS policy.
+            </para>
+            <para>
+                If the request is valid, the service returns the
+                <code>Accepted (202)</code> response code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/bandwidth_limit_rule-update-request.json"/>
+                </wadl:doc>
+                &bandwidth_limit_ruleObject;
+                &qos-policy-rule-policy_idRequestParameter;
+                &max_kbpsRequestParameter;
+                &max_burst_kbpsRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/bandwidth_limit_rule-update-response.json"/>
+                </wadl:doc>
+                &bandwidth_limit_ruleObject;
+                &qos-policy-rule-idResponseParameter;
+                &qos-policy-rule-policy_idResponseParameter;
+                &max_kbpsResponseParameter;
+                &max_burst_kbpsResponseParameter;
+            </representation>
+        </response> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
+    <method name="DELETE" id="deleteBandwidthLimitRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete bandwidth limit rule">
+            <para role="shortdesc">
+                Deletes a bandwidth limit rule for a QoS policy.
+            </para>
+        </wadl:doc>
+        <response status="204"/> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
+</application>
