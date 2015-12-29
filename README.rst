@@ -131,7 +131,7 @@ To run individual tests:
  * ``tox -e checkbuild`` - Builds the manual
 
 To run these tests, the Tox package uses the
-`OpenStack doc tools package <https://github.com/openstack/openstack-doc-tools>`_.
+`OpenStack doc tools package <https://git.openstack.org/cgit/openstack/openstack-doc-tools>`_.
 
 The OpenStack doc tools require Maven for the build check.
 
