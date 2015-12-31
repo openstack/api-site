@@ -176,6 +176,16 @@
     </para>
   </wadl:doc>
 </param>'>
+<!ENTITY policy_idTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  type="csapi:UUID" style="template" required="true" name="policy_id">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Policy UUID">
+    <para>
+      The UUID of the policy.
+    </para>
+  </wadl:doc>
+</param>'>
 <!ENTITY port_idTemplateParameter '
 <param xmlns="http://wadl.dev.java.net/2009/02"
   type="csapi:UUID" style="template" required="true" name="port_id">
@@ -195,6 +205,16 @@
     xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Router ID">
     <para>
       The UUID of the router.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY rule_idTemplateParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  type="csapi:UUID" style="template" required="true" name="rule_id">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Rule UUID">
+    <para>
+      The UUID of the rule.
     </para>
   </wadl:doc>
 </param>'>
@@ -570,6 +590,994 @@
   </wadl:doc>
 </param>'>
 <!ENTITY portObject '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="port" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A <code>port</code> object.
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!ENTITY portsObject '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="ports" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A <code>ports</code> object.
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!ENTITY portCommonRequestParams '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="name" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A symbolic name for the port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="admin_state_up" style="plain" type="xsd:bool">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The administrative status of the port, which is up
+                (<code>true</code>) or down (<code>false</code>).
+            </para>
+        </wadl:doc>
+    </param>
+    &tenantIdOwnerNetwork;
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="mac_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The MAC address. If you specify an address that is not valid,
+                a <code>Bad Request (400)</code> status code is returned. If
+                you do not specify a MAC address, OpenStack Networking tries
+                to allocate one. If a failure occurs, a <code>Service
+                Unavailable (503)</code> status code is returned.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="fixed_ips" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                If you specify only a subnet ID, OpenStack Networking
+                allocates an available IP from that subnet to the port. If
+                you specify both a subnet ID and an IP address, OpenStack
+                Networking tries to allocate the address to the
+                port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="subnet_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                If you specify only a subnet ID, OpenStack Networking
+                allocates an available IP from that subnet to the port. If
+                you specify both a subnet ID and an IP address, OpenStack
+                Networking tries to allocate the address to the
+                port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="ip_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                If you specify both a subnet ID and an IP address, OpenStack
+                Networking tries to allocate the address to the
+                port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="security_groups" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                One or more security group IDs.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="network_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the network.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="allowed_address_pairs" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A set of zero or more allowed address pairs. An address pair
+                contains an IP address and MAC address.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="ip_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The IP address of an allowed address pair.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="mac_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The MAC address of an allowed address pair.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="opt_value" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The extra DHCP option value.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="opt_name" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The extra DHCP option name.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="device_owner" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the entity that uses this port. For example, a DHCP
+                agent.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="device_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the device that uses this port. For example, a
+                virtual server.
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!ENTITY portCommonResponseParams '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="status" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The port status. Value is ACTIVE or DOWN.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="name" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The port name.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="allowed_address_pairs" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A set of zero or more allowed address pairs. An address pair
+                consists of an IP address and MAC address.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="ip_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The IP address.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="mac_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The MAC address.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="admin_state_up" style="plain" type="xsd:bool">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The administrative state of the port, which is up
+                (<code>true</code>) or down (<code>false</code>).
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="network_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the attached network.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="tenant_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the tenant who owns the network. Only administrative
+                users can specify a tenant ID other than their own.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="extra_dhcp_opts" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A set of zero or more extra DHCP option pairs. An option pair
+                consists of an option value and name.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="opt_value" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The extra DHCP option value.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="opt_name" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The extra DHCP option name.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="device_owner" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the entity that uses this port. For example, a DHCP
+                agent.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="mac_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The MAC address of the port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="fixed_ips" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                IP addresses for the port. Includes the IP address and subnet
+                ID.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="subnet_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                Subnet ID of the subnet to which the port is attached.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="ip_address" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                IP address.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="security_groups" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The IDs of any attached security groups.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="device_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the device that uses this port. For example, a virtual
+                server.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+        name="port_security_enabled" style="plain" type="xsd:bool">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The port security status. The status is enabled
+                (<code>true</code>) or disabled (<code>false</code>).
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!ENTITY portListResponseParams '
+    &portsObject;
+    &portCommonResponseParams;
+'>
+<!ENTITY portListQueryParams '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="status" style="query" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The port status. Value is ACTIVE or DOWN.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="display_name" style="query" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The port name.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="admin_state" style="query" type="xsd:bool">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The administrative state of the router, which is up (true)
+                or down (false).
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="network_id" style="query" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the attached network.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="tenant_id" style="query" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the tenant who owns the network. Only administrative
+                users can specify a tenant ID other than their own. You cannot
+                change this value through authorization policies.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="device_owner" style="query" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the entity that uses this port. For example, a DHCP
+                agent.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="mac_address" style="query" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The MAC address of the port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="port_id" style="query" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="security_groups" style="query" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The IDs of any attached security groups.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="device_id" style="query" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the device that uses this port. For example, a
+                virtual server.
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!ENTITY portCreateRequestParams '
+    &portObject;
+    &portCommonRequestParams;
+'>
+<!ENTITY portCreateResponseParams '
+    &portObject;
+    &portCommonResponseParams;
+'>
+<!ENTITY portShowResponseParams '
+    &portObject;
+    &portCommonResponseParams;
+'>
+<!ENTITY portUpdateRequestParams '
+    &portObject;
+    &portCommonRequestParams;
+'>
+<!ENTITY portUpdateResponseParams '
+    &portObject;
+    &portCommonResponseParams;
+'>
+<!ENTITY portBindingRequestParams '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:host_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the host where the port is allocated. In some
+                cases, different implementations can run on different
+                hosts.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:profile" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A dictionary that enables the application running on the
+                host to pass and receive virtual network interface
+                (VIF) port-specific information to the plug-in.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:vnic_type" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The virtual network interface card (vNIC) type that is bound
+                to the neutron port. A valid value is <code>normal</code>,
+                <code>direct</code>, or <code>macvtap</code>.
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!ENTITY portBindingResponseParams '
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:host_id" style="plain" type="csapi:uuid">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The ID of the host where the port is allocated. In some
+                cases, different implementations can run on different
+                hosts.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:vif_details" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                Read-only. A dictionary that enables the application to
+                pass information about functions that the Networking API
+                provides. To enable or disable port filtering features such as
+                security group and anti-MAC/IP spoofing, specify <code>port_filter:
+                True</code> or <code>port_filter:
+                False</code>.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="port_filter" style="plain" type="xsd:bool">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                Read-only. A dictionary that enables the application to
+                pass information about functions that the Networking API
+                provides. To enable or disable port filtering features such as
+                security group and anti-MAC/IP spoofing, specify <code>port_filter:
+                True</code> or <code>port_filter:
+                False</code>.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="ovs_hybrid_plug" style="plain" type="xsd:bool">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                Read-only. A dictionary that enables the application to
+                pass information about functions that the Networking API
+                provides. To enable or disable port filtering features such as
+                security group and anti-MAC/IP spoofing, specify <code>port_filter:
+                True</code> or <code>port_filter:
+                False</code>.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:vif_type" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                Read-only. The VIF type for the specified
+            port.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:profile" style="plain" type="xsd:dict">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                A dictionary the enables the application running on the
+                host to pass and receive VIF port-specific
+                information to the plug-in.
+            </para>
+        </wadl:doc>
+    </param>
+    <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+        name="binding:vnic_type" style="plain" type="xsd:string">
+        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+                The virtual network interface card (vNIC) type that is bound
+                to the neutron port.
+            </para>
+            <para>
+                In &POST; and &PUT; operations, specify a value of
+                <code>normal</code> (virtual NIC), <code>direct</code> (PCI
+                pass-through), or <code>macvtap</code> (virtual interface with
+                a tap-like software interface). These values support SR-IOV
+                PCI pass-through networking. The ML2 plug-in supports the
+                <code>vnic_type</code>.
+            </para>
+            <para>
+                In &GET; operations, the <code>binding:vnic_type</code> extended
+                attribute is visible to only port owners and administrative users.
+            </para>
+        </wadl:doc>
+    </param>
+'>
+<!-- Subnet Parameters -->
+<!ENTITY subnetListParameters
+'<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="name" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The subnet name.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="network_id" style="plain" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the attached network.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="tenant_id" style="plain" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the tenant who owns the network. Only
+             administrative users can specify a tenant ID other than their
+             own.</para>
+             </wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="allocation_pools" style="plain" type="xsd:dict">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start and end addresses for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="start" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="end" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The end address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="gateway_ip" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The gateway IP address.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="ip_version" style="plain" type="xsd:int">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The IP version, which is 4 or 6.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="cidr" style="plain" type="xsd:bool">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The CIDR.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="id" style="plain" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the subnet.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="enable_dhcp" style="plain" type="xsd:boolean">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+         xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Set to true if DHCP is enabled and false if DHCP is disabled.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="dns_nameservers" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>DNS server.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="host_routes" style="plain" type="xsd:list">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A list of host route dictionaries for the subnet.
+             For example:</para>
+             <programlisting>"host_routes":[
+    {
+        "destination":"0.0.0.0/0",
+        "nexthop":"123.456.78.9"
+    },
+    {
+        "destination":"192.168.0.0/24",
+        "nexthop":"192.168.0.1"
+    }
+]</programlisting></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="destination" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Destination for static route.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="nexthop" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The next hop for the destination.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="ipv6_ra_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>
+                The IPv6 RA mode, which is <code>dhcpv6-stateful</code>,
+                <code>dhcpv6-stateless</code>, or <code>slaac</code>.
+              </para>
+            </wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="ipv6_address_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+            <para>
+              The IPv6 address mode, which is <code>dhcpv6-stateful</code>,
+              <code>dhcpv6-stateless</code>, or <code>slaac</code>.
+            </para>
+          </wadl:doc>
+     </param>
+       '>
+<!ENTITY subnetListQueryParameters '<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="display_name" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Name of the network.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="network_id" style="query" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the attached network.</para></wadl:doc>
+     </param>
+     &tenantIdOwnerNetwork;
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="gateway_ip" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The gateway IP address.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ip_version" style="query" type="xsd:int">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The IP version, which is 4 or 6.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="cidr" style="query" type="xsd:bool">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The CIDR.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="id" style="query" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the subnet.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="enable_dhcp" style="query" type="xsd:boolean">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>If true, DHCP is enabled and If false, DHCP is disabled.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_ra_mode" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Choose from (constants.IPV6_SLAAC,constants.DHCPV6_STATEFUL,constants.DHCPV6_STATELESS,name=&apos;ipv6_address_modes,null).</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_address_mode" style="query" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Choose from (constants.IPV6_SLAAC,constants.DHCPV6_STATEFUL,constants.DHCPV6_STATELESS,name=&apos;ipv6_address_modes,null).</para></wadl:doc>
+     </param>'>
+    <!-- Subnet Create Parameters -->
+<!ENTITY subnetCreateParameters '<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="name" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The subnet name.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="network_id" style="plain" type="csapi:uuid">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The ID of the attached network.</para></wadl:doc>
+     </param>
+     &tenantIdOwnerNetwork;
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="allocation_pools" style="plain" type="xsd:dict">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start and end addresses for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="start" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="end" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The end address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="gateway_ip" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The gateway IP address.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="ip_version" style="plain" type="xsd:int">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The IP version, which is 4 or 6.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+         name="cidr" style="plain" type="xsd:bool">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The CIDR.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="enable_dhcp" style="plain" type="xsd:boolean">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Set to true if DHCP is enabled and false if DHCP is disabled.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="dns_nameservers" style="plain" type="xsd:list">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A list of DNS name servers for the subnet. Specify each name server as an IP address and separate multiple entries with a space. For example [8.8.8.7 8.8.8.8].</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="host_routes" style="plain" type="xsd:list">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A list of host route dictionaries for the subnet. For example:</para>
+             <programlisting>"host_routes":[
+    {
+        "destination":"0.0.0.0/0",
+        "nexthop":"123.456.78.9"
+    },
+    {
+        "destination":"192.168.0.0/24",
+        "nexthop":"192.168.0.1"
+    }
+]</programlisting></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="destination" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Destination for static route</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="nexthop" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The next hop for the destination.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_ra_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A valid value is dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="ipv6_address_mode" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A valid value is dhcpv6-stateful, dhcpv6-stateless, or slaac.</para></wadl:doc>
+     </param>'>
+<!ENTITY subnetUpdateParameters '<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="name" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The subnet name.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="allocation_pools" style="plain" type="xsd:dict">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start and end addresses for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="start" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The start address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="end" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The end address for the allocation pools.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="gateway_ip" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The gateway IP address.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="enable_dhcp" style="plain" type="xsd:boolean">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Set to true if DHCP is enabled and false if DHCP is disabled.</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="dns_nameservers" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>DNS server</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="host_routes" style="plain" type="xsd:list">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>A list of host route dictionaries for the subnet. For example:</para>
+             <programlisting>"host_routes":[
+    {
+        "destination":"0.0.0.0/0",
+        "nexthop":"123.456.78.9"
+    },
+    {
+        "destination":"192.168.0.0/24",
+        "nexthop":"192.168.0.1"
+    }
+]</programlisting></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="destination" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Destination for static route</para></wadl:doc>
+     </param>
+     <param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+         name="nexthop" style="plain" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>The next hop for the destination</para></wadl:doc>
+     </param>'>
+<!-- Server List Parameters -->
+<!ENTITY serverListParameters '
+&changes_since-QueryParameter;
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="image" style="query" required="false" type="xsd:anyURI">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Name of the image in URL format.</para></wadl:doc>
+     </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="flavor" style="query" required="false" type="xsd:anyURI">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Name of the flavor in URL format.</para></wadl:doc>
+     </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="name" style"query" required="false" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Name of the server as a string.</para></wadl:doc>
+     </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="marker" style="query" required="false" type="csapi:UUID">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>UUID of the server at which you want to set a marker.</para></wadl:doc>
+     </param>
+      &limitMarkerReqParameter;
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="status" style="query" required="false" type="csapi:ServerStatus">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Value of the status of the server so that you can filter on "ACTIVE" for example.</para></wadl:doc>
+     </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="host" style"query" required="false" type="xsd:string">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Name of the host as a string.</para></wadl:doc>
+     </param>'>
+<!-- Flavor List Parameters -->
+<!ENTITY flavorListParameters '
+&changes_since-QueryParameter;
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="minDisk" style="query" required="false" type="xsd:int">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Integer value for the minimum disk space in GB so you can filter results.</para></wadl:doc>
+     </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="minRam" style="query" required="false" type="xsd:int">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>Integer value for the minimum RAM, in MB, so that you can filter results.</para></wadl:doc>
+     </param>
+      <param xmlns="http://wadl.dev.java.net/2009/02"
+         name="marker" style="query" required="false" type="csapi:UUID">
+         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <para>UUID of the flavor at which you want to set a marker.</para></wadl:doc>
+     </param>
+     &limitMarkerReqParameter; '>
+<!--! router parameters  -->
+<!ENTITY routerParameter '
 <param xmlns="http://wadl.dev.java.net/2009/02" required="true"
     name="port" style="plain" type="xsd:dict">
   <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
@@ -6857,8 +7865,9 @@
       merges adjacent prefixes and treats them as a single prefix.
     </para>
     <para>
-      Each subnet prefix must be unique among all subnet prefixes in all
-      subnet pools that are associated with the address scope.
+      Ensure that each subnet prefix is unique among all subnet prefixes
+      in all subnet pools that are associated with the address
+      scope.
     </para>
   </wadl:doc>
 </param>
@@ -6868,9 +7877,9 @@
       xmlns:wadl="http://wadl.dev.java.net/2009/02"
       xml:lang="EN">
     <para>
-      The size of the prefix to allocate when the <code>cidr</code> or
-      <code>prefixlen</code> attributes are omitted when you create
-      the subnet. Default is <code>min_prefixlen</code>.
+        The size of the prefix to allocate when the <code>cidr</code> or
+        <code>prefixlen</code> attributes are omitted when you create
+        the subnet. Default is <code>min_prefixlen</code>.
     </para>
   </wadl:doc>
 </param>
@@ -6982,9 +7991,9 @@
       xmlns:wadl="http://wadl.dev.java.net/2009/02"
       xml:lang="EN">
     <para>
-      The size of the prefix to allocate when the <code>cidr</code> or
-      <code>prefixlen</code> attributes are omitted when you create
-      the subnet. Default is <code>min_prefixlen</code>.
+        The size of the prefix to allocate when the <code>cidr</code> or
+        <code>prefixlen</code> attributes are omitted when you create
+        the subnet. Default is <code>min_prefixlen</code>.
     </para>
   </wadl:doc>
 </param>
@@ -7090,9 +8099,9 @@
       xmlns:wadl="http://wadl.dev.java.net/2009/02"
       xml:lang="EN">
     <para>
-      The size of the prefix to allocate when the <code>cidr</code> or
-      <code>prefixlen</code> attributes are omitted when you create
-      the subnet.
+        The size of the prefix to allocate when the <code>cidr</code> or
+        <code>prefixlen</code> attributes are omitted when you create
+        the subnet.
     </para>
   </wadl:doc>
 </param>
@@ -7504,3 +8513,292 @@
 &firewall-router_idsRequestParameter;
 &firewall-firewall_policy_idRequestParameter;
 &firewall-nameRequestParameter;'>
+<!ENTITY policyObject '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="policy" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+          A <code>policy</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY policiesObject '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="policies" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+          A list of policy objects.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY bandwidth_limit_ruleObject '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="bandwidth_limit_rule" style="plain" type="xsd:dict">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+          A <code>bandwidth_limit_rule</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY bandwidth_limit_rulesObject '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="bandwidth_limit_rules" style="plain" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+          A list of bandwidth limit rule objects.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-idResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The generated UUID of the QoS policy.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-nameRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="name" style="plain" type="xsd:string">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The QoS policy name.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-nameResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="name" style="plain" type="xsd:string">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The QoS policy name.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-descriptionRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="description" style="plain" type="xsd:string">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The QoS policy description.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-descriptionResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="description" style="plain" type="xsd:string">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The QoS policy description.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-sharedRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="shared" style="plain" type="xsd:bool">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      Set to <code>true</code> to share this policy with other tenants.
+    </para>
+    <para>
+      Default is <code>false</code>.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-sharedResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="shared" style="plain" type="xsd:bool">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      Set to <code>true</code> to share this policy with other tenants.
+    </para>
+    <para>
+      Default is <code>false</code>.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY bandwidth_limit_rulesRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="bandwidth_limit_rules" style="plain" type="xsd:list">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      A list of bandwidth limit rules associated with the QoS policy.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY bandwidth_limit_rulesResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="bandwidth_limit_rules" style="plain" type="xsd:list">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      A list of bandwidth limit rules associated with the QoS policy.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-tenant_idRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="tenant_id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The tenant UUID of QoS policy owner. Only administrative
+      users can specify a tenant UUID other than their own. You cannot
+      change this value through authorization policies.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-tenant_idResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="tenant_id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The tenant UUID of QoS policy owner.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-typeRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="type" style="plain" type="xsd:string">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The type of QoS policy.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-typeResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+    name="type" style="plain" type="xsd:string">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The type of QoS policy.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-rule-directionRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+  name="direction" style="plain" type="xsd:string">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xml:lang="EN">
+    <para>
+      The direction to which to apply the QoS policy rule. Valid value is
+      <code>ingress</code> or <code>egress</code>.
+    </para>
+    <para>
+      Default is <code>egress</code>.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-rule-directionResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+  name="direction" style="plain" type="xsd:string">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xml:lang="EN">
+    <para>
+      The direction to which to apply the QoS policy rule. Valid value is
+      <code>ingress</code> or <code>egress</code>.
+    </para>
+    <para>
+      Default is <code>egress</code>.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-rule-idRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+  name="id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The UUID of the QoS policy rule.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-rule-idResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+  name="id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The UUID of the QoS policy rule.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-rule-policy_idRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+  name="policy_id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The UUID of the QoS policy that is associated with the rule.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY qos-policy-rule-policy_idResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+  name="policy_id" style="plain" type="csapi:UUID">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The UUID of the QoS policy that is associated with the rule.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY max_kbpsRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+  name="max_kbps" style="plain" type="xsd:int">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The maximum KBPS value. If you specify this value, must be greater than
+      0. Default is <code>null</code>.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY max_kbpsResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+  name="max_kbps" style="plain" type="xsd:int">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The maximum KBPS value.
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY max_burst_kbpsRequestParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+  name="max_burst_kbps" style="plain" type="xsd:int">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The burst over the maximum KBPS value. Default is <code>0</code>
+    </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY max_burst_kbpsResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="true"
+  name="max_burst_kbps" style="plain" type="xsd:int">
+  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+    <para>
+      The burst over the maximum KBPS value.
+    </para>
+  </wadl:doc>
+</param>'>
