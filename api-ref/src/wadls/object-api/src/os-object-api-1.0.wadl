@@ -494,6 +494,27 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
                 If the container does not exist, the call returns the
                 <code>Not Found (404)</code> response code.
             </para>
+            <para>
+                The operation returns the <code>Range Not Satisfiable (416)</code> response
+                code for any ranged &GET; requests that specify more than:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Fifty ranges.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Three overlapping ranges.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Eight non-increasing ranges.
+                    </para>
+                </listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
             <representation mediaType="application/xml">
@@ -541,7 +562,9 @@ Date: Fri, 17 Jan 2014 16:09:56 GMT</programlisting></para>
                 &container-meta-temp-url-key-requestHeader;
                 &container-meta-temp-url-key-2-requestHeader;
             </representation>
-        </response> &fault404; </method>
+        </response> &fault404;
+        <response status="416"/>
+    </method>
     <method name="PUT" id="createContainer">
         <!-- create container -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -889,6 +912,27 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
 &lt;html>&lt;h1>Not Found&lt;/h1>&lt;p>The resource could not be found.&lt;/p>&lt;/html></programlisting></para>
                 </listitem>
             </itemizedlist>
+            <para>
+                The operation returns the <code>Range Not Satisfiable (416)</code> response
+                code for any ranged &GET; requests that specify more than:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Fifty ranges.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Three overlapping ranges.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Eight non-increasing ranges.
+                    </para>
+                </listitem>
+            </itemizedlist>
         </wadl:doc>
         <request>
           <representation mediaType="application/xml">
@@ -918,7 +962,9 @@ Date: Thu, 16 Jan 2014 18:55:00 GMT
             &static-large-object-responseHeader;
             &trans-id-responseHeader; &Date-ResponseHeader;
           </representation>
-        </response> &fault404; </method>
+        </response> &fault404;
+        <response status="416"/>
+    </method>
     <method name="PUT" id="createOrReplaceObject">
         <!-- create, replace object -->
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
@@ -1220,8 +1266,10 @@ Date: Thu, 16 Jan 2014 21:13:19 GMT
 </programlisting></para>
                 </listitem>
             </itemizedlist>
-            <para>If the request succeeds, the operation returns the
-                    <code>200</code> response code.</para>
+            <para>
+                If the request succeeds, the operation returns the
+                <code>200</code> response code.
+            </para>
         </wadl:doc>
         <request>
           <representation mediaType="application/xml">
