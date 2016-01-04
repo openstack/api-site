@@ -28,17 +28,23 @@
                     <resource path="disable-log-reason" id="disable-log-reason">
                         <method href="#disableLogReason"/>
                     </resource>
-                    <method href="#deleteService"/>
+                    <resource id="service_id" path="{service_id}">
+                        &service_idTemplateParameter;
+                        <method href="#deleteService"/>
+                    </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
     <method name="GET" id="listServices">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="List services">
+            title="List Compute services">
             <para role="shortdesc">
-                Lists all services for a tenant. Includes reasons, if
-                available, for why any services were disabled.
+                Lists all running Compute services for a tenant.
+            </para>
+            <para>
+                Includes reasons, if available, for why any services were
+                disabled.
             </para>
         </wadl:doc>
         <response status="200">
@@ -46,27 +52,27 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/services-list-get-response.json"
+                        href="../samples/os-services/v2.11/services-list-response.json"
                     />
                 </wadl:doc>
-                &servicesResponseParameter;
-                &serviceIdResponseParameter;
-                &binaryRequestParameter;
-                &disabled_reasonRequestParameter;
-                &hostRequestParameter;
-                &serviceStateResponseParameter;
-                &forced_downResponseParameter;
-                &serviceStatusResponseParameter;
+                &servicesObjectParameter;
+                &service-idResponseParameter;
+                &service-binaryResponseParameter;
+                &service-disabled_reasonResponseParameter;
+                &service-hostResponseParameter;
+                &service-stateResponseParameter;
+                &service-statusResponseParameter;
                 &service-updated_at-ResponseParameter;
-                &zoneResponseParameter;
+                &service-forced_downResponseParameter;
+                &service-zoneResponseParameter;
             </representation>
         </response>
     </method>
     <method name="PUT" id="enableScheduling">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Enable scheduling for a service">
+            title="Enable scheduling for a Compute service">
             <para role="shortdesc">
-                Enables scheduling for a service.
+                Enables scheduling for a Compute service.
             </para>
             <para>
                 Specify the service by its host name and binary name.
@@ -77,11 +83,11 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-enable-put-request.json"
+                        href="../samples/os-services/v2.11/service-enable-request.json"
                     />
                 </wadl:doc>
-                &hostRequestParameter;
-                &binaryRequestParameter;
+                &service-hostRequestParameter;
+                &service-binaryRequestParameter;
             </representation>
         </request>
         <response status="200">
@@ -89,21 +95,21 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-enable-update-response.json"
+                        href="../samples/os-services/v2.11/service-enable-response.json"
                     />
                 </wadl:doc>
-                &serviceResponseParameter;
-                &binaryRequestParameter;
-                &hostRequestParameter;
-                &serviceStatusResponseParameter;
+                &serviceObjectParameter;
+                &service-binaryResponseParameter;
+                &service-hostResponseParameter;
+                &service-statusResponseParameter;
             </representation>
         </response>
     </method>
     <method name="PUT" id="disableScheduling">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Disable scheduling for a service">
+            title="Disable scheduling for a Compute service">
             <para role="shortdesc">
-                Disables scheduling for a service.
+                Disables scheduling for a Compute service.
             </para>
             <para>
                 Specify the service by its host name and binary name.
@@ -114,11 +120,11 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-disable-put-request.json"
+                        href="../samples/os-services/service-disable-request.json"
                     />
                 </wadl:doc>
-                &hostRequestParameter;
-                &binaryRequestParameter;
+                &service-hostRequestParameter;
+                &service-binaryRequestParameter;
             </representation>
         </request>
         <response status="200">
@@ -126,22 +132,22 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-disable-update-response.json"
+                        href="../samples/os-services/service-disable-response.json"
                     />
                 </wadl:doc>
-                &serviceResponseParameter;
-                &binaryRequestParameter;
-                &hostRequestParameter;
-                &serviceStatusResponseParameter;
+                &serviceObjectParameter;
+                &service-binaryResponseParameter;
+                &service-hostResponseParameter;
+                &service-statusResponseParameter;
             </representation>
         </response>
     </method>
     <method name="PUT" id="disableLogReason">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Log disabled service information">
+            title="Log disabled Compute service information">
             <para role="shortdesc">
-                Logs information to the service table about why a
-                service was disabled.
+                Logs information to the Compute service table about why a
+                Compute service was disabled.
             </para>
             <para>
                 Specify the service by its host name and binary name.
@@ -152,12 +158,12 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-disable-log-put-request.json"
+                        href="../samples/os-services/service-disable-log-request.json"
                     />
                 </wadl:doc>
-                &hostRequestParameter;
-                &binaryRequestParameter;
-                &disabled_reasonRequestParameter;
+                &service-hostRequestParameter;
+                &service-binaryRequestParameter;
+                &service-disabled_reasonRequestParameter;
             </representation>
         </request>
         <response status="200">
@@ -165,22 +171,22 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-disable-log-update-response.json"
+                        href="../samples/os-services/service-disable-log-response.json"
                     />
                 </wadl:doc>
-                &serviceResponseParameter;
-                &binaryRequestParameter;
-                &disabled_reasonRequestParameter;
-                &hostRequestParameter;
-                &serviceStatusResponseParameter;
+                &serviceObjectParameter;
+                &service-binaryResponseParameter;
+                &service-disabled_reasonResponseParameter;
+                &service-hostResponseParameter;
+                &service-statusResponseParameter;
             </representation>
         </response>
     </method>
     <method name="DELETE" id="deleteService">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
-            title="Delete service">
+            title="Delete Compute service">
             <para role="shortdesc">
-                Deletes a service.
+                Deletes a Compute service.
             </para>
             <para>
                 Specify the service by its host name and binary name.
@@ -191,11 +197,11 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-services/service-enable-put-request.json"
+                        href="../samples/os-services/service-enable-request.json"
                     />
                 </wadl:doc>
-                &hostRequestParameter;
-                &binaryRequestParameter;
+                &service-hostRequestParameter;
+                &service-binaryRequestParameter;
             </representation>
         </request>
         <response status="204"/>
