@@ -125,7 +125,7 @@ if len(testing_instance.private_ips):
 public_ip = None
 if len(testing_instance.public_ips):
     public_ip = testing_instance.public_ips[0]
-    print('Public IP found: {}'.format(private_ip))
+    print('Public IP found: {}'.format(public_ip))
 
 # step-15
 print('Checking for unused Floating IP...')
