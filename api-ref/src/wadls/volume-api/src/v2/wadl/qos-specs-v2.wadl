@@ -24,6 +24,9 @@
                         &qos_idTemplateParameter;
                         <method href="#showQoSDetails"/>
                         <method href="#setQoSKey"/>
+                        <resource id="delete_keys" path="delete_keys">
+                            <method href="#unsetQoSKey"/>
+                        </resource>
                         <method href="#deleteQoSSpec"/>
                         <resource id="associate" path="associate">
                             &volume_type_idTemplateParameter;
@@ -357,9 +360,9 @@
     <!-- update QoS spec key/s -->
     <method name="PUT" id="setQoSKey">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Set or unset keys in QoS specification">
+            title="Set keys in QoS specification">
             <para role="shortdesc">
-                Sets or unsets keys in a QoS specification.
+                Sets keys in a QoS specification.
             </para>
         </wadl:doc>
         <request>
@@ -404,6 +407,41 @@
                 </wadl:doc>
             </representation>
         </response>
+    </method>
+    <!--unset QoS Key/s -->
+    <method name="PUT" id="unsetQoSKey">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Unset keys in QoS specification">
+            <para role="shortdesc">
+                Unsets keys in a QoS specification.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/qos-specs/qos-unset-request.xml"/>
+                </wadl:doc>
+            </representation>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/qos-specs/qos-unset-request.json"/>
+                </wadl:doc>
+                <param name="keys" style="plain" required="true"
+                    type="xsd:list">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                        xml:lang="EN" title="keys">
+                        <para>
+                            List of Keys.
+                        </para>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="200"/>
     </method>
     <!-- delete QoS spec -->
     <method name="DELETE" id="deleteQoSSpec">
