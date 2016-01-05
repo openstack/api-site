@@ -20,10 +20,9 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import os
-
-
 import openstackdocstheme
+import os
+import subprocess
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -73,8 +72,11 @@ release = '0.1'
 #   bug_project: Project to file bugs against.
 # These variables are passed to the logabug code via html_context.
 giturl = u'http://git.openstack.org/cgit/openstack/api-site/tree/api-quick-start/source'
-git_cmd = "/usr/bin/git log | head -n1 | cut -f2 -d' '"
-gitsha = os.popen(git_cmd).read().strip('\n')
+git_cmd = ["/usr/bin/git", "log", "-1"]
+last_commit = subprocess.Popen(git_cmd, stdout=subprocess.PIPE)
+first_line_cmd = ["head", "-n1"]
+gitsha = subprocess.Popen(first_line_cmd, stdin=last_commit.stdout,
+                stdout=subprocess.PIPE).communicate()[0].split()[-1].strip()
 html_context = {"gitsha": gitsha, "bug_tag": bug_tag,
                 "giturl": giturl,
                 "bug_project": "openstack-api-site"}
