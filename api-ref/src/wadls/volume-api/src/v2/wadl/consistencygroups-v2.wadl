@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (C) 2015-2016 OpenStack Foundation, All Rights Reserved -->
 <!DOCTYPE application [
-    <!ENTITY % common  SYSTEM "../common.ent">
+    <!ENTITY % common  SYSTEM "../../common.ent">
     %common;
     <!ENTITY % common_project  SYSTEM "../../../../common_project.ent">
     %common_project;
@@ -19,22 +19,22 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenant_idTemplateParameter;
                 <resource id="consistencygroups" path="consistencygroups">
-                    <method href="#listConsistencyGroups-v2"/>
-                    <method href="#postConsistencygroups-v2"/>
+                    <method href="#listConsistencyGroups"/>
+                    <method href="#createConsistencyGroup"/>
                     <resource id="detail" path="detail">
-                        <method href="#listConsistencyGroupsDetail-v2"/>
+                        <method href="#listConsistencyGroupsDetail"/>
                     </resource>
                     <resource id="create_from_src" path="create_from_src">
-                        <method href="#postConsistencygroupsFromSrc-v2"/>
+                        <method href="#createConsistencyGroupFromSource"/>
                     </resource>
                     <resource path="{consistencygroup_id}" id="consistencygroup_id">
                         &consistencygroup_idTemplateParameter;
-                        <method href="#showConsistencyGroup-v2"/>
+                        <method href="#showConsistencyGroup"/>
                         <resource path="delete" id="delete">
-                            <method href="#postConsistencygroupDelete-v2"/>
+                            <method href="#deleteConsistencyGroup"/>
                         </resource>
                         <resource path="update" id="update">
-                            <method href="#putConsistencygroupUpdate-v2"/>
+                            <method href="#updateConsistencyGroup"/>
                         </resource>
                     </resource>
                 </resource>
@@ -42,7 +42,7 @@
         </resource>
     </resources>
     <!-- consistencygroups -->
-    <method name="GET" id="listConsistencyGroups-v2">
+    <method name="GET" id="listConsistencyGroups">
         <wadl:doc xml:lang="EN" title="List consistency groups"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -57,13 +57,11 @@
                         href="../samples/consistencygroups/consistency-groups-list-response.json"
                     />
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
-                &consistencyGroupsResponseParameters;
+                &consistencyGroupResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="GET" id="listConsistencyGroupsDetail-v2">
+    <method name="GET" id="listConsistencyGroupsDetail">
         <wadl:doc xml:lang="EN" title="List consistency groups with details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -78,13 +76,11 @@
                         href="../samples/consistencygroups/consistency-groups-list-detailed-response.json"
                     />
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
-                &consistencyGroupsDetailsResponseParameters;
+                &consistencyGroupDetailResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="POST" id="postConsistencygroups-v2">
+    <method name="POST" id="createConsistencyGroup">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create consistency group">
             <para role="shortdesc">
@@ -99,8 +95,6 @@
                         href="../samples/consistencygroups/consistency-group-create-request.json"
                     />
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
                 &consistencyGroupCreateRequestParameters;
             </representation>
         </request>
@@ -114,7 +108,7 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="postConsistencygroupsFromSrc-v2">
+    <method name="POST" id="createConsistencyGroupFromSource">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create consistency group from source">
             <para role="shortdesc">
@@ -129,8 +123,6 @@
                         href="../samples/consistencygroups/consistency-group-create-from-src-request.json"
                     />
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
                 &consistencyGroupCreateFromSourceRequestParameters;
             </representation>
         </request>
@@ -144,7 +136,7 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="postConsistencygroupDelete-v2">
+    <method name="POST" id="deleteConsistencyGroup">
         <wadl:doc xml:lang="EN" title="Delete consistency group"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -159,15 +151,13 @@
                         href="../samples/consistencygroups/consistency-group-delete-request.json"
                     />
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
                 &forceRequestParameter;
             </representation>
         </request>
         <response status="202">
         </response>
     </method>
-    <method name="PUT" id="putConsistencygroupUpdate-v2">
+    <method name="PUT" id="updateConsistencyGroup">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Update consistency group">
             <para role="shortdesc">
@@ -181,13 +171,13 @@
                     <xsdxt:code
                         href="../samples/consistencygroups/consistency-group-update-request.json"/>
                 </wadl:doc>
-                &consistencyGroupUpdateRequestParameters;
+                &consistencyGroupUpdateParameters;
             </representation>
         </request>
         <response status="202">
         </response>
     </method>
-    <method name="GET" id="showConsistencyGroup-v2">
+    <method name="GET" id="showConsistencyGroup">
         <wadl:doc xml:lang="EN" title="Show consistency group details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -202,9 +192,7 @@
                         href="../samples/consistencygroups/consistency-group-show-response.json"
                     />
                 </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
-                &consistencyGroupsDetailsResponseParameters;
+                &consistencyGroupDetailResponseParameters;
             </representation>
         </response>
     </method>
