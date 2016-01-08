@@ -35,7 +35,7 @@ if [ "$PUBLISH" = "publish" ] ; then
 
     # Publication happens from publish-docs/api-ref to
     # developer.openstack.org, so move content around
-    mkdir publish-docs/api-ref/
+    mkdir -p publish-docs/api-ref/
     python tools/www-generator.py --source-directory www/ \
         --output-directory publish-docs/api-ref/
     rsync -a www/static/ publish-docs/api-ref/
