@@ -1010,6 +1010,10 @@ OpenStack contribution process.
       data-processing stack and associated management
       interfaces. The code name for the project is sahara.
 
+   data store
+
+      A database engine supported by the Database service.
+
    deallocate
 
       The process of removing the association between a floating IP
@@ -3455,7 +3459,8 @@ OpenStack contribution process.
    strategy
 
       Specifies the authentication source used by Image service or
-      Identity.
+      Identity. In the Database service, it refers to the extensions
+      implemented for a data store.
 
    subdomain
 
