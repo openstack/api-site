@@ -35,19 +35,13 @@
         <resource id="v2" path="//v2">
             <resource id="metadefs" path="metadefs">
                 <resource id="namespaces" path="namespaces">
-                    <resource path="{namespace}" id="namespace">
+                    <resource path="{namespace_id}" id="namespace_id">
+                        &namespace_idTemplateParameter;
                         <resource id="objects" type="#ObjectList" path="objects">
                             <method href="#createObject-v2"/>
                             <method href="#listObjects-v2"/>
                             <resource path="{object_name}" id="object_name">
-                                &metadefNamespace_idParameter;
-                                <param xmlns="http://wadl.dev.java.net/2009/02" name="object_name"
-                                       style="template" required="true" type="xsd:string">
-                                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-                                       <para>The name of the object.</para>
-                                    </wadl:doc>
-                                </param>
+                                &object_nameTemplateParameter;
                                 <method href="#showObject-v2"/>
                                 <method href="#updateObject-v2"/>
                                 <method href="#deleteObject-v2"/>
@@ -76,80 +70,14 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="../samples/metadef-object-create-request.json"/>
                 </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="namespace" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            The namespace is unique across all users.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="display_name" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>User-friendly name to use in a UI to display the namespace name.
-                        </para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="description" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN"><para>Detailed description for the namespace.
-                        </para></wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="visibility" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Namespace visibility. Public or private.
-                            Default is private.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="protected" style="plain" type="xsd:boolean"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>Namespace protection for deletion. Valid value is true or false.
-                            Default is false.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="properties" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>Property definitions, if any, for the namespace.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="objects" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>Object definitions, if any, for the namespace.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="resource_type_associations" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>Resource types, if any, that are associated with this namespace</para>
-                    </wadl:doc>
-                </param>
+                &namespaceRequestParameter;
+                &display_nameRequestParameter;
+                &namespace-descriptionRequestParameter;
+                &namespace-visibilityRequestParameter;
+                &namespace-protectedRequestParameter;
+                &namespace-propertiesRequestParameter;
+                &objectRequestParameter;
+                &resource_type_associationsRequestParameter;
             </representation>
         </request>
         <response status="201">
@@ -158,10 +86,15 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../samples/metadef-object-create-response.json"/>
-                </wadl:doc> &metadefNamespaceParameter; &metadefNSDisplayNameParameter;
-                &metadefNSDescParameter; &metadefNSVisibilityParameter;
-                &metadefNSProtectedParameter; &metadefPropertiesParameter;
-                &metadefObjectsParameter; &metadefResTypeAssocsParameter;
+                </wadl:doc>
+                &namespaceResponseParameter;
+                &display_nameResponseParameter;
+                &namespace-descriptionResponseParameter;
+                &namespace-visibilityResponseParameter;
+                &namespace-protectedResponseParameter;
+                &namespace-propertiesResponseParameter;
+                &objectsResponseParameter;
+                &resource_type_associationsResponseParameter;
             </representation>
         </response>
     </method>
@@ -204,7 +137,8 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                &metadefNamespaceListReqParameters; </representation>
+                &metadefNamespaceListQueryParameters;
+            </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -212,10 +146,15 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../samples/metadef-objects-list-response.json"/>
-                </wadl:doc> &namespacesParameter; &metadefNamespaceParameter;
-                 &metadefNSDisplayNameParameter; &metadefNSDescParameter;
-                 &metadefNSVisibilityParameter; &metadefNSProtectedParameter;
-                 &metadefResTypeAssocsParameter; </representation>
+                </wadl:doc>
+                &namespacesObjectParameter;
+                &namespaceResponseParameter;
+                &display_nameResponseParameter;
+                &namespace-descriptionResponseParameter;
+                &namespace-visibilityResponseParameter;
+                &namespace-protectedResponseParameter;
+                &resource_type_associationsResponseParameter;
+            </representation>
         </response>
     </method>
     <method name="GET" id="showObject-v2">

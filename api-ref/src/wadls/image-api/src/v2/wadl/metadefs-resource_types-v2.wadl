@@ -34,34 +34,17 @@
         xml:id="os-metadef-resourcetype-v2">
         <resource id="v2" path="//v2">
             <resource id="metadefs" path="metadefs">
-                <resource id="resource_types" type="#ResourceTypeList"
-                    path="resource_types">
+                <resource id="resource_types" type="#ResourceTypeList" path="resource_types">
                     <method href="#listResourceTypes-v2"/>
                 </resource>
                 <resource id="namespaces" path="namespaces">
-                    <resource path="{namespace}" id="namespace">
-                        <resource id="resource_types_assoc" type="#ResourceTypeAssocList"
-                                  path="resource_types">
-                            <param xmlns="http://wadl.dev.java.net/2009/02"
-                                   name="namespace" style="template" type="xsd:string" required="true">
-                            <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                                xml:lang="EN">
-                               <para>
-                                    Unique namespace.
-                                </para>
-                            </wadl:doc>
-                            </param>
+                    <resource path="{namespace_id}" id="namespace_id">
+                        &namespace_idTemplateParameter;
+                        <resource id="resource_types_assoc" type="#ResourceTypeAssocList" path="resource_types">
                             <method href="#createResourceTypeAssoc-v2"/>
                             <method href="#listResourceTypeAssocs-v2"/>
                             <resource path="{name}" id="name">
-                                <param xmlns="http://wadl.dev.java.net/2009/02" name="name"
-                                       style="template" required="true" type="xsd:string">
-                                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-                                       <para>Name of the resource type.</para>
-                                    </wadl:doc>
-                                </param>
+                                &resource-type-nameTemplateParameter;
                                 <method href="#deleteResourceTypeAssoc-v2"/>
                             </resource>
                         </resource>
@@ -77,8 +60,9 @@
     <method name="POST" id="createResourceTypeAssoc-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Create resource type association">
-            <para role="shortdesc">Creates a resource type association
-                in a namespace.</para>
+            <para role="shortdesc">
+                Creates a resource type association in a namespace.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json"
@@ -88,46 +72,9 @@
                     <xsdxt:code
                         href="../samples/metadef-resource-type-create-request.json"/>
                 </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="name" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>Name of the resource type.</para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="prefix" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            Prefix for any properties in the namespace that
-                            you want to apply to the resource type. If you
-                            specify a prefix, you must append a prefix
-                            separator, such as the colon (<code>:</code>)
-                            character.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="properties_target" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            Some resource types allow more than one key and
-                            value pair for each instance. For example, the
-                            Image service allows both user and image metadata
-                            on volumes. The <code>properties_target</code>
-                            parameter enables a namespace target to remove the
-                            ambiguity.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &resource-type-nameRequestParameter;
+                &prefixRequestParameter;
+                &properties_targetRequestParameter;
             </representation>
         </request>
         <response status="201">
@@ -143,11 +90,13 @@
     <method name="GET" id="listResourceTypes-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="List resource types">
-            <para role="shortdesc">Lists resource types.</para>
+            <para role="shortdesc">
+                Lists all resource types.
+            </para>
             <para>
-                Lists all possible resource types. You can assign metadata
-                definition namespaces to these resource types. See the
-                metadata definition resource types section.
+                You can assign metadata definition namespaces to these
+                resource types. See the metadata definition resource types
+                section.
             </para>
         </wadl:doc>
         <response status="200">
