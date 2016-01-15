@@ -272,11 +272,12 @@ SDKs do not generally support the service yet, but you can use the
 'trove' command-line client to work with it instead.
 
 To install the 'trove' command-line client, see
-`Install the OpenStack command-line clients <http://docs.openstack.org/cli-reference/content/install_clients.html>`_.
+`Install the OpenStack command-line clients
+<http://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients>`_.
 
 To set up environment variables for your cloud in an :file:`openrc.sh`
 file, see
-`Set environment variables using the OpenStack RC file <http://docs.openstack.org/cli-reference/content/cli_openrc.html>`_.
+`Set environment variables using the OpenStack RC file <http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html>`_.
 
 Ensure you have an :file:`openrc.sh` file, source it, and validate that
 your trove client works: ::

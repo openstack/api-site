@@ -580,7 +580,7 @@ interface. Also, each OpenStack project has a related client project that
 includes Python API bindings and a command-line interface (CLI).
 
 For information about the command-line clients, see `OpenStack
-Command-Line Interface Reference <http://docs.openstack.org/cli-reference/content/>`__.
+Command-Line Interface Reference <http://docs.openstack.org/cli-reference/>`__.
 
 Install the clients
 -------------------
@@ -625,7 +625,7 @@ Before you can issue client commands, you must download and source the
 For complete information about the OpenStack clients, including how to source
 the ``openrc`` file, see `OpenStack End User Guide <http://docs.openstack.org/user-guide/>`__,
 `OpenStack Admin User Guide <http://docs.openstack.org/user-guide-admin/>`__,
-and `OpenStack Command-Line Interface Reference <http://docs.openstack.org/cli-reference/content/>`__.
+and `OpenStack Command-Line Interface Reference <http://docs.openstack.org/cli-reference/>`__.
 
 Launch an instance
 ------------------
