@@ -11,49 +11,48 @@
     xmlns:xsd="http://docs.rackspacecloud.com/xsd/v1.0"
     xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
     xmlns:csapi="http://docs.openstack.org/identity/api/v3">
-    <resources base="https://servers.api.openstack.com"
-        xml:id="os-quota-sets-v2.1">
+    <resources base="https://servers.api.openstack.com" xml:id="os-quota-sets-v2.1">
         <resource id="v2.1" path="//v2.1">
-            <resource id="tenant_id" path="{tenant_id}">
-                &tenant_idTemplateParameter;
+            <resource id="admin_tenant_id" path="{admin_tenant_id}">
+                &admin_tenant_idTemplateParameter;
                 <resource id="os-quota-sets" path="os-quota-sets">
-                    <method href="#deletequota"/>
-                    <method href="#forceUpdateQuota"/>
-                    <method href="#updateQuota"/>
-                    <resource id="defaults" path="defaults">
-                        <method href="#showDefaultQuotas"/>
-                    </resource>
-                    <resource id="quotas_detail" path="detail" type="#DetailQuotasList"/>
-                    <resource id="user_id">
-                        &user_idQueryParameter;
-                        <method href="#updateQuotaUser"/>
-                        <method href="#deleteQuotaUser"/>
+                    <resource id="tenant_id" path="{tenant_id}">
+                        &tenant_idTemplateParameter;
+                        <method href="#updateQuota"/>
+                        <method href="#revertQuotas"/>
+                        <resource id="defaults" path="defaults">
+                            <method href="#listDefaultQuotas"/>
+                        </resource>
+                        <resource id="quotas_detail"
+                            path="detail" type="#DetailQuotasList"/>
                     </resource>
                 </resource>
             </resource>
         </resource>
     </resources>
     <resource_type id="DetailQuotasList">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Detail quotas list">
-            <para>A detailed quotas list.</para>
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Detail quotas list">
+            <para>
+                Lists quotas with reserved, limit, and in-use value details.
+            </para>
         </wadl:doc>
         <method href="#listDetailQuotas"/>
     </resource_type>
     <!-- *******************************************************-->
     <!--      OS Quota sets            -->
     <!--*******************************************************-->
-    <method name="DELETE" id="deletequota">
-        <wadl:doc xml:lang="EN" title="Delete quota for tenant"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Deletes a quota for tenant.</para>
-        </wadl:doc>
-        <response status="202"/>
-    </method>
-    <method name="GET" id="showDefaultQuotas">
-        <wadl:doc xml:lang="EN" title="Show default quotas"
+    <method name="GET" id="listDefaultQuotas">
+        <wadl:doc xml:lang="EN" title="List default quotas for tenant"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Shows default quotas for tenant.
+                Lists the default quotas for a project or a project and a user.
+            </para>
+            <para>
+                In the request URI, you specify both the ID of the
+                administrative project and the ID of the project for
+                which you want to show default quotas. These project IDs can
+                match.
             </para>
         </wadl:doc>
         <response status="200">
@@ -61,16 +60,19 @@
                 <wadl:doc xmlns="http://docbook.org/ns/docbook"
                     xml:lang="EN">
                     <xsdxt:code
-                        href="../samples/os-quota-sets/quotas-default-show-response.json"
+                        href="../samples/os-quota-sets/quotas-default-list-response.json"
                     />
                 </wadl:doc>
+                &quotaSetsResponseParameters;
             </representation>
         </response>
     </method>
     <method name="GET" id="listDetailQuotas">
-        <wadl:doc xml:lang="EN" title="Show quotas (detailed)"
+        <wadl:doc xml:lang="EN" title="List quotas with details"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Lists quotas with details for a tenant.</para>
+            <para role="shortdesc">
+                Lists quotas with details for a project or a project and a user.
+            </para>
         </wadl:doc>
         <response status="200">
             <representation mediaType="application/json">
@@ -79,43 +81,34 @@
                     <xsdxt:code
                         href="../samples/os-quota-sets/quotas-list-details-response.json"
                     />
-                </wadl:doc> &x-openstack-request-idHeader;
-            </representation>
-        </response>
-    </method>
-    <method name="PUT" id="forceUpdateQuota">
-        <wadl:doc xml:lang="EN" title="Force-update quota"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Force-updates quota for tenant.
-            </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/os-quota-sets/quota-force-update-request.json"
-                    />
                 </wadl:doc>
-            </representation>
-        </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/os-quota-sets/quota-force-update-response.json"
-                    />
-                </wadl:doc>
+                &x-openstack-request-idHeader;
+                &quotaSetsResponseParameters;
+                &reservedResponseParameter;
+                &limitResponseParameter;
+                &in_useResponseParameter;
             </representation>
         </response>
     </method>
     <method name="PUT" id="updateQuota">
-        <wadl:doc xml:lang="EN" title="Update quota"
+        <wadl:doc xml:lang="EN" title="Update quotas"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Updates quota for tenant.
+                Update the quotas for a project or a project and a user.
+            </para>
+            <para>
+                You can force the update even if the quota has already been
+                used and the reserved quota exceeds the new quota.
+            </para>
+            <para>
+                To force the update, specify the <code>"force": "True"</code>
+                attribute in the request body. Default is <code>False</code>.
+                The following example request shows the optional
+                <code>force</code> attribute.
+            </para>
+            <para>
+                To update a quota for a project and a user, specify the <code>user</code>
+                query parameter.
             </para>
         </wadl:doc>
         <request>
@@ -126,6 +119,8 @@
                         href="../samples/os-quota-sets/quota-update-request.json"
                     />
                 </wadl:doc>
+                &user_idQueryParameter;
+                &quotaSetsRequestParameters;
             </representation>
         </request>
         <response status="200">
@@ -136,44 +131,24 @@
                         href="../samples/os-quota-sets/quota-update-response.json"
                     />
                 </wadl:doc>
+                &quotaSetsResponseParameters;
             </representation>
         </response>
     </method>
-    <method name="DELETE" id="deleteQuotaUser">
-        <wadl:doc xml:lang="EN" title="Delete quota for user"
+    <method name="DELETE" id="revertQuotas">
+        <wadl:doc xml:lang="EN" title="Revert quotas to defaults"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Deletes quota for a user.
+                Reverts the quotas to default values for a project or a project and a user.
             </para>
-        </wadl:doc>
-        <response status="202"/>
-    </method>
-    <method name="PUT" id="updateQuotaUser">
-        <wadl:doc xml:lang="EN" title="Update quota for user"
-            xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Updates quota for user.
+            <para>
+                To revert quotas for a project and a user, specify the <code>user</code>
+                query parameter.
             </para>
         </wadl:doc>
         <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/os-quota-sets/quota-user-update-request.json"
-                    />
-                </wadl:doc>
-            </representation>
+            &user_idQueryParameter;
         </request>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/os-quota-sets/quota-user-update-response.json"
-                    />
-                </wadl:doc>
-            </representation>
-        </response>
+        <response status="202"/>
     </method>
 </application>
