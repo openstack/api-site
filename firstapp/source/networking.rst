@@ -67,10 +67,11 @@ Because the SDKs do not fully support the OpenStack Networking API, this
 section uses the command-line clients.
 
 Use this guide to install the 'neutron' command-line client:
-http://docs.openstack.org/cli-reference/content/install_clients.html
+http://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
 
-Use this guide to set up the necessary variables for your cloud in an 'openrc' file:
-http://docs.openstack.org/cli-reference/content/cli_openrc.html
+Use this guide to set up the necessary variables for your cloud in an
+'openrc' file:
+http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
 
 Ensure you have an openrc.sh file, source it, and then check that your
 neutron client works: ::
