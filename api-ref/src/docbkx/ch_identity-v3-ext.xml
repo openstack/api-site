@@ -18,33 +18,111 @@
     <itemizedlist role="compact">
         <listitem>
             <para>
-            <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-INHERIT-ext">
-OS-INHERIT extension (OS-INHERIT)
-            </link>
-             </para>
-          </listitem>
-          <listitem>
+                <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-ENDPOINT-POLICY-ext">
+OS-ENDPOINT-POLICY extension (OS-ENDPOINT-POLICY)
+                </link>
+            </para>
+        </listitem>
+        <listitem>
             <para>
-            <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-KDS-ext">
-Key Distribution Server (KDS) extension (OS-KDS)
-            </link>
-             </para>
-          </listitem>
-          <listitem>
-             <para>
+                <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-INHERIT-ext">
+OS-INHERIT extension (OS-INHERIT)
+                </link>
+            </para>
+        </listitem>
+        <listitem>
+            <para>
+                <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-KDS-ext">
+    Key Distribution Server (KDS) extension (OS-KDS)
+                </link>
+            </para>
+        </listitem>
+        <listitem>
+            <para>
                 <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-OAUTH1-ext">
 OAuth extension (OS-OAUTH1)
                 </link>
-             </para>
+            </para>
           </listitem>
           <listitem>
-             <para>
+            <para>
                 <link xlink:href="http://developer.openstack.org/api-ref-identity-v3-ext.html#identity_v3_OS-TRUST-ext">
 Trust extension (OS-TRUST)
                 </link>
-             </para>
-          </listitem>
-       </itemizedlist>
+            </para>
+        </listitem>
+    </itemizedlist>
+    <section xml:id="identity_v3_OS-ENDPOINT-POLICY-ext">
+        <title>OS-ENDPOINT-POLICY extension (OS-ENDPOINT-POLICY)</title>
+        <para>
+            Creates, verifies, and deletes associations between service
+            endpoints and policies. Such associations enable an endpoint to
+            request its policy.
+        </para>
+        <para>
+            To create, check, or delete an association, you reference a policy by its ID in
+            the Identity server.
+        </para>
+        <para>
+            The extension supports these associations:
+        </para>
+        <orderedlist>
+            <listitem>
+                <para>
+                    A policy and endpoint association.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    A policy and service-type endpoint in a region association.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    A policy and service-type endpoint association.
+                </para>
+            </listitem>
+        </orderedlist>
+        <para>
+            This order reflects policies in their most to least-specific order.
+        </para>
+        <para>
+            When an endpoint requests the appropriate policy for itself, the
+            extension finds the policy by traversing the ordered sequence of
+            methods of association. The extension shows the policy for the
+            first association that it finds.
+        </para>
+        <para>
+            If the region of the endpoint has a parent, the extension examines
+            the region associations up the region tree in ascending order. For
+            region associations, the extension examines any parent regions in
+            ascending order. The extension does not combine polices.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-ENDPOINT-POLICY-v3.wadl#endpoints">
+                <wadl:method href="#listPolicyEndpointAssociations"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-ENDPOINT-POLICY-v3.wadl#policy">
+                <wadl:method href="#showPolicyForEndpoint"/>
+                <wadl:method href="#checkPolicyForEndpoint"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-ENDPOINT-POLICY-v3.wadl#endpoint_id">
+                <wadl:method href="#associatePolicyAndEndpoint"/>
+                <wadl:method href="#getPolicyAndEndpointAssociation"/>
+                <wadl:method href="#deletePolicyAndEndpointAssociation"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-ENDPOINT-POLICY-v3.wadl#region_id">
+                <wadl:method href="#associatePolicyAndServiceRegion"/>
+                <wadl:method href="#getPolicyAndServiceRegionAssociation"/>
+                <wadl:method href="#deletePolicyAndServiceRegionAssociation"/>
+            </wadl:resource>
+            <wadl:resource href="../wadls/identity-api/src/v3/wadl/OS-ENDPOINT-POLICY-v3.wadl#service_id">
+                <wadl:method href="#associatePolicyAndService"/>
+                <wadl:method href="#getPolicyAndServiceAssociation"/>
+                <wadl:method href="#deletePolicyAndServiceAssociation"/>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
     <section xml:id="identity_v3_OS-INHERIT-ext">
         <title>OS-INHERIT extension (OS-INHERIT)</title>
         <para>
@@ -382,3 +460,4 @@ Trust extension (OS-TRUST)
         </wadl:resources>
     </section>
 </chapter>
+
