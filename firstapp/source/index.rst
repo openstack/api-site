@@ -8,6 +8,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   common/conventions.rst
    getting_started
    introduction
    scaling_out
