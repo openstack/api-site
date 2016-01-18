@@ -30,7 +30,8 @@
     <!--*******************************************************-->
     <!-- We should use SSL in production -->
     <resources base="http://localhost:35357" xml:id="identity-admin-v2.0">
-        <resource id="version-admin-v2" path="//v2.0">
+        <resource id="admin-version" path="//v2.0">
+            <method href="#admin-getVersionInfo"/>
             <resource id="admin-tokens" path="tokens">
                 <param xmlns="http://wadl.dev.java.net/2009/02" name="X-Auth-Token" style="header"
                     type="xsd:string" required="true">
@@ -233,9 +234,40 @@
             </resource>
         </resource>
     </resources>
+
+    <!--*******************************************************-->
+    <!--               Resource Types                          -->
+    <!--*******************************************************-->
+    <resource_type id="VersionDetails">
+        <method href="#admin-getVersionInfo"/>
+    </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
+    <!-- Version -->
+    <method name="GET" id="admin-getVersionInfo">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Get version details">
+            <para>
+                Gets detailed information about a version of the Identity API.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:sample title="Get version information: JSON response">
+                        <xsdxt:code href="../samples/admin/version-show-response.json"/>
+                    </xsdxt:sample>
+                </wadl:doc>
+                <param xmlns="http://wadl.dev.java.net/2009/02" name="location" style="plain"
+                    type="xsd:anyURI" required="true"
+                    path="/capi:version/atom:link[@rel='self']/@href">
+                    <link resource_type="#VersionDetails" rel="self"/>
+                </param>
+            </representation>
+        </response>
+        <response status="203"/>
+        &commonFaults; &getFaults;
+    </method>
     <!-- Token Operations -->
     <method name="POST" id="admin-authenticate">
         <wadl:doc xml:lang="EN" title="Authenticate for admin API"

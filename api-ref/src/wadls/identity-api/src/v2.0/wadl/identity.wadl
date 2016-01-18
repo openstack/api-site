@@ -34,10 +34,11 @@
             <method href="#listVersions-v2"/>
         </resource>
         <resource id="version" type="#VersionDetails" path="//v2.0">
-            <resource id="extensions-v2" type="#ExtensionList" path="extensions">
-                <resource id="extension-v2.0" path="{alias}">
+            <resource id="identity-extensions" path="extensions">
+                <method href="#listExtensions"/>
+                <resource id="extension" path="{alias}">
                     &aliasTemplateParameter;
-                    <method href="#showExtension-v2"/>
+                    <method href="#showExtension"/>
                 </resource>
             </resource>
             <resource id="tokens" path="tokens">
@@ -63,15 +64,6 @@
     <!--*******************************************************-->
     <resource_type id="VersionDetails">
         <method href="#showVersionInfo-v2.0"/>
-    </resource_type>
-    <resource_type id="ExtensionList">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-            xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN" title="List extensions">
-            <para role="shortdesc">
-                Lists supported extensions.
-            </para>
-        </wadl:doc>
-        <method href="#listExtensions-v2"/>
     </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
@@ -112,7 +104,7 @@
         <response status="203"/> &commonFaults; &getFaults;
     </method>
     <!-- Extensions -->
-    <method name="GET" id="listExtensions-v2">
+    <method name="GET" id="listExtensions">
         <wadl:doc xmlns="http://docbook.org/ns/docbook"
             xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xml:lang="EN" title="List extensions">
@@ -121,53 +113,34 @@
             </para>
         </wadl:doc>
         <response status="200">
-            <representation mediaType="application/json" element="capi:extensions">
+            <representation mediaType="application/json">
                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                     <xsdxt:sample title="List extensions: JSON response">
                         <xsdxt:code href="../samples/admin/extensions-list-response.json"/>
                     </xsdxt:sample>
                 </wadl:doc>
-               <!--  <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="next" style="plain" type="xsd:anyURI"
-                    path="/capi:extensions/atom:link[@rel='next']/@href">
-                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Moves to the next item in the list.
-                        </para>
-                    </wadl:doc>
-                    <link resource_type="#ExtensionList" rel="next"/>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="previous" style="plain" type="xsd:anyURI"
-                    path="/capi:extensions/atom:link[@rel='previous']/@href">
-                    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Moves to the previous item in the list.
-                        </para>
-                    </wadl:doc>
-                    <link resource_type="#ExtensionList" rel="previous"/>
-                </param> -->
+                &x-openstack-request-idResponseHeader;
             </representation>
         </response>
         <response status="203"/> &commonFaults; &getFaults;
     </method>
-    <method name="GET" id="showExtension-v2">
-        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook" title="Show extension details">
-            <para role="shortdesc">Shows details for an extension.</para>
-            <para>Specify the extension alias in the URI.</para>
+    <method name="GET" id="showExtension">
+        <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
+            title="Show extension details">
+            <para role="shortdesc">
+                Shows details for an extension, by alias.
+            </para>
         </wadl:doc>
         <response status="200">
-            <representation mediaType="application/json" element="capi:extension">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <xsdxt:sample title="Show extension details: JSON response">
-                        <xsdxt:code href="../samples/admin/extension-show-response.json"/>
-                    </xsdxt:sample>
-                </wadl:doc>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code href="../samples/admin/extension-show-response.json"
+                    />
+                </wadl:doc> &x-openstack-request-idResponseHeader;
             </representation>
         </response>
-        <response status="203"/> &commonFaults; &getFaults;
+        <response status="203"/>
     </method>
     <!-- Token Operations -->
     <method name="POST" id="authenticate-v2.0">
