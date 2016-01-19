@@ -206,22 +206,446 @@
     </para>
   </wadl:doc>
 </param>'>
-<!-- QUERY PARAMETERS -->
-<!ENTITY sortQueryParameter '
-<param xmlns="http://wadl.dev.java.net/2009/02"
-  name="sort" style="query" required="false" type="xsd:string">
-  <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-    <para>
-      Comma-separated list of sort keys and optional sort directions in the
-      form of &lt;key&gt;[:&lt;direction&gt;]. A valid direction is
-      <code>asc</code> (ascending) or <code>desc</code> (descending).
-    </para>
-  </wadl:doc>
+<!ENTITY volume_type_idTemplateParameter '
+<param name="volume_type_id" style="template"
+    required="true" type="csapi:UUID" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+      <para>
+        The UUID for an existing volume type.
+      </para>
+    </wadl:doc>
 </param>'>
 <!ENTITY sort_keyQueryParameter '
 <param xmlns="http://wadl.dev.java.net/2009/02" name="sort_key"
   style="query" required="false" type="xsd:string" default="ALL">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+     <para>
+        Sorts the response by an attribute. Default is <code>created_at</code>. The API uses
+        the natural sorting direction of the attribute that is provided as the
+        <code>sort_key</code>.
+     </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY sort_dirQueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_dir"
+  style="query" required="false" type="xsd:string" default="ALL">
+  <wadl:doc xmlns="http://docbook.org/ns/docbook"
+     xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+     <para>
+        Sorts the response by one or more sets of attribute and sort direction
+        combinations. If you omit the sort direction in a set, the default is
+        <code>desc</code>.
+     </para>
+  </wadl:doc>
+</param>'>
+<!ENTITY quotasShowRequest '
+<param name="usage" style="query" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:boolean">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>
+        Set to <code>usage=True</code> to show quota usage. Default is
+        <code>False</code>.
+      </para></wadl:doc>
+</param>'>
+<!ENTITY quotaSetsReqParameters '
+<param name="quota_set" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>A <code>quota_set</code> object.</para></wadl:doc>
+</param>
+<param name="cores" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of instance cores allowed for
+       each tenant.</para></wadl:doc>
+</param>
+<param name="fixed_ips" style="plain" required="false"
+ xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+        The number of fixed IP addresses allowed for each tenant. Must be
+        equal to or greater than the number of allowed instances.
+    </para></wadl:doc>
+</param>
+<param name="floating_ips" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+        The number of floating IP addresses allowed for each tenant.
+    </para></wadl:doc>
+</param>
+<param name="id" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The ID for the quota set.</para></wadl:doc>
+</param>
+<param name="injected_file_content_bytes"
+    style="plain" xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+       The number of bytes of content allowed for each injected file.
+    </para></wadl:doc>
+</param>
+<param name="injected_file_path_bytes" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of bytes allowed for each
+        injected file path.</para></wadl:doc>
+</param>
+<param name="injected_files" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of injected files allowed for
+        each tenant.</para></wadl:doc>
+</param>
+<param name="instances" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of instances allowed for each
+        tenant.</para></wadl:doc>
+</param>
+<param name="key_pairs" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of key pairs allowed for each
+        user.</para></wadl:doc>
+</param>
+<param name="metadata_items" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of metadata items allowed for
+        each instance.</para></wadl:doc>
+</param>
+<param name="ram" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The amount of instance RAM in megabytes
+        allowed for each tenant.</para></wadl:doc>
+</param>
+<param name="security_group_rules" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of rules allowed for each
+        security group.</para></wadl:doc>
+</param>
+<param name="security_groups" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of security groups allowed
+        for each tenant.</para></wadl:doc>
+</param>'>
+<!ENTITY quotasShowResponse '
+<param name="in_use" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+      <para>
+        The in use data size. Visible only if you set the
+        <code>usage=True</code> query parameter.
+      </para>
+    </wadl:doc>
+</param>
+<param name="reserved" style="plain" required="false"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>
+        Reserved volume size. Visible only if you set the
+        <code>usage=True</code> query parameter.
+      </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY quotaSetsRespParameters '
+<param name="quota_set" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>A <code>quota_set</code> object.</para></wadl:doc>
+</param>
+<param name="cores" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of instance cores allowed for
+        each tenant.</para></wadl:doc>
+</param>
+<param name="fixed_ips" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+        The number of fixed IP addresses allowed for each tenant. Must be
+        equal to or greater than the number of allowed instances.
+    </para></wadl:doc>
+</param>
+<param name="floating_ips" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of floating IP addresses
+        allowed for each tenant.</para></wadl:doc>
+</param>
+<param name="id" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The ID for the quota set.</para></wadl:doc>
+</param>
+<param name="injected_file_content_bytes"
+    style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of bytes of content allowed
+        for each injected file.</para></wadl:doc>
+</param>
+<param name="injected_file_path_bytes" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of bytes allowed for each
+        injected file path.</para></wadl:doc>
+</param>
+<param name="injected_files" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of injected files allowed for
+        each tenant.</para></wadl:doc>
+</param>
+<param name="instances" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of instances allowed for each
+        tenant.</para></wadl:doc>
+</param>
+<param name="key_pairs" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of key pairs allowed for each
+        user.</para></wadl:doc>
+</param>
+<param name="metadata_items" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+       The number of metadata items allowed for each instance.
+    </para></wadl:doc>
+</param>
+<param name="ram" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The amount of instance RAM in megabytes
+        allowed for each tenant.</para></wadl:doc>
+</param>
+<param name="security_group_rules" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="false" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The number of rules allowed for each
+        security group.</para></wadl:doc>
+</param>
+<param name="security_groups" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+    <para>
+       The number of security groups allowed for each tenant.
+    </para></wadl:doc>
+</param>'>
+<!ENTITY limitsRespParameters '
+<param name="limits" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>A <code>limits</code> object.</para></wadl:doc>
+</param>
+<param name="absolute" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>An <code>absolute</code> limits object.</para></wadl:doc>
+</param>
+<param name="totalSnapshotsUsed" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Total number of snapshots used.</para></wadl:doc>
+</param>
+<param name="maxTotalBackups" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Maximum number of backups.</para></wadl:doc>
+</param>
+<param name="maxTotalVolumeGigabytes" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Maximum total amount of volumes, in gibibytes (GiB).</para></wadl:doc>
+</param>
+<param name="maxTotalSnapshots" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Maximum number of snapshots.</para></wadl:doc>
+</param>
+<param name="maxTotalBackupGigabytes" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Maximum total amount of backups, in gibibytes (GiB).</para></wadl:doc>
+</param>
+<param name="totalBackupGigabytesUsed" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Total number of backups gibibytes (GiB) used.</para></wadl:doc>
+</param>
+<param name="maxTotalVolumes" style="plain"
+   xmlns="http://wadl.dev.java.net/2009/02"
+    required="true" type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Maximum number of volumes.</para></wadl:doc>
+</param>
+<param name="totalVolumesUsed" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Total number of volumes used.</para></wadl:doc>
+</param>
+<param name="totalBackupsUsed" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Total number of backups used.</para></wadl:doc>
+</param>
+<param name="totalGigabytesUsed" style="plain" required="true"
+   xmlns="http://wadl.dev.java.net/2009/02"
+   type="xsd:int">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>Total number of gibibytes (GiB) used.</para></wadl:doc>
+</param>'>
+<!ENTITY createVolumeParameters '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+ name="availability_zone" style="plain"
+   type="xsd:string" required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+       xmlns:wadl="http://wadl.dev.java.net/2009/02"
+       xml:lang="EN">
+       <para>The availability zone.</para></wadl:doc>
+</param>
+<param xmlns="http://wadl.dev.java.net/2009/02"
+  name="source_volid" style="plain"
+  type="csapi:UUID" required="false">
   <wadl:doc xmlns="http://docbook.org/ns/docbook"
     xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
     <para>

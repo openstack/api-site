@@ -79,9 +79,6 @@
                     <method href="#showNode"/>
                     <method href="#updateNode"/>
                     <method href="#deleteNode"/>
-                    <resource id="node_actions" path="actions">
-                        <method href="#node_action"/>
-                    </resource>
                 </resource>
             </resource>
             <resource id="actions" path="actions">
@@ -145,6 +142,8 @@
         <request>
             <representation mediaType="application/json">
                 &limitMarkerReqParameter;
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="name" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -164,21 +163,6 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Includes deleted clusters in or excludes deleted
-                            clusters from the cluster list.
-                        </para>
-                        <para>
-                            Set to <code>False</code> to exclude deleted
-                            clusters from the cluster list. Set to
-                            <code>True</code> to include deleted clusters in
-                            the cluster list. Default is <code>False</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
                 <param name="show_nested" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -194,49 +178,6 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                       <para>
-                            Sorts the list by an attribute. A valid value is
-                            <code>name</code>, <code>status</code>,
-                            <code>created_time</code>, or
-                            <code>updated_time</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute
-                            value.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="global_project" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to include nodes from either all
-                            tenants or the current tenant.
-                        </para>
-                        <para>
-                            If you are an administrative user and you set this
-                            value to <code>True</code>, the call returns all
-                            nodes from all tenants. Default is
-                            <code>False</code>, which returns only nodes in
-                            the current tenant.
-                        </para>
-                    </wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -249,7 +190,7 @@
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                         <para>
                             List of cluster records. Each record contains
-                            fields such as <code>created_time</code>,
+                            fields such as <code>created_at</code>,
                             <code>id</code>, <code>name</code>,
                             <code>profile_id</code>, <code>size</code>,
                             <code>nodes</code>, <code>status</code>,
@@ -452,63 +393,13 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                <param name="priority" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Filters the response by a policy priority on the cluster.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="level" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Filters the response by a policy enforcement level
-                            on the cluster.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="cooldown" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Filters the response by a policy cool down value
-                            on the cluster.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &sortQueryParameter;
                 <param name="enabled" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                         <para>
                             Filters the response by a policy enabled status on
                             the cluster.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Sorts the list by an attribute. A valid attribute
-                            is <code>priority</code>, <code>level</code>,
-                            <code>cooldown</code>, or <code>enabled</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
                         </para>
                     </wadl:doc>
                 </param>
@@ -541,10 +432,9 @@
                     <para>
                         A <code>cluster_policy</code> map with keys such as
                         <code>cluster_id</code>, <code>policy_id</code>,
-                        <code>policy_type </code>, <code>level</code>,
-                        <code>cooldown</code>, <code>priority </code>, and so
-                        on. The key values are attributes for the policy that
-                        is attached to the cluster.
+                        <code>policy_type </code>,  and so on. The key values
+                        are attributes for the policy that is attached to the
+                        cluster.
                     </para>
                     <xsdxt:code href="../samples/cluster-policy-show-response.json"/>
                 </wadl:doc>
@@ -646,34 +536,8 @@
         <request>
             <representation mediaType="application/json">
                 &limitMarkerReqParameter;
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Sorts the list by an attribute. A valid value is
-                            <code>name</code>, <code>type</code>,
-                            <code>created_time</code>,
-                            <code>updated_time</code>,
-                            <code>deleted_time</code>,
-                            <code>permission</code>, or <code>metadata</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="name" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -690,28 +554,11 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="permission" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Filters the response by the permission string of a profile.
-                        </para>
-                    </wadl:doc>
-                </param>
                 <param name="metadata" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                         <para>
                             Filters the response by a metadata key and value pair.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Includes deleted profiles in or excludes deleted
-                            profiles from the response.
                         </para>
                     </wadl:doc>
                 </param>
@@ -729,8 +576,7 @@
                             Profile records. Each record contains the
                             <code>id</code>, <code>name</code>,
                             <code>type</code>, <code>spec</code>,
-                            <code>permission</code>, <code>metadata</code>,
-                            and other fields.
+                            <code>metadata</code>, and other fields.
                         </para>
                     </wadl:doc>
                 </param>
@@ -789,12 +635,6 @@
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>permission</code> The permission of
-                                    the profile.
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
                                     <code>metadata</code> A list of key and
                                     value pairs that are attached to the
                                     profile.
@@ -802,20 +642,14 @@
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>created_time</code> The UTC date and
+                                    <code>created_at</code> The UTC date and
                                     time stamp when the profile was created.
                                 </para>
                             </listitem>
                              <listitem>
                                 <para>
-                                    <code>updated_time</code> The UTC date and
+                                    <code>updated_at</code> The UTC date and
                                     time stamp when the profile was updated.
-                                </para>
-                            </listitem>
-                             <listitem>
-                                <para>
-                                    <code>deleted_time</code> The UTC date and
-                                    time stamp when the profile was deleted.
                                 </para>
                             </listitem>
                             <listitem>
@@ -851,8 +685,7 @@
                     <para>
                         A profile record. Contains fields such as
                         <code>id</code>, <code>name</code>, <code>type</code>,
-                        <code>spec</code>, <code>permission</code>,
-                        <code>metadata</code>, and so on.
+                        <code>spec</code>, <code>metadata</code>, and so on.
                     </para>
                     <xsdxt:code href="../samples/profile-show-response.json"/>
                 </wadl:doc>
@@ -878,14 +711,6 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="permission" style="plain" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            A permission.
-                        </para>
-                    </wadl:doc>
-                </param>
                 <param name="metadata" style="plain" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -903,8 +728,7 @@
                     <para>
                         A profile record. Contains fields such as
                         <code>id</code>, <code>name</code>, <code>type</code>,
-                        <code>spec</code>, <code>permission</code>,
-                        <code>metadata</code>, and so on.
+                        <code>spec</code>, <code>metadata</code>, and so on.
                     </para>
                     <xsdxt:code href="../samples/profile-update-response.json"/>
                 </wadl:doc>
@@ -928,34 +752,8 @@
         <request>
             <representation mediaType="application/xml">
                 &limitMarkerReqParameter;
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Sorts the list by an attribute. A valid value is
-                            <code>name</code>, <code>type</code>,
-                            <code>level</code>, <code>created_time</code>,
-                            <code>updated_time</code>,
-                            <code>deleted_time</code>, or
-                            <code>cooldown</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="name" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -972,32 +770,6 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="level" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Filters the response by the default enforcement
-                            level of a policy.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="cooldown" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Filters the response by the default cooldown value
-                            of a policy.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Specifies whether to list or omit deleted policies.
-                        </para>
-                    </wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -1011,8 +783,7 @@
                         <para>
                             List of policy records. Each record contains
                             fields such as <code>id</code>, <code>name</code>,
-                            <code>type</code>, <code>spec</code>,
-                            <code>level</code>, <code>cooldown</code>, and so
+                            <code>type</code>, <code>spec</code>, and so
                             on.
                         </para>
                     </wadl:doc>
@@ -1080,30 +851,14 @@
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>level</code> A number representing the default enforcement level.
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>cooldown</code> A number representing the default cooldown seconds.
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>created_time</code> The UTC date and
+                                    <code>created_at</code> The UTC date and
                                     time stamp when the policy was created.
                                 </para>
                             </listitem>
                              <listitem>
                                 <para>
-                                    <code>updated_time</code> The UTC date and
+                                    <code>updated_at</code> The UTC date and
                                     time stamp when the policy was updated.
-                                </para>
-                            </listitem>
-                             <listitem>
-                                <para>
-                                    <code>deleted_time</code> The UTC date and
-                                    time stamp when the policy was deleted.
                                 </para>
                             </listitem>
                             <listitem>
@@ -1139,9 +894,8 @@
                     <para>
                         A policy record with fields such as <code>id</code>,
                         <code>name</code>, <code>type</code>,
-                        <code>spec</code>, <code>level</code>,
-                        <code>cooldown</code>, <code>created_time</code>,
-                        <code>deleted_time</code>, and so on.
+                        <code>spec</code>, <code>created_at</code>,
+                        <code>updated_at</code>, and so on.
                     </para>
                     <xsdxt:code href="../samples/policy-show-response.json"/>
                 </wadl:doc>
@@ -1173,17 +927,6 @@
                                     <code>name</code> Name for the policy, if specified.
                                 </para>
                             </listitem>
-                            <listitem>
-                                <para>
-                                    <code>level</code> Enforcement level for the policy, if specified.
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>cooldown</code> The cooldown value for the policy, in
-                                    seconds, if specified.
-                                </para>
-                            </listitem>
                         </itemizedlist>
                     </wadl:doc>
                 </param>
@@ -1195,10 +938,8 @@
                     <para>
                         A policy record that includes fields such as
                         <code>id</code>, <code>name</code>, <code>type</code>,
-                        <code>spec</code>, <code>level</code>,
-                        <code>cooldown</code>, <code>created_time</code>,
-                        <code>updated_time</code>, <code>deleted_time</code>,
-                        and so on.
+                        <code>spec</code>, <code>created_at</code>,
+                        <code>updated_at</code>, and so on.
                     </para>
                     <xsdxt:code href="../samples/policy-update-response.json"/>
                 </wadl:doc>
@@ -1222,20 +963,13 @@
         <request>
             <representation mediaType="application/xml">
                 &limitMarkerReqParameter;
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="cluster_id" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
                         <para>
                             Filters the response by the cluster that owns a node.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Includes deleted nodes in or excludes deleted
-                            nodes from the list.
                         </para>
                     </wadl:doc>
                 </param>
@@ -1255,41 +989,6 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Sorts the list by an attribute. A valid attribute
-                            is <code>name</code>, <code>status</code>,
-                            <code>created_time</code>, or <code>updated_time
-                            </code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="global_project" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to list or omit nodes from all tenants.
-                            Operation subject to access policy enforcement.
-                        </para>
-                    </wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -1305,9 +1004,9 @@
                             such as <code>id</code>, <code>cluster_id</code>,
                             <code>name</code>, <code>physical_id</code>,
                             <code>profile_id</code>,
-                            <code>created_time</code>, <code>index</code>,
+                            <code>created_at</code>, <code>index</code>,
                             <code>status</code>, <code>status_reason</code>,
-                            <code>metadata</code>, <code>updated_time</code>,
+                            <code>metadata</code>, <code>updated_at</code>,
                             and so on.
                         </para>
                     </wadl:doc>
@@ -1451,53 +1150,6 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="node_action">
-        <wadl:doc xml:lang="EN" title="Trigger node action" xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">
-                Triggers an action on a node.
-            </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <param name="action" style="plain" required="true"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:dict">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            A map with the action to trigger. Optionally,
-                            includes the parameters for the action. Supported
-                            action names include:
-                        </para>
-                        <itemizedlist>
-                            <listitem>
-                                <para>
-                                    <code>join</code> Adds current node to a cluster.
-                                    <xsdxt:code href="../samples/node-join-request.json"/>
-                                </para>
-                            </listitem>
-                            <listitem>
-                                <para>
-                                    <code>leave</code> Deletes the current node from its cluster.
-                                    <xsdxt:code href="../samples/node-leave-request.json"/>
-                                </para>
-                            </listitem>
-                        </itemizedlist>
-                    </wadl:doc>
-                </param>
-            </representation>
-        </request>
-        <response status="202">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <para>
-                        A map that includes the <code>action</code> key and
-                        value, where the value is the UUID of the action that
-                        the request initiated.
-                    </para>
-                </wadl:doc>
-                &actionLocationParameter;
-            </representation>
-        </response>
-    </method>
     <method name="DELETE" id="deleteNode">
         <wadl:doc xml:lang="EN" title="Delete node" xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -1540,10 +1192,10 @@
                         A node record. Each record contains fields such as
                         <code>id</code>, <code>cluster_id</code>,
                         <code>name</code>, <code>physical_id</code>,
-                        <code>profile_id</code>, <code>created_time</code>,
+                        <code>profile_id</code>, <code>created_at</code>,
                         <code>index</code>, <code>status</code>,
                         <code>status_reason</code>, <code>metadata</code>,
-                        <code>updated_time</code>, and so on.
+                        <code>updated_at</code>, and so on.
                     </para>
                     <xsdxt:code href="../samples/node-show-response.json"/>
                 </wadl:doc>
@@ -1559,14 +1211,8 @@
         <request>
             <representation mediaType="application/xml">
                 &limitMarkerReqParameter;
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to show or omit deleted receivers.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="name" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -1607,40 +1253,6 @@
                         </para>
                     </wadl:doc>
                 </param>
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Sorts the list by an attribute. A valid attribute is
-                            <code>name</code>, <code>type</code>, <code>action</code>,
-                            <code>cluster_id</code> or <code>created_time</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="global_project" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to show or omit receivers from all projects.
-                            This operation is subject to access privilege checking.
-                        </para>
-                    </wadl:doc>
-                </param>
             </representation>
         </request>
         <response status="200">
@@ -1653,8 +1265,8 @@
                         <code>domain</code>, <code>cluster_id</code>,
                         <code>type</code>, <code>action</code>,
                         <code>actor</code>, <code>params</code>,
-                        <code>created_time</code> and
-                        <code>deleted_time</code>, and so on.
+                        <code>created_at</code> and
+                        <code>updated_at</code>, and so on.
                     </para>
                     <xsdxt:code href="../samples/receivers-list-response.json"/>
                 </wadl:doc>
@@ -1759,8 +1371,7 @@
                         <code>cluster_id</code>, <code>action</code>,
                         <code>actor</code>, <code>params</code>,
                         <code>channel</code>,
-                        <code>created_time</code>, <code>updated_time</code>,
-                        <code>deleted_time</code>,
+                        <code>created_at</code>, <code>updated_at</code>,
                         <code>user</code>, <code>project</code>,
                         <code>domain</code>, and so on.
                     </para>
@@ -1825,49 +1436,8 @@
         <request>
             <representation mediaType="application/json">
                 &limitMarkerReqParameter;
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sorts the list by an attribute. A valid attribute
-                            is <code>timestamp</code>, <code>obj_type </code>,
-                            <code>obj_name</code>, <code>user</code>, or
-                            <code>action</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="global_project" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to include or exclude events for all projects.
-                            Default is <code>False</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to include or exclude deleted events.
-                            Default is <code>False</code>.
-                        </para>
-                    </wadl:doc>
-                </param>
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="obj_id" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -1956,6 +1526,8 @@
         <request>
             <representation mediaType="application/json">
                 &limitMarkerReqParameter;
+                &sortQueryParameter;
+                &global_projectRequestParameter;
                 <param name="name" style="query" required="false"
                     xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
                     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
@@ -1982,41 +1554,6 @@
                         <para>
                             Filters the response by an action name. Use this
                             filter multiple times to filter by multiple names.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_key" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:list">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Sorts the list by the <code>name</code>,
-                            <code>target</code>, <code>action</code>,
-                            <code>created_time</code>, <code>status</code>, or
-                            other attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="sort_dir" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xml:lang="EN">
-                        <para>
-                            Sort direction. A valid value is <code>asc</code>
-                            (ascending) or <code>desc</code> (descending).
-                            Default is <code>desc</code>. You can specify
-                            multiple pairs of sort key and sort direction
-                            query parameters. If you omit the sort direction
-                            in a pair, the API uses the natural sorting
-                            direction of the <code>sort_key</code> attribute.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="show_deleted" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Indicates whether to include or exclude deleted
-                            action entries. Default is <code>False</code>.
                         </para>
                     </wadl:doc>
                 </param>
