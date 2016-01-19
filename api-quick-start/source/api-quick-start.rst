@@ -78,19 +78,24 @@ The payload of credentials to authenticate contains these parameters:
 +-----------------------+----------------+--------------------------------------+
 
 
-For a typical OpenStack deployment that runs Identity, use the following cURL
-command to request a token. Specify your tenant name, and user name and
-password credentials:
+In a typical OpenStack deployment that runs Identity, you can specify your
+tenant name, and user name and password credentials to authenticate.
+
+First, export your tenant name to the `OS_TENANT_NAME` environment variable,
+your user name to the `OS_USERNAME` environment variable, and your password to
+the `OS_PASSWORD` environment variable. The example below uses a TryStack endpoint
+but you can also use `$OS_IDENTITYENDPOINT` as an environment variable as needed.
+
+Then, run this cURL command to request a token:
 
 .. code-block:: console
 
    $ curl -s -X POST http://128.136.179.2:5000/v2.0/tokens \
      -H "Content-Type: application/json" \
-     -d '{"auth": {"tenantName": "'"$OS_TENANT_NAME"'", "passwordCredentials": \
-     {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
+     -d '{"auth": {"tenantName": "'"$OS_TENANT_NAME"'", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
      | python -m json.tool
 
-If the request succeeds, it returns the OK (200) response code followed by a
+If the request succeeds, it returns the ``OK (200)`` response code followed by a
 response body that contains a token in the form ``"id":"token"`` and an
 expiration date and time in the form ``"expires":"datetime"``.
 
@@ -103,8 +108,7 @@ expiration date and time in the form ``"expires":"datetime"``.
 
       $ curl -s -X POST http://128.136.179.2:5000/v2.0/tokens \
         -H "Content-Type: application/json" \
-        -d '{"auth": {"tenantName": "", "passwordCredentials": \
-        {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
+        -d '{"auth": {"tenantName": "", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
         | python -m json.tool
 
 The following example shows a successful response:
@@ -338,19 +342,27 @@ This section shows how to make some basic Compute API calls. For a complete
 list of Compute API calls, see
 `Compute API (CURRENT) <http://developer.openstack.org/api-ref-compute-v2.1.html>`__.
 
-Export the token ID to the ``TOKEN`` environment variable. For example:
+Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
 .. code-block:: console
 
-   export TOKEN=4b57c7d386a7438b829d1a8922e0eaab
+   export OS_TOKEN=4b57c7d386a7438b829d1a8922e0eaab
 
 The token expires every 24 hours.
 
-Use the Compute API to list flavors:
+Export the tenant name to the ``OS_TENANT_NAME`` environment variable. For example:
 
 .. code-block:: console
 
-   $ curl -s -H "X-Auth-Token: $TOKEN" http://128.136.179.2:8774/v2/$OS_TENANT_NAME/flavors | python -m json.tool
+   export OS_TENANT_NAME=demo
+
+Then, use the Compute API to list flavors:
+
+.. code-block:: console
+
+   $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
+     http://128.136.179.2:8774/v2/$OS_TENANT_NAME/flavors \
+     | python -m json.tool
 
 .. code-block:: json
 
@@ -433,7 +445,7 @@ Use the Compute API to list images:
 
 .. code-block:: console
 
-   $ curl -s -H "X-Auth-Token:token" \
+   $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
      http://8.21.28.222:8774/v2/tenant_id/images \
      | python -m json.tool
 
@@ -543,7 +555,7 @@ Use the Compute API to list servers:
 
 .. code-block:: console
 
-   $ curl -s -H "X-Auth-Token:token" \
+   $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
      http://8.21.28.222:8774/v2/tenant_id/servers \
      | python -m json.tool
 
