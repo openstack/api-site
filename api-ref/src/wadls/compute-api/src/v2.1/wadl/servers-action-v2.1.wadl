@@ -22,6 +22,7 @@
                         &server_idTemplateParameter;
                         <resource id="action" path="action">
                             <method href="#addFloatingIp"/>
+                            <method href="#addSecurityGroup"/>
                             <method href="#attach"/>
                             <method href="#changePassword"/>
                             <method href="#confirmResize"/>
@@ -31,6 +32,7 @@
                             <method href="#reboot"/>
                             <method href="#rebuild"/>
                             <method href="#removeFloatingIp"/>
+                            <method href="#removeSecurityGroup"/>
                             <method href="#rescue"/>
                             <method href="#resize"/>
                             <method href="#resume"/>
@@ -231,8 +233,8 @@
                 Confirms a pending resize action for a server.
             </para>
             <para>
-                Specify the
-                <code>confirmResize</code> action in the request body.
+                Specify the <code>confirmResize</code> action in the request
+                body.
             </para>
             <para>
                 After you make this request, you typically must keep
@@ -275,7 +277,7 @@
     </method>
     <method name="POST" id="createImage">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-         title="Create image (createImage action)">
+            title="Create image (createImage action)">
             <para role="shortdesc">
                 Creates an image from a server.
             </para>
@@ -370,8 +372,10 @@
     <method name="POST" id="pause">
         <wadl:doc xml:lang="EN" title="Pause server (pause action)"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Pauses a server. Changes its status
-                to <code>PAUSED</code>.</para>
+            <para role="shortdesc">
+                Pauses a server. Changes its status
+                to <code>PAUSED</code>.
+            </para>
             <para>
                 Specify the <code>pause</code> action in the request body.
             </para>
@@ -492,7 +496,7 @@
     </method>
     <method name="POST" id="reboot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-         title="Reboot server (reboot action)">
+            title="Reboot server (reboot action)">
             <para role="shortdesc">
                 Reboots a server.
             </para>
@@ -512,7 +516,8 @@
         &commonFaults; &getFaults; &postPutFaults;
         &rebootFaults; &inProgressFault; </method>
     <method name="POST" id="rebuild">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Rebuild server (rebuild action)">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Rebuild server (rebuild action)">
             <para role="shortdesc">
                 Rebuilds a server.
             </para>
@@ -837,7 +842,9 @@
     <method name="POST" id="unlock">
         <wadl:doc xml:lang="EN" title="Unlock server (unlock action)"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Unlocks a server.</para>
+            <para role="shortdesc">
+                Unlocks a locked server.
+            </para>
             <para>
                 Specify the <code>unlock</code> action in the request body.
             </para>
@@ -895,12 +902,10 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Unrescue server (unrescue action)">
             <para role="shortdesc">
-                Unrescues a server. Changes status to
-                <code>ACTIVE</code>.
+                Unrescues a server. Changes status to <code>ACTIVE</code>.
             </para>
             <para>
-                Specify the <code>unrescue</code>
-                action in the request body.
+                Specify the <code>unrescue</code> action in the request body.
             </para>
             <para>Preconditions</para>
             <itemizedlist>
@@ -915,7 +920,8 @@
                         After you successfully unrescue a server and make a
                         <code>GET
                         /v2.1/​{tenant_id}​/servers/​{server_id}​</code>
-                        request, its status changes to <code>ACTIVE</code>.</para>
+                        request, its status changes to <code>ACTIVE</code>.
+                    </para>
                 </listitem>
             </itemizedlist>
         </wadl:doc>
@@ -932,5 +938,57 @@
             </representation>
         </request>
         <response status="202"/>
+    </method>
+    <method name="POST" id="addSecurityGroup">
+        <wadl:doc xml:lang="EN" title="Add security group to a server (addSecurityGroup action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Adds a security group to a server.
+            </para>
+            <para>
+                Specify the <code>addSecurityGroup</code> action in the request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                       href="../samples/servers-action-admin/addSecurityGroup-request.json"
+                    />
+                </wadl:doc>
+                &addSecurityGroupActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+        &commonFaults;
+        &postPutFaults;
+    </method>
+    <method name="POST" id="removeSecurityGroup">
+        <wadl:doc xml:lang="EN"
+            title="Remove security group from a server (removeSecurityGroup action)"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Removes a security group from a server.
+            </para>
+            <para>
+                Specify the <code>removeSecurityGroup</code> action in the
+                request body.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xml:lang="EN"
+                    xmlns="http://docbook.org/ns/docbook">
+                    <xsdxt:code
+                       href="../samples/servers-action-admin/removeSecurityGroup-request.json"
+                    />
+                </wadl:doc>
+                &removeSecurityGroupActionRequestParameter;
+            </representation>
+        </request>
+        <response status="202"/>
+        &commonFaults;
+        &postPutFaults;
     </method>
 </application>
