@@ -2383,13 +2383,6 @@ OpenStack contribution process.
       Facility in Compute that enables a virtual machine instance to
       have more than one VIF connected to it.
 
-   network namespace
-
-      Linux kernel feature that provides independent virtual
-      networking instances on a single host with separate routing
-      tables and interfaces. Similar to virtual routing and forwarding
-      (VRF) services on physical network equipment.
-
    Nebula
 
       Released as open source by NASA in 2010 and is the basis for
@@ -2441,6 +2434,13 @@ OpenStack contribution process.
       The Compute component that manages various network components,
       such as firewall rules, IP address allocation, and so on.
 
+   network namespace
+
+      Linux kernel feature that provides independent virtual
+      networking instances on a single host with separate routing
+      tables and interfaces. Similar to virtual routing and forwarding
+      (VRF) services on physical network equipment.
+
    network node
 
       Any compute node that runs the network worker daemon.
@@ -2449,6 +2449,14 @@ OpenStack contribution process.
 
       Represents a virtual, isolated OSI layer-2 subnet in
       Networking.
+
+   Newton
+
+      The code name for the fourteenth release of OpenStack. The
+      design summit will take place in Austin, Texas, US. The
+      release is named after "Newton House" which is located at
+      1013 E. Ninth St., Austin, TX. which is listed on the
+      National Register of Historic Places.
 
    NTP
 
@@ -2597,6 +2605,12 @@ OpenStack contribution process.
 
       Allows a user to set a flag on an Object Storage container so
       that all objects within the container are versioned.
+
+   Ocata
+
+      The code name for the fifteenth release of OpenStack. The
+      design summit will take place in Barcelona, Spain. Ocata is
+      a beach north of Barcelona.
 
    Oldie
 
