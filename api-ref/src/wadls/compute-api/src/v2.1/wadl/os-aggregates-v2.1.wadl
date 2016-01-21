@@ -17,14 +17,15 @@
             <resource id="tenant_id" path="{tenant_id}">
                 &tenant_idTemplateParameter;
                 <resource id="os-aggregates" path="os-aggregates">
-                    <method href="#createaggregate"/>
+                    <method href="#createAggregate"/>
                     <method href="#listAggregates"/>
                     <resource id="aggregate-id" path="{aggregate_id}">
                         &aggregate_idTemplateParameter;
-                        <method href="#showaggregate"/>
+                        <method href="#showAggregate"/>
+                        <method href="#deleteAggregate"/>
                         <method href="#updateAggregate"/>
                         <resource id="action" path="action">
-                            <method href="#addhost"/>
+                            <method href="#addHost"/>
                             <method href="#addAggregateMetadata"/>
                             <method href="#removeAggregateHost"/>
                         </resource>
@@ -36,10 +37,12 @@
     <!-- *******************************************************-->
     <!--             Aggregates                           -->
     <!--*******************************************************-->
-    <method name="POST" id="createaggregate">
+    <method name="POST" id="createAggregate">
         <wadl:doc xml:lang="EN" title="Create aggregate"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Creates an aggregate in an availability zone.</para>
+            <para role="shortdesc">
+                Creates an aggregate in an availability zone.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -62,7 +65,16 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="addhost">
+    <method name="DELETE" id="deleteAggregate">
+        <wadl:doc xml:lang="EN" title="Delete aggregate"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes an aggregate.
+            </para>
+        </wadl:doc>
+        <response status="200"/>
+    </method>
+    <method name="POST" id="addHost">
         <wadl:doc xml:lang="EN" title="Add host"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -93,11 +105,12 @@
             </representation>
         </response>
     </method>
-    <method name="GET" id="showaggregate">
+    <method name="GET" id="showAggregate">
         <wadl:doc xml:lang="EN" title="Show aggregate details"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Shows the details of an aggregate, including hosts and metadata.
+                Shows details for an aggregate. Details include hosts and
+                metadata.
             </para>
         </wadl:doc>
         <request>
@@ -117,7 +130,8 @@
                     <xsdxt:code
                         href="../samples/os-aggregates/aggregate-show-response.json"
                     />
-                </wadl:doc> &x-openstack-request-idHeader;
+                </wadl:doc>
+                &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
@@ -146,7 +160,8 @@
                     <xsdxt:code
                         href="../samples/os-aggregates/aggregates-list-response.json"
                     />
-                </wadl:doc> &x-openstack-request-idHeader;
+                </wadl:doc>
+                &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
@@ -155,8 +170,7 @@
             title="Create or update aggregate metadata"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Creates or replaces metadata for an
-                aggregate.
+                Creates or replaces metadata for an aggregate.
             </para>
             <para>
                 Specify the <code>add_metadata</code> action in the request body.
@@ -187,8 +201,7 @@
         <wadl:doc xml:lang="EN" title="Remove host"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
-                Removes a host from an
-                aggregate.
+                Removes a host from an aggregate.
             </para>
             <para>
                 Specify the <code>remove_host</code> action in the request body.
@@ -218,8 +231,10 @@
     <method name="PUT" id="updateAggregate">
         <wadl:doc xml:lang="EN" title="Update aggregate"
             xmlns="http://docbook.org/ns/docbook">
-            <para role="shortdesc">Updates either or both the name and
-                availability zone for an aggregate.</para>
+            <para role="shortdesc">
+                Updates either or both the name and availability zone for an
+                aggregate.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -238,7 +253,8 @@
                     <xsdxt:code
                         href="../samples/os-aggregates/aggregate-update-response.json"
                     />
-                </wadl:doc> &x-openstack-request-idHeader;
+                </wadl:doc>
+                &x-openstack-request-idHeader;
             </representation>
         </response>
     </method>
