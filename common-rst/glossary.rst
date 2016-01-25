@@ -369,7 +369,7 @@ OpenStack contribution process.
 
       The storage method used by the Identity service catalog service
       to store and retrieve information about API endpoints that are
-      available to the client. Examples include a SQL database, LDAP
+      available to the client. Examples include an SQL database, LDAP
       database, or KVS back end.
 
    back-end store
@@ -828,7 +828,7 @@ OpenStack contribution process.
    compute worker
 
       The Compute component that runs on each compute node and manages
-      the VM instance life cycle, including run, reboot, terminate,
+      the VM instance lifecycle, including run, reboot, terminate,
       attach/detach volumes, and so on. Provided by the nova-compute daemon.
 
    concatenated object
