@@ -698,7 +698,7 @@ address of the worker:
 
 Now you can SSH into the instance:
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_WORKER_1
 
@@ -709,7 +709,7 @@ Once you have logged in, check to see whether the worker service process
 is running as expected. You can find the logs of the worker service
 in the directory :code:`/var/log/supervisor/`.
 
-::
+.. code-block:: console
 
     worker # ps ax | grep faafo-worker
     17210 ?        R      7:09 /usr/bin/python /usr/local/bin/faafo-worker
@@ -719,7 +719,7 @@ Open :code:`top` to monitor the CPU usage of the :code:`faafo-worker` process.
 Now log into the controller instance, :code:`app-controller`, also
 with SSH, using the previously added SSH key pair "demokey".
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_CONTROLLER
 
@@ -730,7 +730,7 @@ Check to see whether the API service process is running like
 expected. You can find the logs for the API service in the directory
 :file:`/var/log/supervisor/`.
 
-::
+.. code-block:: console
 
     controller # ps ax | grep faafo-api
     17209 ?        Sl     0:19 /usr/bin/python /usr/local/bin/faafo-api
@@ -739,7 +739,7 @@ Now call the Fractal application's command line interface (:code:`faafo`) to
 request a few new fractals. The following command requests a few
 fractals with random parameters:
 
-::
+.. code-block:: console
 
     controller # faafo --endpoint-url http://localhost --verbose create
     2015-04-02 03:55:02.708 19029 INFO faafo.client [-] generating 6 task(s)
@@ -748,7 +748,7 @@ Watch :code:`top` on the worker instance. Right after calling
 :code:`faafo` the :code:`faafo-worker` process should start consuming
 a lot of CPU cycles.
 
-::
+.. code-block:: console
 
       PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND
     17210 root      20   0  157216  39312   5716 R 98.8  3.9  12:02.15 faafo-worker
@@ -756,7 +756,7 @@ a lot of CPU cycles.
 To show the details of a specific fractal use the subcommand
 :code:`show` of the Faafo CLI.
 
-::
+.. code-block:: console
 
     controller # faafo show 154c7b41-108e-4696-a059-1bde9bf03d0a
     +------------+------------------------------------------------------------------+
