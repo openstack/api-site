@@ -37,17 +37,8 @@
                 <resource id="namespaces" type="#NamespaceList" path="namespaces">
                     <method href="#createNamespace-v2"/>
                     <method href="#listNamespaces-v2"/>
-                    <resource path="{namespace}" id="namespace">
-                    <param xmlns="http://wadl.dev.java.net/2009/02"
-                               name="namespace" style="template" type="xsd:string" required="true">
-                        <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                            xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                            xml:lang="EN">
-                           <para>
-                                Unique namespace.
-                            </para>
-                        </wadl:doc>
-                        </param>
+                    <resource path="{namespace_id}" id="namespace_id">
+                        &namespace_idTemplateParameter;
                         <method href="#showNamespace-v2"/>
                         <method href="#updateNamespace-v2"/>
                         <method href="#deleteNamespace-v2"/>
@@ -78,98 +69,14 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="../samples/metadef-namespace-create-request.json"/>
                 </wadl:doc>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="namespace" style="plain" type="xsd:string"
-                    required="true">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            A namespace name that is unique across all users.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="display_name" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            User-friendly name that you can use in the UI to
-                            display the namespace name.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="description" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            Detailed description for the namespace.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="visibility" style="plain" type="xsd:string"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                        <para>
-                            Namespace visibility. Valid value is public or
-                            private. Default is private.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="protected" style="plain" type="xsd:boolean"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>
-                            Namespace protection for deletion. Valid value is
-                            true or false. Default is false.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="properties" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>
-                            One or more property definitions in the namespace.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="objects" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>
-                            One or more object definitions in the namespace.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02"
-                    name="resource_type_associations" style="plain" type="xsd:dict"
-                    required="false">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                        xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                        xml:lang="EN">
-                         <para>
-                            One or more resource types that are associated
-                            with this namespace.
-                        </para>
-                    </wadl:doc>
-                </param>
+                <!-- &namespaceRequestParameter;
+                &display_nameRequestParameter;
+                &namespace-descriptionRequestParameter;
+                &namespace-visibilityRequestParameter;
+                &namespace-protectedRequestParameter;
+                &propertiesRequestParameter;
+                &objectsRequestParameter;
+                &resource_type_associationsRequestParameter; -->
             </representation>
         </request>
         <response status="201">
@@ -179,10 +86,14 @@
                     <xsdxt:code
                         href="../samples/metadef-namespace-create-response.json"/>
                 </wadl:doc>
-                &metadefNamespaceParameter; &metadefNSDisplayNameParameter;
-                &metadefNSDescParameter; &metadefNSVisibilityParameter;
-                &metadefNSProtectedParameter; &metadefPropertiesParameter;
-                &metadefObjectsParameter; &metadefResTypeAssocsParameter;
+                &namespaceResponseParameter;
+                &display_nameResponseParameter;
+                &namespace-descriptionResponseParameter;
+                &namespace-visibilityResponseParameter;
+                &namespace-protectedResponseParameter;
+                &namespace-propertiesResponseParameter;
+                &objectsResponseParameter;
+                &resource_type_associationsResponseParameter;
             </representation>
         </response>
     </method>
@@ -219,47 +130,10 @@
         <request>
             <representation mediaType="application/json">
                 &limitMarkerReqParameter;
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="visibility"
-                       style="query" required="false" type="imageapi:string">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-                       <para>Filter parameter. Namespace visibility. Valid values are
-                          <code>public</code> and <code>private</code>.
-                          Default is <code>public</code>.
-                       </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="resource_types"
-                       style="query" required="false" type="xsd:int">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-                       <para>
-                            Filter parameter. Specify this value as comma-separated list. For
-                            example, send the <code>resource_types</code> filter of
-                            <code>OS::Glance::Image,OS::Nova::Flavor</code> to filter the namespaces
-                            by those resource types.
-                       </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="sort_key"
-                       style="query" required="false" type="xsd:string" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-                       <para>Sort key. Use attributes like <code>namespace</code>
-                          for sorting. Default is <code>created_at</code>.
-                       </para>
-                    </wadl:doc>
-                </param>
-                <param xmlns="http://wadl.dev.java.net/2009/02" name="sort_dir"
-                       style="query" required="false" type="xsd:string" default="ALL">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                       xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
-                       <para>Sort direction. Valid values are <code>asc</code>
-                          (ascending) and <code>desc</code> (descending). Default is
-                          <code>desc</code>.
-                       </para>
-                    </wadl:doc>
-                </param>
+                &visibilityQueryParameter;
+                &resource_typesQueryParameter;
+                &sort_keyQueryParameter;
+                &sort_dirQueryParameter;
              </representation>
         </request>
         <response status="200">
@@ -269,10 +143,13 @@
                     <xsdxt:code
                         href="../samples/metadef-namespaces-list-response.json"/>
                 </wadl:doc>
-                &namespacesParameter; &metadefNamespaceParameter;
-                &metadefNSDisplayNameParameter; &metadefNSDescParameter;
-                &metadefNSVisibilityParameter; &metadefNSProtectedParameter;
-                &metadefResTypeAssocsParameter;
+                &namespacesObjectParameter;
+                &namespaceResponseParameter;
+                &display_nameResponseParameter;
+                &namespace-descriptionResponseParameter;
+                &namespace-visibilityResponseParameter;
+                &namespace-protectedResponseParameter;
+                &resource_type_associationsResponseParameter;
              </representation>
         </response>
     </method>
@@ -300,7 +177,9 @@
     <method name="PUT" id="updateNamespace-v2">
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Update namespace">
-            <para role="shortdesc">Updates a namespace.</para>
+            <para role="shortdesc">
+                Updates a namespace.
+            </para>
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
@@ -308,7 +187,6 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="../samples/metadef-namespace-update-request.json"/>
                 </wadl:doc>
-                &metadefNamespace_idParameter;
             </representation>
         </request>
         <response status="200">
@@ -325,13 +203,13 @@
         <wadl:doc xml:lang="EN" xmlns="http://docbook.org/ns/docbook"
             title="Delete namespace">
             <para role="shortdesc">
-                Deletes a namespace and its properties,
-                objects, and any resource type associations.
+                Deletes a namespace and its properties, objects, and any
+                resource type associations.
             </para>
             <para>
                 You cannot delete namespaces with the <code>protected</code>
-                attribute set to true (boolean); the response returns the HTTP
-                403 status code.
+                attribute set to <code>true</code> (boolean); the response returns the HTTP
+                <code>403</code> response code.
             </para>
             <para>
                 To delete a namespace, you must first make an update namespace
@@ -339,14 +217,14 @@
                 (boolean) on the namespace. Then, delete the namespace.
             </para>
             <para>
-                If the operation succeeds, the response returns the HTTP 204
-                status code.
+                A successful operation returns the HTTP <code>204</code>
+                response code.
             </para>
             <para>
                 If you try to remove a namespace with the
                 <code>protected</code> attribute set to true (boolean), the
-                operation fails and the response returns the HTTP 403 error
-                code.
+                operation fails and the response returns the HTTP
+                <code>403</code> response code.
             </para>
         </wadl:doc>
         <response status="204"/>

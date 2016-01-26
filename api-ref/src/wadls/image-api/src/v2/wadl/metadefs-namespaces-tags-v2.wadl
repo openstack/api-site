@@ -35,12 +35,14 @@
         <resource id="v2" path="//v2">
             <resource id="metadefs" path="metadefs">
                 <resource id="namespaces" path="namespaces">
-                    <resource path="{namespace}" id="namespace">
-                        <resource id="tags" type="#TagList" path="tags">
+                    <resource id="tags" type="#TagList" path="tags">
+                        <resource path="{namespace_id}" id="namespace_id">
+                            &namespace_idTemplateParameter;
                             <method href="#createTags-v2"/>
                             <method href="#listTags-v2"/>
                             <method href="#deleteAllTags-v2"/>
-                            <resource path="{name}" id="tag_name">
+                            <resource path="{tag_name}" id="tag_name">
+                                &tag_nameTemplateParameter;
                                 <method href="#addTag-v2"/>
                                 <method href="#showTag-v2"/>
                                 <method href="#updateTag-v2"/>
@@ -70,9 +72,9 @@
                     <xsdxt:code
                         href="../samples/metadef-tag-create-request.json"/>
                 </wadl:doc>
-                &metadefNamespaceParameter;
-                &metadefTagsParameter;
-                &metadefTagNameParameter;
+                &namespaceResponseParameter;
+                &tagsObjectParameter;
+                &tag-nameResponseParameter;
             </representation>
         </request>
         <response status="201">
@@ -82,8 +84,8 @@
                     <xsdxt:code
                         href="../samples/metadef-tag-create-response.json"/>
                 </wadl:doc>
-                &metadefTagsParameter;
-                &metadefTagNameParameter;
+                &tagsObjectParameter;
+                &tag-nameResponseParameter;
             </representation>
         </response>
     </method>
@@ -102,9 +104,10 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                &metadefNamespaceParameter;
+                &namespaceResponseParameter;
                 &limitMarkerReqParameter;
-                &metadefTagListSortParameters; </representation>
+                &metadefTagListQueryParameters;
+            </representation>
         </request>
         <response status="200">
             <representation mediaType="application/json">
@@ -113,8 +116,8 @@
                     <xsdxt:code
                         href="../samples/metadef-tags-list-response.json"/>
                 </wadl:doc>
-                &metadefTagsParameter;
-                &metadefTagNameParameter;
+                &tagsObjectParameter;
+                &tag-nameResponseParameter;
             </representation>
         </response>
     </method>
@@ -137,7 +140,7 @@
         </wadl:doc>
         <request>
             <representation mediaType="application/json">
-                &metadefNamespaceParameter;
+                &namespaceResponseParameter;
             </representation>
         </request>
         <response status="204"/>
@@ -150,19 +153,14 @@
                 Adds a tag to the list of namespace tag definitions.
             </para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                    &metadefNamespaceParameter;
-                    &metadefTagNameParameter;
-            </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../samples/metadef-tag-add-response.json"/>
-                </wadl:doc> &metadefTagNameParameter;
+                </wadl:doc>
+                &tag-nameResponseParameter;
             </representation>
         </response>
     </method>
@@ -174,19 +172,14 @@
             </para>
             <para>The response body shows a single tag entity.</para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &metadefNamespaceParameter;
-                &metadefTagNameParameter;
-            </representation>
-        </request>
         <response status="200">
             <representation mediaType="application/json">
                 <wadl:doc xml:lang="EN"
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code
                         href="../samples/metadef-tag-details-response.json"/>
-                </wadl:doc> &metadefTagNameParameter;
+                </wadl:doc>
+                &tag-nameResponseParameter;
             </representation>
         </response>
     </method>
@@ -203,8 +196,6 @@
                     xmlns="http://docbook.org/ns/docbook">
                     <xsdxt:code href="../samples/metadef-tag-update-request.json"/>
                 </wadl:doc>
-                    &metadefNamespaceParameter;
-                    &metadefTagNameParameter;
             </representation>
         </request>
         <response status="200">
@@ -214,7 +205,7 @@
                     <xsdxt:code
                         href="../samples/metadef-tag-update-response.json"/>
                 </wadl:doc>
-                &metadefTagNameParameter;
+                &tag-nameResponseParameter;
             </representation>
         </response>
     </method>
@@ -235,12 +226,6 @@
                 The response is empty and returns the HTTP 204 status code.
             </para>
         </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                &metadefNamespaceParameter;
-                &metadefTagNameParameter;
-            </representation>
-        </request>
         <response status="204"/>
         <response status="403"/>
     </method>
