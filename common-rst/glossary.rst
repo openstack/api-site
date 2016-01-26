@@ -3500,7 +3500,7 @@ OpenStack contribution process.
       Disk-based virtual memory used by operating systems to provide
       more memory than is actually available on the system.
 
-   swawth
+   swauth
 
       An authentication and authorization service for Object Storage,
       implemented through WSGI middleware; uses Object Storage itself as the
