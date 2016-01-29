@@ -60,7 +60,7 @@
                     <method href="#updateCluster"/>
                     <method href="#deleteCluster"/>
                     <resource id="cluster_actions" path="actions">
-                        <method href="#cluster_action"/>
+                        <method href="#clusterAction"/>
                     </resource>
                     <resource id="cluster_policies" path="policies">
                         <method href="#listClusterPolicies"/>
@@ -79,6 +79,9 @@
                     <method href="#showNode"/>
                     <method href="#updateNode"/>
                     <method href="#deleteNode"/>
+                    <resource id="node_actions" path="actions">
+                        <method href="#nodeAction"/>
+                    </resource>
                 </resource>
             </resource>
             <resource id="actions" path="actions">
@@ -160,21 +163,6 @@
                             Filters the response by a cluster status. Use this
                             filter multiple times to filter by multiple
                             statuses.
-                        </para>
-                    </wadl:doc>
-                </param>
-                <param name="show_nested" style="query" required="false"
-                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:boolean">
-                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                        <para>
-                            Includes nested clusters in or excludes nested
-                            clusters from the cluster list.
-                        </para>
-                        <para>
-                            Set to <code>False</code> to exclude nested
-                            clusters from the cluster list. Set to
-                            <code>True</code> to include nested clusters in
-                            the cluster list. Default is <code>False</code>.
                         </para>
                     </wadl:doc>
                 </param>
@@ -284,7 +272,7 @@
             </representation>
         </response>
     </method>
-    <method name="POST" id="cluster_action">
+    <method name="POST" id="clusterAction">
         <wadl:doc xml:lang="EN" title="Trigger cluster action"
             xmlns="http://docbook.org/ns/docbook">
             <para role="shortdesc">
@@ -346,6 +334,21 @@
                             </listitem>
                             <listitem>
                                 <para>
+                                    <code>check</code> Check the health status
+                                    of a cluster. For example:
+                                    <xsdxt:code href="../samples/cluster-check-request.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>recover</code> Recover a cluster from
+                                    its current unhealthy status. For example:
+                                    <xsdxt:code href="../samples/cluster-recover-request.json"/>
+                                </para>
+                            </listitem>
+
+                            <listitem>
+                                <para>
                                     <code>policy_attach</code> Attach a policy
                                     to a cluster. The request body contains
                                     parameters for the policy attachment:
@@ -362,7 +365,7 @@
                             </listitem>
                             <listitem>
                                 <para>
-                                    <code>updatePolicy</code> Update the
+                                    <code>policy_update</code> Update the
                                     policy attachment. Specify the policy ID and
                                     property settings in the request body:
                                     <xsdxt:code href="../samples/cluster-policy-update-request.json"/>
@@ -1199,6 +1202,59 @@
                     </para>
                     <xsdxt:code href="../samples/node-show-response.json"/>
                 </wadl:doc>
+            </representation>
+        </response>
+    </method>
+    <method name="POST" id="nodeAction">
+        <wadl:doc xml:lang="EN" title="Trigger node action"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Triggers an action on a node.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <param name="action" style="plain" required="true"
+                    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string">
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                        <para>
+                            The action to trigger.
+                        </para>
+                        <para>
+                            Each action takes a different set of parameters.
+                        </para>
+                        <para>
+                            Supported actions include:
+                        </para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <code>check</code> Check the health status
+                                    of a node. For example:
+                                    <xsdxt:code href="../samples/node-check-request.json"/>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <code>recover</code> Recover a node from
+                                    its current unhealthy status. For example:
+                                    <xsdxt:code href="../samples/node-recover-request.json"/>
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </wadl:doc>
+                </param>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <para>
+                        The <code>Location</code> response header contains the
+                        action that the request initiates.
+                    </para>
+                </wadl:doc>
+                &actionLocationParameter;
             </representation>
         </response>
     </method>
