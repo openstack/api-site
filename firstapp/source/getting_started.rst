@@ -1435,7 +1435,7 @@ information, the flavor ID, and image ID.
 
 .. only:: shade
 
-    .. literalinclude:: ../samples/libcloud/getting_started.py
+    .. literalinclude:: ../samples/shade/getting_started.py
        :language: python
 
 .. only:: openstacksdk
