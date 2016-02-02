@@ -44,6 +44,16 @@
                                 <method href="#deleteBandwidthLimitRule"/>
                             </resource>
                         </resource>
+                        <resource id="dscp_marking_rules" path="dscp_marking_rules">
+                            <method href="#listDscpMarkingRules"/>
+                            <method href="#createDscpMarkingRule"/>
+                            <resource id="dscp_rule_id" path="{dscp_rule_id}">
+                                &rule_idTemplateParameter;
+                                <method href="#showDscpMarkingRule"/>
+                                <method href="#updateDscpMarkingRule"/>
+                                <method href="#deleteDscpMarkingRule"/>
+                            </resource>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
@@ -75,10 +85,12 @@
             &qos-policy-descriptionResponseParameter;
             &qos-policy-sharedResponseParameter;
             &bandwidth_limit_rulesResponseParameter;
+            &dscp_marking_rulesResponseParameter;
             &qos-policy-rule-idResponseParameter;
             &qos-policy-rule-policy_idResponseParameter;
             &max_kbpsResponseParameter;
             &max_burst_kbpsResponseParameter;
+            &dscp_markResponseParameter;
         </representation>
         </response> &fault401; &fault500; &fault503;
     </method>
@@ -148,10 +160,12 @@
             &qos-policy-descriptionResponseParameter;
             &qos-policy-sharedResponseParameter;
             &bandwidth_limit_rulesResponseParameter;
+            &dscp_marking_rulesResponseParameter;
             &qos-policy-rule-idResponseParameter;
             &qos-policy-rule-policy_idResponseParameter;
             &max_kbpsResponseParameter;
             &max_burst_kbpsResponseParameter;
+            &dscp_markResponseParameter;
         </representation>
         </response> &fault401; &fault500; &fault503;
     </method>
@@ -311,6 +325,115 @@
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete bandwidth limit rule">
             <para role="shortdesc">
                 Deletes a bandwidth limit rule for a QoS policy.
+            </para>
+        </wadl:doc>
+        <response status="204"/> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
+    <method name="GET" id="listDscpMarkingRules">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="List DSCP marking rules for QoS policy">
+            <para role="shortdesc">
+                Lists all DSCP marking rules for a QoS policy.
+            </para>
+            <para>
+                The list may be empty.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/dscp_marking_rules-list-response.json"/>
+            </wadl:doc>
+            &dscp_marking_rulesResponseParameter;
+            &qos-policy-rule-idResponseParameter;
+            &qos-policy-rule-policy_idResponseParameter;
+            &dscp_markResponseParameter;
+        </representation>
+        </response> &fault401; &fault500; &fault503;
+    </method>
+    <method name="POST" id="createDscpMarkingRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create DSCP marking rule">
+            <para role="shortdesc">
+                Creates a DSCP marking rule for a QoS policy.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/dscp_marking_rule-create-request.json"/>
+                </wadl:doc>
+                &dscp_marking_ruleObject;
+                &qos-policy-rule-policy_idRequestParameter;
+                &dscp_markRequestParameter;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/dscp_marking_rule-create-response.json"/>
+                </wadl:doc>
+                &dscp_marking_ruleObject;
+                &qos-policy-rule-idResponseParameter;
+                &qos-policy-rule-policy_idResponseParameter;
+                &dscp_markResponseParameter;
+            </representation>
+        </response> &fault401; &fault404; &fault409; &fault413; &fault500; &fault503;
+    </method>
+    <method name="GET" id="showDscpMarkingRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show DSCP marking rule details">
+            <para role="shortdesc">
+                Shows details for a DSCP marking rule for a QoS policy.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/dscp_marking_rule-show-response.json"/>
+            </wadl:doc>
+            &dscp_marking_ruleObject;
+            &qos-policy-rule-idResponseParameter;
+            &qos-policy-rule-policy_idResponseParameter;
+            &dscp_markResponseParameter;
+        </representation>
+        </response> &fault401; &fault500; &fault503;
+    </method>
+    <method name="PUT" id="updateDscpMarkingRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update DSCP marking rule">
+            <para role="shortdesc">
+                Updates a DSCP marking rule for a QoS policy.
+            </para>
+            <para>
+                If the request is valid, the service returns the
+                <code>Accepted (202)</code> response code.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/dscp_marking_rule-update-request.json"/>
+                </wadl:doc>
+                &dscp_marking_ruleObject;
+                &qos-policy-rule-policy_idRequestParameter;
+                &dscp_markRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/qos/dscp_marking_rule-update-response.json"/>
+                </wadl:doc>
+                &dscp_marking_ruleObject;
+                &qos-policy-rule-idResponseParameter;
+                &qos-policy-rule-policy_idResponseParameter;
+                &dscp_markResponseParameter;
+            </representation>
+        </response> &fault400; &fault401; &fault413; &fault500; &fault503;
+    </method>
+    <method name="DELETE" id="deleteDscpMarkingRule">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete DSCP marking rule">
+            <para role="shortdesc">
+                Deletes a DSCP marking rule for a QoS policy.
             </para>
         </wadl:doc>
         <response status="204"/> &fault400; &fault401; &fault413; &fault500; &fault503;
