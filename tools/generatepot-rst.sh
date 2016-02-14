@@ -31,14 +31,14 @@ fi
 
 
 # We're not doing anything for this directory. But we need to handle
-# it by this script so that the common-rst.pot file gets registered.
-if [[ "$DOCNAME" = "common-rst" ]] ; then
+# it by this script so that the common.pot file gets registered.
+if [[ "$DOCNAME" = "common" ]] ; then
     exit 0
 fi
 
 if [ "$REPOSITORY" = "openstack-manuals" ] ; then
     # Build Glossary
-    tools/glossary2rst.py doc/common-rst/glossary.rst
+    tools/glossary2rst.py doc/common/glossary.rst
 fi
 # First remove the old pot file, otherwise the new file will contain
 # old references
@@ -61,18 +61,18 @@ if [ "$REPOSITORY" = "openstack-manuals" ] ; then
     sed -i -e 's/^"Project-Id-Version: [a-zA-Z0-9\. ]+\\n"$/"Project-Id-Version: \\n"/' \
         ${DIRECTORY}/source/locale/common.pot
     # Create the common pot file
-    msgcat --sort-by-file ${TOPDIR}common-rst/source/locale/common-rst.pot \
+    msgcat --sort-by-file ${TOPDIR}common/source/locale/common.pot \
         ${DIRECTORY}/source/locale/common.pot | \
         sed -e 's/^"Project-Id-Version: [a-zA-Z0-9\. ]+\\n"$/"Project-Id-Version: \\n"/' | \
         awk '$0 !~ /^\# [a-z0-9]+$/' | awk '$0 !~ /^\# \#-\#-\#-\#-\# /' \
-        > ${DIRECTORY}/source/locale/common-rst.pot
-    mv -f ${DIRECTORY}/source/locale/common-rst.pot \
-        ${TOPDIR}common-rst/source/locale/common-rst.pot
+        > ${DIRECTORY}/source/locale/common.pot
+    mv -f ${DIRECTORY}/source/locale/common.pot \
+        ${TOPDIR}common/source/locale/common.pot
     rm -f ${DIRECTORY}/source/locale/common.pot
 
     # Simplify metadata
-    rm -f ${TOPDIR}common-rst/source/locale/dummy.po
-    cat << EOF > ${TOPDIR}common-rst/source/locale/dummy.po
+    rm -f ${TOPDIR}common/source/locale/dummy.po
+    cat << EOF > ${TOPDIR}common/source/locale/dummy.po
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
@@ -85,14 +85,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 EOF
-    msgmerge -N ${TOPDIR}common-rst/source/locale/dummy.po \
-        ${TOPDIR}common-rst/source/locale/common-rst.pot \
-        > ${TOPDIR}common-rst/source/locale/tmp.pot
-    mv -f ${TOPDIR}common-rst/source/locale/tmp.pot \
-        ${TOPDIR}common-rst/source/locale/common-rst.pot
-    rm -f ${TOPDIR}common-rst/source/locale/dummy.po
+    msgmerge -N ${TOPDIR}common/source/locale/dummy.po \
+        ${TOPDIR}common/source/locale/common.pot \
+        > ${TOPDIR}common/source/locale/tmp.pot
+    mv -f ${TOPDIR}common/source/locale/tmp.pot \
+        ${TOPDIR}common/source/locale/common.pot
+    rm -f ${TOPDIR}common/source/locale/dummy.po
 else
-    # common-rst is translated as part of openstack-manuals, do not
+    # common is translated as part of openstack-manuals, do not
     # include the file in the combined tree if it exists.
     if [ -f ${DIRECTORY}/source/locale/common.pot ] ; then
         rm ${DIRECTORY}/source/locale/common.pot
