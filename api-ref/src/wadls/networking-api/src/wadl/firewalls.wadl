@@ -44,6 +44,12 @@
                         <method href="#showFirewallPolicy"/>
                         <method href="#updateFirewallPolicy"/>
                         <method href="#deleteFirewallPolicy"/>
+                        <resource path="insert_rule" id="insert_rule">
+                            <method href="#insert_ruleFirewallPolicy"/>
+                        </resource>
+                        <resource path="remove_rule" id="remove_rule">
+                            <method href="#remove_ruleFirewallPolicy"/>
+                        </resource>
                     </resource>
                 </resource>
                 <resource id="firewall_rules" path="firewall_rules">
@@ -287,6 +293,86 @@
         <!-- &fault400; -->
         <!-- &fault401; -->
         <!-- &fault404; -->
+    </method>
+    <method name="PUT" id="insert_ruleFirewallPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Insert rule into a firewall policy">
+            <para role="shortdesc">
+              Insert firewall rule into a policy.
+            </para>
+            <para>
+              A firewall_rule_id is inserted relative to the position of the
+              firewall_rule_id set in <code>insert_before</code> or
+              <code>insert_after</code>. If <code>insert_before</code> is set,
+              <code>insert_after</code> is ignored. If both
+              <code>insert_before</code> and <code>insert_after</code> are not
+              set, the new firewall_rule_id is inserted at the top of the
+              policy.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code href="../samples/firewalls/firewall-policy-insert-rule-request.json"/>
+                </wadl:doc>
+                &firewallRuleIdParameter;
+                &firewallPolicyInsertBeforeParameter;
+                &firewallPolicyInsertAfterParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code href="../samples/firewalls/firewall-policy-insert-rule-response.json"/>
+                </wadl:doc>
+                &firewall_policy-auditedResponseParameter;
+                &firewall_policy-descriptionResponseParameter;
+                &firewall_policy-firewall_listResponseParameter;
+                &firewall_policy-firewall_rulesResponseParameter;
+                &firewall_policy-idResponseParameter;
+                &firewall_policy-nameResponseParameter;
+                &firewall_policy-sharedResponseParameter;
+                &firewall_policy-tenant_idResponseParameter;
+            </representation>
+        </response>
+        &fault400;
+        &fault401;
+        &fault404;
+        &fault409;
+    </method>
+    <method name="PUT" id="remove_ruleFirewallPolicy">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Remove rule from firewall policy">
+            <para role="shortdesc">
+                Remove firewall rule from a policy.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code href="../samples/firewalls/firewall-policy-remove-rule-request.json"/>
+                </wadl:doc>
+                &firewallRuleIdParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+                    <xsdxt:code href="../samples/firewalls/firewall-policy-remove-rule-response.json"/>
+                </wadl:doc>
+                &firewall_policy-auditedResponseParameter;
+                &firewall_policy-descriptionResponseParameter;
+                &firewall_policy-firewall_listResponseParameter;
+                &firewall_policy-firewall_rulesResponseParameter;
+                &firewall_policy-idResponseParameter;
+                &firewall_policy-nameResponseParameter;
+                &firewall_policy-sharedResponseParameter;
+                &firewall_policy-tenant_idResponseParameter;
+            </representation>
+        </response>
+        &fault400;
+        &fault401;
+        &fault404;
     </method>
     <method name="DELETE" id="deleteFirewallPolicy">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete firewall policy">
