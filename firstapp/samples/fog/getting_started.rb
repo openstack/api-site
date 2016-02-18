@@ -1,157 +1,145 @@
-# step-1
+#!/usr/bin/env ruby
 require 'fog'
 
-auth_username = 'your_auth_username'
-auth_password = 'your_auth_password'
-auth_url = 'http://controller:5000'
-project_name = 'your_project_name_or_id'
-region_name = 'your_region_name'
+# step-1
+auth_username = "your_auth_username"
+auth_password = "your_auth_password"
+auth_url = "http://controller:5000"
+project_name = "your_project_name_or_id"
 
-conn = Fog::Compute.new({
-    :provider            => 'openstack',
-    :openstack_auth_url  => auth_url + '/v2.0/tokens',
-    :openstack_username  => auth_username,
-    :openstack_tenant    => project_name,
-    :openstack_api_key   => auth_password,
-})
+conn = Fog::Compute::OpenStack.new({
+                                     openstack_auth_url: auth_url + "/v3/auth/tokens",
+                                     openstack_domain_id: "default",
+                                     openstack_username: auth_username,
+                                     openstack_api_key:  auth_password,
+                                     openstack_project_name: project_name
+                                   })
 
 # step-2
-images = conn.images.all
-print images
+p conn.images.all
 
 # step-3
-flavors = conn.flavors.all
-print flavors
+p conn.flavors.all
 
 # step-4
-image_id = '2cccbea0-cea9-4f86-a3ed-065c652adda5'
-image = conn.images.get image_id
-print image
+image = conn.images.get("2cccbea0-cea9-4f86-a3ed-065c652adda5")
+p image
 
 # step-5
-flavor_id = '3'
-flavor = conn.flavors.get flavor_id
-print flavor
+flavor = conn.flavors.get("2")
+p flavor
 
 # step-6
-instance_name = 'testing'
-testing_instance = conn.servers.create(:name => instance_name,
-                                       :flavor_ref => flavor.id,
-                                       :image_ref => image.id)
+instance_name = "testing"
+testing_instance = conn.servers.create({
+                                         name: instance_name,
+                                         image_ref: image.id,
+                                         flavor_ref: flavor.id
+                                       })
+testing_instance.wait_for {testing_instance.ready?}
+
+p testing_instance
 
 # step-7
-print conn.servers
+p conn.servers.all
 
 # step-8
 testing_instance.destroy
 
 # step-9
+puts "Checking for existing SSH key pair..."
 key_pair_name = "demokey"
-
 pub_key_file = "~/.ssh/id_rsa.pub"
 
-puts "Checking for existing SSH keypair"
-
-for pair in conn.key_pairs.all()
-    if pair.name == key_pair_name
-        key_pair = pair
-        puts "Key pair \"" + key_pair.name + "\" exists, skipping
-import"
-        break
-    end
+if key_pair = conn.key_pairs.get(key_pair_name)
+  puts "Keypair #{key_pair_name} already exists. Skipping import."
+else
+  puts "adding keypair..."
+  key_pair = conn.key_pairs.create({
+                                     name: key_pair_name,
+                                     public_key: File.read(File.expand_path(pub_key_file))
+                                   })
 end
 
-if not key_pair
-    puts "Uploading keypair from ~/.ssh/id_rsa.pub"
-    key_file = File.open(File.expand_path(pub_key_file))
-    public_key = key_file.read
-    key_pair = conn.key_pairs.create :name => key_pair_name,
-                                     :public_key => public_key
-end
+p conn.key_pairs.all
 
 # step-10
-for security_group in conn.security_groups.all
-    if security_group.name == 'all-in-one'
-        all_in_one_security_group = security_group
-        break
-    end
+puts "Checking for existing security group..."
+security_group_name = "all-in-one"
+
+if all_in_one_security_group = conn.security_groups.find {|security_group| security_group.name == security_group_name}
+  puts "Security Group #{security_group_name} already exists. Skipping creation."
+else
+  all_in_one_security_group = conn.security_groups.create({
+                                                            name: security_group_name,
+                                                            description: "network access for all-in-one application."
+                                                          })
+  conn.security_group_rules.create({
+                                     parent_group_id: all_in_one_security_group.id,
+                                     ip_protocol: "tcp",
+                                     from_port: 80,
+                                     to_port: 80
+                                   })
+  conn.security_group_rules.create({
+                                     parent_group_id: all_in_one_security_group.id,
+                                     ip_protocol: "tcp",
+                                     from_port: 22,
+                                     to_port: 22
+                                   })
 end
 
-if not all_in_one_security_group
-    conn.create_security_group 'all-in-one',
-                               'network access for all-in-one application.'
-    for security_group in conn.security_groups.all
-        if security_group.name == 'all-in-one'
-            all_in_one_security_group = security_group
-            break
-        end
-    end
-
-    conn.security_group_rules.create :ip_protocol => 'TCP',
-                               :from_port => 22,
-                               :to_port => 22,
-                               :parent_group_id => all_in_one_security_group.id
-    conn.security_group_rules.create :ip_protocol => 'TCP',
-                               :from_port => 80,
-                               :to_port => 80,
-                               :parent_group_id => all_in_one_security_group.id
-end
+p conn.security_groups.all
 
 # step-11
-userdata = "#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh \
-| bash -s -- \ -i faafo -i messaging -r api -r worker -r demo"
+user_data = <<END
+#!/usr/bin/env bash
+curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+-i faafo -i messaging -r api -r worker -r demo
+END
 
 # step-12
-puts "Checking for existing instance"
-for server in conn.servers.all
-    if server.name == instance_name
-        instance = server
-        break
-    end
+puts "Checking for existing instance..."
+instance_name = "all-in-one"
+
+if testing_instance = conn.servers.find {|instance| instance.name == instance_name}
+  puts "Instance #{instance_name} already exists. Skipping creation."
+else
+  testing_instance = conn.servers.create({
+                                           name: instance_name,
+                                           image_ref: image.id,
+                                           flavor_ref: flavor.id,
+                                           key_name: key_pair.name,
+                                           user_data: user_data,
+                                           security_groups: all_in_one_security_group
+                                         })
+  testing_instance.wait_for {testing_instance.ready?}
 end
 
-if not instance
-    puts "No test instance found, creating one now"
-    instance = conn.servers.create :name => instance_name,
-                              :flavor_ref => flavor.id,
-                              :image_ref => image.id,
-                              :key_name => key_pair.name,
-                              :user_data => userdata,
-                              :security_groups => all_in_one_security_group
-end
-
-until instance.ready?
-    for server in conn.servers
-        if server.name == instance.name
-            instance = server
-            break
-        end
-    end
-end
+p conn.servers.all
 
 # step-13
-puts "Checking for unused Floating IP..."
-for address in conn.addresses.all()
-    if not address.instance_id
-        ip_address = address
-        puts "Unused IP " + ip_address.ip + " found, it will be used
-    instead of creating a new IP"
-        break
-    end
-end
-
-if not ip_address
-    puts "Allocating new Floating IP"
-    ip_address = conn.addresses.create()
-end
+puts "Private IP found: #{private_ip_address}" if private_ip_address ||= testing_instance.private_ip_address
 
 # step-14
-if instance.public_ip_addresses.length > 0
-    puts "Instance already has a floating IP address"
-else
-    instance.associate_address(ip_address.ip)
-end
+puts "Public IP found: #{floating_ip_address}" if floating_ip_address ||= testing_instance.floating_ip_address
 
 # step-15
-puts "Fractals app will be deployed to http://#{ip_address.ip}"
+puts "Checking for unused Floating IP..."
+unless unused_floating_ip_address = conn.addresses.find {|address| address.instance_id.nil?}
+  pool_name = conn.addresses.get_address_pools[0]["name"]
+  puts "Allocating new Floating IP from pool: #{pool_name}"
+  unused_floating_ip_address = conn.addresses.create({
+                                                       pool: pool_name
+                                                     })
+end
+
+# step-16
+if floating_ip_address
+  puts "Instance #{testing_instance.name} already has a public ip. Skipping attachment."
+elsif unused_floating_ip_address
+  unused_floating_ip_address.server = testing_instance
+end
+
+# step-17
+actual_ip_address = floating_ip_address || unused_floating_ip_address || private_ip_address
+puts "The Fractals app will be deployed to http://#{actual_ip_address.ip}"
