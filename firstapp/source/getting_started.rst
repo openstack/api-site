@@ -710,8 +710,7 @@ Next, tell the script which flavor you want to use:
 
 .. only:: shade
 
-    Because shade accepts either the ID or name in most API calls, specify the
-    name for the flavor:
+    Specify the flavor ID that you would like to use.
 
     .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-5

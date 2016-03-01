@@ -20,7 +20,7 @@ image = conn.get_image(image_id)
 print(image)
 
 #step-5
-flavor_id = 'subsonic'
+flavor_id = '100'
 flavor = conn.get_flavor(flavor_id)
 print(flavor)
 
