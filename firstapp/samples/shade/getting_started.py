@@ -38,7 +38,7 @@ for instance in instances:
     print(instance)
 
 #step-8
-conn.delete_server(name=instance_name)
+conn.delete_server(name_or_id=instance_name)
 
 #step-9
 print('Checking for existing SSH keypair...')
