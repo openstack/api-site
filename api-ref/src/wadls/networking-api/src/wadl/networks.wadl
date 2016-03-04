@@ -26,14 +26,8 @@
     <resources base="https://neutron.example.com/" xml:id="os-networks-v2.0">
         <resource id="networks-versions" path="//">
             <method href="#networks-listVersions"/>
-        </resource>
-        <resource id="networks-version" path="//v2">
-            <resource id="extensions" path="extensions">
-                <method href="#listExtensions"/>
-                <resource id="extension" path="{alias}">
-                    &aliasTemplateParameter;
-                    <method href="#showExtension"/>
-                </resource>
+            <resource id="version" path="v2.0">
+                <method href="#networks-showVersionDetails"/>
             </resource>
         </resource>
         <resource id="network-version" path="//v2.0">
@@ -60,16 +54,6 @@
         </wadl:doc>
         <method href="#listNetworks"/>
     </resource_type>
-    <resource_type id="ExtensionList">
-        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Extension List">
-            <para>
-                A list of supported extensions.
-            </para>
-        </wadl:doc>
-        <method href="#listExtensions"/>
-    </resource_type>
     <!--*******************************************************-->
     <!--               All Methods                             -->
     <!--*******************************************************-->
@@ -91,8 +75,7 @@
         <response status="300"/>
     </method>
     <method name="GET" id="networks-showVersionDetails">
-        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Show API v2 details">
             <para role="shortdesc">
                 Shows details for Networking API v2.0.
@@ -123,70 +106,6 @@
         <response status="203"/>
     </method>
     <!-- Extensions -->
-    <method name="GET" id="listExtensions">
-        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="List extensions">
-            <para role="shortdesc">
-                Lists available Networking API extensions.
-            </para>
-        </wadl:doc>
-        <response status="200">
-            <param xmlns="http://wadl.dev.java.net/2009/02" name="next" style="plain" type="xsd:anyURI"
-                path="/capi:extensions/atom:link[@rel='next']/@href">
-                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <para>
-                        Moves to the next item in the list.
-                    </para>
-                </wadl:doc>
-                <link resource_type="#ExtensionList" rel="next"/>
-            </param>
-            <param xmlns="http://wadl.dev.java.net/2009/02" name="previous" style="plain" type="xsd:anyURI"
-                path="/capi:extensions/atom:link[@rel='previous']/@href">
-                <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-                    xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
-                    <para>
-                        Moves to the previous item in the list.
-                    </para>
-                </wadl:doc>
-                <link resource_type="#ExtensionList" rel="previous"/>
-            </param>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="List extensions: JSON response">
-                        <xsdxt:code href="../samples/networks/extensions-list-response.json"
-                        />
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>
-        <response status="203"/>
-        &commonFaults;
-    </method>
-    <method name="GET" id="showExtension">
-        <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
-            xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Show extension details">
-            <para role="shortdesc">
-                Shows details for an extension.
-            </para>
-        </wadl:doc>
-        <response status="200">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook">
-                    <xsdxt:sample
-                        title="Get extension details: JSON response">
-                        <xsdxt:code href="../samples/networks/extension-show-response.json"
-                        />
-                    </xsdxt:sample>
-                </wadl:doc>
-            </representation>
-        </response>
-        <response status="203"/>
-        &commonFaults;
-    </method>
     <method name="GET" id="listNetworks">
         <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
             xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
