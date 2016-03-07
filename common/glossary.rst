@@ -907,16 +907,13 @@ OpenStack contribution process.
       or the main API of a specific core project, such as Compute,
       Networking, Image service, and so on.
 
-   core project
+   core service
 
-      An official OpenStack project. Currently consists of Compute
-      (nova), Object Storage (swift), Image service (glance), Identity
-      (keystone), Dashboard (horizon), Networking (neutron), and Block
-      Storage (cinder), Telemetry (ceilometer), Orchestration (heat),
-      Database service (trove), Bare Metal service (ironic),
-      Data processing service (sahara). However, this
-      definition is changing based on
-      community discussions about the "Big Tent".
+      An official OpenStack service defined as core by
+      DefCore Committee. Currently, consists of
+      Block Storage service (cinder), Compute service (nova),
+      Identity service (keystone), Image service (glance),
+      Networking service (neutron), and Object Storage service (swift).
 
    cost
 
@@ -2678,6 +2675,14 @@ OpenStack contribution process.
 
       The person responsible for planning and maintaining an OpenStack
       installation.
+
+   optional service
+
+      An official OpenStack service defined as optional by
+      DefCore Committee. Currently, consists of
+      Dashboard (horizon), Telemetry service (Telemetry),
+      Orchestration service (heat), Database service (trove),
+      Bare Metal service (ironic), and so on.
 
    Orchestration
 
