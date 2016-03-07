@@ -96,6 +96,11 @@ and toolkits with the OpenStack cloud:
      - A .NET-based library.
        Use it to write C++ or C# code for Microsoft applications.
      - https://www.nuget.org/packages/openstack.net
+   * - Go
+     - `gophercloud <https://github.com/rackspace/gophercloud>`_
+     - A go-based SDK.
+       Use it with multiple clouds.
+     - http://gophercloud.io/
 
 For a list of available SDKs, see `Software Development Kits <https://wiki.openstack.org/wiki/SDKs>`_.
 
@@ -180,6 +185,11 @@ To interact with the cloud, you must also have
      `a recent version of shade library installed <http://docs.openstack.org/infra/shade/installation.html>`_.
 
      .. note:: Before proceeding, install the latest version of shade.
+
+.. only:: gophercloud
+
+          `a recent version of gophercloud installed <https://godoc.org/github.com/rackspace/gophercloud>`_
+
 
 Obtain the following information from your cloud provider:
 
@@ -307,6 +317,18 @@ to run code snippets in your language of choice.
               of the following API calls please double-check your
               credentials.
 
+.. only:: gophercloud
+
+    To try it, add the following code to go file
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-1
+        :end-before: step-2
+
+    .. note:: The client object accesses the Compute v2.0 service,
+              so that version is in this tutorial.
+
 Flavors and images
 ~~~~~~~~~~~~~~~~~~
 
@@ -425,6 +447,20 @@ To list the images that are available in your cloud, run some API calls:
         openstack.image.v1.image.Image(attrs={u'name': u'ubuntu-14.04', u'container_format': u'bare', u'disk_format': u'qcow2', u'checksum': u'6d8f1c8cf05e1fbdc8b543fda1a9fa7f', u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'size': 258540032}, loaded=True)
         ...
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-2
+        :end-before: step-3
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        [{74e6d1ec-9a08-444c-8518-4f232446386d 2016-02-01T07:20:31Z 0 0 cirros-0.3.4-x86_64-uec 100 ACTIVE 2016-02-01T07:20:32Z}
+        {f70b7fb0-348a-4519-b358-0f239dc64dc5 2016-02-01T07:20:30Z 0 0 cirros-0.3.4-x86_64-uec-ramdisk 100 ACTIVE 2016-02-01T07:20:31Z}
+        {e92f5e17-60d2-4cb5-b893-d605b136afab 2016-02-01T07:20:29Z 0 0 cirros-0.3.4-x86_64-uec-kernel 100 ACTIVE 2016-02-01T07:20:30Z}]
 
 You can also get information about available flavors:
 
@@ -545,6 +581,22 @@ You can also get information about available flavors:
 
         ...
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-3
+        :end-before: step-4
+
+    This code returns output like this:
+
+    .. code-block:: none
+
+        [{1 1 512 m1.tiny 1 0 1}
+        {2 20 2048 m1.small 1 0 1}
+        {3 40 4096 m1.medium 1 0 2}
+        ...
+        {84 0 128 m1.micro 1 0 1}]
 
 Your images and flavors will be different, of course.
 
@@ -656,6 +708,19 @@ image that you picked in the previous section:
 
         openstack.image.v1.image.Image(attrs={u'name': u'ubuntu-14.04', u'container_format': u'bare', u'disk_format': u'qcow2', u'checksum': u'6d8f1c8cf05e1fbdc8b543fda1a9fa7f', u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'size': 258540032}, loaded=True)
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-4
+        :end-before: step-5
+
+    You should see output like this:
+
+    .. code-block:: none
+
+        &{74e6d1ec-9a08-444c-8518-4f232446386d 2016-02-01T07:20:31Z 0 0 cirros-0.3.4-x86_64-uec 100 ACTIVE 2016-02-01T07:20:32Z}
+
 Next, tell the script which flavor you want to use:
 
 .. only:: fog
@@ -754,6 +819,19 @@ Next, tell the script which flavor you want to use:
 
         openstack.compute.v2.flavor.Flavor(attrs={u'name': u'm1.small', u'links': [{u'href': u'http://controller:8774/v2/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'self'}, {u'href': u'http://controller:8774/96ff6aa79e60423d9848b70d5475c415/flavors/2', u'rel': u'bookmark'}], u'ram': 2048, u'OS-FLV-DISABLED:disabled': False, u'vcpus': 1, u'swap': u'', u'os-flavor-access:is_public': True, u'rxtx_factor': 1.0, u'OS-FLV-EXT-DATA:ephemeral': 0, u'disk': 20, 'id': u'2'}, loaded=True)
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-5
+        :end-before: step-6
+
+    You should see output like this:
+
+    .. code-block:: none
+
+        &{1 1 512 m1.tiny 1 0 1}
+
 Now, you can launch the instance.
 
 Launch an instance
@@ -835,6 +913,19 @@ Create the instance.
         :start-after: step-6
         :end-before: step-7
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-6
+        :end-before: step-7
+
+    You should see output like this:
+
+    .. code-block:: none
+
+       &{739dd964-ae88-461d-9746-f8f1139d20f6 0 map[] map[] map[] map[] ... RPUkTFM8fynn [map[name:default]]}
+
 If you list existing instances:
 
 .. only:: fog
@@ -874,6 +965,13 @@ If you list existing instances:
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-7
+        :end-before: step-8
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
         :start-after: step-7
         :end-before: step-8
 
@@ -981,6 +1079,14 @@ The new instance appears.
         updated: '2015-07-20T20:31:10Z'
         user_id: bfd3dbf1c8a242cd90884408de547bb9
 
+.. only:: gophercloud
+
+    .. code-block:: none
+
+        [...
+        {739dd964-ae88-461d-9746-f8f1139d20f6 061fdb617b6c4bdf8694bf5b0d8eefdd bb210009e42c4b509ba75893a757c8e5 testing 2016-02-16T07:16:52Z 2016-02-16T07:16:52Z 2d2f4bba90498fd46c72e7d019dde9189c36637b73e71e1e652d75db BUILD 0 ... [map[name:default]]}
+        ...]
+
 Before you continue, you must do one more thing.
 
 Destroy an instance
@@ -1025,6 +1131,13 @@ cost money. To avoid unexpected expenses, destroy cloud resources.
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-8
+        :end-before: step-9
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
         :start-after: step-8
         :end-before: step-9
 
@@ -1100,6 +1213,13 @@ your public SSH key file.
 
         openstack.compute.v2.keypair.Keypair(attrs={u'public_key': u'ssh-rsa ABAAABAQCyyzkyaPf.....', u'name': u'demokey', u'fingerprint': aa:bb:cc:... '}, loaded=True)
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-9
+        :end-before: step-10
+
 * Network access. By default, OpenStack filters all traffic. You must create
   a security group and apply it to your instance. The security group allows HTTP
   and SSH access. We will go into more detail in :doc:`/introduction`.
@@ -1132,6 +1252,13 @@ your public SSH key file.
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-10
+        :end-before: step-11
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
         :start-after: step-10
         :end-before: step-11
 
@@ -1173,6 +1300,13 @@ your public SSH key file.
         :start-after: step-11
         :end-before: step-12
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-11
+        :end-before: step-12
+
 Now, you can boot and configure the instance.
 
 Boot and configure an instance
@@ -1211,6 +1345,13 @@ After you request the instance, wait for it to build.
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
+        :start-after: step-12
+        :end-before: step-13
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
         :start-after: step-12
         :end-before: step-13
 
@@ -1338,6 +1479,45 @@ instance.
         :start-after: step-14
         :end-before: step-15
 
+.. only:: gophercloud
+
+    To see whether a private IP address is assigned to your instance:
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-13
+        :end-before: step-14
+
+
+
+    If one is assigned, users can use this address to access the instance on
+    some OpenStack clouds.
+
+    To determine whether a public IP address is assigned to your instance:
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-14
+        :end-before: step-15
+
+    If one is assigned, users can use this address to access the instance.
+
+    To create a floating IP address to use with your instance:
+
+    Use network service client to select the first floating IP address pool.
+    Allocate this pool to your project and use it to get a floating IP address.
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-15
+        :end-before: step-16
+
+    Attach the floating IP address to the instance:
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-16
+        :end-before: step-17
 
 Run the script to start the deployment.
 
@@ -1374,6 +1554,12 @@ interface at the following link.
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
         :start-after: step-15
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+        :language: go
+        :start-after: step-17
 
 .. note:: If you do not use floating IP addresses, substitute another IP
           address, as appropriate.
@@ -1441,3 +1627,8 @@ information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
        :language: python
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/getting_started.go
+       :language: go

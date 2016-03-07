@@ -9,7 +9,7 @@ for tag in libcloud; do
 done
 
 # Draft documents
-for tag in dotnet fog openstacksdk pkgcloud shade jclouds; do
+for tag in dotnet fog openstacksdk pkgcloud shade jclouds gophercloud; do
     tools/build-rst.sh firstapp  \
         --tag ${tag} --target "api-ref/draft/firstapp-${tag}"
 done
