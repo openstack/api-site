@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2013-2016 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent lbaas-v2.0.wadl                 -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+<!ENTITY % common  SYSTEM "../common.ent">
+%common;
+<!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+%common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+             xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+             xmlns:xlink="http://www.w3.org/1999/xlink"
+             xmlns:linkend="http://www.w3.org/1999/linkend"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:wadl="http://wadl.dev.java.net/2009/02"
+             xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+  <!--*******************************************************-->
+  <!--             All Resources                             -->
+  <!--*******************************************************-->
+  <resources base="https://neutron.example.com/"
+             xml:id="os-flavors-framework-v2.0">
+    <resource id="version" path="//v2.0/">
+      <resource id="flavors" path="flavors">
+        <method href="#listFlavors"/>
+        <method href="#createFlavor"/>
+        <resource path="{flavor_id}" id="flavor_id">
+          <method href="#showFlavor" />
+          <method href="#updateFlavor" />
+          <method href="#deleteFlavor" />
+          <resource id = "flavor_service_profiles_id" path="service_profiles">
+            <method href="#associateFlavor" />
+            <resource id = "flavor_profile_id" path="{profile_id}">
+              <method href="#disassociateFlavor" />
+            </resource>
+          </resource>
+        </resource>
+      </resource>
+      <resource id="service_profiles" path="service_profiles">
+        <method href="#listServiceProfiles" />
+        <method href="#createServiceProfile" />
+        <resource path="{profile_id}" id="profile_id">
+          <method href="#showServiceProfile" />
+          <method href="#updateServiceProfile" />
+          <method href="#deleteServiceProfile" />
+        </resource>
+      </resource>
+    </resource>
+  </resources>
+
+  <!--*******************************************************-->
+  <!--               All Methods                             -->
+  <!--*******************************************************-->
+  <!-- flavor -->
+  <method name="GET" id="listFlavors">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="List flavors">
+      <para role="shortdesc">
+        Lists all flavors visible for the tenant account.
+      </para>
+      <para>
+        The list can be empty.
+      </para>
+      <para>
+        Standard query parameters are supported on the URI.
+        For example, <code>fields</code> can be used to
+        limit the returned response to just name by
+        appending <code>?fields=name</code>.
+        If Neutron configuration supports pagination by overriding
+        allow_pagination = false,
+        the <code>marker</code> query parameter can set the last element id
+        the client has seen and <code>limit</code> set the maximum number
+        of items to return.
+        if Neutron configuration has allow_sorting = true,
+        <code>sort_key</code> and <code>sort_dir</code> pairs can be used
+        where sort direction is 'asc' or 'desc'.
+      </para>
+    </wadl:doc>
+    <response status="200">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavors-list-response.json"
+              />
+        </wadl:doc>
+        &flavorsObject;
+        &flavorResponseParameters;
+      </representation>
+    </response>
+    &fault401;
+  </method>
+  <method name="POST" id="createFlavor">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="Create flavor">
+      <para role="shortdesc">
+        Creates a flavor.
+      </para>
+      <para>
+        This operation establishes a new flavor.
+      </para>
+      <para>
+        The service_type to which the flavor applies is a required
+        parameter.  The corresponding service plugin must have been activated
+        as part of the configuration.
+        See
+        <link xlink:href="http://developer.openstack.org/api-ref-networking-v2.html#service-type">Service providers</link> for how to see currently loaded
+        service types.
+        Additionally the service plugin needs to support the use of
+        flavors.  For example, the LOADBALANCERV2 service type using
+        the LBaaSv2 API currently supports Neutron service flavors.
+      </para>
+      <para>
+        Creation currently limited to administrators.  Other users will
+        receive a <code>Forbidden 403</code> response code with
+        a response body NeutronError message expressing that
+        creation is disallowed by policy.
+      </para>
+      <para>
+        Until one or more service profiles are associated with the
+        flavor by the operator, attempts to use the flavor during
+        resource creations will
+        currently return a <code>Not Found 404</code> with a response body
+        that indicates no service profile could be found.
+      </para>
+      <para>
+        If the API cannot fulfill the request due to insufficient data
+        or data that is not valid, the service returns the HTTP
+        <code>Bad Request (400)</code> response code with information
+        about the failure in the response body. Validation errors
+        require that you correct the error and submit the request
+        again.
+      </para>
+    </wadl:doc>
+    <request>
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-create-request.json"/>
+        </wadl:doc>
+        &flavorObject;
+        &flavorCreateRequestParameters;
+      </representation>
+    </request>
+    <response status="201">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-create-response.json"/>
+        </wadl:doc>
+        &flavorObject;
+        &flavorResponseParameters;
+      </representation>
+    </response>
+    &fault400;
+    &fault401;
+    &fault403;
+  </method>
+  <method name="GET" id="showFlavor">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="Show flavor details">
+      <para role="shortdesc">
+        Shows details for a flavor.
+      </para>
+      <para>
+        This operation returns a flavor object by ID. If you
+        are not an administrative user and the flavor object
+        is not visible to your tenant account, the service returns
+        the HTTP <code>Forbidden (403)</code> response code.
+      </para>
+    </wadl:doc>
+    <response status="200">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-show-response.json"
+              />
+        </wadl:doc>
+        &flavorObject;
+        &flavorResponseParameters;
+      </representation>
+    </response>
+    &fault401;
+    &fault403;
+    &fault404;
+  </method>
+  <method name="PUT" id="updateFlavor">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+              title="Update flavor">
+      <para role="shortdesc">Updates a flavor.</para>
+      <para>
+        The service_type cannot be updated as there may be associated
+        service profiles and consumers depending on the value.
+      </para>
+    </wadl:doc>
+    <request>
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-update-request.json"
+              />
+        </wadl:doc>
+        &flavorObject;
+        &flavorUpdateRequestParameters;
+      </representation>
+    </request>
+    <response status="200">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-update-response.json"
+              />
+        </wadl:doc>
+        &flavorObject;
+        &flavorResponseParameters;
+      </representation>
+    </response>
+    &fault400;
+    &fault401;
+    &fault403;
+    &fault404;
+  </method>
+  <method name="DELETE" id="deleteFlavor">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+              title="Delete flavor">
+      <para role="shortdesc">Deletes a flavor.</para>
+    </wadl:doc>
+    <response status="204"></response>
+    &fault401;
+    &fault403;
+    &fault404;
+  </method>
+  <method name="POST" id="associateFlavor">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="Associate flavor">
+      <para role="shortdesc">
+        Associate a flavor with a service profile.
+      </para>
+      <para>
+        A flavor can be associated with more than one profile.
+      </para>
+      <para>
+        Will return <code>409 Conflict</code> if association already exists.
+      </para>
+    </wadl:doc>
+    <request>
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-associate-request.json"/>
+        </wadl:doc>
+        &flavorServiceProfileObject;
+        &flavorAssociationParameters;
+      </representation>
+    </request>
+    <response status="201">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/flavor-associate-response.json"/>
+        </wadl:doc>
+        &flavorServiceProfileObject;
+        &flavorAssociationParameters;
+      </representation>
+    </response>
+    &fault400;
+    &fault401;
+    &fault403;
+    &fault404;
+    &fault409;
+  </method>
+  <method name="DELETE" id="disassociateFlavor">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+              title="Disassociate a flavor.">
+      <para role="shortdesc">
+        Disassociate a flavor from a service profile.
+      </para>
+    </wadl:doc>
+    <response status="204"></response>
+    &fault401;
+    &fault403;
+    &fault404;
+  </method>
+  <method name="GET" id="listServiceProfiles">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="List service profiles">
+      <para role="shortdesc">
+        Lists all service profiles visible for the tenant account.
+      </para>
+      <para>
+        The list can be empty.
+      </para>
+      <para>
+        Standard query parameters are supported on the URI.
+      </para>
+    </wadl:doc>
+    <response status="200">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/service-profiles-list-response.json"
+              />
+        </wadl:doc>
+        &serviceProfilesObject;
+        &serviceProfileResponseParameters;
+      </representation>
+    </response>
+    &fault401;
+  </method>
+  <method name="POST" id="createServiceProfile">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="Create service profile">
+      <para role="shortdesc">
+        Creates a service profile.
+      </para>
+      <para>
+        This operation establishes a new service profile that can
+        be associated with one or more flavors.
+      </para>
+      <para>
+        Either metadata or a driver is required.
+      </para>
+      <para>
+        If a driver is specified but does not exist, call will
+        return a <code>Not found 404</code> error with the response
+        body explaining that the driver could not be found.
+      </para>
+      <para>
+        Creation currently limited to administrators.  Other users will
+        receive a <code>Forbidden 403</code> response code with
+        a response body NeutronError message expressing that
+        creation is disallowed by policy.
+      </para>
+      <para>
+        If the API cannot fulfill the request due to insufficient data
+        or data that is not valid, the service returns the HTTP
+        <code>Bad Request (400)</code> response code with information
+        about the failure in the response body. Validation errors
+        require that you correct the error and submit the request
+        again.
+      </para>
+    </wadl:doc>
+    <request>
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/service-profile-create-request.json"/>
+        </wadl:doc>
+        &serviceProfileObject;
+        &serviceProfileCreateRequestParameters;
+      </representation>
+    </request>
+    <response status="201">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/service-profile-create-response.json"/>
+        </wadl:doc>
+        &serviceProfileObject;
+        &serviceProfileResponseParameters;
+      </representation>
+    </response>
+    &fault400;
+    &fault401;
+    &fault403;
+  </method>
+  <method name="GET" id="showServiceProfile">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+              title="Show service profile details">
+      <para role="shortdesc">
+        Shows details for a service profile.
+      </para>
+      <para>
+        This operation returns a service profile object by ID. If you
+        are not an administrative user and the object
+        is not visible to your tenant account, the service returns
+        the HTTP <code>Forbidden (403)</code> response code.
+      </para>
+    </wadl:doc>
+    <response status="200">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/service-profile-show-response.json"
+              />
+        </wadl:doc>
+        &serviceProfileObject;
+        &serviceProfileResponseParameters;
+      </representation>
+    </response>
+    &fault401;
+    &fault403;
+    &fault404;
+  </method>
+  <method name="PUT" id="updateServiceProfile">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+              title="Update service profile">
+      <para role="shortdesc">Updates a service profile.</para>
+    </wadl:doc>
+    <request>
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/service-profile-update-request.json"
+              />
+        </wadl:doc>
+        &serviceProfileObject;
+        &serviceProfileUpdateRequestParameters;
+      </representation>
+    </request>
+    <response status="200">
+      <representation
+          mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                  xml:lang="EN">
+          <xsdxt:code
+              href="../samples/flavors/service-profile-update-response.json"
+              />
+        </wadl:doc>
+        &serviceProfileObject;
+        &serviceProfileResponseParameters;
+      </representation>
+    </response>
+    &fault400;
+    &fault401;
+    &fault403;
+    &fault404;
+  </method>
+  <method name="DELETE" id="deleteServiceProfile">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+              title="Delete service profile">
+      <para role="shortdesc">Deletes a service profile.</para>
+      <para>
+        Attempting to delete a service profile that is currently
+        associated with a flavor will return a <code>Conflict 409</code>
+        with a response body containing an in use message.
+      </para>
+    </wadl:doc>
+    <response status="204"></response>
+    &fault401;
+    &fault403;
+    &fault404;
+    &fault409;
+  </method>
+</application>
