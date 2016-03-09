@@ -221,7 +221,7 @@ OpenStack contribution process.
       application, or program. Includes service calls, required parameters
       for each call, and the expected return values.
 
-   Application catalog
+   Application Catalog service
 
       OpenStack project that provides an application catalog
       service so that users can compose and deploy composite
@@ -401,7 +401,7 @@ OpenStack contribution process.
       An Image service container format that indicates that no
       container exists for the VM image.
 
-   Bare metal service
+   Bare Metal service
 
       OpenStack project that provisions bare metal, as opposed to
       virtual, machines. The code name for the project is ironic.
@@ -463,7 +463,7 @@ OpenStack contribution process.
       user-initiated switchover. Does not require shared storage. Supported
       by Compute.
 
-   Block Storage
+   Block Storage service
 
       The OpenStack core project that enables management of volumes,
       volume snapshots, and volume types. The project name of Block Storage
@@ -752,7 +752,7 @@ OpenStack contribution process.
       A pre-made VM image that serves as a cloudpipe server.
       Essentially, OpenVPN running on Linux.
 
-   Clustering
+   Clustering service
 
       The OpenStack project that OpenStack project that implements
       clustering services and libraries for the management of
@@ -795,7 +795,7 @@ OpenStack contribution process.
       compression for things such as Object Storage objects or Image service
       VM images.
 
-   Compute
+   Compute service
 
       The OpenStack core project that provides compute services. The
       project name of Compute service is nova.
@@ -971,7 +971,7 @@ OpenStack contribution process.
       groups, and read-write-execute permissions is an example of
       DAC.
 
-   dashboard
+   Dashboard
 
       The web-based management interface for OpenStack. An alternative
       name for horizon.
@@ -1001,7 +1001,7 @@ OpenStack contribution process.
       relational and non-relational database engines. The project
       name of Database service is trove.
 
-   Data processing service
+   Data Processing service
 
       OpenStack project that provides a scalable
       data-processing stack and associated management
@@ -1064,7 +1064,7 @@ OpenStack contribution process.
       and manage users through the ``nova-manage`` command as
       opposed to using the Identity service.
 
-   Designate
+   designate
 
       Code name for the DNS service project for OpenStack.
 
@@ -1796,7 +1796,7 @@ OpenStack contribution process.
       name and password. It is a typical source of authentication
       tokens.
 
-   Identity
+   Identity service
 
       The OpenStack core project that provides a central directory of
       users mapped to the OpenStack services they can access. It also
@@ -2087,7 +2087,7 @@ OpenStack contribution process.
       module, that provides the core virtualization infrastructure
       and a processor specific module.
 
-   Key management service
+   Key Manager service
 
       OpenStack project that produces a secret storage and
       generation system capable of providing key management for
@@ -2471,7 +2471,7 @@ OpenStack contribution process.
       services such as giving an IP address to a booting nova
       instance.
 
-   Networking
+   Networking service
 
       A core OpenStack project that provides a network connectivity
       abstraction layer to OpenStack Compute. The project name of Networking
@@ -2584,7 +2584,7 @@ OpenStack contribution process.
       An Object Storage component that is responsible for managing
       objects.
 
-   Object Storage
+   Object Storage service
 
       The OpenStack core project that provides eventually consistent
       and redundant storage and retrieval of fixed digital content. The
@@ -2684,7 +2684,7 @@ OpenStack contribution process.
       Orchestration service (heat), Database service (trove),
       Bare Metal service (ironic), and so on.
 
-   Orchestration
+   Orchestration service
 
       An integrated project that orchestrates multiple cloud
       applications for OpenStack. The project name of Orchestration is
@@ -3553,7 +3553,7 @@ OpenStack contribution process.
       collects meters and usage information. This information can be used
       for billing.
 
-   Telemetry
+   Telemetry service
 
       An integrated project that provides metering and measuring
       facilities for OpenStack. The project name of Telemetry is
