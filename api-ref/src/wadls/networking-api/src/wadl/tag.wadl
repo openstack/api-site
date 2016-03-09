@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2016 OpenStack Foundation, All Rights Reserved -->
+<!--*******************************************************-->
+<!--         Import Common XML Entities                    -->
+<!--                                                       -->
+<!--     You can resolve the entities with xmllint         -->
+<!--                                                       -->
+<!--        xmllint -noent tag.wadl                        -->
+<!--*******************************************************-->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "../common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:csapi="http://docs.openstack.org/compute/api/v1.1">
+    <!--*******************************************************-->
+    <!--             All Resources                             -->
+    <!--*******************************************************-->
+    <resources base="https://neutron.example.com/" xml:id="os-tag-v2">
+        <resource id="version" path="//v2.0">
+            <resource id="resource_type" path="{resource_type}">
+                <resource id="resource_id" path="{resource_id}">
+                    <resource id="tags" path="tags">
+                        &tagResourceTemplateParameters;
+                        <method href="#updateTags"/>
+                        <method href="#deleteTags"/>
+                        <resource id="tag" path="{tag}">
+                            &tagTemplateParameter;
+                            <method href="#showTag"/>
+                            <method href="#updateTag"/>
+                            <method href="#deleteTag"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!--*******************************************************-->
+    <!--               All Methods                             -->
+    <!--*******************************************************-->
+    <method name="PUT" id="updateTags">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Replace all tags"
+            xml:lang="EN">
+            <para role="shortdesc">
+                Replaces all tags on the resource.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/tag/tag-update-request.json"/>
+                </wadl:doc>
+                &tagsParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="../samples/tag/tag-update-response.json"/>
+                </wadl:doc>
+                &tagsParameter;
+            </representation>
+        </response> &fault400; &fault401; &fault404; &fault500; &fault503;
+    </method>
+    <method name="DELETE" id="deleteTags">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Remove all tags"
+            xml:lang="EN">
+            <para role="shortdesc">
+                Removes all tags on the resource.
+            </para>
+        </wadl:doc>
+        <response status="204" /> &fault401; &fault404; &fault500; &fault503;
+    </method>
+    <method name="GET" id="showTag">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Confirm a tag">
+            <para role="shortdesc">
+                Confirms a given tag is set on the resource.
+            </para>
+        </wadl:doc>
+        <response status="204" /> &fault401; &fault404; &fault500; &fault503;
+    </method>
+    <method name="PUT" id="updateTag">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Add a tag"
+            xml:lang="EN">
+            <para role="shortdesc">
+                Adds a tag on the resource.
+            </para>
+        </wadl:doc>
+        <response status="201" /> &fault401; &fault404; &fault500; &fault503;
+    </method>
+    <method name="DELETE" id="deleteTag">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            title="Remove a tag"
+            xml:lang="EN">
+            <para role="shortdesc">
+                Removes a tag on the resource.
+            </para>
+        </wadl:doc>
+        <response status="204" /> &fault401; &fault404; &fault500; &fault503;
+    </method>
+</application>
