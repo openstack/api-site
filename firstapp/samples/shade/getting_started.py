@@ -43,7 +43,7 @@ conn.delete_server(name_or_id=instance_name)
 #step-9
 print('Checking for existing SSH keypair...')
 keypair_name = 'demokey'
-pub_key_file = '~/.ssh/demo_key.pub'
+pub_key_file = '/home/username/.ssh/id_rsa.pub'
 
 if conn.search_keypairs(keypair_name):
     print('Keypair already exists. Skipping import.')
