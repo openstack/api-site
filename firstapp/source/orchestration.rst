@@ -106,7 +106,7 @@ You pass in these configuration settings as parameters:
 - Your ssh key name
 - The unique identifier (UUID) of the image
 
-::
+.. code-block:: console
 
     $ wget https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/hello_faafo.yaml
     $ heat stack-create --template-file hello_faafo.yaml \
@@ -119,7 +119,7 @@ You pass in these configuration settings as parameters:
 
 The stack automatically creates a Nova instance, as follows:
 
-::
+.. code-block:: console
 
     $ nova list
     +--------------------------------------+---------------------------------+--------+------------+-------------+------------------+
@@ -130,7 +130,7 @@ The stack automatically creates a Nova instance, as follows:
 
 Verify that the stack was successfully created:
 
-::
+.. code-block:: console
 
     $ heat stack-list
     +--------------------------------------+-------------+-----------------+----------------------+
@@ -149,7 +149,7 @@ the stack creation is complete.
 
 Get more information about the stack:
 
-::
+.. code-block:: console
 
     $ heat stack-show hello_faafo
 
@@ -158,7 +158,7 @@ application. You can SSH into the instance.
 
 **Remove the stack**
 
-::
+.. code-block:: console
 
     $ heat stack-delete hello_faafo
     +--------------------------------------+-------------+--------------------+----------------------+
@@ -169,7 +169,7 @@ application. You can SSH into the instance.
 
 Verify the nova instance was deleted when the stack was removed:
 
-::
+.. code-block:: console
 
     $ nova list
     +----+------+--------+------------+-------------+----------+
@@ -231,7 +231,7 @@ addition or removal of worker instances.
 
 To verify that ceilometer is installed, list the known meters:
 
-::
+.. code-block:: console
 
     $ ceilometer meter-list
 
@@ -240,7 +240,7 @@ is never thrown away!
 
 Launch the stack with auto-scaling workers:
 
-::
+.. code-block:: console
 
     $ wget https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/faafo_autoscaling_workers.yaml
     $ heat stack-create --template-file faafo_autoscaling_workers.yaml \
@@ -259,7 +259,7 @@ And as before, the stack takes a few minutes to build!
 
 Wait for it to reach the :code:`CREATE_COMPLETE` status:
 
-::
+.. code-block:: console
 
     $ heat stack-list
     +--------------------------------------+---------------------------+-----------------+----------------------+
@@ -270,7 +270,7 @@ Wait for it to reach the :code:`CREATE_COMPLETE` status:
 
 Run the :code:`nova list` command. This template created three instances:
 
-::
+.. code-block:: console
 
     $ nova list
     +--------------------------------------+----------+--------+------------+-------------+----------------------+
@@ -285,7 +285,7 @@ Note that the worker instance is part of an :code:`OS::Heat::AutoScalingGroup`.
 
 Confirm that the stack created two alarms:
 
-::
+.. code-block:: console
 
     $ ceilometer alarm-list
     +--------------------------------------+---------------------------------------+-------+----------+---------+------------+--------------------------------+------------------+
@@ -303,7 +303,7 @@ Confirm that the stack created two alarms:
 
 Use the stack ID to get more information about the stack:
 
-::
+.. code-block:: console
 
     $ heat stack-show 0db2c026-fb9a-4849-b51d-b1df244096cd
 
@@ -317,14 +317,14 @@ These queries provide a view into the behavior of the stack.
 In a new Terminal window, SSH into the 'api' API instance. Use the key pair
 name that you passed in as a parameter.
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/test USERNAME@IP_API
 
 
 In your SSH session, confirm that no fractals were generated:
 
-::
+.. code-block:: console
 
     $ faafo list
     201-11-18 11:07:20.464 8079 INFO faafo.client [-] listing all fractals
@@ -335,14 +335,14 @@ In your SSH session, confirm that no fractals were generated:
 
 Then, create a pair of large fractals:
 
-::
+.. code-block:: console
 
     $ faafo create --height 9999 --width 9999 --tasks 2
 
 In the Terminal window where you run ceilometer, run
 :code:`ceilometer_sample_query` to see the samples.
 
-::
+.. code-block:: console
 
     $ ceilometer sample-list -m cpu_util -q metadata.user_metadata.stack=0db2c026-fb9a-4849-b51d-b1df244096cd
     +--------------------------------------+----------+-------+----------------+------+---------------------+
@@ -358,7 +358,7 @@ The CPU utilization across workers increases as workers start to create the frac
 
 Run the :code:`ceilometer_statistics_query`: command to see the derived statistics.
 
-::
+.. code-block:: console
 
     $ ceilometer statistics -m cpu_util -q metadata.user_metadata.stack=0db2c026-fb9a-4849-b51d-b1df244096cd -p 60 -a avg
     +--------+---------------------+---------------------+----------------+----------+---------------------+---------------------+
@@ -374,7 +374,7 @@ Run the :code:`ceilometer_statistics_query`: command to see the derived statisti
 
 See the state of the alarms set up by the template:
 
-::
+.. code-block:: console
 
     $ ceilometer alarm-list
     +--------------------------------------+---------------------------------------+-------+----------+---------+------------+--------------------------------+------------------+
@@ -387,7 +387,7 @@ See the state of the alarms set up by the template:
 Run the :code:`nova list` command to confirm that the
 :code:`OS::Heat::AutoScalingGroup` has created more instances:
 
-::
+.. code-block:: console
 
     $ nova list
     +--------------------------------------+----------+--------+------------+-------------+----------------------+
@@ -406,7 +406,7 @@ for some time.
 Run the :code:`nova list` command to confirm that the
 :code:`OS::Heat::AutoScalingGroup` removed the unneeded instances:
 
-::
+.. code-block:: console
 
     $ nova list
     +--------------------------------------+----------+--------+------------+-------------+----------------------+
@@ -429,7 +429,7 @@ In the outputs section of the stack, you can run these web API calls:
 These demonstrate how the Ceilometer alarms add and remove instances.
 To use them:
 
-::
+.. code-block:: console
 
     $  curl -X POST "Put the very long url from the template outputs section between these quotes"
 
@@ -446,7 +446,7 @@ instance. The metadata is in the :code:`metering.stack=stack_id` format.
 
 The prefix is `metering.` For example, `metering.some_name`.
 
-::
+.. code-block:: console
 
     $ nova show <instance_id>
     ...
@@ -457,20 +457,20 @@ You can aggregate samples and calculate statistics across all instances with
 the `metering.some_name` metadata that has `some_value` by using a query of
 the form:
 
-::
+.. code-block:: console
 
     -q metadata.user_metadata.some_name=some_value
 
 For example:
 
-::
+.. code-block:: console
 
     $ ceilometer sample-list -m cpu_util -q metadata.user_metadata.some_name=some_value
     $ ceilometer statistics -m cpu_util -q metadata.user_metadata.some_name=some_value -p 6
 
 The alarms have the form:
 
-::
+.. code-block:: console
 
     matching_metadata: {'metadata.user_metadata.stack': {get_param: "OS::stack_id"}}
 
