@@ -69,7 +69,7 @@ Create more tasks
 Use SSH with the existing SSH keypair to log in to the
 :code:`app-controller` controller instance.
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_CONTROLLER
 
@@ -80,7 +80,7 @@ Use SSH with the existing SSH keypair to log in to the
 Call the :code:`faafo` command-line interface to request the
 generation of five large fractals.
 
-::
+.. code-block:: console
 
     $ faafo create --height 9999 --width 9999 --tasks 5
 
@@ -88,7 +88,7 @@ If you check the load on the worker, you can see that the instance is
 not doing well. On the single CPU flavor instance, a load average
 greater than 1 means that the server is at capacity.
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_WORKER uptime
     10:37:39 up  1:44,  2 users,  load average: 1.24, 1.40, 1.36
@@ -106,7 +106,7 @@ capacity to work. We can simulate many requests to the API, as follows:
 Use SSH with the existing SSH keypair to log in to the
 :code:`app-controller` controller instance.
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_CONTROLLER
 
@@ -117,7 +117,7 @@ Use SSH with the existing SSH keypair to log in to the
 Use a for loop to call the :code:`faafo` command-line interface to
 request a random set of fractals 500 times:
 
-::
+.. code-block:: console
 
     $ for i in $(seq 1 500); do faafo --endpoint-url http://IP_CONTROLLER create &; done
 
@@ -129,7 +129,7 @@ instance, you see that the instance is not doing well. On your single
 CPU flavor instance, a load average greater than 1 means that the server is
 at capacity.
 
-::
+.. code-block:: console
 
     $ uptime
     10:37:39 up  1:44,  2 users,  load average: 1.24, 1.40, 1.36
@@ -375,7 +375,7 @@ In the previous steps, you split out several services and expanded
 capacity. To see the new features of the Fractals application, SSH to
 one of the app instances and create a few fractals.
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_API_1
 
@@ -394,7 +394,7 @@ Because multiple worker instances share the work, fractals are
 generated more quickly and users might not even notice when a worker
 fails.
 
-::
+.. code-block:: console
 
     root@app-api-1:/var/log/supervisor# faafo list
     +--------------------------------------+------------------+-------------+
