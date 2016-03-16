@@ -173,7 +173,7 @@ Log in to the server to run the following steps.
 
 Now prepare the empty block device.
 
-::
+.. code-block:: console
 
     $ ssh -i ~/.ssh/id_rsa USERNAME@IP_SERVICES
     # fdisk -l
@@ -187,7 +187,7 @@ Stop the running MySQL database service and move the database files from
 :file:`/var/lib/mysql` to the new volume, which is temporarily mounted at
 :file:`/mnt/database`.
 
-::
+.. code-block:: console
 
     # systemctl stop mariadb
     # mv /var/lib/mysql/* /mnt/database
@@ -195,7 +195,7 @@ Stop the running MySQL database service and move the database files from
 Sync the file systems and mount the block device that contains the database
 files to :file:`/var/lib/mysql`.
 
-::
+.. code-block:: console
 
     # sync
     # umount /mnt/database
@@ -206,7 +206,7 @@ files to :file:`/var/lib/mysql`.
 Finally, start the stopped MySQL database service and validate that everything
 works as expected.
 
-::
+.. code-block:: console
 
     # systemctl start mariadb
     # mysql -ufaafo -ppassword -h localhost faafo -e 'show tables;'
@@ -280,7 +280,9 @@ file, see
 `Set environment variables using the OpenStack RC file <http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html>`_.
 
 Ensure you have an :file:`openrc.sh` file, source it, and validate that
-your trove client works: ::
+your trove client works:
+
+.. code-block:: console
 
     $ cat openrc.sh
     export OS_USERNAME=your_auth_username
