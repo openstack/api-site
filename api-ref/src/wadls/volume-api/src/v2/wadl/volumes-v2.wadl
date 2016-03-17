@@ -17,6 +17,19 @@
         <resource id="versions" path="//">
             <method href="#listVersions"/>
         </resource>
+        <resource id="version_type" path="//v2">
+            <resource id="tenant_id_type" path="{tenant_id}">
+                &volumeTypeAccessProjectIdRequestParameters;
+                <resource id="vol_types" path="types">
+                    <resource id="volume_type" path="{volume_type}">
+                        &VolumeTypeAccessIDRequestParameters;
+                        <resource id="action" path="action">
+                            <method href="#createVolumeTypeAccessExt"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
         <resource id="version" type="#VersionDetails" path="//v2">
             <resource id="tenant_id" path="{tenant_id}">
                 &tenant_idTemplateParameter;
@@ -30,7 +43,6 @@
                 <resource id="volumes" path="volumes">
                     <method href="#createVolume"/>
                     <method href="#listVolumes"/>
-                    <method href="#createVolumeTypeAccessExt"/>
                     <resource path="detail" id="detail">
                         <method href="#listVolumesDetail"/>
                     </resource>
@@ -1083,6 +1095,34 @@
         </wadl:doc>
         <response status="202"/>
     </method>
+    <method name="POST" id="createVolumeTypeAccessExt">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
+            title="Add private volume type access">
+            <para role="shortdesc">
+                Adds private volume type access to a project.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/volumes/volume-type-access-add-request.json"
+                    />
+                </wadl:doc>
+                &projectRequestParameters;
+            </representation>
+            <representation mediaType="application/xml">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="../samples/volumes/volume-type-access-add-request.xml"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+        </response>
+    </method>
     <method name="POST" id="createSnapshot">
         <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
             title="Create snapshot">
@@ -1487,55 +1527,6 @@
                         href="../samples/volumes/snapshot-metadata-update-response.json"
                     />
                 </wadl:doc>
-            </representation>
-        </response>
-    </method>
-    <method name="POST" id="createVolumeTypeAccessExt">
-        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN"
-            title="Create private volume">
-            <para role="shortdesc">
-                Creates a private Block Storage volume.
-            </para>
-        </wadl:doc>
-        <request>
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/volumes/volume-create-request.json"
-                    />
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/volumes/volume-create-request.xml"/>
-                </wadl:doc>
-                &volumeObjectParameter;
-                &createVolumeRequestParameters;
-                &is_publicRequestParameter;
-            </representation>
-        </request>
-        <response status="202">
-            <representation mediaType="application/json">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/volumes/volume-create-response.json"
-                    />
-                </wadl:doc>
-            </representation>
-            <representation mediaType="application/xml">
-                <wadl:doc xmlns="http://docbook.org/ns/docbook"
-                    xml:lang="EN">
-                    <xsdxt:code
-                        href="../samples/volumes/volume-create-response.xml"
-                    />
-                </wadl:doc>
-                &volumeObjectParameter;
-                &volumeResponseParameters;
-                &is_publicResponseParameter;
             </representation>
         </response>
     </method>
