@@ -1117,7 +1117,7 @@ OpenStack contribution process.
       service (glance).
       Diablo is the code name for the fourth release of
       OpenStack. The design summit took place in
-      in the Bay Area near Santa Clara,
+      the Bay Area near Santa Clara,
       California, US and Diablo is a nearby city.
 
    direct consumer
