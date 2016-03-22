@@ -111,6 +111,11 @@ OpenStack contribution process.
       public Internet. They can exist as a separate service (keystone) or
       can be a subset of another API (nova).
 
+   administrator
+
+      The person responsible for installing, configuring,
+      and managing an OpenStack cloud.
+
    admin server
 
       In the context of the Identity service, the worker process that
