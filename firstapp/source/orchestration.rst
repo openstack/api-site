@@ -7,7 +7,7 @@ your cloud-based applications. In most cases, really achieving these
 qualities means automating tasks such as scaling and other operational
 tasks.
 
-The Orchestration module provides a template-based way to describe a
+The Orchestration service provides a template-based way to describe a
 cloud application, then coordinates running the needed OpenStack API
 calls to run cloud applications. The templates enable you to create
 most OpenStack resource types, such as instances, networking
@@ -33,7 +33,7 @@ object enables the creation of templates that contain all the required cloud
 infrastructure to run an application, such as load balancers, block storage
 volumes, compute instances, networking topology, and security policies.
 
-.. note:: The Orchestration module is not deployed by default in every cloud.
+.. note:: The Orchestration service is not deployed by default in every cloud.
           If these commands do not work, it means the Orchestration API is not
           available; ask your support team for assistance.
 
