@@ -80,7 +80,7 @@ and toolkits with the OpenStack cloud:
      - `fog <http://fog.io/>`_
      - A Ruby-based SDK.
        Use it to work with multiple clouds.
-     - https://github.com/fog/fog/blob/master/lib/fog/openstack/docs/getting_started.md
+     - https://github.com/fog/fog-openstack/blob/master/lib/fog/openstack/docs/getting_started.md
    * - node.js
      - `pkgcloud <https://github.com/pkgcloud/pkgcloud>`_
      - A Node.js-based SDK.
