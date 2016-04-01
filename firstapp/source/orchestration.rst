@@ -59,7 +59,7 @@ http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_usi
 .. only:: fog
 
     .. note:: fog `does support OpenStack Orchestration
-              <https://github.com/fog/fog/tree/master/lib/fog/openstack/models/orchestration>`_.
+              <https://github.com/fog/fog-openstack/tree/master/lib/fog/openstack/models/orchestration>`_.
 
 .. only:: jclouds
 
