@@ -260,7 +260,7 @@ To detach and delete a volume:
 Work with the OpenStack Database service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Previously, you manually created the database, which is useful for a a single
+Previously, you manually created the database, which is useful for a single
 database that you rarely update. However, the OpenStack :code:`trove`
 component provides Database as a Service (DBaaS).
 
