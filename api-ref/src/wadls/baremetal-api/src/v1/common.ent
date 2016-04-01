@@ -1,0 +1,506 @@
+<!-- ************************************ -->
+<!-- FAULTS                               -->
+<!-- ************************************ -->
+<!-- A collection of common faults, these are pretty much expected in every request. -->
+<!ENTITY fault400 '
+<response status="400" xmlns="http://wadl.dev.java.net/2009/02">
+   <representation mediaType="application/xml" element="csapi:badRequest"/>
+   <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault401 '
+<response status="401" xmlns="http://wadl.dev.java.net/2009/02">
+   <representation mediaType="application/xml" element="csapi:unauthorized"/>
+   <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault403 '
+<response status="403" xmlns="http://wadl.dev.java.net/2009/02">
+   <representation mediaType="application/xml" element="csapi:forbidden"/>
+   <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault404 '
+<response status="404" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="csapi:itemNotFound"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault405 '
+<response status="405" xmlns="http://wadl.dev.java.net/2009/02">
+   <representation mediaType="application/xml" element="csapi:badMethod"/>
+   <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault409 '
+<response status="409" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="csapi:conflict"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault413 '
+<response status="413" xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:rax="http://docs.rackspace.com/api" rax:phrase="Request Entity Too Large">
+    <representation mediaType="application/xml" element="csapi:overLimit"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault415 '
+<response status="415" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="csapi:badMediaType"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!ENTITY fault503 '
+<response status="503" xmlns="http://wadl.dev.java.net/2009/02">
+    <representation mediaType="application/xml" element="csapi:serverCapacityUnavailable"/>
+    <representation mediaType="application/json"/>
+</response>'>
+<!-- ************************************** -->
+<!-- Faults on GET - includes common faults -->
+<!-- ************************************** -->
+<!ENTITY getFaults '
+&fault400;
+&fault401;
+&fault403;
+&fault404;
+&fault405;
+&fault413;
+&fault503;'>
+<!-- ******************************************* -->
+<!-- Faults on POST/PUT - includes common faults -->
+<!-- ******************************************* -->
+<!ENTITY postPutDeleteFaults '
+&fault400;
+&fault401;
+&fault403;
+&fault404;
+&fault405;
+&fault409;
+&fault413;
+&fault415;
+&fault503;'>
+<!-- *************************************** -->
+<!-- REQUEST HEADERS                         -->
+<!-- *************************************** -->
+<!ENTITY AcceptRequestHeader '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="Accept"
+    style="header" required="false" type="xsd:string">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A list of one or more representation schemes that are accepted in
+            the response to this request. Use the semicolon (<code>;</code>) character to
+            separate multiple schemes. See <link
+            xlink:href="http://www.w3.org/Protocols/HTTP/HTRQ_Headers.html#z3">Accept</link>.
+        </para>
+        <para>
+            (Since v3.3) If the <code>Accept</code> request header value is
+            <code>application/json-home</code>, the call returns a <link
+            xlink:href="http://tools.ietf.org/html/draft-nottingham-json-home-00">JSON
+            Home document</link>. The JSON Home document includes all core
+            components and the resources for any enabled extensions and excludes
+            the resources for disabled extensions.
+        </para>
+        <para>
+            Note that the client must check the <code>Content-Type</code>
+            header value in the response because earlier servers return a
+            normal JSON response rather than a JSON Home document.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY authTokenHeader '
+<param name="X-Auth-Token" style="header"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A valid authentication token for an administrative user.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY subjectTokenRequestHeader '
+<param name="X-Subject-Token" style="header"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The authentication token for which you want to perform the
+            operation.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- RESPONSE HEADERS                     -->
+<!-- ************************************ -->
+<!ENTITY subjectTokenResponseHeader '
+<param name="X-Subject-Token" style="header"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="true">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            The authentication token.
+        </para>
+        <para>
+            An authentication response returns the token ID in this header
+            rather than in the response body.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- TEMPLATE PARAMETERS                  -->
+<!-- ************************************ -->
+<!ENTITY chassis_uuidTemplateParameter '
+<param name="chassis_uuid" 
+    style="template" required="true" type="csapi:UUID"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+        <para>
+          The UUID of the chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY driver_nameTemplateParameter '
+<param name="driver_name" 
+    style="template" required="true" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+        <para>
+          The name of the driver.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY link_idTemplateParameter '
+<param name="link_id" 
+    style="template" required="true" type="csapi:UUID"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+        <para>
+          The UUID of the link.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY node_idTemplateParameter '
+<param name="node_id" 
+    style="template" required="true" type="csapi:UUID"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+        <para>
+          The UUID of the node.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY port_idTemplateParameter '
+<param name="port_id" 
+    style="template" required="true" type="csapi:UUID"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+        <para>
+          The UUID of the port.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY tenant_idTemplateParameter '
+<param name="tenant_id" 
+    style="template" required="true" type="csapi:UUID"
+    xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+      xmlns:wadl="http://wadl.dev.java.net/2009/02"
+      xml:lang="EN">
+        <para>
+          The tenant ID in a multi-tenancy cloud.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- QUERY PARAMETERS                     -->
+<!-- ************************************ -->
+<!ENTITY descriptionQueryParameter '
+<param name="description" style="query"
+    xmlns="http://wadl.dev.java.net/2009/02" type="xsd:string"
+    required="false">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Filters the response by a description.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY fieldsQueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" required="false"
+    name="fields" type="xsd:list" style="query">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            One or more chassis fields to be returned in the response.
+        </para>
+        <para>
+            For example, the following request returns only the
+            <code>description</code> field for each chassis:
+        </para>
+<programlisting>GET /v1/chassis?fields=description</programlisting>
+      </wadl:doc>
+</param>'>
+<!ENTITY sort_keyQueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_key"
+   style="query" required="false" type="xsd:string" default="ALL">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Sorts the response by the this attribute value. Default is
+            <code>id</code>. You can specify multiple pairs of sort key and
+            sort direction query parameters. If you omit the sort direction in
+            a pair, the API uses the natural sorting direction of the server
+            attribute that is provided as the <code>sort_key</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY sort_dirQueryParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02" name="sort_dir"
+   style="query" required="false" type="xsd:string" default="ALL">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            Sorts the response by the requested sort direction. A valid value
+            is <code>asc</code> (ascending) or <code>desc</code> (descending).
+            Default is <code>asc</code>. You can specify multiple pairs of
+            sort key and sort direction query parameters. If you omit the sort
+            direction in a pair, the API uses the natural sorting direction of
+            the server attribute that is provided as the
+            <code>sort_key</code>.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- CHASSIS                              -->
+<!-- ************************************ -->
+<!-- CHASSIS REQUEST PARAMETERS           -->
+<!-- ************************************ -->
+<!ENTITY chassisRequestParameter '
+<param name="chassis" style="plain" required="true"
+    type="xsd:string" xmlns="http://wadl.dev.java.net/2009/02">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A <code>chassis</code> object.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-descriptionRequestParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            A description for the chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-extraRequestParameter '
+<param name="extra" style="plain" type="xsd:dict"
+    xmlns="http://wadl.dev.java.net/2009/02" required="false">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            A set of one or more arbitrary metadata key and value pairs for
+            the chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- CHASSIS RESPONSE PARAMETERS          -->
+<!-- ************************************ -->
+<!ENTITY chassisResponseParameter '
+<param xmlns="http://wadl.dev.java.net/2009/02"
+    name="chassis" style="plain" required="true" type="xsd:list">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook"
+        xmlns:wadl="http://wadl.dev.java.net/2009/02" xml:lang="EN">
+        <para>
+            A list of chassis objects.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-descriptionResponseParameter '
+<param name="description" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            A description for the chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-extraResponseParameter '
+<param name="extra" style="plain" type="xsd:dict"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            A set of zero or more arbitrary metadata key and value pairs for
+            the chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-linksResponseParameter '
+<param name="links" style="plain" type="xsd:list"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            A list that contains a self link and associated chassis links.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-nodesResponseParameter '
+<param name="nodes" style="plain" type="xsd:list"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook"
+        xml:lang="EN">
+        <para>
+            Links to the collection of nodes contained in this chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY chassis-uuidResponseParameter '
+<param name="uuid" style="plain" type="csapi:uuid"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The UUID for the chassis.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- DRIVERS                              -->
+<!-- ************************************ -->
+<!-- DRIVERS RESPONSE PARAMETERS          -->
+<!-- ************************************ -->
+<!ENTITY driversResponseParameter '
+<param name="drivers" style="plain" type="xsd:list"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            A list of <code>drivers</code> objects.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY hostsResponseParameter '
+<param name="hosts" style="plain" type="xsd:list"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            A list of active hosts that support this driver.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY host-linksResponseParameter '
+<param name="links" style="plain" type="xsd:list"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>A list of relative links. Includes the self and bookmark links.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY host-nameResponseParameter '
+<param name="name" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>The name of the driver.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY host-propertiesResponseParameter '
+<param name="properties" style="plain" type="xsd:list"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>A list of links to driver properties.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- LINKS                                -->
+<!-- ************************************ -->
+<!-- LINKS REQUEST PARAMETERS             -->
+<!-- ************************************ -->
+<!ENTITY link-hrefRequestParameter '
+<param name="href" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The URL of a link.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY link-relRequestParameter '
+<param name="rel" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The name of a link.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY link-typeRequestParameter '
+<param name="type" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The type of document and link.
+        </para>
+    </wadl:doc>
+</param>'>
+<!-- ************************************ -->
+<!-- LINKS RESPONSE PARAMETERS            -->
+<!-- ************************************ -->
+<!ENTITY link-hrefResponseParameter '
+<param name="href" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The URL of a link.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY link-relResponseParameter '
+<param name="rel" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The name of a link.
+        </para>
+    </wadl:doc>
+</param>'>
+<!ENTITY link-typeResponseParameter '
+<param name="type" style="plain" type="xsd:string"
+    xmlns="http://wadl.dev.java.net/2009/02" required="true">
+    <wadl:doc xmlns:wadl="http://wadl.dev.java.net/2009/02"
+        xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+        <para>
+            The type of document and link.
+        </para>
+    </wadl:doc>
+</param>'>
+
+
+

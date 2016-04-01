@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) 2016 OpenStack Foundation, All Rights Reserved -->
+<!DOCTYPE application [
+    <!ENTITY % common  SYSTEM "common.ent">
+    %common;
+    <!ENTITY % common_project  SYSTEM "../../../common_project.ent">
+    %common_project;
+]>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:xsdxt="http://docs.rackspacecloud.com/xsd-ext/v1.0"
+    xmlns:csapi="http://docs.openstack.org/api/openstack-baremetal/v1"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wadl="http://wadl.dev.java.net/2009/02"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:linkend="http://www.w3.org/1999/linkend">
+    <resources base="https://ironic.example.com/" xml:id="baremetal-v1">
+        <resource id="v1" path="//v1">
+            <resource id="tenant_id" path="{tenant_id}">
+                &tenant_idTemplateParameter;
+                <resource id="chassis" path="chassis">
+                    <method href="#createChassis"/>
+                    <method href="#listChassis"/>
+                    <resource path="detail" id="detail-chassis">
+                        <method href="#listChassisDetail"/>
+                    </resource>
+                    <resource path="{chassis_id}" id="chassis_id">
+                        &chassis_uuidTemplateParameter;
+                        <method href="#showChassis"/>
+                        <method href="#updateChassis"/>
+                        <method href="#deleteChassis"/>
+                    </resource>
+                </resource>
+                <resource id="drivers" path="drivers">
+                    <method href="#listDrivers"/>
+                    <resource path="{driver_name}" id="driver_name">
+                        &driver_nameTemplateParameter;
+                        <method href="#showDriver"/>
+                        <resource path="properties" id="properties">
+                            <method href="#showDriverProperties"/>
+                        </resource>
+                        <resource path="raid" id="raid">
+                            <resource path="logical_disk_properties" id="logical_disk_properties">
+                                <method href="#showLogicalDiskProperties"/>
+                            </resource>
+                        </resource>
+                        <resource path="vendor_passthru/methods" id="vendor_passthru-methods">
+                            <method href="#showVendorMethods"/>
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="links" path="links">
+                    <method href="#createLink"/>
+                    <method href="#listLinks"/>
+                    <resource path="detail" id="detail-links">
+                        <method href="#listLinksDetail"/>
+                    </resource>
+                    <resource path="{link_id}" id="link_id">
+                        &link_idTemplateParameter;
+                        <method href="#showLink"/>
+                        <method href="#updateLink"/>
+                        <method href="#deleteLink"/>
+                    </resource>
+                </resource>
+                <resource id="nodes" path="nodes">
+                    <method href="#createNode"/>
+                    <method href="#listNodes"/>
+                    <resource path="detail" id="detail-nodes">
+                        <method href="#listNodesDetail"/>
+                    </resource>
+                    <resource path="{node_id}" id="node_id">
+                        &node_idTemplateParameter;
+                        <method href="#showNode"/>
+                        <method href="#updateNode"/>
+                        <method href="#deleteNode"/>
+                    </resource>
+                </resource>
+                <resource id="ports" path="ports">
+                    <method href="#createPort"/>
+                    <method href="#listPorts"/>
+                    <resource path="detail" id="detail-ports">
+                        <method href="#listPortsDetail"/>
+                    </resource>
+                    <resource path="{port_id}" id="port_id">
+                        &port_idTemplateParameter;
+                        <method href="#showPort"/>
+                        <method href="#updatePort"/>
+                        <method href="#deletePort"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resource>
+    </resources>
+    <!-- ************************************** -->
+    <!-- Chassis                                -->
+    <!-- ************************************** -->
+    <!-- ************************************** -->
+    <!-- Create chassis                         -->
+    <!-- ************************************** -->
+    <method name="POST" id="createChassis">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create chassis">
+            <para role="shortdesc">
+                Creates a chassis.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/chassis-create-request.json"/>
+                </wadl:doc>
+                &chassisRequestParameter;
+                &chassis-descriptionRequestParameter;
+                &chassis-extraRequestParameter;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/chassis-show-response.json"/>
+                </wadl:doc>
+                &created_at-ResponseParameter;
+                &chassis-descriptionResponseParameter;
+                &chassisResponseParameter;
+                &chassis-extraResponseParameter;
+                &chassis-linksResponseParameter;
+                &chassis-nodesResponseParameter;
+                &updated_at-ResponseParameter;
+                &chassis-uuidResponseParameter;
+            </representation>
+        </response>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all chassis                       -->
+    <!-- ************************************** -->
+    <method name="GET" id="listChassis">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List chassis">
+            <para role="shortdesc">
+                Lists all chassis.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &limitMarkerReqParameter;
+                &sort_dirQueryParameter;
+                &sort_keyQueryParameter;
+                &fieldsQueryParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/chassis-list-response.json"/>
+                </wadl:doc>
+                &chassisResponseParameter;
+                &chassis-descriptionResponseParameter;
+                &chassis-extraResponseParameter;
+                &chassis-uuidResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all chassis with details          -->
+    <!-- ************************************** -->
+    <method name="GET" id="listChassisDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List chassis with details">
+            <para role="shortdesc">
+                Lists all chassis with details.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &limitMarkerReqParameter;
+                &sort_dirQueryParameter;
+                &sort_keyQueryParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/chassis-list-details-response.json"/>
+                </wadl:doc>
+                &chassisResponseParameter;
+                &chassis-descriptionResponseParameter;
+                &chassis-extraResponseParameter;
+                &chassis-uuidResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Show chassis details                   -->
+    <!-- ************************************** -->
+    <method name="GET" id="showChassis">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show chassis details">
+            <para role="shortdesc">
+                Shows details for a chassis.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &fieldsQueryParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/chassis-show-response.json"/>
+                </wadl:doc>
+                &chassisResponseParameter;
+                &chassis-descriptionResponseParameter;
+                &chassis-extraResponseParameter;
+                &chassis-uuidResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Update chassis                         -->
+    <!-- ************************************** -->
+    <method name="PATCH" id="updateChassis">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Update chassis">
+            <para role="shortdesc">
+                Updates a chassis.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/chassis-update-request.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &chassisRequestParameter;
+                &chassis-descriptionRequestParameter;
+                &chassis-extraRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/chassis-show-response.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &created_at-ResponseParameter;
+                &chassis-descriptionResponseParameter;
+                &chassisResponseParameter;
+                &chassis-extraResponseParameter;
+                &chassis-linksResponseParameter;
+                &chassis-nodesResponseParameter;
+                &updated_at-ResponseParameter;
+                &chassis-uuidResponseParameter;
+            </representation>
+        </response> &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Delete chassis                         -->
+    <!-- ************************************** -->
+    <method name="DELETE" id="deleteChassis">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Delete chassis">
+            <para role="shortdesc">
+                Deletes a chassis.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Drivers                                -->
+    <!-- ************************************** -->
+    <!-- ************************************** -->
+    <!-- List all drivers                       -->
+    <!-- ************************************** -->
+    <method name="GET" id="listDrivers">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="List drivers">
+            <para role="shortdesc">
+                Lists all drivers.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/drivers-list-response.json"/>
+                </wadl:doc>
+                &driversResponseParameter;
+                &hostsResponseParameter;
+                &host-nameResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Show driver details                    -->
+    <!-- ************************************** -->
+    <method name="GET" id="showDriver">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show driver details">
+            <para role="shortdesc">
+                Shows details for a driver.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-get-response.json"/>
+                </wadl:doc>
+                &hostsResponseParameter;
+                &host-nameResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Shows properties for a driver          -->
+    <!-- ************************************** -->
+    <method name="GET" id="showDriverProperties">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show driver properties">
+            <para role="shortdesc">
+                Shows properties for a driver.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-get-response.json"/>
+                </wadl:doc>
+                &hostsResponseParameter;
+                &host-linksResponseParameter;
+                &host-nameResponseParameter;
+                &host-propertiesResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ******************************************* -->
+    <!-- Shows logical disk properties for a driver  -->
+    <!-- ******************************************* -->
+    <method name="GET" id="showLogicalDiskProperties">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show driver logical disk properties">
+            <para role="shortdesc">
+                Shows logical disk properties for a driver.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-get-response.json"/>
+                </wadl:doc>
+                &hostsResponseParameter;
+                &host-linksResponseParameter;
+                &host-nameResponseParameter;
+                &host-propertiesResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Shows vendor methods for a driver      -->
+    <!-- ************************************** -->
+    <method name="GET" id="showVendorMethods">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xml:lang="EN" title="Show driver vendor methods">
+            <para role="shortdesc">
+                Shows vendor methods for a driver.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-get-response.json"/>
+                </wadl:doc>
+                &hostsResponseParameter;
+                &host-linksResponseParameter;
+                &host-nameResponseParameter;
+                &host-propertiesResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Links                                  -->
+    <!-- ************************************** -->
+    <!-- ************************************** -->
+    <!-- Create link                            -->
+    <!-- ************************************** -->
+    <method name="POST" id="createLink">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create link">
+            <para role="shortdesc">
+                Creates a link.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/link-create-request.json"/>
+                </wadl:doc>
+                &link-hrefRequestParameter;
+                &link-relRequestParameter;
+                &link-typeRequestParameter;
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/link-show-response.json"/>
+                </wadl:doc>
+                &link-hrefResponseParameter;
+                &link-relResponseParameter;
+                &link-typeResponseParameter;
+            </representation>
+        </response>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all Links                         -->
+    <!-- ************************************** -->
+    <method name="GET" id="listLinks">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List links">
+            <para role="shortdesc">
+                Lists all links.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/link-show-response.json"/>
+                </wadl:doc>
+                &link-hrefResponseParameter;
+                &link-relResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all links with details            -->
+    <!-- ************************************** -->
+    <method name="GET" id="listLinksDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List links with details">
+            <para role="shortdesc">
+                Lists all links with details.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/link-show-response.json"/>
+                </wadl:doc>
+                &link-hrefResponseParameter;
+                &link-relResponseParameter;
+                &link-typeResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Show link details                      -->
+    <!-- ************************************** -->
+    <method name="GET" id="showLink">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show link details">
+            <para role="shortdesc">
+                Shows details for a link.
+            </para>
+        </wadl:doc>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/link-show-response.json"/>
+                </wadl:doc>
+                &link-hrefResponseParameter;
+                &link-relResponseParameter;
+                &link-typeResponseParameter;
+            </representation>
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Update link                            -->
+    <!-- ************************************** -->
+    <method name="PATCH" id="updateLink">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Update link">
+            <para role="shortdesc">
+                Updates a link.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/link-create-request.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &link-hrefRequestParameter;
+                &link-relRequestParameter;
+                &link-typeRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/link-show-response.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+                &link-hrefResponseParameter;
+                &link-relResponseParameter;
+                &link-typeResponseParameter;
+            </representation>
+        </response>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Delete link                            -->
+    <!-- ************************************** -->
+    <method name="DELETE" id="deleteLink">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Delete link">
+            <para role="shortdesc">
+                Deletes a link.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Nodes                                  -->
+    <!-- ************************************** -->
+    <!-- ************************************** -->
+    <!-- Create node                            -->
+    <!-- ************************************** -->
+    <method name="POST" id="createNode">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create node">
+            <para role="shortdesc">
+                Creates a node.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+<!--                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-create-request.json"/>
+                </wadl:doc> -->
+               <!--  &driverRequestParameter;
+                &driver-descriptionRequestParameter;
+                &driver-extraRequestParameter; -->
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <!-- <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-create-response.json"/>
+                </wadl:doc> -->
+                <!-- &created_at-ResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driverResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-linksResponseParameter;
+                &driver-nodesResponseParameter;
+                &updated_at-ResponseParameter;
+                &driver-uuidResponseParameter; -->
+            </representation>
+        </response>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all nodes                         -->
+    <!-- ************************************** -->
+    <method name="GET" id="listNodes">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List nodes">
+            <para role="shortdesc">
+                Lists all nodes.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <!-- &limitMarkerQueryParameters;
+                &sort_dirQueryParameter;
+                &sort_keyQueryParameter;
+                &fieldsQueryParameter; -->
+            </representation>
+        </request>
+        <response status="200">
+           <!--  <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-list-response.json"/>
+                </wadl:doc>
+                &driverResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-uuidResponseParameter;
+            </representation> -->
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all nodes with details            -->
+    <!-- ************************************** -->
+    <method name="GET" id="listNodesDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List nodes with details">
+            <para role="shortdesc">
+                Lists all nodes with details.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+               <!--  &limitMarkerQueryParameters;
+                &sort_dirQueryParameter;
+                &sort_keyQueryParameter; -->
+            </representation>
+        </request>
+        <response status="200">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-list-details-response.json"/>
+                </wadl:doc>
+                &driverResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-uuidResponseParameter;
+            </representation> -->
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Show node details                      -->
+    <!-- ************************************** -->
+    <method name="GET" id="showNode">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show node details">
+            <para role="shortdesc">
+                Shows details for a node.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &fieldsQueryParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-list-details-response.json"/>
+                </wadl:doc>
+                &driverResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-uuidResponseParameter;
+            </representation> -->
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Update node                            -->
+    <!-- ************************************** -->
+    <method name="PATCH" id="updateNode">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Update node">
+            <para role="shortdesc">
+                Updates a node.
+            </para>
+        </wadl:doc>
+        <request>
+           <!--  <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/driver-update-request.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation> -->
+        </request>
+        <response status="200">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/driver-create-response.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation> -->
+        </response> &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Delete node                            -->
+    <!-- ************************************** -->
+    <method name="DELETE" id="deleteNode">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Delete node">
+            <para role="shortdesc">
+                Deletes a node.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Ports                                  -->
+    <!-- ************************************** -->
+    <!-- ************************************** -->
+    <!-- Create port                            -->
+    <!-- ************************************** -->
+    <method name="POST" id="createPort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Create port">
+            <para role="shortdesc">
+                Creates a port.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+<!--                 <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-create-request.json"/>
+                </wadl:doc> -->
+               <!--  &driverRequestParameter;
+                &driver-descriptionRequestParameter;
+                &driver-extraRequestParameter; -->
+            </representation>
+        </request>
+        <response status="201">
+            <representation mediaType="application/json">
+                <!-- <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-create-response.json"/>
+                </wadl:doc> -->
+                <!-- &created_at-ResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driverResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-linksResponseParameter;
+                &driver-nodesResponseParameter;
+                &updated_at-ResponseParameter;
+                &driver-uuidResponseParameter; -->
+            </representation>
+        </response>
+        &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all Ports                       -->
+    <!-- ************************************** -->
+    <method name="GET" id="listPorts">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List ports">
+            <para role="shortdesc">
+                Lists all ports.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <!-- &limitMarkerQueryParameters;
+                &sort_dirQueryParameter;
+                &sort_keyQueryParameter;
+                &fieldsQueryParameter; -->
+            </representation>
+        </request>
+        <response status="200">
+           <!--  <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-list-response.json"/>
+                </wadl:doc>
+                &driverResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-uuidResponseParameter;
+            </representation> -->
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- List all ports with details            -->
+    <!-- ************************************** -->
+    <method name="GET" id="listPortsDetail">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List ports with details">
+            <para role="shortdesc">
+                Lists all ports with details.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+               <!--  &limitMarkerQueryParameters;
+                &sort_dirQueryParameter;
+                &sort_keyQueryParameter; -->
+            </representation>
+        </request>
+        <response status="200">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-list-details-response.json"/>
+                </wadl:doc>
+                &driverResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-uuidResponseParameter;
+            </representation> -->
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Show port details                      -->
+    <!-- ************************************** -->
+    <method name="GET" id="showPort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show port details">
+            <para role="shortdesc">
+                Shows details for a port.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                &fieldsQueryParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+                    <xsdxt:code href="samples/driver-list-details-response.json"/>
+                </wadl:doc>
+                &driverResponseParameter;
+                &driver-descriptionResponseParameter;
+                &driver-extraResponseParameter;
+                &driver-uuidResponseParameter;
+            </representation> -->
+        </response>
+        &getFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Update port                            -->
+    <!-- ************************************** -->
+    <method name="PATCH" id="updatePort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Update port">
+            <para role="shortdesc">
+                Updates a port.
+            </para>
+        </wadl:doc>
+        <request>
+           <!--  <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="../samples/driver-update-request.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation> -->
+        </request>
+        <response status="200">
+            <!-- <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:sample>
+                        <xsdxt:code
+                            href="samples/driver-create-response.json"
+                        />
+                    </xsdxt:sample>
+                </wadl:doc>
+            </representation> -->
+        </response> &postPutDeleteFaults;
+    </method>
+    <!-- ************************************** -->
+    <!-- Delete port                            -->
+    <!-- ************************************** -->
+    <method name="DELETE" id="deletePort">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"
+            xml:lang="EN" title="Delete port">
+            <para role="shortdesc">
+                Deletes a port.
+            </para>
+        </wadl:doc>
+        <response status="204"/>
+        &postPutDeleteFaults;
+    </method>
+</application>
