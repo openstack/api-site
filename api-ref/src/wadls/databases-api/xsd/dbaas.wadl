@@ -52,7 +52,10 @@
                         <method href="#attachConfigGroup"/>
                         <method href="#detachConfigGroup"/>
                         <method href="#deleteInstance"/>
-                        <method href="#listConfigDefaults"/>
+                        <method href="#detachReplica"/>
+                        <resource id="configuration" path="configuration">
+                            <method href="#listConfigDefaults"/>
+                        </resource>
                         <resource id="instanceAction" path="action">
                             <method href="#resizeInstance"/>
                             <method href="#resizeVolume"/>
@@ -78,6 +81,7 @@
                         <resource id="root-dbaas" path="root">
                             <method href="#createRoot"/>
                             <method href="#isRootEnabled"/>
+                            <method href="#disableRoot"/>
                         </resource>
                     </resource>
                 </resource>
@@ -228,6 +232,7 @@
                 &instanceRequestParameter;
                 &flavorRefRequestParameter;
                 &sizeRequestParameter;
+                &typeRequestParameter;
                 &databasesRequestParameter;
                 &instance-nameRequestParameter;
                 &databaseNameRequestParameter;
@@ -236,6 +241,11 @@
                 &usersRequestParameter;
                 &user-nameRequestParameter;
                 &user-passwordRequestParameter;
+                &datastoreRequestParameter;
+                &datastoreVersionRequestParameter;
+                &configurationRequestParameter;
+                &replicaOfRequestParameter;
+                &replicaCountRequestParameter;
             </representation>
         </request>
         <response status="200">
@@ -1408,6 +1418,70 @@
                     xml:lang="EN">
                     <xsdxt:code
                         href="samples/db-detach-config-grp-response-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; &postPutFaults;
+    </method>
+    <method name="DELETE" id="disableRoot">
+        <wadl:doc xml:lang="EN" title="Disable root user"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Disables the root user.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-delete-root-request-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-delete-root-response-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="PATCH" id="detachReplica">
+        <wadl:doc xml:lang="EN" title="Detach replica"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Detaches a replica from its replication source.
+            </para>
+            <para>If you created an instance that is a replica of a source instance,
+                you can detach the replica from the source. This can be useful if
+                the source becomes unavailable. In this case, you can detach the
+                replica from the source, making the replica a standalone database
+                instance. You can then take the new standalone instance and create
+                a new replica of that instance.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-detach-replica-request-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-detach-replica-request.json"/>
+                </wadl:doc>
+                &replicaOfRequestParameterDetach;
+                &slaveOfRequestParameterDetach;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-detach-replica-response-json-http.txt"
                     />
                 </wadl:doc>
             </representation>
