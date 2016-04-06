@@ -636,7 +636,7 @@ Before you can issue client commands, you must download and source the
 
 For complete information about the OpenStack clients, including how to source
 the ``openrc`` file, see `OpenStack End User Guide <http://docs.openstack.org/user-guide/>`__,
-`OpenStack Admin User Guide <http://docs.openstack.org/user-guide-admin/>`__,
+`OpenStack Administrator Guide <http://docs.openstack.org/admin-guide/>`__,
 and `OpenStack Command-Line Interface Reference <http://docs.openstack.org/cli-reference/>`__.
 
 Launch an instance
