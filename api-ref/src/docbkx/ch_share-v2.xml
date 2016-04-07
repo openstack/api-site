@@ -20,17 +20,30 @@
         The Shared File Systems API uses Compute-style micro-versions. Use the
         HTTP <code>X-Openstack-Manila-Api-Version</code> request header to specify a
         valid micro-version. For example, <code>"X-Openstack-Manila-Api-Version:
-        2.6"</code>. If you omit this header, the default micro-version is 2.0.
+        2.15"</code>. If you omit this header, the default micro-version is 2.0.
     </para>
     <para>
         Other than the switch to the micro-versions approach, the Shared File
         Systems API v2.0 is functionally identical to the
-        <link xlink:href="api-ref-share-v1.html#share-api-v1">Shared File Systems API v1</link>.
+        <link xlink:href="http://developer.openstack.org/api-ref-share-v1.html#share-api-v1">
+            Shared File Systems API v1.
+        </link>
     </para>
     <para>
         Subsequent API v2 micro-versions, such as v2.1, differ from API v1.
         Look for notes that identify in which post-v2 micro-version a feature,
         method, or parameter was introduced.
+    </para>
+    <para>
+        Latest micro-version for <code>Liberty</code> release of Manila is 2.6
+    </para>
+    <para>
+        Latest micro-version for <code>Mitaka</code> release of Manila is 2.15
+    </para>
+    <para>
+        <link xlink:href="http://docs.openstack.org/developer/manila/devref/api_microversion_history.html">
+            History of all Manila API changes.
+        </link>
     </para>
     <!-- <section xml:id="share-versions">
         <title>API versions</title>
@@ -131,6 +144,11 @@
             <listitem>
                 <para>
                     <code>HDFS</code>. Hadoop Distributed File System (HDFS).
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <code>CEPHFS</code>. Ceph File System (CephFS).
                 </para>
             </listitem>
         </itemizedlist>
@@ -290,10 +308,51 @@
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#detail-share">
                 <wadl:method href="#listSharesDetails" />
             </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#manage-share">
+                <wadl:method href="#manageShare" >
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Manage share">
+                        <para role="shortdesc">
+                        Configures Shared File Systems to manage a share.
+                        This API is available for micro-versions later than or equal to 2.7
+                        </para>
+                    </wadl:doc>
+                </wadl:method>
+            </wadl:resource>
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#share_id">
                 <wadl:method href="#showShare" />
                 <wadl:method href="#updateShare" />
                 <wadl:method href="#deleteShare" />
+            </wadl:resource>
+        </wadl:resources>
+    </section>
+    <section xml:id="share-share-export-locations" xmlns="http://docbook.org/ns/docbook">
+        <title>Share export locations (since API v2.9)</title>
+        <para>
+            Set of APIs used for viewing export locations of shares.
+        </para>
+        <para>
+            By default, these APIs are admin-only.
+            Use the <code>policy.json</code> file to grant permissions for
+            these actions to other roles.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#share-export-location-list">
+                <wadl:method href="#exportLocationList" >
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List export locations">
+                      <para role="shortdesc">
+                          Lists all export locations for a share.
+                      </para>
+                    </wadl:doc>
+                </wadl:method>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#share_export_location_id">
+                <wadl:method href="#exportLocationShow" >
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show single export location">
+                      <para role="shortdesc">
+                          Show details of an export location belonging to a share.
+                      </para>
+                    </wadl:doc>
+                </wadl:method>
             </wadl:resource>
         </wadl:resources>
     </section>
@@ -394,6 +453,17 @@
                 <para><code>error_deleting</code></para>
             </listitem>
         </itemizedlist>
+        <caution>
+            <para>
+                If micro-version 1.0-2.6 is used then all share actions,
+                defined below, should include prefix <code>os-</code>
+                in top element of request JSON's body.
+            </para>
+            <para>
+                For example: {"access_list": null} is valid for v2.7+.
+                And {"os-access_list": null} is valid for v1.0-2.6
+            </para>
+        </caution>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#action">
                 <wadl:method href="#grantAccess" />
@@ -403,6 +473,7 @@
                 <wadl:method href="#force-deleteShare" />
                 <wadl:method href="#extendShare" />
                 <wadl:method href="#shrinkShare" />
+                <wadl:method href="#unmanageShare" />
             </wadl:resource>
         </wadl:resources>
     </section>
@@ -411,9 +482,9 @@
         <para>
             Use the shared file service to make snapshots of shares. A share
             snapshot is a point-in-time, read-only copy of the data that is
-            contained in a share. You can create, update, and delete share
-            snapshots. After you create a share snapshot, you can create a
-            share from it.
+            contained in a share. You can create, manage, update,
+            and delete share snapshots. After you create or manage
+            a share snapshot, you can create a share from it.
         </para>
         <para>
             You can update a share snapshot to rename it, change its
@@ -435,6 +506,18 @@
             <listitem>
                 <para><code>error_deleting</code></para>
             </listitem>
+            <listitem>
+                <para><code>manage_starting</code></para>
+            </listitem>
+            <listitem>
+                <para><code>manage_error</code></para>
+            </listitem>
+            <listitem>
+                <para><code>unmanage_starting</code></para>
+            </listitem>
+            <listitem>
+                <para><code>unmanage_error</code></para>
+            </listitem>
         </itemizedlist>
         <para>
             As administrator, you can also reset the state of a snapshot and
@@ -447,6 +530,9 @@
                 <wadl:method href="#share-createSnapshot" />
                 <wadl:method href="#share-listSnapshots" />
             </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#snapshot-manage">
+                <wadl:method href="#share-manageSnapshot" />
+            </wadl:resource>
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#detail-snapshot">
                 <wadl:method href="#share-listSnapshotsDetails" />
             </wadl:resource>
@@ -456,6 +542,7 @@
                 <wadl:method href="#share-deleteSnapshot" />
             </wadl:resource>
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#snapshot-action">
+                <wadl:method href="#share-unmanageSnapshot" />
                 <wadl:method href="#resetSnapshotState" />
                 <wadl:method href="#forceshare-deleteSnapshot" />
             </wadl:resource>
@@ -716,6 +803,37 @@
             </wadl:resource>
         </wadl:resources>
     </section>
+    <section xml:id="share-share-instance-export-locations" xmlns="http://docbook.org/ns/docbook">
+        <title>Share instance export locations (since API v2.9)</title>
+        <para>
+            Set of APIs used to view export locations of share instances.
+        </para>
+        <para>
+            By default, these APIs are admin-only.
+            Use the <code>policy.json</code> file to grant permissions for
+            these actions to other roles.
+        </para>
+        <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#share-instance-export-location-list">
+                <wadl:method href="#exportLocationList" >
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List export locations">
+                      <para role="shortdesc">
+                          Lists all export locations for a share instance.
+                      </para>
+                    </wadl:doc>
+                </wadl:method>
+            </wadl:resource>
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#share_instance_export_location_id">
+                <wadl:method href="#exportLocationShow" >
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show single export location">
+                      <para role="shortdesc">
+                          Show details of an export location belonging to a share instance.
+                      </para>
+                    </wadl:doc>
+                </wadl:method>
+            </wadl:resource>
+        </wadl:resources>
+    </section>
     <section xml:id="share-type">
         <title>Share types</title>
         <para>
@@ -744,7 +862,9 @@
         </para>
         <para>You can set share types as either public or private. By default
             a share type is created as publicly accessible. Set
-            <code>os-share-type-access:is_public</code> to <code>False</code>
+            <code>share_type_access:is_public</code> (
+            <code>os-share-type-access:is_public</code> for
+            micro-versions 1.0-2.6) to <code>False</code>
             to make the share type private.
         </para>
         <para>
@@ -847,7 +967,7 @@
                 <wadl:method href="#addShareTypeAccess" />
                 <wadl:method href="#removeShareTypeAccess" />
             </wadl:resource>
-            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#os-share-type-access">
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#share-type-access">
                 <wadl:method href="#showShareTypeAccess" />
             </wadl:resource>
         </wadl:resources>
@@ -878,8 +998,14 @@
         <para>
             Administrators can also enable or disable a service.
         </para>
+        <caution>
+            <para>
+                For old microversions 1.0-2.6 replace URL part <code>services</code>
+                with <code>os-services</code>.
+            </para>
+        </caution>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#os-services">
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#services">
                 <wadl:method href="#listServices" />
             </wadl:resource>
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#enable-service">
@@ -890,13 +1016,19 @@
             </wadl:resource>
         </wadl:resources>
     </section>
-    <section xml:id="share-os-availability-zone" xmlns="http://docbook.org/ns/docbook">
+    <section xml:id="share-availability-zones" xmlns="http://docbook.org/ns/docbook">
         <title>Availability zones</title>
         <para>
             Describes availability zones.
         </para>
+        <caution>
+            <para>
+                For old microversions 1.0-2.6 replace URL part <code>availability-zones</code>
+                with <code>os-availability-zone</code>.
+            </para>
+        </caution>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#os-availability-zone">
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#availability-zones">
                 <wadl:method href="#listAvailabilityZones" />
             </wadl:resource>
         </wadl:resources>
@@ -909,32 +1041,50 @@
         <para>
             The share unmanage operation is not supported for shares that are
             created on top of share servers (created with share networks).
-         </para>
+        </para>
         <para>
             You can unmanage a share that has no dependent snapshots.
         </para>
+        <para>
+            These APIs are available for micro-versions 1.0-2.6
+        </para>
+        <para>
+            Starting with micro-version 2.7 these APIs are available under 'shares' API group.
+        </para>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
             <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#os-share-manage">
-                <wadl:method href="#manageShare" />
+                <wadl:method href="#manageShare" >
+                    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Manage share">
+                        <para role="shortdesc">
+                        Configures Shared File Systems to manage a share.
+                        </para>
+                    </wadl:doc>
+                </wadl:method>
             </wadl:resource>
-            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#unmanage">
-                <wadl:method href="#unmanageShare" />
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#os-unmanage">
+                <wadl:method href="#osUnmanageShare" />
             </wadl:resource>
         </wadl:resources>
     </section>
-    <section xml:id="share-os-quota-sets" xmlns="http://docbook.org/ns/docbook">
+    <section xml:id="share-quota-sets" xmlns="http://docbook.org/ns/docbook">
         <title>Quota sets</title>
         <para>
             Provides quotas management support.
         </para>
+        <caution>
+            <para>
+                For old microversions 1.0-2.6 replace URL part <code>quota-sets</code>
+                with <code>os-quota-sets</code>.
+            </para>
+        </caution>
         <wadl:resources xmlns:wadl="http://wadl.dev.java.net/2009/02">
-            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#tenant_id-os-quota-sets">
-                <wadl:method href="#os-quota-sets-showQuota"/>
-                <wadl:method href="#os-quota-sets-updateQuota"/>
-                <wadl:method href="#os-quota-sets-deleteQuota"/>
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#tenant_id-quota-sets">
+                <wadl:method href="#quota-sets-showQuota"/>
+                <wadl:method href="#quota-sets-updateQuota"/>
+                <wadl:method href="#quota-sets-deleteQuota"/>
             </wadl:resource>
-            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#os-quota-sets-defaults">
-                <wadl:method href="#os-quota-sets-listDefaultQuotas"/>
+            <wadl:resource href="../wadls/share-api/src/v2/wadl/os-share-v2.wadl#quota-sets-defaults">
+                <wadl:method href="#quota-sets-listDefaultQuotas"/>
             </wadl:resource>
         </wadl:resources>
     </section>

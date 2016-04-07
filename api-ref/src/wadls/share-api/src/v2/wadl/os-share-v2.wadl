@@ -21,7 +21,7 @@
           <para>
             The HTTP header to specify a valid Shared File Systems API
             micro-version. For example, <code>"X-Openstack-Manila-Api-Version:
-            2.6"</code>. If you omit this header, the default micro- version is
+            2.15"</code>. If you omit this header, the default micro- version is
             2.0.
           </para>
         </wadl:doc>
@@ -50,6 +50,9 @@
             <resource path="detail" id="detail-share">
               <method href="#listSharesDetails" />
             </resource>
+            <resource path="manage" id="manage-share">
+              <method href="#manageShare" />
+            </resource>
             <resource path="{share_id}" id="share_id">
               &share_idTemplateParameter;
               <method href="#showShare" />
@@ -63,6 +66,14 @@
                 <method href="#force-deleteShare" />
                 <method href="#extendShare" />
                 <method href="#shrinkShare" />
+                <method href="#unmanageShare" />
+              </resource>
+              <resource id="share-export-location-list" path="export_locations">
+                <method href="#exportLocationList" />
+                <resource id="share_export_location_id" path="{export_location_id}">
+                  &export_location_idTemplateParameter;
+                  <method href="#exportLocationShow" />
+                </resource>
               </resource>
               <resource path="metadata" id="metadata-share">
                 <method href="#showShareMetadata" />
@@ -77,6 +88,9 @@
           </resource>
           <resource id="snapshots" path="snapshots">
             <method href="#share-createSnapshot" />
+            <resource path="manage" id="snapshot-manage">
+              <method href="#share-manageSnapshot" />
+            </resource>
             <method href="#share-listSnapshots" />
             <resource path="detail" id="detail-snapshot">
               <method href="#share-listSnapshotsDetails" />
@@ -87,6 +101,7 @@
               <method href="#share-updateSnapshot" />
               <method href="#share-deleteSnapshot" />
               <resource id="snapshot-action" path="action">
+                <method href="#share-unmanageSnapshot" />
                 <method href="#resetSnapshotState" />
                 <method href="#forceshare-deleteSnapshot" />
               </resource>
@@ -154,7 +169,7 @@
                 <method href="#addShareTypeAccess" />
                 <method href="#removeShareTypeAccess" />
               </resource>
-              <resource id="os-share-type-access" path="os-share-type-access">
+              <resource id="share-type-access" path="share_type_access">
                 <method href="#showShareTypeAccess" />
               </resource>
             </resource>
@@ -168,9 +183,16 @@
                 <method href="#resetShareInstanceState" />
                 <method href="#force-deleteShareInstance" />
               </resource>
+              <resource id="share-instance-export-location-list" path="export_locations">
+                <method href="#exportLocationList" />
+                <resource id="share_instance_export_location_id" path="{export_location_id}">
+                  &export_location_idTemplateParameter;
+                  <method href="#exportLocationShow" />
+                </resource>
+              </resource>
             </resource>
           </resource>
-          <resource id="os-services" path="os-services">
+          <resource id="services" path="services">
             <method href="#listServices" />
             <resource id="enable-service" path="enable">
               <method href="#enableService" />
@@ -185,13 +207,13 @@
           <resource id="os-share-unmanage" path="os-share-unmanage">
             <resource id="os-share-unmanage-share_id" path="{share_id}">
               &share_idTemplateParameter;
-              <resource id="unmanage" path="unmanage">
-                <method href="#unmanageShare" />
+              <resource id="os-unmanage" path="unmanage">
+                <method href="#osUnmanageShare" />
               </resource>
             </resource>
           </resource>
-          <resource id="os-quota-sets" path="os-quota-sets">
-            <resource id="tenant_id-os-quota-sets" path="{tenant_id}" >
+          <resource id="quota-sets" path="quota-sets">
+            <resource id="tenant_id-quota-sets" path="{tenant_id}" >
               &tenant_idTemplateParameter2;
               <param name="user_id" style="query"
                 type="csapi:UUID" required="false">
@@ -206,15 +228,15 @@
                   </para>
                 </wadl:doc>
               </param>
-              <method href="#os-quota-sets-showQuota"/>
-              <method href="#os-quota-sets-updateQuota"/>
-              <method href="#os-quota-sets-deleteQuota"/>
-              <resource path="defaults" id="os-quota-sets-defaults">
-                <method href="#os-quota-sets-listDefaultQuotas"/>
+              <method href="#quota-sets-showQuota"/>
+              <method href="#quota-sets-updateQuota"/>
+              <method href="#quota-sets-deleteQuota"/>
+              <resource path="defaults" id="quota-sets-defaults">
+                <method href="#quota-sets-listDefaultQuotas"/>
               </resource>
             </resource>
           </resource>
-          <resource id="os-availability-zone" path="os-availability-zone">
+          <resource id="availability-zones" path="availability-zones">
             <method href="#listAvailabilityZones" />
           </resource>
         </resource>
@@ -742,6 +764,45 @@
              <xsdxt:code href="../samples/manila-snapshot-actions-force-delete-request.json" />
           </wadl:doc>
           &forceshare-deleteSnapshotRequestParameter;
+       </representation>
+    </request>
+    <response status="202" />
+  </method>
+  <method name="POST" id="share-manageSnapshot">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Manage share snapshot">
+       <para role="shortdesc">
+        (Since API v2.12) Configures Shared File Systems to manage a share snapshot.
+       </para>
+    </wadl:doc>
+    <request>
+       <representation mediaType="application/json">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <xsdxt:code href="../samples/manila-snapshot-manage-request.json" />
+          </wadl:doc>
+          &share-manageSnapshotRequestParameters;
+       </representation>
+    </request>
+    <response status="200">
+       <representation mediaType="application/json">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <xsdxt:code href="../samples/manila-snapshot-manage-response.json" />
+          </wadl:doc>
+          &share-manageSnapshotResponseParameters;
+       </representation>
+    </response>
+  </method>
+  <method name="POST" id="share-unmanageSnapshot">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Unmanage share snapshot">
+      <para role="shortdesc">
+        (Since API v2.12) Configures Shared File Systems to stop managing a share snapshot.
+      </para>
+    </wadl:doc>
+    <request>
+       <representation mediaType="application/json">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <xsdxt:code href="../samples/manila-snapshot-actions-unmanage-request.json" />
+          </wadl:doc>
+          &unmanageSnapshotRequestParameter;
        </representation>
     </request>
     <response status="202" />
@@ -1328,6 +1389,34 @@
     </request>
     <response status="202" />
   </method>
+  <method name="GET" id="exportLocationList">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List export locations">
+      <para role="shortdesc">
+      </para>
+    </wadl:doc>
+    <response status="200">
+      <representation mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+          <xsdxt:code href="../samples/manila-export-location-list-response.json" />
+        </wadl:doc>
+        &listExportLocationsResponseParameters;
+      </representation>
+    </response>
+  </method>
+  <method name="GET" id="exportLocationShow">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show single export location">
+      <para role="shortdesc">
+      </para>
+    </wadl:doc>
+    <response status="200">
+      <representation mediaType="application/json">
+        <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+          <xsdxt:code href="../samples/manila-export-location-show-response.json" />
+        </wadl:doc>
+        &getExportLocationResponseParameters;
+      </representation>
+    </response>
+  </method>
   <method name="GET" id="listPools">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List back-end storage pools">
        <para role="shortdesc">
@@ -1423,8 +1512,8 @@
   <method name="GET" id="listAvailabilityZones">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List availability zones">
        <para role="shortdesc">
-        Lists all availability zones.
-      </para>
+          Lists all availability zones.
+       </para>
     </wadl:doc>
     <response status="200">
        <representation mediaType="application/json">
@@ -1437,9 +1526,7 @@
   </method>
   <method name="POST" id="manageShare">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Manage share">
-       <para role="shortdesc">
-        Configures Shared File Systems to manage a share.
-      </para>
+       <para role="shortdesc"></para>
     </wadl:doc>
     <request>
        <representation mediaType="application/json">
@@ -1460,7 +1547,7 @@
        </representation>
     </response>
   </method>
-  <method name="POST" id="unmanageShare">
+  <method name="POST" id="osUnmanageShare">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Unmanage share">
        <para role="shortdesc">
         Configures Shared File Systems to stop managing a share.
@@ -1468,7 +1555,26 @@
     </wadl:doc>
     <response status="202" />
   </method>
-  <method name="GET" id="os-quota-sets-showQuota">
+  <method name="POST" id="unmanageShare">
+    <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Unmanage share">
+      <para role="shortdesc">
+        Configures Shared File Systems to stop managing a share.
+      </para>
+      <para role="shortdesc">
+        This API is available for micro-versions later than or equal to 2.7
+      </para>
+    </wadl:doc>
+    <request>
+       <representation mediaType="application/json">
+          <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN">
+             <xsdxt:code href="../samples/manila-share-actions-unmanage-request.json" />
+          </wadl:doc>
+          &unmanageShareRequestParameter;
+       </representation>
+    </request>
+    <response status="202" />
+  </method>
+  <method name="GET" id="quota-sets-showQuota">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show quotas">
       <para role="shortdesc">
         Shows quotas for a tenant.
@@ -1488,7 +1594,7 @@
        </representation>
     </response>
   </method>
-  <method name="GET" id="os-quota-sets-listDefaultQuotas">
+  <method name="GET" id="quota-sets-listDefaultQuotas">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show default quotas">
        <para role="shortdesc">
         Shows default quotas for a tenant.
@@ -1503,7 +1609,7 @@
        </representation>
     </response>
   </method>
-  <method name="PUT" id="os-quota-sets-updateQuota">
+  <method name="PUT" id="quota-sets-updateQuota">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Update quotas">
        <para role="shortdesc">
         Updates quotas for a tenant.
@@ -1531,7 +1637,7 @@
        </representation>
     </response>
   </method>
-  <method name="DELETE" id="os-quota-sets-deleteQuota">
+  <method name="DELETE" id="quota-sets-deleteQuota">
     <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Delete quotas">
        <para role="shortdesc">
           Deletes quotas for a tenant. The quota reverts to the default quota.
