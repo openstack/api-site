@@ -60,6 +60,8 @@
                             <method href="#resizeInstance"/>
                             <method href="#resizeVolume"/>
                             <method href="#restartInstance"/>
+                            <method href="#promoteToReplicaSource"/>
+                            <method href="#ejectReplicaSource"/>
                         </resource>
                         <resource id="databases" path="databases">
                             <method href="#createDatabase"/>
@@ -115,6 +117,16 @@
                 <resource id="configurations" path="configurations">
                     <method href="#createConfigGroup"/>
                     <method href="#listConfigGroups"/>
+                    <resource id="configId" path="{configId}">
+                        &configIdTemplateParameter;
+                        <method href="#deleteConfigGroup"/>
+                        <method href="#patchConfigGroup"/>
+                        <method href="#listConfigDetails"/>
+                        <method href="#updateConfigGroup"/>
+                        <resource id="config_instances" path="instances">
+                            <method href="#listConfigInstances"/>
+                        </resource>
+                    </resource>
                 </resource>
             </resource>
         </resource>
@@ -1486,5 +1498,267 @@
                 </wadl:doc>
             </representation>
         </response> &commonFaults; &getFaults; &postPutFaults;
+    </method>
+    <method name="POST" id="promoteToReplicaSource">
+        <wadl:doc xml:lang="EN" title="Promote instance to replica source"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Promotes a replica.
+            </para>
+            <para>
+                If you have set up replication, and the base instance
+                is still reachable, you can use this operation to promote
+                a replica to be the new base instance.
+            </para>
+            <para>
+                This can be useful if you want to make a configuration change
+                to the base instance that your replicas are replicating from.
+                For example, you might want to increase the disk or CPU capacity.
+                If you made the change on the base instance directly, you would
+                need to take the base instance down for the duration of the operation.
+                Instead, you can create a replica, make the configuration change
+                on the replica, and then promote the replica to become the new
+                base instance.
+            </para>
+            <para>
+                For <code>instanceId</code>, pass in the instance ID of the
+                replica you want to promote.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-instance-promote-replica-request-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-instance-promote-replica-request.json"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-instance-promote-replica-response-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; &postPutFaults;
+    </method>
+    <method name="POST" id="ejectReplicaSource">
+        <wadl:doc xml:lang="EN" title="Delete replication base instance"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Deletes the base instance in a replication set.
+            </para>
+            <para>
+                If the base instance becomes unreachable, you can use this
+                operation to delete the base instance.
+            </para>
+            <para>
+                This operation:
+            </para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Finds the replica that has processed the greatest
+                        number of transactions and picks that replica to use
+                        as the new base instance.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Transfers the public IP of the old base instance
+                        to the new base instance (which is the newly-promoted
+                        replica).
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Deletes the old base instance.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Takes all the instances in the replication
+                        set and makes them start replicating from the new
+                        base instance.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>
+                For <code>instanceId</code>, pass in the instance ID of the
+                unreachable base instance.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-instance-eject-replica-request-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-instance-eject-replica-request.json"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-instance-eject-replica-response-json-http.txt"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults; &postPutFaults;
+    </method>
+    <method name="DELETE" id="deleteConfigGroup">
+        <wadl:doc xml:lang="EN" title="Delete configuration group"
+            xmlns="http://docbook.org/ns/docbook"><para
+                role="shortdesc">Deletes a configuration group.</para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-delete-config-group-request-json-http.txt"/>
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="202"/> &commonFaults; <response status="422"
+            xmlns="http://wadl.dev.java.net/2009/02">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-delete-config-group-response-json-http.txt"/>
+                </wadl:doc>
+            </representation>
+        </response> &getFaults;
+    </method>
+    <method name="GET" id="listConfigInstances">
+        <wadl:doc xml:lang="EN" title="List configuration group instances"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists the instances associated with the specified configuration
+                group.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-config-group-instances-request-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-config-group-instances-response-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-config-group-instances-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="PATCH" id="patchConfigGroup">
+        <wadl:doc xml:lang="EN" title="Patch configuration group"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Sets new values for a configuration group.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-patch-config-grp-request-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-patch-config-grp-request.json"/>
+                </wadl:doc>
+                &configParamNamesValuesRequestParameter;
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-patch-config-grp-response-json-http.txt"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="GET" id="listConfigDetails">
+        <wadl:doc xml:lang="EN" title="Show configuration group details"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Lists details about a configuration group, including its values.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-config-group-details-request-json-http.txt"
+                    />
+                </wadl:doc>
+            </representation>
+        </request>
+        <response status="200">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-config-group-details-response-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-config-group-details-response.json"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
+    </method>
+    <method name="PUT" id="updateConfigGroup">
+        <wadl:doc xml:lang="EN" title="Update configuration group"
+            xmlns="http://docbook.org/ns/docbook">
+            <para role="shortdesc">
+                Sets new values for a configuration group.
+                Also lets you change the name and description of the
+                configuration group.
+            </para>
+        </wadl:doc>
+        <request>
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-update-config-grp-request-json-http.txt"/>
+                    <xsdxt:code
+                        href="samples/db-update-config-grp-request.json"/>
+                </wadl:doc>
+                &configParamNamesValuesRequestParameter;
+                &configGroupNameUpdateRequestParameter;
+                &configGroupDescUpdateRequestParameter;
+            </representation>
+        </request>
+        <response status="202">
+            <representation mediaType="application/json">
+                <wadl:doc xmlns="http://docbook.org/ns/docbook"
+                    xml:lang="EN">
+                    <xsdxt:code
+                        href="samples/db-update-config-grp-response-json-http.txt"/>
+                </wadl:doc>
+            </representation>
+        </response> &commonFaults; &getFaults;
     </method>
 </application>
