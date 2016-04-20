@@ -5,7 +5,7 @@
 <!--                                                       -->
 <!--     You can resolve the entities with xmllint         -->
 <!--                                                       -->
-<!--        xmllint -noent routers.wadl                    -->
+<!--      xmllint -noent network-ip-availability.wadl      -->
 <!--*******************************************************-->
 <!DOCTYPE application [
     <!ENTITY % common  SYSTEM "../common.ent">
@@ -24,14 +24,14 @@
    <!--*******************************************************-->
    <!--             All Resources                             -->
    <!--*******************************************************-->
-   <resources base="https://neutron.example.com/" xml:id="os-routers-v2">
+   <resources base="https://neutron.example.com/" xml:id="network-ip-availabilities-v2">
       <resource id="version" path="//v2.0">
          <resource id="network-ip-availability" path="network-ip-availabilities">
-               <method href="#ListNetworkIpAvailability" />
-               <method href="#ShowNetworkIpAvailability" />
-               <resource path="{network_id}" id="network_id">
-                   &network_idTemplateParameter;
-               </resource>
+             <method href="#ListNetworkIpAvailability" />
+             <resource path="{network_id}" id="network_id">
+                 &network_idTemplateParameter;
+                 <method href="#ShowNetworkIpAvailability" />
+             </resource>
          </resource>
       </resource>
    </resources>
@@ -39,8 +39,8 @@
    <!--               All Methods                             -->
    <!--*******************************************************-->
    <method name="GET" id="ListNetworkIpAvailability">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Network IP Availability">
-      <para role="shortdesc">List network IP availability of all networks.</para>
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="List Network IP Availability">
+      <para role="shortdesc">Lists network IP availability of all networks.</para>
       </wadl:doc>
       <response status="200">
           <representation mediaType="application/json">
@@ -49,7 +49,8 @@
                   <xsdxt:code
                      href="../samples/network-ip-availability/network-ip-availability-list.json"/>
                </wadl:doc>
-               &net-ip-availabilityResponseParameters;
+               &net-ip-availability-listResponseParameter;
+               &net-ip-availability-commonResponseParameters;
          </representation>
       </response>
       <response status="401"
@@ -66,8 +67,8 @@
       </response>
    </method>
    <method name="GET" id="ShowNetworkIpAvailability">
-      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Network IP Availability">
-      <para role="shortdesc">Show network IP availability of all networks.</para>
+      <wadl:doc xmlns="http://docbook.org/ns/docbook" xml:lang="EN" title="Show Network IP Availability">
+      <para role="shortdesc">Shows network IP availability details for a network.</para>
       </wadl:doc>
       <response status="200">
           <representation mediaType="application/json">
@@ -76,7 +77,8 @@
                   <xsdxt:code
                      href="../samples/network-ip-availability/network-ip-availability-show.json"/>
                </wadl:doc>
-               &net-ip-availabilityResponseParameters;
+               &net-ip-availability-showResponseParameter;
+               &net-ip-availability-commonResponseParameters;
          </representation>
       </response>
       <response status="401"
