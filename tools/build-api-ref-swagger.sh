@@ -25,8 +25,11 @@ function convert_to_swagger {
     find api-ref/src/docbkx/ -name api-ref-\* -type f -exec fairy-slipper-docbkx-to-json -o swagger {} \;
 
     # Generate Swagger
-    find swagger -name api-ref\*json -type f -exec fairy-slipper-wadl-to-swagger-valid -o swagger {} \;
-
+    for file in swagger/*.json
+      do
+      echo $file
+      fairy-slipper-wadl-to-swagger-valid $file -o swagger
+      done
     # Remove interim JSON files
     rm -r swagger/api-ref*
 
