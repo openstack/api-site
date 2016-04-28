@@ -103,6 +103,11 @@
                 <link xlink:href="http://developer.openstack.org/api-ref-identity-v3.html#users-v3">Users</link>
             </para>
         </listitem>
+        <listitem>
+            <para>
+                <link xlink:href="http://developer.openstack.org/api-ref-identity-v3.html#identity_v3_OS-OAUTH1">OAuth (OS-OAUTH1)</link>
+            </para>
+          </listitem>
     </itemizedlist>
     <!-- ************************************ -->
     <!-- API VERSIONS                         -->
@@ -806,5 +811,75 @@
                 <wadl:method href="#listUserProjects"/>
             </wadl:resource>
         </wadl:resources>
+    </section>
+    <!-- ************************************ -->
+    <!-- OAuth (OS-OAUTH1)                    -->
+    <!-- ************************************ -->
+    <section xml:id="identity_v3_OS-OAUTH1">
+        <title>OAuth OAuth (OS-OAUTH1)</title>
+        <para>
+            Enables users to delegate roles to third-party consumers through
+            <link xlink:href="http://tools.ietf.org/html/rfc5849">The
+            OAuth 1.0 Protocol</link>.
+        </para>
+        <para>
+            A user is an Identity API user who delegates its roles and who
+            authorizes request tokens.
+        </para>
+        <para>
+            A consumer is a third-party application that uses OAuth to access
+            a protected resource.
+        </para>
+        <para>
+            Administrative users use an OAuth-derived token to act on behalf
+            of the authorizing user.
+        </para>
+        <para>
+            The consumer uses a request token to get authorization from the
+            user. The consumer provides an OAuth verifier string with the
+            request token in exchange for an access token.
+        </para>
+        <para>
+            The consumer uses an access token to request Identity API tokens
+            on behalf of the authorizing user instead of using the credentials
+            for the user.
+        </para>
+        <para>
+            Request and access tokens use token keys to identify themselves.
+            For OpenStack purposes, the token key is the token ID. The
+            consumer uses a token secret to establish ownership of a token.
+            Both request and access tokens have token secrets.
+        </para>
+        <para>
+            Delegated authentication through OAuth occurs as follows:
+        </para>
+        <orderedlist>
+            <listitem>
+                <para>A user creates a consumer.</para>
+            </listitem>
+            <listitem>
+                <para>The consumer gets an unauthorized request token.
+                    Then, the consumer uses the request token to
+                    initiate user authorization.</para>
+            </listitem>
+            <listitem>
+                <para>The user authorizes the request token.</para>
+            </listitem>
+            <listitem>
+                <para>
+                    The consumer exchanges the authorized request token and
+                    the OAuth verifier for an access token.
+                </para>
+                <para>The authorizing user receives the request token
+                    key from the consumer out-of-band.</para>
+            </listitem>
+            <listitem>
+                <para>The consumer uses the access token to request an
+                    Identity API token.</para>
+            </listitem>
+        </orderedlist>
+        <wadl:resources
+            href="../wadls/identity-api/src/v3/wadl/OS-OAUTH1-v3.wadl"
+            xmlns:wadl="http://wadl.dev.java.net/2009/02"/>
     </section>
 </chapter>
