@@ -446,7 +446,7 @@ Use the Compute API to list images:
 .. code-block:: console
 
    $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
-     http://8.21.28.222:8774/v2/tenant_id/images \
+     http://8.21.28.222:8774/v2/$OS_TENANT_NAME/images \
      | python -m json.tool
 
 .. code-block:: json
@@ -556,7 +556,7 @@ Use the Compute API to list servers:
 .. code-block:: console
 
    $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
-     http://8.21.28.222:8774/v2/tenant_id/servers \
+     http://8.21.28.222:8774/v2/$OS_TENANT_NAME/servers \
      | python -m json.tool
 
 .. code-block:: json
