@@ -1,0 +1,52 @@
+{
+    "profile": {
+        "metadata": {},
+        "name": "test_prof1",
+        "spec": {
+            "properties": {
+                "disable_rollback": false,
+                "environment": {
+                    "resource_registry": {
+                        "os.heat.server": "OS::Heat::Server"
+                    }
+                },
+                "files": {
+                    "file:///usr/test_script.sh": "#!/bin/bash\n\necho \"this is a test script file\"\n"
+                },
+                "parameters": {},
+                "template": {
+                    "heat_template_version": "2014-10-16",
+                    "outputs": {
+                        "result": {
+                            "value": {
+                                "get_attr": [
+                                    "random",
+                                    "value"
+                                ]
+                            }
+                        }
+                    },
+                    "parameters": {
+                        "file": {
+                            "default": {
+                                "get_file": "file:///usr/test_script.sh"
+                            },
+                            "type": "string"
+                        }
+                    },
+                    "resources": {
+                        "random": {
+                            "properties": {
+                                "length": 64
+                            },
+                            "type": "OS::Heat::RandomString"
+                        }
+                    }
+                },
+                "timeout": 60
+            },
+            "type": "os.heat.stack",
+            "version": "1.0"
+        }
+    }
+}
