@@ -18,13 +18,25 @@ Contents
    networking
    advice
    craziness
-   appendix
 
+Appendix
+~~~~~~~~
+
+.. toctree::
+   :maxdepth: 1
+
+   appendix
    common/app_support.rst
+
+Glossary
+~~~~~~~~
+
+.. toctree::
+   :maxdepth: 1
+
    common/glossary.rst
 
 Search in this guide
 ~~~~~~~~~~~~~~~~~~~~
 
 * :ref:`search`
-
