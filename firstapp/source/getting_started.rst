@@ -1193,6 +1193,9 @@ your public SSH key file.
 
 .. only:: libcloud
 
+    .. note:: If you see an IOError, you may need to change ``~/.ssh/`` to
+       ``/home/{USERNAME}/.ssh/``, using an absolute path.
+
     .. literalinclude:: ../samples/libcloud/getting_started.py
         :start-after: step-9
         :end-before: step-10
