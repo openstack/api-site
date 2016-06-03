@@ -68,8 +68,8 @@ The payload of credentials to authenticate contains these parameters:
 |                       |                | both attributes, the server returns  |
 |                       |                | the Bad Request (400) response code. |
 |                       |                | If you do not know the tenant name   |
-|                       |                | ID, send a request with "" for the   |
-|                       |                | tenant name or ID. The response      |
+|                       |                | or ID, send a request with "" for    |
+|                       |                | the tenant name or ID. The response  |
 |                       |                | returns the tenant name or ID.       |
 +-----------------------+----------------+--------------------------------------+
 | token (Optional)      | xsd:string     | A token. If you do not provide a     |
