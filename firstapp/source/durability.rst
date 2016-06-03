@@ -117,6 +117,11 @@ First, learn how to connect to the Object Storage endpoint:
     .. warning:: This section has not yet been completed for the
                  PHP-OpenCloud SDK.
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-1
+        :end-before: step-2
 
 To begin to store objects, we must first make a container.
 Call yours :code:`fractals`:
@@ -152,6 +157,23 @@ Call yours :code:`fractals`:
 
         <Container: name=fractals, provider=OpenStack Swift>
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-2
+        :end-before: step-3
+
+    You should see output such as:
+
+    .. code-block:: python
+
+        Munch({u'content-length': u'0', u'x-container-object-count': u'0',
+        u'accept-ranges': u'bytes', u'x-container-bytes-used': u'0',
+        u'x-timestamp': u'1463950178.11674', u'x-trans-id':
+        u'txc6262b9c2bc1445b9dfe3-00574277ff', u'date': u'Mon, 23 May 2016
+        03:24:47 GMT', u'content-type': u'text/plain; charset=utf-8'})
+
+
 You should now be able to see this container appear in a listing of
 all containers in your account:
 
@@ -186,6 +208,17 @@ all containers in your account:
 
         [<Container: name=fractals, provider=OpenStack Swift>]
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-3
+        :end-before: step-4
+
+    .. code-block:: python
+
+        [Munch({u'count': 0, u'bytes': 0, u'name': u'fractals'}),
+        Munch({u'count': 0, u'bytes': 0, u'name': u'fractals_segments'})]
+
 The next logical step is to upload an object. Find a photo of a goat
 on line, name it :code:`goat.jpg`, and upload it to your
 :code:`fractals` container:
@@ -206,6 +239,12 @@ on line, name it :code:`goat.jpg`, and upload it to your
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
+        :start-after: step-4
+        :end-before: step-5
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
         :start-after: step-4
         :end-before: step-5
 
@@ -301,6 +340,29 @@ the same:
 
         7513986d3aeb22659079d1bf3dc2468b
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-5
+        :end-before: step-6
+
+    ::
+
+        [Munch({u'hash': u'd1408b5bf6510426db6e2bafc2f90854', u'last_modified':
+        u'2016-05-23T03:34:59.353480', u'bytes': 63654, u'name': u'an amazing
+        goat', u'content_type': u'application/octet-stream'})]
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-6
+        :end-before: step-7
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-7
+        :end-before: step-8
+
+    ::
+
+        d1408b5bf6510426db6e2bafc2f90854
 
 Finally, clean up by deleting the test object:
 
@@ -335,6 +397,21 @@ Finally, clean up by deleting the test object:
 
         []
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-8
+        :end-before: step-9
+
+    ::
+
+        Munch({u'content-length': u'0', u'x-container-object-count': u'0',
+        u'accept-ranges': u'bytes', u'x-container-bytes-used': u'0',
+        u'x-timestamp': u'1463950178.11674', u'x-trans-id':
+        u'tx46c83fa41030422493110-0057427af3', u'date': u'Mon, 23 May 2016
+        03:37:23 GMT', u'content-type': u'text/plain; charset=utf-8'})
+
+
 Back up the Fractals from the database on the Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -359,6 +436,12 @@ Place the images in the :code:`fractals` container:
 .. only:: libcloud
 
     .. literalinclude:: ../samples/libcloud/durability.py
+        :start-after: step-10
+        :end-before: step-11
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
         :start-after: step-10
         :end-before: step-11
 
@@ -391,6 +474,19 @@ A simple loop takes care of that:
         <Object: name=025fd8a0-6abe-4ffa-9686-bcbf853b71dc, size=61597, hash=b7a8a26e3c0ce9f80a1bf4f64792cd0c, provider=OpenStack Swift ...>
         <Object: name=26ca9b38-25c8-4f1e-9e6a-a0132a7a2643, size=136298, hash=9f9b4cac16893854dd9e79dc682da0ff, provider=OpenStack Swift ...>
         <Object: name=3f68c538-783e-42bc-8384-8396c8b0545d, size=27202, hash=e6ee0cd541578981c294cebc56bc4c35, provider=OpenStack Swift ...>
+
+    .. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
+
+    .. note:: The example code uses the awesome
+              `Requests library <http://docs.python-requests.org/en/latest/>`_.
+              Before you try to run the previous script, make sure that
+              it is installed on your system.
+
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-11
+        :end-before: step-12
 
     .. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
 
@@ -435,6 +531,12 @@ Otherwise, the delete operation fails:
         :start-after: step-12
         :end-before: step-13
 
+.. only:: shade
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-12
+        :end-before: step-13
+
 .. warning:: It is not possible to restore deleted objects. Be careful.
 
 Add metadata to objects
@@ -474,6 +576,20 @@ your SDK.
         :end-before: step-14
 
 .. todo:: It would be nice to have a pointer here to section 9.
+
+.. only:: shade
+
+    This adds a "foo" key to the metadata that has a value of "bar".
+
+    .. Note::
+
+        Swift metadata keys are prepended with "x-object-meta-" so when you get
+        the object with get_object(), in order to get the value of the metadata
+        your key will be "x-object-meta-foo".
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-13
+        :end-before: step-14
 
 Large objects
 ~~~~~~~~~~~~~
@@ -526,6 +642,12 @@ For efficiency, most Object Storage installations treat large objects,
 
     .. literalinclude:: ../samples/jclouds/Durability.java
         :language: java
+
+.. only:: shade
+
+    Shade's create_object function has a "use_slo" parameter (that defaults to
+    true) which will break your object into smaller objects for upload and
+    rejoin them if needed.
 
 Next steps
 ----------
