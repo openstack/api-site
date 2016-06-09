@@ -238,6 +238,16 @@ to run code snippets in your language of choice.
         :start-after: step-1
         :end-before: step-2
 
+.. only:: jclouds
+
+    First provide the appropriate identity, credentials and authorization URL
+    for your project. Then get an instance of the Nova API interface.
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-1
+        :end-before: step-2
+
 .. only:: openstacksdk
 
     To try it out, add the following code to a Python script (or use an
@@ -444,6 +454,13 @@ To list the images that are available in your cloud, run some API calls:
         updated_at: '2014-10-15T22:42:52Z'
         visibility: public
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-2
+        :end-before: step-3
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
@@ -572,6 +589,13 @@ You can also get information about available flavors:
         ram: 2048
         swap: ''
         vcpus: 1
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-3
+        :end-before: step-4
 
 .. only:: openstacksdk
 
@@ -718,6 +742,13 @@ image that you picked in the previous section:
 
         openstack.image.v1.image.Image(attrs={u'name': u'ubuntu-14.04', u'container_format': u'bare', u'disk_format': u'qcow2', u'checksum': u'6d8f1c8cf05e1fbdc8b543fda1a9fa7f', u'id': u'cb6b7936-d2c5-4901-8678-c88b3a6ed84c', u'size': 258540032}, loaded=True)
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-4
+        :end-before: step-5
+
 .. only:: gophercloud
 
     .. literalinclude:: ../samples/gophercloud/getting_started.go
@@ -817,6 +848,13 @@ Next, tell the script which flavor you want to use:
         swap: ''
         vcpus: 1
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-5
+        :end-before: step-6
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
@@ -878,6 +916,13 @@ Create the instance.
     .. code-block:: python
 
        <Node: uuid=1242d56cac5bcd4c110c60d57ccdbff086515133, name=testing, state=PENDING, public_ips=[], private_ips=[], provider=OpenStack ...>
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-6
+        :end-before: step-7
 
 .. only:: openstacksdk
 
@@ -971,6 +1016,12 @@ If you list existing instances:
         :start-after: step-7
         :end-before: step-8
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-7
+        :end-before: step-8
 
 .. only:: openstacksdk
 
@@ -1138,6 +1189,13 @@ cost money. To avoid unexpected expenses, destroy cloud resources.
         :start-after: step-8
         :end-before: step-9
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-8
+        :end-before: step-9
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
@@ -1216,6 +1274,15 @@ your public SSH key file.
         :start-after: step-9
         :end-before: step-10
 
+.. only:: jclouds
+
+    If a key pair of the given name is not found then one is generated.
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-9
+        :end-before: step-10
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
@@ -1262,6 +1329,13 @@ your public SSH key file.
         :start-after: step-10
         :end-before: step-11
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-10
+        :end-before: step-11
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
@@ -1302,6 +1376,13 @@ your public SSH key file.
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-11
+        :end-before: step-12
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
         :start-after: step-11
         :end-before: step-12
 
@@ -1352,6 +1433,13 @@ After you request the instance, wait for it to build.
     The shade framework can select and assign a free floating IP quickly
 
     .. literalinclude:: ../samples/shade/getting_started.py
+        :start-after: step-12
+        :end-before: step-13
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
         :start-after: step-12
         :end-before: step-13
 
@@ -1468,6 +1556,22 @@ instance.
         :start-after: step-13
         :end-before: step-14
 
+.. only:: jclouds
+
+    Allocate the floating IP address:
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-13
+        :end-before: step-14
+
+    Then attach it to the instance:
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-14
+        :end-before: step-15
+
 .. only:: openstacksdk
 
     .. note:: For this example, we take a floating IP pool from the 'public'
@@ -1563,6 +1667,14 @@ interface at the following link.
     .. literalinclude:: ../samples/shade/getting_started.py
         :start-after: step-15
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
+        :start-after: step-15
+        :end-before: step-16
+
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/getting_started.py
@@ -1635,6 +1747,11 @@ information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/shade/getting_started.py
        :language: python
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/GettingStarted.java
+        :language: java
 
 .. only:: openstacksdk
 
