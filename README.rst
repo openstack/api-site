@@ -8,33 +8,38 @@ For details, see the
 which includes these pages and PDFs:
 
  * API Quick Start
- * API Complete Reference (web pages)
- * API Reference PDFs
  * API Guide (in progress)
 
 In addition to these documents, this repository contains:
 
- * developer.openstack.org: ``www``
+ * Landing page for developer.openstack.org: ``www``
  * Writing your first OpenStack application tutorial (in progress): ``firstapp``
+
+The files in the ``api-ref`` directory cannot be changed because they are
+moving to project repositories.
+
+To complete code reviews in this repository, use the standard OpenStack Gerrit
+`workflow <https://review.openstack.org>`_ . For details, see
+`Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 Prerequisites
 =============
 
-To build the documentation, you must install `Apache Maven <http://maven.apache.org/>`_.
-
-To install Maven 3 for Ubuntu 12.04 or later or Debian 7 ("wheezy") or later::
-
-    apt-get install maven
-
-On Fedora 20 or later::
-
-    yum install maven
-
-To run tests, you must install `Python Tox <https://tox.readthedocs.org/>`_.
+To build the documentation locally, you must install Python and `Python Tox <https://tox.readthedocs.org/>`_.
 
 To install Tox for Ubuntu 14.04 or later::
 
     apt-get install python-tox python-dev libxml2-dev libxslt1-dev
+
+To build all the documentation after installing Python and Tox::
+
+    tox -e docs
+
+To build an individual document, such as the API Quick Start::
+
+    tox -e api-quick-start
+
+The locally-built output files are found in a ``publish-docs`` directory.
 
 "Writing your First OpenStack Application" tutorial
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,61 +66,8 @@ On Mac OSX with Homebrew installed::
 Build and update API docs
 =========================
 
-To complete code reviews in this repository, use the standard OpenStack Gerrit
-`workflow <https://review.openstack.org>`_ . For details, see
-`Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
-
-To build and update the API documents:
-
-#. Open a Terminal window.
-
-#. Change into a directory where you want to clone api-site.
-
-#. Run this command to clone openstack/api-site::
-
-        git clone https://git.openstack.org/openstack/api-site
-
-#. CD into the api-site directory.
-
-#. Run these commands to ensure that you have the latest changes::
-
-        git remote update
-        git checkout master
-        git pull origin master
-
-#. To check out a new branch::
-
-        git checkout -b "*my_branch*"
-
-   Otherwise, to check out an existing review::
-
-        git review -d change-number /* where change-number is the change number of the review
-
-#. Make your changes.
-
-#. Run this command to build the docs locally::
-
-        mvn clean generate-sources
-
-#. To check in your changes, see
-`Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
-
-- The root of the generated HTML (API site) documentation is::
-
-        api-site/api-ref/target/docbkx/html/api-ref.html
-
-- The root of the generated API guide (in progress) is::
-
-        api-site/api-guide/target/docbkx/webhelp/api-guide/index.html
-
-- The generated PDFs for the API pages are at::
-
-        api-site/api-ref-guides/target/docbkx/pdf/*.pdf
-
-- The root of the API quick start is at::
-
-        api-site/api-quick-start/target/docbkx/webhelp/api-quick-start-onepager-external/api-quick-start-onepager.pdf
-
+Refer to the `OpenStack Documentation Contributor Guide <http://docs.openstack.org/contributor-guide/api-guides.html>` for more
+information.
 
 Run tests
 =========
@@ -128,13 +80,10 @@ To run individual tests:
  * ``tox -e checkniceness`` - Niceness tests
  * ``tox -e checksyntax`` - Syntax checks
  * ``tox -e checkdeletions`` - Verifies that no deleted files are referenced
- * ``tox -e checkbuild`` - Builds the manual
+ * ``tox -e checkbuild`` - Builds all of the documents in this repository
 
 To run these tests, the Tox package uses the
 `OpenStack doc tools package <https://git.openstack.org/cgit/openstack/openstack-doc-tools>`_.
-
-The OpenStack doc tools require Maven for the build check.
-
 
 Contribute
 ==========
@@ -159,7 +108,6 @@ Bugs
 File bugs on Launchpad and not through GitHub:
 
    https://bugs.launchpad.net/openstack-api-site/
-
 
 Install
 =======
