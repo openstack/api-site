@@ -109,13 +109,20 @@ You pass in these configuration settings as parameters:
 .. code-block:: console
 
     $ wget https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/hello_faafo.yaml
-    $ heat stack-create --template-file hello_faafo.yaml \
-     --parameters flavor=m1.small\;key_name=test\;image_id=5bbe4073-90c0-4ec9-833c-092459cc4539 hello_faafo
-    +--------------------------------------+-------------+--------------------+----------------------+
-    | id                                   | stack_name  | stack_status       | creation_time        |
-    +--------------------------------------+-------------+--------------------+----------------------+
-    | 0db2c026-fb9a-4849-b51d-b1df244096cd | hello_faafo | CREATE_IN_PROGRESS | 2015-04-01T03:20:25Z |
-    +--------------------------------------+-------------+--------------------+----------------------+
+    $ openstack stack create -t hello_faafo.yaml \
+     --parameter flavor=m1.small\;key_name=test\;image_id=5bbe4073-90c0-4ec9-833c-092459cc4539 hello_faafo
+    +---------------------+-----------------------------------------------------------------------+
+    | Field               | Value                                                                 |
+    +---------------------+-----------------------------------------------------------------------+
+    | id                  | 0db2c026-fb9a-4849-b51d-b1df244096cd                                  |
+    | stack_name          | hello_faafo                                                           |
+    | description         | A template to bring up the faafo application as an all in one install |
+    |                     |                                                                       |
+    | creation_time       | 2015-04-01T03:20:25                                                   |
+    | updated_time        | None                                                                  |
+    | stack_status        | CREATE_IN_PROGRESS                                                    |
+    | stack_status_reason |                                                                       |
+    +---------------------+-----------------------------------------------------------------------+
 
 The stack automatically creates a Nova instance, as follows:
 
@@ -132,18 +139,18 @@ Verify that the stack was successfully created:
 
 .. code-block:: console
 
-    $ heat stack-list
-    +--------------------------------------+-------------+-----------------+----------------------+
-    | id                                   | stack_name  | stack_status    | creation_time        |
-    +--------------------------------------+-------------+-----------------+----------------------+
-    | 0db2c026-fb9a-4849-b51d-b1df244096cd | hello_faafo | CREATE_COMPLETE | 2015-04-01T03:20:25Z |
-    +--------------------------------------+-------------+-----------------+----------------------+
+    $ openstack stack list
+    +--------------------------------------+-------------+-----------------+---------------------+--------------+
+    | ID                                   | Stack Name  | Stack Status    | Creation Time       | Updated Time |
+    +--------------------------------------+-------------+-----------------+---------------------+--------------+
+    | 0db2c026-fb9a-4849-b51d-b1df244096cd | hello_faafo | CREATE_COMPLETE | 2015-04-01T03:20:25 | None         |
+    +--------------------------------------+-------------+-----------------+---------------------+--------------+
 
 The stack reports an initial :code:`CREATE_IN_PROGRESS` status. When all
 software is installed, the status changes to :code:`CREATE_COMPLETE`.
 
-You might have to run the :code:`stack-list` command a few times before
-the stack creation is complete.
+You might have to run the :command:`openstack stack list` command a few
+times before the stack creation is complete.
 
 **Show information about the stack**
 
@@ -151,7 +158,7 @@ Get more information about the stack:
 
 .. code-block:: console
 
-    $ heat stack-show hello_faafo
+    $ openstack stack show hello_faafo
 
 The `outputs` property shows the URL through which you can access the Fractal
 application. You can SSH into the instance.
@@ -160,12 +167,8 @@ application. You can SSH into the instance.
 
 .. code-block:: console
 
-    $ heat stack-delete hello_faafo
-    +--------------------------------------+-------------+--------------------+----------------------+
-    | id                                   | stack_name  | stack_status       | creation_time        |
-    +--------------------------------------+-------------+--------------------+----------------------+
-    | 0db2c026-fb9a-4849-b51d-b1df244096cd | hello_faafo | DELETE_IN_PROGRESS | 2015-04-01T03:20:25Z |
-    +--------------------------------------+-------------+--------------------+----------------------+
+    $ openstack stack delete hello_faafo
+    Are you sure you want to delete this stack(s) [y/N]?
 
 Verify the nova instance was deleted when the stack was removed:
 
@@ -243,14 +246,21 @@ Launch the stack with auto-scaling workers:
 .. code-block:: console
 
     $ wget https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/faafo_autoscaling_workers.yaml
-    $ heat stack-create --template-file faafo_autoscaling_workers.yaml \
+    $ openstack stack create -t faafo_autoscaling_workers.yaml \
     --parameters flavor=m1.small\;key_name=test\;image_id=5bbe4073-90c0-4ec9-833c-092459cc4539 \
     faafo_autoscaling_workers
-    +--------------------------------------+---------------------------+--------------------+----------------------+
-    | id                                   | stack_name                | stack_status       | creation_time        |
-    +--------------------------------------+---------------------------+--------------------+----------------------+
-    | 0db2c026-fb9a-4849-b51d-b1df244096cd | faafo_autoscaling_workers | CREATE_IN_PROGRESS | 2015-11-17T05:12:06Z |
-    +--------------------------------------+---------------------------+--------------------+----------------------+
+    +---------------------+-----------------------------------------------------------------------+
+    | Field               | Value                                                                 |
+    +---------------------+-----------------------------------------------------------------------+
+    | id                  | 0db2c026-fb9a-4849-b51d-b1df244096cd                                  |
+    | stack_name          | faafo_autoscaling_workers                                             |
+    | description         | A template to bring up the faafo application as an all in one install |
+    |                     |                                                                       |
+    | creation_time       | 2015-11-17T05:12:06                                                   |
+    | updated_time        | None                                                                  |
+    | stack_status        | CREATE_IN_PROGRESS                                                    |
+    | stack_status_reason |                                                                       |
+    +---------------------+-----------------------------------------------------------------------+
 
 
 As before, pass in configuration settings as parameters.
@@ -261,12 +271,12 @@ Wait for it to reach the :code:`CREATE_COMPLETE` status:
 
 .. code-block:: console
 
-    $ heat stack-list
-    +--------------------------------------+---------------------------+-----------------+----------------------+
-    | id                                   | stack_name                | stack_status    | creation_time        |
-    +--------------------------------------+---------------------------+-----------------+----------------------+
-    | 0db2c026-fb9a-4849-b51d-b1df244096cd | faafo_autoscaling_workers | CREATE_COMPLETE | 2015-11-17T05:12:06Z |
-    +--------------------------------------+---------------------------+-----------------+----------------------+
+    $ openstack stack list
+    +--------------------------------------+---------------------------+-----------------+---------------------+--------------+
+    | ID                                   | Stack Name                | Stack Status    | Creation Time       | Updated Time |
+    +--------------------------------------+---------------------------+-----------------+---------------------+--------------+
+    | 0db2c026-fb9a-4849-b51d-b1df244096cd | faafo_autoscaling_workers | CREATE_COMPLETE | 2015-11-17T05:12:06 | None         |
+    +--------------------------------------+---------------------------+-----------------+---------------------+--------------+
 
 Run the :code:`nova list` command. This template created three instances:
 
@@ -305,7 +315,7 @@ Use the stack ID to get more information about the stack:
 
 .. code-block:: console
 
-    $ heat stack-show 0db2c026-fb9a-4849-b51d-b1df244096cd
+    $ openstack stack show 0db2c026-fb9a-4849-b51d-b1df244096cd
 
 The outputs section of the stack contains two ceilometer command-line queries:
 
