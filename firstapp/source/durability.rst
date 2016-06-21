@@ -220,7 +220,7 @@ all containers in your account:
         Munch({u'count': 0, u'bytes': 0, u'name': u'fractals_segments'})]
 
 The next logical step is to upload an object. Find a photo of a goat
-on line, name it :code:`goat.jpg`, and upload it to your
+online, name it :code:`goat.jpg`, and upload it to your
 :code:`fractals` container:
 
 .. only:: fog
@@ -411,6 +411,16 @@ Finally, clean up by deleting the test object:
         u'tx46c83fa41030422493110-0057427af3', u'date': u'Mon, 23 May 2016
         03:37:23 GMT', u'content-type': u'text/plain; charset=utf-8'})
 
+    Now, no more objects are available in the :code:`fractals` container.
+
+    .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-9
+        :end-before: step-10
+
+    ::
+
+        []
+
 
 Back up the Fractals from the database on the Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -475,7 +485,6 @@ A simple loop takes care of that:
         <Object: name=26ca9b38-25c8-4f1e-9e6a-a0132a7a2643, size=136298, hash=9f9b4cac16893854dd9e79dc682da0ff, provider=OpenStack Swift ...>
         <Object: name=3f68c538-783e-42bc-8384-8396c8b0545d, size=27202, hash=e6ee0cd541578981c294cebc56bc4c35, provider=OpenStack Swift ...>
 
-    .. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
 
     .. note:: The example code uses the awesome
               `Requests library <http://docs.python-requests.org/en/latest/>`_.
@@ -487,8 +496,6 @@ A simple loop takes care of that:
     .. literalinclude:: ../samples/shade/durability.py
         :start-after: step-11
         :end-before: step-12
-
-    .. note:: Replace :code:`IP_API_1` with the IP address of the API instance.
 
     .. note:: The example code uses the awesome
               `Requests library <http://docs.python-requests.org/en/latest/>`_.
@@ -590,6 +597,7 @@ your SDK.
     .. literalinclude:: ../samples/shade/durability.py
         :start-after: step-13
         :end-before: step-14
+
 
 Large objects
 ~~~~~~~~~~~~~
