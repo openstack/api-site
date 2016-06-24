@@ -304,7 +304,7 @@ to run code snippets in your language of choice.
 .. only:: shade
 
     Use your credentials above to specify the cloud provider name,
-    user name, password, project_name and region_name in the file
+    username, password, project_name and region_name in the file
     :file:`~/.config/openstack/clouds.yml`.
 
     .. literalinclude:: ../samples/shade/clouds.yml
