@@ -21,3 +21,15 @@ Specify a network during instance build
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. todo:: code for creating a networking using code
+
+.. only:: shade
+
+    Add the parameter network and send its name or id to attach the instance to:
+
+    .. code-block:: python
+
+        testing_instance = conn.create_server(wait=True, auto_ip=True,
+            name=instance_name,
+            image=image_id,
+            flavor=flavor_id,
+            network=network_id)
