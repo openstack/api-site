@@ -17,10 +17,6 @@ previous section.
 
     .. highlight:: ruby
 
-.. only:: jclouds
-
-    .. warning:: This section has not yet been completed for the jclouds SDK.
-
 .. only:: pkgcloud
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK.
@@ -214,6 +210,16 @@ commands again.
         :start-after: step-1
         :end-before: step-2
 
+.. only:: jclouds
+
+    Note that we will be showing the commands in a more idiomatic Java way:
+    as methods on a class.
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-1
+        :end-before: step-1-end
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/introduction.py
@@ -269,6 +275,13 @@ your cloud provider to confirm the user name.
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-2
         :end-before: step-3
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-2
+        :end-before: step-2-end
 
 .. only:: openstacksdk
 
@@ -334,6 +347,13 @@ port 22):
               ports as input. This is why ports 80 and 22 are passed
               twice.
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-3
+        :end-before: step-3-end
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/introduction.py
@@ -360,6 +380,13 @@ You can list available security groups with:
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-4
         :end-before: step-5
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-4
+        :end-before: step-4-end
 
 .. only:: openstacksdk
 
@@ -388,6 +415,13 @@ Once you have created a rule or group, you can also delete it:
         :start-after: step-5
         :end-before: step-6
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-5
+        :end-before: step-5-end
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/introduction.py
@@ -414,6 +448,13 @@ To see which security groups apply to an instance, you can:
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-6
         :end-before: step-7
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-6
+        :end-before: step-6-end
 
 .. only:: openstacksdk
 
@@ -503,6 +544,32 @@ then associate it to your instance's network interface.
         :start-after: step-7
         :end-before: step-8
 
+.. only:: jclouds
+
+    First check for an unused floating IP.
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-7
+        :end-before: step-7-end
+
+    If you have no free floating IPs that have been previously allocated
+    for your project, then select a floating IP pool offered by your
+    provider. In this example, we have selected the first one and assume
+    that it has available IP addresses.
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-8
+        :end-before: step-8-end
+
+    Then request an IP number be allocated from the pool.
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-9
+        :end-before: step-9-end
+
 .. only:: openstacksdk
 
     .. literalinclude:: ../samples/openstacksdk/introduction.py
@@ -545,6 +612,13 @@ project, attach it to an instance.
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-10
         :end-before: step-11
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-10
+        :end-before: step-10-end
 
 .. only:: openstacksdk
 
@@ -599,10 +673,16 @@ Parameter  Description            Values
 
 .. only:: libcloud
 
-
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-11
         :end-before: step-12
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-11
+        :end-before: step-11-end
 
 .. only:: openstacksdk
 
@@ -635,6 +715,13 @@ Next, start a second instance, which will be the worker instance:
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-12
         :end-before: step-13
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-12
+        :end-before: step-12-end
 
 .. only:: openstacksdk
 
@@ -689,6 +776,13 @@ address of the worker:
     .. literalinclude:: ../samples/libcloud/introduction.py
         :start-after: step-13
         :end-before: step-14
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
+        :start-after: step-13
+        :end-before: step-13-end
 
 .. only:: openstacksdk
 
@@ -832,6 +926,11 @@ authentication information, the flavor ID, and image ID.
 
     .. literalinclude:: ../samples/libcloud/introduction.py
        :language: python
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/Introduction.java
+        :language: java
 
 .. only:: openstacksdk
 
