@@ -46,10 +46,6 @@ first, learn how to create and attach a Block Storage device.
 
     .. warning:: This section has not yet been completed for the fog SDK.
 
-.. only:: jclouds
-
-    .. warning:: This section has not yet been completed for the jclouds SDK.
-
 .. only:: pkgcloud
 
     .. warning:: This section has not yet been completed for the pkgcloud SDK.
@@ -73,6 +69,13 @@ Connect to the API endpoint:
         :start-after: step-1
         :end-before: step-2
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
+        :start-after: step-1
+        :end-before: step-2
+
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/block_storage.py
@@ -80,7 +83,7 @@ Connect to the API endpoint:
         :start-after: step-1
         :end-before: step-2
 
-To try it out, make a 1GB volume called :test'.
+To try it out, make a 1GB volume called 'test'.
 
 .. only:: libcloud
 
@@ -93,6 +96,13 @@ To try it out, make a 1GB volume called :test'.
 
         <StorageVolume id=755ab026-b5f2-4f53-b34a-6d082fb36689 size=1 driver=OpenStack>
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
+        :start-after: step-2
+        :end-before: step-3
+
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/block_storage.py
@@ -100,7 +110,7 @@ To try it out, make a 1GB volume called :test'.
         :start-after: step-2
         :end-before: step-3
 
-.. note:: The parameter :code:`size` is in gigabytes.
+    .. note:: The parameter :code:`size` is in gigabytes.
 
 To see if the volume creation was successful, list all volumes:
 
@@ -114,6 +124,13 @@ To see if the volume creation was successful, list all volumes:
     ::
 
         [<StorageVolume id=755ab026-b5f2-4f53-b34a-6d082fb36689 size=1 driver=OpenStack>]
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
+        :start-after: step-3
+        :end-before: step-4
 
 .. only:: shade
 
@@ -141,6 +158,13 @@ MySQL, port 3306) from the network:
         :start-after: step-4
         :end-before: step-5
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
+        :start-after: step-4
+        :end-before: step-5
+
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/block_storage.py
@@ -156,6 +180,13 @@ attach the volume to it at :code:`/dev/vdb`:
 
     .. literalinclude:: ../samples/libcloud/block_storage.py
         :language: python
+        :start-after: step-5
+        :end-before: step-6
+
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
         :start-after: step-5
         :end-before: step-6
 
@@ -235,6 +266,13 @@ To detach and delete a volume:
     .. note:: :code:`detach_volume` and :code:`destroy_volume` take a
               volume object, not a name.
 
+.. only:: jclouds
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
+        :start-after: step-6
+        :end-before: step-7
+
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/block_storage.py
@@ -256,6 +294,22 @@ To detach and delete a volume:
 
     For information about these and other calls, see
     `libcloud documentation <http://ci.apache.org/projects/libcloud/docs/compute/drivers/openstack.html>`_.
+
+.. only:: jclouds
+
+    Other features, such as creating volume snapshots, are useful for backups:
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
+        :start-after: step-7
+        :end-before: step-8
+
+    The following file contains all of the code from this section of the
+    tutorial. This comprehensive code sample lets you view and run the code
+    as a single file.
+
+    .. literalinclude:: ../samples/jclouds/BlockStorage.java
+        :language: java
 
 Work with the OpenStack Database service
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
