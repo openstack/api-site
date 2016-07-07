@@ -1,11 +1,11 @@
 API-Site repository
 +++++++++++++++++++
 
-This repository contains documentation for the OpenStack project.
+This repository contains API documentation for the OpenStack project.
 
-For details, see the
-`OpenStack Documentation wiki page <http://wiki.openstack.org/Documentation>`_,
-which includes these pages and PDFs:
+For details, see `OpenStack Documentation Contributor Guide
+<http://docs.openstack.org/contributor-guide/index.html>`_,
+which includes these pages:
 
  * API Quick Start
  * API Guide (in progress)
@@ -15,17 +15,19 @@ In addition to these documents, this repository contains:
  * Landing page for developer.openstack.org: ``www``
  * Writing your first OpenStack application tutorial (in progress): ``firstapp``
 
-The files in the ``api-ref`` directory cannot be changed because they are
-moving to project repositories.
+The files in the ``api-ref`` directory cannot be changed
+because they are moving to project repositories.
 
-To complete code reviews in this repository, use the standard OpenStack Gerrit
-`workflow <https://review.openstack.org>`_ . For details, see
-`Gerrit Workflow <http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
+To complete code reviews in this repository, use the standard
+OpenStack Gerrit `workflow <https://review.openstack.org>`_.
+For details, see `Gerrit Workflow
+<http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 Prerequisites
 =============
 
-To build the documentation locally, you must install Python and `Python Tox <https://tox.readthedocs.org/>`_.
+To build the documentation locally, you must install Python and
+`Python Tox <https://tox.readthedocs.org/>`_.
 
 To install Tox for Ubuntu 14.04 or later::
 
@@ -35,7 +37,7 @@ To build all the documentation after installing Python and Tox::
 
     tox -e docs
 
-To build an individual document, such as the API Quick Start::
+To build an individual document, such as the API Guide::
 
     tox -e api-quick-start
 
@@ -66,8 +68,9 @@ On Mac OSX with Homebrew installed::
 Build and update API docs
 =========================
 
-Refer to the `OpenStack Documentation Contributor Guide <http://docs.openstack.org/contributor-guide/api-guides.html>` for more
-information.
+Refer to the `OpenStack Documentation Contributor Guide
+<http://docs.openstack.org/contributor-guide/api-guides.html>`_
+for more information.
 
 Run tests
 =========
@@ -83,24 +86,27 @@ To run individual tests:
  * ``tox -e checkbuild`` - Builds all of the documents in this repository
 
 To run these tests, the Tox package uses the
-`OpenStack doc tools package <https://git.openstack.org/cgit/openstack/openstack-doc-tools>`_.
+`OpenStack doc tools package
+<https://git.openstack.org/cgit/openstack/openstack-doc-tools>`_.
 
 Contribute
 ==========
 
 Our community welcomes everyone who is interested in open source cloud
-computing and encourages you to join the `OpenStack Foundation <http://www.openstack.org/join>`_.
+computing and encourages you to join the
+`OpenStack Foundation <http://www.openstack.org/join>`_.
 
 The best way to get involved with the community is to talk with others online
 or at a meetup and offer contributions through our processes, the
-`OpenStack wiki <http://wiki.openstack.org>`_, blogs, or on IRC at ``#openstack`` on
-``irc.freenode.net``.
+`OpenStack wiki <http://wiki.openstack.org>`_, blogs,
+or on IRC at ``#openstack`` on ``irc.freenode.net``.
 
 We welcome all types of contributions, from blueprint designs to documentation
 to testing to deployment scripts.
 
 To contribute to the documents, see
-`OpenStack Documentation Contributor Guide <http://docs.openstack.org/contributor-guide/>`_.
+`OpenStack Documentation Contributor Guide
+<http://docs.openstack.org/contributor-guide/>`_.
 
 Bugs
 ====
@@ -112,4 +118,5 @@ File bugs on Launchpad and not through GitHub:
 Install
 =======
 
-To learn more about the OpenStack project, see `OpenStack <http://www.openstack.org/>`_.
+To learn more about the OpenStack project,
+see `OpenStack <http://www.openstack.org/>`_.
