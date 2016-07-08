@@ -403,6 +403,30 @@ To see which security groups apply to an instance, you can:
         :start-after: step-6
         :end-before: step-7
 
+    .. code-block:: none
+
+        name: 'all-in-one',
+        description: 'network access for all-in-one application.',
+        security_group_rules:
+        -   direction: 'ingress',
+            protocol': 'tcp',
+            remote_ip_prefix: '0.0.0.0/0',
+            port_range_max: 22,
+            security_group_id: '83aa1bf9-564a-47da-bb46-60cd1c63cc84',
+            port_range_min: 22,
+            ethertype: 'IPv4',
+            id: '5ff0008f-a02d-4b40-9719-f52c77dfdab0',
+        -   direction: 'ingress',
+            protocol: 'tcp',
+            remote_ip_prefix: '0.0.0.0/0',
+            port_range_max: 80,
+            security_group_id: '83aa1bf9-564a-47da-bb46-60cd1c63cc84',
+            port_range_min: 80,
+            ethertype: 'IPv4',
+            id: 'c2539e49-b110-4657-bf0a-7a221f5e9e6f',
+        id: '83aa1bf9-564a-47da-bb46-60cd1c63cc84'
+
+
 .. only:: fog
 
     .. literalinclude:: ../samples/fog/introduction.rb
@@ -676,7 +700,6 @@ address of the worker:
     .. literalinclude:: ../samples/shade/introduction.py
         :language: python
         :start-after: step-13
-        :end-before: step-14
 
 .. only:: fog
 
