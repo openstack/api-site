@@ -119,7 +119,7 @@ request a random set of fractals 500 times:
 
 .. code-block:: console
 
-    $ for i in $(seq 1 500); do faafo --endpoint-url http://IP_CONTROLLER create &; done
+    $ for i in $(seq 1 500); do faafo --endpoint-url http://IP_CONTROLLER create & done
 
 .. note:: Replace :code:`IP_CONTROLLER` with the IP address of the
           controller instance.
@@ -153,6 +153,8 @@ cloud are no longer working, remove them and re-create something new.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+        :start-after: step-1
+        :end-before: step-2
 
 .. only:: fog
 
@@ -186,6 +188,8 @@ groups.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+        :start-after: step-2
+        :end-before: step-3
 
 .. only:: fog
 
@@ -218,6 +222,8 @@ floating IP quota too quickly.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+        :start-after: step-3
+        :end-before: step-4
 
 .. only:: fog
 
@@ -251,6 +257,8 @@ fractals and to coordinate the communication between the services.
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+        :start-after: step-4
+        :end-before: step-5
 
 .. only:: fog
 
@@ -287,6 +295,8 @@ multiple API services:
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+        :start-after: step-5
+        :end-before: step-6
 
 .. only:: fog
 
@@ -333,6 +343,7 @@ To increase the overall capacity, add three workers:
 
     .. literalinclude:: ../samples/shade/scaling_out.py
         :language: python
+        :start-after: step-6
 
 .. only:: fog
 
@@ -396,7 +407,7 @@ fails.
 
 .. code-block:: console
 
-    root@app-api-1:/var/log/supervisor# faafo list
+    root@app-api-1:# faafo list
     +--------------------------------------+------------------+-------------+
     |                 UUID                 |    Dimensions    |   Filesize  |
     +--------------------------------------+------------------+-------------+
