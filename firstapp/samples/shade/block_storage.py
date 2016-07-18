@@ -13,13 +13,21 @@ for vol in volumes:
 
 # step-4
 db_group = conn.create_security_group('database', 'for database service')
+conn.create_security_group_rule(db_group['name'], 22, 22, 'TCP')
 conn.create_security_group_rule(db_group['name'], 3306, 3306, 'TCP')
 
+userdata = '''#!/usr/bin/env bash
+curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+    -i database -i messaging
+'''
+
 instance = conn.create_server(wait=True, auto_ip=False,
-    name=name,
-    image=image['id'],
-    flavor=flavor['id'],
-    security_groups=[db_group['name']])
+    name='app-database',
+    image=image_id,
+    flavor=flavor_id,
+    key_name='demokey',
+    security_groups=[db_group['name']],
+    userdata=userdata)
 
 # step-5
 conn.attach_volume(instance, volume, '/dev/vdb')
@@ -27,6 +35,3 @@ conn.attach_volume(instance, volume, '/dev/vdb')
 # step-6
 conn.detach_volume(instance, volume)
 conn.delete_volume(volume['id'])
-
-# step-7
-# step-8
