@@ -119,7 +119,7 @@ instance_services = conn.servers.create name:            "app-services",
                                         user_data:       user_data,
                                         security_groups: services_group
 
-Fog.wait_for {instance_services.ready?}
+instance_services.wait_for { ready? }
 services_ip_address = instance_services.private_ip_address
 
 # step-5
@@ -143,9 +143,9 @@ instance_api_2 = conn.servers.create name:            "app-api-2",
                                      user_data:       user_data,
                                      security_groups: api_group
 
-Fog.wait_for {instance_api_1.ready?}
+instance_api_1.wait_for { ready? }
 api_1_ip_address = instance_api_1.private_ip_address
-Fog.wait_for {instance_api_2.ready?}
+instance_api_2.wait_for { ready? }
 api_2_ip_address = instance_api_2.private_ip_address
 
 [instance_api_1, instance_api_2].each do |instance|

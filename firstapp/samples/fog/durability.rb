@@ -28,7 +28,7 @@ p swift.directories.all
 # step-4
 file_path   = "goat.jpg"
 object_name = "an amazing goat"
-container   = swift.direcories.get container_name
+container   = swift.directories.get container_name
 object      = container.files.create body: File.read(File.expand_path(file_path)),
                                      key:  object_name
 
@@ -48,6 +48,8 @@ object.destroy
 p container.files.all
 
 # step-10
+container_name = 'fractals'
+container      = swift.directories.get container_name
 
 # step-11
 endpoint  = "http://IP_API_1"
@@ -56,8 +58,8 @@ uri.query = URI.encode_www_form results_per_page: -1
 data      = JSON.parse(Net::HTTP.get_response(uri).body)
 
 data["objects"].each do |fractal|
-  uri = URI("#{endpoint}/fractal/#{fractal["uuid"]}")
-  #TBC
+  body   = open("#{endpoint}/fractal/#{fractal["uuid"]}") {|f| f.read}
+  object = container.files.create body: body, key: fractal["uuid"]
 end
 
 p container.files.all
@@ -70,13 +72,14 @@ container.destroy
 
 # step-13
 object_name = "backup_goat.jpg"
+file_path   = "backup_goat.jpg"
 extra = {
-  meta_data: {
-    description: "a funny goat",
-    created:     "2015-06-02"
-  }
+  description: "a funny goat",
+  created:     "2015-06-02"
 }
-#TBC
+object  = container.files.create body: File.read(File.expand_path(file_path)),
+                                 key:  object_name,
+                                 metadata: extra
 
 # step-14
 #TBC

@@ -33,7 +33,7 @@ testing_instance = conn.servers.create name:       instance_name,
                                        image_ref:  image.id,
                                        flavor_ref: flavor.id
 
-Fog.wait_for {testing_instance.ready?}
+testing_instance.wait_for { ready? }
 
 p testing_instance
 
@@ -107,7 +107,7 @@ else
                                          user_data:       user_data,
                                          security_groups: all_in_one_security_group
 
-  Fog.wait_for {testing_instance.ready?}
+  testing_instance.wait_for { ready? }
 end
 
 p conn.servers.summary
