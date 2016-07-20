@@ -3,6 +3,7 @@ require 'fog/openstack'
 require 'digest/md5'
 require 'net/http'
 require 'json'
+require 'openuri'
 
 # step-1
 auth_username = "your_auth_username"
@@ -79,6 +80,26 @@ extra = {
 #TBC
 
 # step-14
-#TBC
+def chunked_file_upload(swift, container_name, object_name, file_path)
+  chunk_size  = 4096
+  offset      = 0
+  hash = Digest::MD5.hexdigest(File.read(File.expand_path(file_path)))
+  object = swift.put_object(container_name, object_name, nil) do
+    chunk = File.read(file_path, chunk_size, offset)
+    offset += chunk_size
+    chunk ? chunk : ''
+  end
+  unless hash == object.data[:headers]["etag"]
+    swift.delete_object container_name, object_name
+    raise "Checksums do not match. Please retry." 
+  end
+  container = swift.directories.get container_name
+  container.files.get object_name
+end
+
+object_name = "very_large_file"
+file_path   = "very_large_file"
+
+object  = chunked_file_upload(swift, container_name, object_name, file_path)
 
 # step-15
