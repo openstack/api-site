@@ -13,7 +13,7 @@ testing_instance = conn.servers.create name:            instance_name,
                                        user_data:       user_data,
                                        security_groups: all_in_one_security_group
 
-Fog.wait_for {testing_instance.ready?}
+testing_instance.wait_for { ready? }
 
 # step-2
 user_data = <<END
@@ -56,7 +56,7 @@ pool_name = conn.addresses.get_address_pools[0]["name"]
 unused_floating_ip_address = conn.addresses.create pool: pool_name
 
 # step-10
-unused_floating_ip_address.server = instance
+unused_floating_ip_address.server = testing_instance
 
 # step-11
 worker_group = conn.security_groups.create name:        "worker",
@@ -99,7 +99,7 @@ instance_controller_1 = conn.servers.create name:            "app-controller",
                                             user_data:       user_data,
                                             security_groups: controller_group
 
-Fog.wait_for {instance_controller_1.ready?}
+instance_controller_1.wait_for { ready? }
 
 puts "Checking for unused Floating IP..."
 unless unused_floating_ip_address = conn.addresses.find {|address| address.instance_id.nil?}
@@ -128,7 +128,7 @@ instance_worker_1 = conn.servers.create name:            "app-worker-1",
                                         user_data:       user_data,
                                         security_groups: worker_group
 
-Fog.wait_for {instance_worker_1.ready?}
+instance_worker_1.wait_for { ready? }
 
 puts "Checking for unused Floating IP..."
 unless unused_floating_ip_address = conn.addresses.find {|address| address.instance_id.nil?}

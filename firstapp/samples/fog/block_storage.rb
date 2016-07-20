@@ -38,7 +38,7 @@ instance = conn.servers.create name:            "app-database",
                                key_name:        key_pair.name,
                                security_groups: db_group
 
-Fog.wait_for { instance.ready? }
+instance.wait_for { ready? }
 
 # step-5
 volume = conn.volumes.get "755ab026-b5f2-4f53-b34a-6d082fb36689"
