@@ -103,5 +103,3 @@ instance_worker_3 = conn.create_server(wait=True, auto_ip=False,
     key_name='demokey',
     security_groups=[worker_group['name']],
     userdata=userdata)
-
-# step-7
