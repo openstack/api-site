@@ -110,6 +110,7 @@ else
   testing_instance.wait_for { ready? }
 end
 
+testing_instance.reload
 p conn.servers.summary
 
 # step-13
