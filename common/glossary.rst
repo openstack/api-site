@@ -431,7 +431,7 @@ B
 
       A security model that focuses on data confidentiality
       and controlled access to classified information.
-      This model divide the entities into subjects and objects.
+      This model divides the entities into subjects and objects.
       The clearance of a subject is compared to the classification of the
       object to determine if the subject is authorized for the specific access mode.
       The clearance or classification scheme is expressed in terms of a lattice.
@@ -1732,7 +1732,7 @@ H
       A high availability system design approach and associated
       service implementation ensures that a prearranged level of
       operational performance will be met during a contractual
-      measurement period. High availability systems seeks to
+      measurement period. High availability systems seek to
       minimize system downtime and data loss.
 
    horizon
