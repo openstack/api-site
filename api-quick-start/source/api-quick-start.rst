@@ -348,7 +348,11 @@ Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
    export OS_TOKEN=4b57c7d386a7438b829d1a8922e0eaab
 
-The token expires every 24 hours.
+The token expires every hour by default,
+though it can be configured differently - see
+the ``expiration`` option in the
+``Description of token configuration options`` section of the
+`Identity Service Configuration <http://docs.openstack.org/mitaka/config-reference/identity/options.html#keystone-token>`__ page.
 
 Export the tenant name to the ``OS_TENANT_NAME`` environment variable. For example:
 
