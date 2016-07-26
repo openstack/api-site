@@ -199,20 +199,48 @@ attach the volume to it at :code:`/dev/vdb`:
 
 Log in to the server to run the following steps.
 
-.. note:: Replace :code:`IP_SERVICES` with the IP address of the
-          services instance and USERNAME to the appropriate user name.
+.. note:: Replace :code:`IP_DATABASE` with the IP address of the
+          database instance and USERNAME to the appropriate user name.
 
 Now prepare the empty block device.
 
 .. code-block:: console
 
-    $ ssh -i ~/.ssh/id_rsa USERNAME@IP_SERVICES
+    $ ssh -i ~/.ssh/id_rsa USERNAME@IP_DATABASE
     # fdisk -l
+    Disk /dev/vdb: 1073 MB, 1073741824 bytes
+    16 heads, 63 sectors/track, 2080 cylinders, total 2097152 sectors
+    Units = sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 512 bytes
+    I/O size (minimum/optimal): 512 bytes / 512 bytes
+    Disk identifier: 0x00000000
+
+    Disk /dev/vdb doesn't contain a valid partition table
+
     # mke2fs /dev/vdb
+    mke2fs 1.42.9 (4-Feb-2014)
+    Filesystem label=
+    OS type: Linux
+    Block size=4096 (log=2)
+    Fragment size=4096 (log=2)
+    Stride=0 blocks, Stripe width=0 blocks
+    65536 inodes, 262144 blocks
+    13107 blocks (5.00%) reserved for the super user
+    First data block=0
+    Maximum filesystem blocks=268435456
+    8 block groups
+    32768 blocks per group, 32768 fragments per group
+    8192 inodes per group
+    Superblock backups stored on blocks:
+      32768, 98304, 163840, 229376
+
+    Allocating group tables: done
+    Writing inode tables: done
+    Writing superblocks and filesystem accounting information: done
+
     # mkdir /mnt/database
     # mount /dev/vdb /mnt/database
 
-.. todo:: Outputs missing, add attaching log from dmesg.
 
 Stop the running MySQL database service and move the database files from
 :file:`/var/lib/mysql` to the new volume, which is temporarily mounted at
@@ -278,7 +306,6 @@ To detach and delete a volume:
     .. literalinclude:: ../samples/shade/block_storage.py
         :language: python
         :start-after: step-6
-        :end-before: step-7
 
 .. only:: libcloud
 
