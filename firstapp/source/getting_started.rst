@@ -149,11 +149,55 @@ To interact with the cloud, you must also have
 
 .. only:: jclouds
 
-    `jClouds 1.8 or higher installed <https://jclouds.apache.org/start/install>`_.
+      `jClouds 1.8 or higher installed <https://jclouds.apache.org/start/install>`_.
 
-    .. warning::
+      Our code samples use
+      `Java 8 <http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html>`_.
 
-       This document has not yet been completed for the jclouds SDK.
+      We have created a Maven POM file to help you get started.
+
+      If you do not know Maven then the `Maven home site <https://maven.apache.org/what-is-maven.html>`_
+      is a good place to learn more.
+
+      **pom.xml:**
+
+      .. literalinclude:: ../samples/jclouds/pom.xml
+        :language: xml
+
+      Place the above pom.xml into the root directory of your project. Then create the nested
+      subdirectory tree :code:`src` -> :code:`main` -> :code:`java`.
+      Place the Java code samples that you copy from this book into the folder named ":code:`java`".
+
+      So, for example, the file named :code:`GettingStarted.java` from the end of this chapter
+      would be located as follows:
+
+      .. figure:: images/jclouds/screenshot_maven_layout.png
+        :width: 328px
+        :align: center
+        :height: 179px
+        :alt: Screenshot of the Maven project directory structure
+        :figclass: align-center
+
+      To use Maven to compile a downloaded sample, with the command prompt located in the same
+      directory as the :code:`pom.xml` file, enter:
+
+      .. code-block:: bash
+
+          mvn compile
+
+      Maven will download and install any dependencies required for compilation, then execute
+      the Java compiler. All files in the :code:`java` subdirectory will be compiled.
+
+      To use Maven to run each downloaded sample, with the command prompt located in the same
+      directory as the :code:`pom.xml` file, enter:
+
+      .. code-block:: bash
+
+          # In the sample below replace GettingStarted with the name of the class you want to run
+          mvn exec:java -Dexec.mainClass="GettingStarted"
+
+      Maven will download and install any further dependencies required and then run the chosen
+      class.
 
 .. only:: libcloud
 
@@ -1749,6 +1793,8 @@ information, the flavor ID, and image ID.
        :language: python
 
 .. only:: jclouds
+
+    **GettingStarted.java:**
 
     .. literalinclude:: ../samples/jclouds/GettingStarted.java
         :language: java
