@@ -20,9 +20,6 @@ api_group        = conn.security_groups.create name:        "api",
 worker_group     = conn.security_groups.create name:        "worker",
                                                description: "for services that run on a worker node"
 
-controller_group = conn.security_groups.create name:        "control",
-                                               description: "for services that run on a control node"
-
 services_group   = conn.security_groups.create name:        "services",
                                                description: "for DB and AMQP services only"
 
@@ -44,25 +41,6 @@ rules = [
     ip_protocol:     "tcp",
     from_port:       22,
     to_port:         22
-  },
-  {
-    parent_group_id: controller_group.id,
-    ip_protocol:     "tcp",
-    from_port:       22,
-    to_port:         22
-  },
-  {
-    parent_group_id: controller_group.id,
-    ip_protocol:     "tcp",
-    from_port:       80,
-    to_port:         80
-  },
-  {
-    parent_group_id: controller_group.id,
-    ip_protocol:     "tcp",
-    from_port:       5672,
-    to_port:         5672,
-    group:           worker_group.id
   },
   {
     parent_group_id: services_group.id,
