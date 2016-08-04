@@ -26,7 +26,7 @@ Appendix
    :maxdepth: 1
 
    appendix
-   common/app_support.rst
+   common/app-support.rst
 
 Glossary
 ~~~~~~~~
