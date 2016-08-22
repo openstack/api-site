@@ -30,6 +30,8 @@ if [ "$PUBLISH" = "build" ] ; then
     # publish-docs/www-index.html is the trigger for openstack-doc-test
     # to include the file.
     mv publish-docs/www/www-index.html publish-docs/www-index.html
+    # Create index page for viewing
+    openstack-indexpage publish-docs
 fi
 if [ "$PUBLISH" = "publish" ] ; then
 

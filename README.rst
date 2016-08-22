@@ -81,8 +81,6 @@ install the Python tox package and run ``tox`` from the top-level directory.
 To run individual tests:
 
  * ``tox -e checkniceness`` - Niceness tests
- * ``tox -e checksyntax`` - Syntax checks
- * ``tox -e checkdeletions`` - Verifies that no deleted files are referenced
  * ``tox -e checkbuild`` - Builds all of the documents in this repository
 
 To run these tests, the Tox package uses the
