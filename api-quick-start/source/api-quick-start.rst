@@ -81,7 +81,7 @@ The payload of credentials to authenticate contains these parameters:
 In a typical OpenStack deployment that runs Identity, you can specify your
 tenant name, and user name and password credentials to authenticate.
 
-First, export your tenant name to the `OS_TENANT_NAME` environment variable,
+First, export your tenant name to the `OS_PROJECT_NAME` environment variable,
 your user name to the `OS_USERNAME` environment variable, and your password to
 the `OS_PASSWORD` environment variable. The example below uses a TryStack endpoint
 but you can also use `$OS_IDENTITYENDPOINT` as an environment variable as needed.
@@ -90,9 +90,9 @@ Then, run this cURL command to request a token:
 
 .. code-block:: console
 
-   $ curl -s -X POST http://128.136.179.2:5000/v2.0/tokens \
+   $ curl -s -X POST $OS_AUTH_URL/tokens \
      -H "Content-Type: application/json" \
-     -d '{"auth": {"tenantName": "'"$OS_TENANT_NAME"'", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
+     -d '{"auth": {"tenantName": "'"$OS_PROJECT_NAME"'", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
      | python -m json.tool
 
 If the request succeeds, it returns the ``OK (200)`` response code followed by a
@@ -106,7 +106,7 @@ expiration date and time in the form ``"expires":"datetime"``.
 
    .. code-block:: console
 
-      $ curl -s -X POST http://128.136.179.2:5000/v2.0/tokens \
+      $ curl -s -X POST $OS_AUTH_URL/tokens \
         -H "Content-Type: application/json" \
         -d '{"auth": {"tenantName": "", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
         | python -m json.tool
@@ -354,18 +354,19 @@ the ``expiration`` option in the
 ``Description of token configuration options`` section of the
 `Identity Service Configuration <http://docs.openstack.org/mitaka/config-reference/identity/options.html#keystone-token>`__ page.
 
-Export the tenant name to the ``OS_TENANT_NAME`` environment variable. For example:
+Export the tenant name to the ``OS_PROJECT_NAME`` environment variable. For example:
 
 .. code-block:: console
 
-   export OS_TENANT_NAME=demo
+   export OS_PROJECT_NAME=demo
 
-Then, use the Compute API to list flavors:
+Then, use the Compute API to list flavors, substituting the Compute API endpoint with
+one containing your project ID below:
 
 .. code-block:: console
 
    $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
-     http://128.136.179.2:8774/v2/$OS_TENANT_NAME/flavors \
+     $OS_COMPUTE_API/flavors \
      | python -m json.tool
 
 .. code-block:: json
@@ -445,12 +446,13 @@ Then, use the Compute API to list flavors:
        ]
    }
 
-Use the Compute API to list images:
+Export the $OS_PROJECT_ID from the token call, and then
+use the Compute API to list images:
 
 .. code-block:: console
 
    $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
-     http://8.21.28.222:8774/v2/$OS_TENANT_NAME/images \
+     http://8.21.28.222:8774/v2/$OS_PROJECT_ID/images \
      | python -m json.tool
 
 .. code-block:: json
@@ -555,12 +557,13 @@ Use the Compute API to list images:
        ]
    }
 
-Use the Compute API to list servers:
+Export the $OS_PROJECT_ID from the token call, and then
+use the Compute API to list servers:
 
 .. code-block:: console
 
    $ curl -s -H "X-Auth-Token: $OS_TOKEN" \
-     http://8.21.28.222:8774/v2/$OS_TENANT_NAME/servers \
+     http://8.21.28.222:8774/v2/$OS_PROJECT_ID/servers \
      | python -m json.tool
 
 .. code-block:: json
