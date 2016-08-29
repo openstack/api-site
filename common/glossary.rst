@@ -2460,11 +2460,10 @@ N
       connectivity. In Networking terminology, a network is always a layer-2
       network.
 
-   NAT
+   Network Address Translation (NAT)
 
-      Network Address Translation; Process of modifying IP address
-      information while in transit. Supported by Compute and
-      Networking.
+      Process of modifying IP address information while in transit.
+      Supported by Compute and Networking.
 
    network controller
 
@@ -2503,6 +2502,11 @@ N
       Represents a virtual, isolated OSI layer-2 subnet in
       Networking.
 
+   Network Time Protocol (NTP)
+
+      Method of keeping a clock for a host or node correct via
+      communication with a trusted, accurate time source.
+
    Newton
 
       The code name for the fourteenth release of OpenStack. The
@@ -2510,12 +2514,6 @@ N
       release is named after "Newton House" which is located at
       1013 E. Ninth St., Austin, TX. which is listed on the
       National Register of Historic Places.
-
-   NTP
-
-      Network Time Protocol; Method of keeping a clock for a host or
-      node correct via communication with a trusted, accurate time
-      source.
 
    network UUID
 
@@ -3519,10 +3517,9 @@ S
       OpenStack project that provides a Software Development
       Lifecycle Automation service.
 
-   SPICE
+   Simple Protocol for Independent Computing Environments (SPICE)
 
-      The Simple Protocol for Independent Computing Environments
-      (SPICE) provides remote desktop access to guest virtual machines. It
+      SPICE provides remote desktop access to guest virtual machines. It
       is an alternative to VNC. SPICE is supported by OpenStack.
 
    spread-first scheduler
@@ -3817,15 +3814,6 @@ V
 
       Unique ID assigned to each Networking VIF.
 
-   VIP
-
-      The primary load balancing configuration object.
-      Specifies the virtual IP address and port where client traffic
-      is received. Also defines other details such as the load
-      balancing method to be used, protocol, and so on. This entity
-      is sometimes known in load-balancing products as a virtual
-      server, vserver, or listener.
-
    Virtual Central Processing Unit (vCPU)
 
       Subdivides physical CPUs. Instances can then use those
@@ -3836,7 +3824,7 @@ V
       One of the VM image disk formats supported by Image
       service.
 
-   VXLAN
+   Virtual Extensible LAN (VXLAN)
 
       A network virtualization technology that attempts to reduce the
       scalability problems associated with large cloud computing
@@ -3848,7 +3836,7 @@ V
       One of the VM image disk formats supported by Image
       service.
 
-   virtual IP
+   virtual IP address (VIP)
 
       An Internet Protocol (IP) address configured on the load
       balancer for use by clients connecting to a service that is load
