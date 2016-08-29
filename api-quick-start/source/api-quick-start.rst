@@ -340,7 +340,7 @@ Send API requests
 
 This section shows how to make some basic Compute API calls. For a complete
 list of Compute API calls, see
-`Compute API (CURRENT) <http://developer.openstack.org/api-ref-compute-v2.1.html>`__.
+`Compute API <http://developer.openstack.org/api-ref/compute/>`__.
 
 Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
