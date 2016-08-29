@@ -694,7 +694,7 @@ command with the image and flavor IDs and the server name:
 
 .. code-block:: console
 
-   $ openstack server create --image 949c80c8-b4ac-4315-844e-69f9bef39ed1 --flavor 1 my_instance
+   $ openstack server create --image a5604931-af06-4512-8046-d43aabf272d3 --flavor 1 my_instance
 
 .. code-block:: console
 
