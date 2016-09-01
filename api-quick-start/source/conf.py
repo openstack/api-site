@@ -52,9 +52,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'API-Quick-Start'
+project = u'Openstack-API-Documentation'
 bug_tag = u'api-site'
-copyright = u'2015, OpenStack contributors'
+copyright = u'2016, OpenStack contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -131,6 +131,14 @@ html_theme = 'openstackdocs'
 # documentation.
 # html_theme_options = {}
 
+# To use the API Reference sidebar dropdown menu,
+# uncomment the html_theme_options parameter.  The theme
+# variable, sidebar_dropdown, should be set to `api_ref`.
+# Otherwise, the list of links for the User and Ops docs
+# appear in the sidebar dropdown menu.
+html_theme_options = {"sidebar_dropdown": "api_ref",
+                      "sidebar_mode": "toc"}
+
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = [openstackdocstheme.get_html_theme_path()]
 
@@ -206,7 +214,7 @@ html_show_sourcelink = False
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'API-Quick-Start'
+htmlhelp_basename = 'OpenStack-API-Documentation'
 
 # If true, publish source files
 html_copy_source = False
@@ -228,7 +236,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'FirstApp.tex', u'FirstApp Documentation',
+    ('index', 'OpenStackAPI.tex', u'OpenStack API Documentation',
      u'OpenStack Doc Team', 'manual'),
 ]
 
@@ -258,7 +266,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'api-quick-start', u'API Quick Start Documentation',
+    ('index', 'openstack-api-documentation', u'OpenStack API Documentation',
      [u'OpenStack Doc Team'], 1)
 ]
 
@@ -272,8 +280,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'api-quick-start', u'API Quick Start Documentation',
-     u'OpenStack Doc Team', 'APIQuickStart', 'Describes basic OpenStack API concepts.',
+    ('index', 'openstack-api-documentation', u'OpenStack API Documentation',
+     u'OpenStack Doc Team', 'OpenStackAPIDocs', 'Describes OpenStack API reference and concepts.',
      'Miscellaneous'),
 ]
 
@@ -298,6 +306,6 @@ locale_dirs = ['locale/']
 # -- Options for PDF output --------------------------------------------------
 
 pdf_documents = [
-    ('index', u'api-quick-start', u'API Quick Start Documentation',
+    ('index', u'openstack-api-documentation', u'OpenStack API Documentation',
      u'OpenStack contributors')
 ]
