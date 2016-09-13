@@ -484,13 +484,12 @@ B
       detaching, and creating block storage for compute
       VMs.
 
-   BMC
+   BMC (Baseboard Management Controller)
 
-      Baseboard Management Controller. The intelligence in the IPMI
-      architecture, which is a specialized micro-controller that is embedded
-      on the motherboard of a computer and acts as a server. Manages the
-      interface between system management software and platform
-      hardware.
+      The intelligence in the IPMI architecture, which is a specialized
+      micro-controller that is embedded on the motherboard of a computer
+      and acts as a server. Manages the interface between system management
+      software and platform hardware.
 
    bootable disk image
 
@@ -996,12 +995,11 @@ D
       An Object Storage component that copies changes in the account,
       container, and object databases to other nodes.
 
-   Database service
+   Database service (trove)
 
-      An integrated project that provide scalable and reliable
+      An integrated project that provides scalable and reliable
       Cloud Database-as-a-Service functionality for both
-      relational and non-relational database engines. The project
-      name of Database service is trove.
+      relational and non-relational database engines.
 
    Data loss prevention (DLP) software
 
@@ -3752,8 +3750,8 @@ T
 
    trove
 
-      OpenStack project that provides database services to
-      applications.
+      Codename for OpenStack :term:`Database service <Database service
+      (trove)>`.
 
    trusted platform module (TPM)
 
