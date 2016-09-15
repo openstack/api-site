@@ -44,12 +44,12 @@ Current API versions
 Supported API versions
 ----------------------
 
-`Block Storage API v1 <http://developer.openstack.org/api-ref/block-storage/v1/>`__
-
 `Image service API v1 <http://developer.openstack.org/api-ref/image/v1>`__
 
 Deprecated API versions
 -----------------------
+
+`Block Storage API v1 <http://developer.openstack.org/api-ref/block-storage/v1/>`__
 
 `Identity API v2.0 <http://developer.openstack.org/api-ref/identity/v2>`__
 
