@@ -387,7 +387,8 @@ B
       for a service, such as lists of Object Storage objects, current state
       of guest VMs, lists of user names, and so on. Also, the method that the
       Image service uses to get and store VM images. Options include Object
-      Storage, local file system, S3, and HTTP.
+      Storage, locally mounted file system, RADOS block devices, VMware
+      datastore, and HTTP.
 
    backup restore and disaster recovery as a service
 
@@ -972,10 +973,10 @@ D
       May or may not listen on a TCP or UDP port. Do not confuse with a
       worker.
 
-   Dashboard
+   Dashboard (horizon)
 
-      The web-based management interface for OpenStack. An alternative
-      name for horizon.
+      OpenStack project which provides an extensible, unified, web-based
+      user interface for all OpenStack services.
 
    data encryption
 
@@ -1704,8 +1705,7 @@ H
 
    horizon
 
-      OpenStack project that provides a dashboard, which is a web
-      interface.
+      Codename for the :term:`Dashboard <Dashboard (horizon)>`.
 
    horizon plug-in
 
@@ -1874,7 +1874,8 @@ I
    image store
 
       The back-end store used by Image service to store VM images,
-      options include Object Storage, local file system, S3, or HTTP.
+      options include Object Storage, locally mounted file system,
+      RADOS block devices, VMware datastore, or HTTP.
 
    image UUID
 
@@ -3250,11 +3251,6 @@ S
 ~
 
 .. glossary::
-
-   S3
-
-      Object storage service by Amazon; similar in function to Object
-      Storage, it can act as a back-end store for Image service VM images.
 
    sahara
 
