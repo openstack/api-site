@@ -43,4 +43,9 @@ if [ "$PUBLISH" = "publish" ] ; then
     rsync -a www/static/ publish-docs/api-ref/
     # Don't publish this file
     rm publish-docs/api-ref/www-index.html
+
+    # This marker is needed for infra publishing
+    MARKER_TEXT="Project: $ZUUL_PROJECT Ref: $ZUUL_REFNAME Build: $ZUUL_UUID"
+    echo $MARKER_TEXT > publish-docs/api-ref/.root-marker
+
 fi
