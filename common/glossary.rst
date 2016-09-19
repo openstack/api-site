@@ -404,7 +404,8 @@ B
 
    barbican
 
-      Code name of the key management service for OpenStack.
+      Code name of the :term:`Key Manager service
+      <Key Manager service (barbican)>`.
 
    bare
 
@@ -473,11 +474,11 @@ B
       user-initiated switchover. Does not require shared storage. Supported
       by Compute.
 
-   Block Storage service
+   Block Storage service (cinder)
 
-      The OpenStack core project that enables management of volumes,
-      volume snapshots, and volume types. The project name of Block Storage
-      is cinder.
+      The OpenStack service that implement services and libraries to provide
+      on-demand, self-service access to Block Storage resources via abstraction
+      and automation on top of other block storage devices.
 
    Block Storage API
 
@@ -681,8 +682,8 @@ C
 
    cinder
 
-      A core OpenStack project that provides block storage services
-      for VMs.
+      Codename for :term:`Block Storage service
+      <Block Storage service (cinder)>`.
 
    CirrOS
 
@@ -2106,12 +2107,11 @@ K
       module, that provides the core virtualization infrastructure
       and a processor specific module.
 
-   Key Manager service
+   Key Manager service (barbican)
 
-      OpenStack project that produces a secret storage and
+      The project that produces a secret storage and
       generation system capable of providing key management for
-      services wishing to enable encryption features. The code name
-      of the project is barbican.
+      services wishing to enable encryption features.
 
    keystone
 
