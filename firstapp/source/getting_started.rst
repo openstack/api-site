@@ -65,12 +65,12 @@ and toolkits with the OpenStack cloud:
    * - Python
      - OpenStack SDK
      - A Python-based library for OpenStack.
-     - http://git.openstack.org/cgit/openstack/python-openstacksdk
+     - http://developer.openstack.org/sdks/python/openstacksdk/
    * - Python
      - Shade
      - A Python-based library developed by OpenStack Infra team.
        Use it to operate multiple OpenStack clouds.
-     - http://git.openstack.org/cgit/openstack-infra/shade
+     - http://docs.openstack.org/infra/shade/
    * - Java
      - `jClouds <https://jclouds.apache.org>`_
      - A Java-based library that the Apache Foundation manages.
@@ -80,7 +80,7 @@ and toolkits with the OpenStack cloud:
      - `fog <http://fog.io/>`_
      - A Ruby-based SDK.
        Use it to work with multiple clouds.
-     - https://github.com/fog/fog-openstack/blob/master/lib/fog/openstack/docs/getting_started.md
+     - https://github.com/fog/fog-openstack/blob/master/docs/getting_started.md
    * - node.js
      - `pkgcloud <https://github.com/pkgcloud/pkgcloud>`_
      - A Node.js-based SDK.
