@@ -412,10 +412,11 @@ B
       An Image service container format that indicates that no
       container exists for the VM image.
 
-   Bare Metal service
+   Bare Metal service (ironic)
 
-      OpenStack project that provisions bare metal, as opposed to
-      virtual machines. The code name for the project is ironic.
+      The OpenStack service that provides a service and associated libraries
+      capable of managing and provisioning physical machines in a
+      security-aware and fault-tolerant manner.
 
    base image
 
@@ -1804,13 +1805,13 @@ I
       name and password. It is a typical source of authentication
       tokens.
 
-   Identity service
+   Identity service (keystone)
 
-      The OpenStack core project that provides a central directory of
-      users mapped to the OpenStack services they can access. It also
-      registers endpoints for OpenStack services. It acts as a common
-      authentication system. The project name of Identity is
-      keystone.
+      The project that facilitates API client authentication, service
+      discovery, distributed multi-tenant authorization, and auditing.
+      It provides a central directory of users mapped to the OpenStack
+      services they can access. It also registers endpoints for OpenStack
+      services and acts as a common authentication system.
 
    Identity service API
 
@@ -1993,8 +1994,8 @@ I
 
    ironic
 
-      OpenStack project that provisions bare metal, as opposed to
-      virtual machines.
+      Codename for the :term:`Bare Metal service <Bare Metal service
+      (ironic)>`.
 
    IP address
 
@@ -2115,7 +2116,7 @@ K
 
    keystone
 
-      The project that provides OpenStack Identity services.
+      Codename of the :term:`Identity service <Identity service (keystone)>`.
 
    Kickstart
 
@@ -2350,7 +2351,7 @@ M
 
    mistral
 
-      OpenStack project that provides the Workflow service.
+      Code name for :term:`Workflow service <Workflow service (mistral)>`.
 
    Mitaka
 
@@ -2360,7 +2361,7 @@ M
 
    monasca
 
-      OpenStack project that provides a Monitoring service.
+      Codename for OpenStack :term:`Monitoring <Monitoring (monasca)>`.
 
    multi-host
 
@@ -2393,15 +2394,14 @@ M
       A Ceph component that communicates with external clients, checks
       data state and consistency, and performs quorum functions.
 
-   Monitoring
+   Monitoring (monasca)
 
-      The OpenStack project that provides a multi-tenant, highly
-      scalable, performant, fault-tolerant Monitoring-as-a-Service
-      solution for metrics, complex event processing, and logging.
-      It builds an extensible platform for advanced monitoring
-      services that can be used by both operators and projects to
-      gain operational insight and visibility, ensuring
-      availability and stability. The project name is monasca.
+      The OpenStack service that provides a multi-tenant, highly scalable,
+      performant, fault-tolerant monitoring-as-a-service solution for metrics,
+      complex event processing and logging. To build an extensible platform for
+      advanced monitoring services that can be used by both operators and
+      tenants to gain operational insight and visibility, ensuring availability
+      and stability.
 
    multi-factor authentication
 
@@ -2886,8 +2886,7 @@ P
 
    project ID
 
-      User-defined alphanumeric string in Compute; the name of a
-      project.
+      Unique ID assigned to each project by the Identity service.
 
    project VPN
 
@@ -3688,8 +3687,7 @@ T
 
    tenant ID
 
-      Unique ID assigned to each project within the Identity service.
-      The project IDs map to the project IDs.
+      An alternative term for :term:`project ID`.
 
    token
 
@@ -3998,14 +3996,13 @@ W
       response to messages. For example, the cinder-volume worker manages volume
       creation and deletion on storage arrays.
 
-   Workflow service
+   Workflow service (mistral)
 
-      OpenStack project that provides a simple YAML-based language
-      to write workflows, tasks and transition rules, and a
-      service that allows to upload them, modify, run them at
-      scale and in a highly available manner, manage and monitor
-      workflow execution state and state of individual tasks. The
-      code name of the project is mistral.
+      The OpenStack service that provides a simple YAML-based language to
+      write workflows (tasks and transition rules) and a service that
+      allows to upload them, modify, run them at scale and in a highly
+      available manner, manage and monitor workflow execution state and state
+      of individual tasks.
 
 X
 ~
