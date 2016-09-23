@@ -11,7 +11,11 @@ Current API versions
 
 `Bare Metal API v1 <http://developer.openstack.org/api-ref/baremetal/>`__ (microversions)
 
-`Block Storage API v2 <http://developer.openstack.org/api-ref/block-storage/v2/>`__
+`Block Storage API v3 <http://developer.openstack.org/api-ref/block-storage/v3/>`__ (microversions)
+
+.. note:: The Block Storage API v3 is functionally identical to the
+   Block Storage API v2. Subsequent API v3 microversions, such as v3.1,
+   differ from API v2.
 
 `Clustering API v1 <http://developer.openstack.org/api-ref/clustering/>`__
 
@@ -43,6 +47,8 @@ Current API versions
 
 Supported API versions
 ----------------------
+
+`Block Storage API v2 <http://developer.openstack.org/api-ref/block-storage/v2/>`__
 
 `Image service API v1 <http://developer.openstack.org/api-ref/image/v1>`__
 
