@@ -228,19 +228,17 @@ A
 
       A Java program that can be embedded into a web page.
 
+   Application Catalog service (murano)
+
+      The project that provides an application catalog service so that users
+      can compose and deploy composite environments on an application
+      abstraction level while managing the application lifecycle.
+
    Application Programming Interface (API)
 
       A collection of specifications used to access a service,
       application, or program. Includes service calls, required parameters
       for each call, and the expected return values.
-
-   Application Catalog service
-
-      OpenStack project that provides an application catalog
-      service so that users can compose and deploy composite
-      environments on an application abstraction level while
-      managing the application lifecycle. The code name of the
-      project is murano.
 
    application server
 
@@ -2337,14 +2335,12 @@ M
       Passes requests from clients to the appropriate workers and
       returns the output to the client after the job completes.
 
-   Message service
+   Message service (zaqar)
 
-      OpenStack project that aims to produce an OpenStack
-      messaging service that affords a variety of distributed
-      application patterns in an efficient, scalable and
-      highly available manner, and to create and maintain associated
-      Python libraries and documentation. The code name for the
-      project is zaqar.
+      The project that provides a messaging service that affords a
+      variety of distributed application patterns in an efficient,
+      scalable and highly available manner, and to create and maintain
+      associated Python libraries and documentation.
 
    Metadata agent
 
@@ -2388,7 +2384,8 @@ M
 
    murano
 
-      OpenStack project that provides an Application catalog.
+      Codename for the :term:`Application Catalog service <Application Catalog
+      service (murano)>`.
 
    Modular Layer 2 (ML2) neutron plug-in
 
@@ -4063,8 +4060,7 @@ Z
 
    zaqar
 
-      OpenStack project that provides a message service to
-      applications.
+      Codename for the :term:`Message service <Message service (zaqar)>`.
 
    ZeroMQ
 
