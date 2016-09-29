@@ -39,6 +39,8 @@ Current API versions
 
 `Orchestration API v1 <http://developer.openstack.org/api-ref/orchestration/v1/>`__
 
+`Search API v1 <http://developer.openstack.org/api-ref/search>`__
+
 `Shared File Systems API v2 <http://developer.openstack.org/api-ref/shared-file-systems>`__ (microversions)
 
 .. note:: The Shared File Systems API v1 is functionally identical to the
