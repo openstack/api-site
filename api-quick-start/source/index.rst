@@ -52,8 +52,6 @@ Supported API versions
 
 `Block Storage API v2 <http://developer.openstack.org/api-ref/block-storage/v2/>`__
 
-`Image service API v1 <http://developer.openstack.org/api-ref/image/v1>`__
-
 Deprecated API versions
 -----------------------
 
@@ -64,6 +62,8 @@ Deprecated API versions
 `Identity admin API v2.0 <http://developer.openstack.org/api-ref/identity/v2-admin>`__
 
 `Identity API v2.0 extensions <http://developer.openstack.org/api-ref/identity/v2-ext>`__
+
+`Image service API v1 <http://developer.openstack.org/api-ref/image/v1>`__
 
 .. todo: telemetry link
 
