@@ -21,6 +21,8 @@ Current API versions
 
 `Compute API <http://developer.openstack.org/api-ref/compute/>`__ (microversions)
 
+`Container Infrastructure Management API <http://developer.openstack.org/api-ref/container-infrastructure-management/>`__ (microversions)
+
 `Data Processing v1.1 <http://developer.openstack.org/api-ref/data-processing/>`__
 
 `Database Service API v1.0 <http://developer.openstack.org/api-ref/database/>`__
