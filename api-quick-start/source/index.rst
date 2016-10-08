@@ -35,6 +35,8 @@ Current API versions
 
 `Image service API v2 <http://developer.openstack.org/api-ref/image/v2>`__
 
+`Messaging API v2 <http://developer.openstack.org/api-ref/messaging>`__
+
 `Networking API v2.0 <http://developer.openstack.org/api-ref/networking/v2>`__
 
 `Object Storage API v1 <http://developer.openstack.org/api-ref/object-storage>`__
