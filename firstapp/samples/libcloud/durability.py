@@ -55,8 +55,6 @@ container_name = 'fractals'
 container = swift.get_container(container_name)
 
 # step-11
-import base64
-import cStringIO
 import json
 
 import requests
