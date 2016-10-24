@@ -49,20 +49,20 @@ The payload of credentials to authenticate contains these parameters:
 +-----------------------+----------------+--------------------------------------+
 | Parameter             | Type           | Description                          |
 +=======================+================+======================================+
-| username (required)   | xsd:string     | The user name. If you do not provide |
+| username (required)   |     string     | The user name. If you do not provide |
 |                       |                | a user name and password, you must   |
 |                       |                | provide a token.                     |
 +-----------------------+----------------+--------------------------------------+
-| password (required)   | xsd:string     | The password for the user.           |
+| password (required)   |     string     | The password for the user.           |
 +-----------------------+----------------+--------------------------------------+
-| *tenantName*          | xsd:string     | The tenant name. Both the            |
+| *tenantName*          |     string     | The tenant name. Both the            |
 | (Optional)            |                | *tenantId* and *tenantName*          |
 |                       |                | are optional and mutually exclusive. |
 |                       |                | If you specify both attributes, the  |
 |                       |                | server returns the Bad Request (400) |
 |                       |                | response code.                       |
 +-----------------------+----------------+--------------------------------------+
-| *tenantId*            | xsd:string     | The tenant ID. Both the *tenantId*   |
+| *tenantId*            |     string     | The tenant ID. Both the *tenantId*   |
 | (Optional)            |                | and *tenantName* are optional and    |
 |                       |                | mutually exclusive. If you specify   |
 |                       |                | both attributes, the server returns  |
@@ -72,7 +72,7 @@ The payload of credentials to authenticate contains these parameters:
 |                       |                | the tenant name or ID. The response  |
 |                       |                | returns the tenant name or ID.       |
 +-----------------------+----------------+--------------------------------------+
-| token (Optional)      | xsd:string     | A token. If you do not provide a     |
+| token (Optional)      |     string     | A token. If you do not provide a     |
 |                       |                | token, you must provide a user name  |
 |                       |                | and password.                        |
 +-----------------------+----------------+--------------------------------------+
