@@ -791,6 +791,13 @@ C
       Microsoft. Like the SMB protocol, CIFS runs at a higher level and uses
       the TCP/IP protocol.
 
+   Common Libraries (oslo)
+
+      The project that produces a set of python libraries containing code
+      shared by OpenStack projects. The APIs provided by these libraries
+      should be high quality, stable, consistent, documented and generally
+      applicable.
+
    community project
 
       A project that is not officially endorsed by the OpenStack
@@ -1582,17 +1589,15 @@ G
 
    glance
 
-      A core project that provides the OpenStack Image service.
+      Codename for the :term:`Image service<Image service (glance)>`.
 
    glance API server
 
-      Processes client requests for VMs, updates Image service
-      metadata on the registry server, and communicates with the store
-      adapter to upload VM images from the back-end store.
+      Alternative name for the :term:`Image API`.
 
    glance registry
 
-      Alternative term for the Image service image registry.
+      Alternative term for the Image service :term:`image registry`.
 
    global endpoint template
 
@@ -1845,6 +1850,9 @@ I
 
       The Image service API endpoint for management of VM
       images.
+      Processes client requests for VMs, updates Image service
+      metadata on the registry server, and communicates with the store
+      adapter to upload VM images from the back-end store.
 
    image cache
 
@@ -1872,15 +1880,12 @@ I
       A list of VM images that are available through Image
       service.
 
-   Image service
+   Image service (glance)
 
-      An OpenStack core project that provides discovery, registration,
-      and delivery services for disk and server images. The project name of
-      the Image service is glance.
-
-   Image service API
-
-      Alternative name for the glance image API.
+      The OpenStack service that provide services and associated libraries
+      to store, browse, share, distribute and manage bootable disk images,
+      other data closely associated with initializing compute resources,
+      and metadata definitions.
 
    image status
 
@@ -2763,8 +2768,8 @@ O
 
    Oslo
 
-      OpenStack project that produces a set of Python libraries
-      containing code shared by OpenStack projects.
+      Codename for the :term:`Common Libraries project<Common Libraries
+      (oslo)>`.
 
 P
 ~
