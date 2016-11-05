@@ -66,7 +66,7 @@ Work with the CLI
 Because the SDKs do not fully support the OpenStack Networking API, this
 section uses the command-line clients.
 
-Use this guide to install the 'neutron' command-line client:
+Use this guide to install the 'openstack' command-line client:
 http://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
 
 Use this guide to set up the necessary variables for your cloud in an
@@ -74,7 +74,7 @@ Use this guide to set up the necessary variables for your cloud in an
 http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
 
 Ensure you have an openrc.sh file, source it, and then check that your
-neutron client works: ::
+openstack client works: ::
 
     $ cat openrc.sh
     export OS_USERNAME=your_auth_username
@@ -85,8 +85,8 @@ neutron client works: ::
 
     $ source openrc.sh
 
-    $ neutron --version
-    2.3.11
+    $ openstack --version
+    3.3.0
 
 Networking segmentation
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -211,131 +211,193 @@ Internet.
 
 ::
 
-        $ neutron net-list
+        $ openstack network list
         +--------------------------------------+------------------+--------------------------------------------------+
-        | id                                   | name             | subnets                                          |
+        | ID                                   | Name             | Subnets                                          |
         +--------------------------------------+------------------+--------------------------------------------------+
-        | 29349515-98c1-4f59-922e-3809d1b9707c | public           | 7203dd35-7d17-4f37-81a1-9554b3316ddb             |
+        | 27e6fa33-fd39-475e-b048-6ac924972a03 | public           | b12293c9-a1f4-49e3-952f-136a5dd24980             |
         +--------------------------------------+------------------+--------------------------------------------------+
 
 Next, create a network and subnet for the workers.
 
 ::
 
-        $ neutron net-create worker_network
-        Created a new network:
-        +-----------------+--------------------------------------+
-        | Field           | Value                                |
-        +-----------------+--------------------------------------+
-        | admin_state_up  | True                                 |
-        | id              | 953224c6-c510-45c5-8a29-37deffd3d78e |
-        | name            | worker_network                       |
-        | router:external | False                                |
-        | shared          | False                                |
-        | status          | ACTIVE                               |
-        | subnets         |                                      |
-        | tenant_id       | f77bf3369741408e89d8f6fe090d29d2     |
-        +-----------------+--------------------------------------+
+        $ openstack network create worker_network
+        +---------------------------+--------------------------------------+
+        | Field                     | Value                                |
+        +---------------------------+--------------------------------------+
+        | admin_state_up            | UP                                   |
+        | availability_zone_hints   |                                      |
+        | availability_zones        |                                      |
+        | created_at                | 2016-11-06T22:28:45Z                 |
+        | description               |                                      |
+        | headers                   |                                      |
+        | id                        | 4d25ff64-eec3-4ab6-9029-f6d4b5a3e127 |
+        | ipv4_address_scope        | None                                 |
+        | ipv6_address_scope        | None                                 |
+        | mtu                       | 1450                                 |
+        | name                      | worker_network                       |
+        | port_security_enabled     | True                                 |
+        | project_id                | a59a543373bc4b12b74f07355ad1cabe     |
+        | provider:network_type     | vxlan                                |
+        | provider:physical_network | None                                 |
+        | provider:segmentation_id  | 54                                   |
+        | revision_number           | 3                                    |
+        | router:external           | Internal                             |
+        | shared                    | False                                |
+        | status                    | ACTIVE                               |
+        | subnets                   |                                      |
+        | tags                      | []                                   |
+        | updated_at                | 2016-11-06T22:28:45Z                 |
+        +---------------------------+--------------------------------------+
 
-        $ neutron subnet-create --name worker_subnet worker_network 10.0.1.0/24
-        Created a new subnet:
-        +-------------------+--------------------------------------------+
-        | Field             | Value                                      |
-        +-------------------+--------------------------------------------+
-        | allocation_pools  | {"start": "10.0.1.2", "end": "10.0.1.254"} |
-        | cidr              | 10.0.1.0/24                                |
-        | dns_nameservers   |                                            |
-        | enable_dhcp       | True                                       |
-        | gateway_ip        | 10.0.1.1                                   |
-        | host_routes       |                                            |
-        | id                | a0e2ebe4-5d4e-46b3-82b5-4179d778e615       |
-        | ip_version        | 4                                          |
-        | ipv6_address_mode |                                            |
-        | ipv6_ra_mode      |                                            |
-        | name              | worker_subnet                              |
-        | network_id        | 953224c6-c510-45c5-8a29-37deffd3d78e       |
-        | tenant_id         | f77bf3369741408e89d8f6fe090d29d2           |
-        +-------------------+--------------------------------------------+
+
+        $ openstack subnet create worker_subnet --network worker_network --subnet-range 10.0.1.0/24
+        +-------------------+--------------------------------------+
+        | Field             | Value                                |
+        +-------------------+--------------------------------------+
+        | allocation_pools  | 10.0.1.2-10.0.1.254                  |
+        | cidr              | 10.0.1.0/24                          |
+        | created_at        | 2016-11-06T22:34:47Z                 |
+        | description       |                                      |
+        | dns_nameservers   |                                      |
+        | enable_dhcp       | True                                 |
+        | gateway_ip        | 10.0.1.1                             |
+        | headers           |                                      |
+        | host_routes       |                                      |
+        | id                | 383309b3-184d-4060-a151-a73dcb0606db |
+        | ip_version        | 4                                    |
+        | ipv6_address_mode | None                                 |
+        | ipv6_ra_mode      | None                                 |
+        | name              | worker_subnet                        |
+        | network_id        | 4d25ff64-eec3-4ab6-9029-f6d4b5a3e127 |
+        | project_id        | a59a543373bc4b12b74f07355ad1cabe     |
+        | revision_number   | 2                                    |
+        | service_types     |                                      |
+        | subnetpool_id     | None                                 |
+        | updated_at        | 2016-11-06T22:34:47Z                 |
+        +-------------------+--------------------------------------+
+
 
 Now, create a network and subnet for the web servers.
 
 ::
 
-    $ neutron net-create webserver_network
-    Created a new network:
-    +-----------------+--------------------------------------+
-    | Field           | Value                                |
-    +-----------------+--------------------------------------+
-    | admin_state_up  | True                                 |
-    | id              | 28cf9704-2b43-4925-b23e-22a892e354f2 |
-    | mtu             | 0                                    |
-    | name            | webserver_network                    |
-    | router:external | False                                |
-    | shared          | False                                |
-    | status          | ACTIVE                               |
-    | subnets         |                                      |
-    | tenant_id       | 0cb06b70ef67424b8add447415449722     |
-    +-----------------+--------------------------------------+
+    $ openstack network create webserver_network
+    +---------------------------+--------------------------------------+
+    | Field                     | Value                                |
+    +---------------------------+--------------------------------------+
+    | admin_state_up            | UP                                   |
+    | availability_zone_hints   |                                      |
+    | availability_zones        |                                      |
+    | created_at                | 2016-11-06T22:36:19Z                 |
+    | description               |                                      |
+    | headers                   |                                      |
+    | id                        | 2410c262-6c27-4e99-8c31-045b60499a01 |
+    | ipv4_address_scope        | None                                 |
+    | ipv6_address_scope        | None                                 |
+    | mtu                       | 1450                                 |
+    | name                      | webserver_network                    |
+    | port_security_enabled     | True                                 |
+    | project_id                | a59a543373bc4b12b74f07355ad1cabe     |
+    | provider:network_type     | vxlan                                |
+    | provider:physical_network | None                                 |
+    | provider:segmentation_id  | 96                                   |
+    | revision_number           | 3                                    |
+    | router:external           | Internal                             |
+    | shared                    | False                                |
+    | status                    | ACTIVE                               |
+    | subnets                   |                                      |
+    | tags                      | []                                   |
+    | updated_at                | 2016-11-06T22:36:19Z                 |
+    +---------------------------+--------------------------------------+
 
-    $ neutron subnet-create --name webserver_subnet webserver_network 10.0.2.0/24
-    Created a new subnet:
-    +-------------------+--------------------------------------------+
-    | Field             | Value                                      |
-    +-------------------+--------------------------------------------+
-    | allocation_pools  | {"start": "10.0.2.2", "end": "10.0.2.254"} |
-    | cidr              | 10.0.2.0/24                                |
-    | dns_nameservers   |                                            |
-    | enable_dhcp       | True                                       |
-    | gateway_ip        | 10.0.2.1                                   |
-    | host_routes       |                                            |
-    | id                | 1e0d6a75-c40e-4be5-8e13-b2226fc8444a       |
-    | ip_version        | 4                                          |
-    | ipv6_address_mode |                                            |
-    | ipv6_ra_mode      |                                            |
-    | name              | webserver_subnet                           |
-    | network_id        | 28cf9704-2b43-4925-b23e-22a892e354f2       |
-    | tenant_id         | 0cb06b70ef67424b8add447415449722           |
-    +-------------------+--------------------------------------------+
+    $ openstack subnet create webserver_subnet --network webserver_network --subnet-range 10.0.2.0/24
+    +-------------------+--------------------------------------+
+    | Field             | Value                                |
+    +-------------------+--------------------------------------+
+    | allocation_pools  | 10.0.2.2-10.0.2.254                  |
+    | cidr              | 10.0.2.0/24                          |
+    | created_at        | 2016-11-06T22:37:47Z                 |
+    | description       |                                      |
+    | dns_nameservers   |                                      |
+    | enable_dhcp       | True                                 |
+    | gateway_ip        | 10.0.2.1                             |
+    | headers           |                                      |
+    | host_routes       |                                      |
+    | id                | 5878afa5-8f1d-4de5-8018-530044a49934 |
+    | ip_version        | 4                                    |
+    | ipv6_address_mode | None                                 |
+    | ipv6_ra_mode      | None                                 |
+    | name              | webserver_subnet                     |
+    | network_id        | 2410c262-6c27-4e99-8c31-045b60499a01 |
+    | project_id        | a59a543373bc4b12b74f07355ad1cabe     |
+    | revision_number   | 2                                    |
+    | service_types     |                                      |
+    | subnetpool_id     | None                                 |
+    | updated_at        | 2016-11-06T22:37:47Z                 |
+    +-------------------+--------------------------------------+
+
 
 Next, create a network and subnet for the API servers.
 
 ::
 
-    $ neutron net-create api_network
-    Created a new network:
-    +-----------------+--------------------------------------+
-    | Field           | Value                                |
-    +-----------------+--------------------------------------+
-    | admin_state_up  | True                                 |
-    | id              | 5fe4045a-65dc-4672-b44e-1f14a496a71a |
-    | mtu             | 0                                    |
-    | name            | api_network                          |
-    | router:external | False                                |
-    | shared          | False                                |
-    | status          | ACTIVE                               |
-    | subnets         |                                      |
-    | tenant_id       | 0cb06b70ef67424b8add447415449722     |
-    +-----------------+--------------------------------------+
+    $ openstack network create api_network
+    +---------------------------+--------------------------------------+
+    | Field                     | Value                                |
+    +---------------------------+--------------------------------------+
+    | admin_state_up            | UP                                   |
+    | availability_zone_hints   |                                      |
+    | availability_zones        |                                      |
+    | created_at                | 2016-11-06T22:38:51Z                 |
+    | description               |                                      |
+    | headers                   |                                      |
+    | id                        | 8657f3a3-6e7d-40a1-a979-1a8c54d5e434 |
+    | ipv4_address_scope        | None                                 |
+    | ipv6_address_scope        | None                                 |
+    | mtu                       | 1450                                 |
+    | name                      | api_network                          |
+    | port_security_enabled     | True                                 |
+    | project_id                | a59a543373bc4b12b74f07355ad1cabe     |
+    | provider:network_type     | vxlan                                |
+    | provider:physical_network | None                                 |
+    | provider:segmentation_id  | 64                                   |
+    | revision_number           | 3                                    |
+    | router:external           | Internal                             |
+    | shared                    | False                                |
+    | status                    | ACTIVE                               |
+    | subnets                   |                                      |
+    | tags                      | []                                   |
+    | updated_at                | 2016-11-06T22:38:51Z                 |
+    +---------------------------+--------------------------------------+
 
-    $ neutron subnet-create --name api_subnet api_network 10.0.3.0/24
-    Created a new subnet:
-    +-------------------+--------------------------------------------+
-    | Field             | Value                                      |
-    +-------------------+--------------------------------------------+
-    | allocation_pools  | {"start": "10.0.3.2", "end": "10.0.3.254"} |
-    | cidr              | 10.0.3.0/24                                |
-    | dns_nameservers   |                                            |
-    | enable_dhcp       | True                                       |
-    | gateway_ip        | 10.0.3.1                                   |
-    | host_routes       |                                            |
-    | id                | 6ce4b60d-a940-4369-b8f0-2e9c196e4f20       |
-    | ip_version        | 4                                          |
-    | ipv6_address_mode |                                            |
-    | ipv6_ra_mode      |                                            |
-    | name              | api_network                                |
-    | network_id        | 5fe4045a-65dc-4672-b44e-1f14a496a71a       |
-    | tenant_id         | 0cb06b70ef67424b8add447415449722           |
-    +-------------------+--------------------------------------------+
+    $ openstack subnet create api_subnet --network api_network --subnet-range 10.0.3.0/24
+    +-------------------+--------------------------------------+
+    | Field             | Value                                |
+    +-------------------+--------------------------------------+
+    | allocation_pools  | 10.0.3.2-10.0.3.254                  |
+    | cidr              | 10.0.3.0/24                          |
+    | created_at        | 2016-11-06T22:40:15Z                 |
+    | description       |                                      |
+    | dns_nameservers   |                                      |
+    | enable_dhcp       | True                                 |
+    | gateway_ip        | 10.0.3.1                             |
+    | headers           |                                      |
+    | host_routes       |                                      |
+    | id                | 614e7801-eb35-45c6-8e49-da5bdc9161f5 |
+    | ip_version        | 4                                    |
+    | ipv6_address_mode | None                                 |
+    | ipv6_ra_mode      | None                                 |
+    | name              | api_subnet                           |
+    | network_id        | 8657f3a3-6e7d-40a1-a979-1a8c54d5e434 |
+    | project_id        | a59a543373bc4b12b74f07355ad1cabe     |
+    | revision_number   | 2                                    |
+    | service_types     |                                      |
+    | subnetpool_id     | None                                 |
+    | updated_at        | 2016-11-06T22:40:15Z                 |
+    +-------------------+--------------------------------------+
+
 
 Now that you have got the networks created, go ahead and create two
 Floating IPs, for web servers. Ensure that you replace 'public' with
@@ -343,35 +405,45 @@ the name of the public/external network offered by your cloud provider.
 
 ::
 
-    $ neutron floatingip-create public
-    Created a new floatingip:
+    $ openstack floating ip create public
     +---------------------+--------------------------------------+
     | Field               | Value                                |
     +---------------------+--------------------------------------+
-    | fixed_ip_address    |                                      |
-    | floating_ip_address | 203.0.113.21                         |
-    | floating_network_id | 7ad1ce2b-4b8c-4036-a77b-90332d7f4dbe |
-    | id                  | 185df49f-7890-4c59-a66a-2456b6a87422 |
-    | port_id             |                                      |
-    | router_id           |                                      |
+    | created_at          | 2016-11-06T22:47:30Z                 |
+    | description         |                                      |
+    | fixed_ip_address    | None                                 |
+    | floating_ip_address | 172.24.4.2                           |
+    | floating_network_id | 27e6fa33-fd39-475e-b048-6ac924972a03 |
+    | headers             |                                      |
+    | id                  | 820385df-36a7-415d-955c-6ff662fdb796 |
+    | port_id             | None                                 |
+    | project_id          | a59a543373bc4b12b74f07355ad1cabe     |
+    | revision_number     | 1                                    |
+    | router_id           | None                                 |
     | status              | DOWN                                 |
-    | tenant_id           | 0cb06b70ef67424b8add447415449722     |
+    | updated_at          | 2016-11-06T22:47:30Z                 |
     +---------------------+--------------------------------------+
 
-    $ neutron floatingip-create public
-    Created a new floatingip:
+
+    $ openstack floating ip create public
     +---------------------+--------------------------------------+
     | Field               | Value                                |
     +---------------------+--------------------------------------+
-    | fixed_ip_address    |                                      |
-    | floating_ip_address | 203.0.113.22                         |
-    | floating_network_id | 7ad1ce2b-4b8c-4036-a77b-90332d7f4dbe |
-    | id                  | 185df49f-7890-4c59-a66a-2456b6a87422 |
-    | port_id             |                                      |
-    | router_id           |                                      |
+    | created_at          | 2016-11-06T22:48:45Z                 |
+    | description         |                                      |
+    | fixed_ip_address    | None                                 |
+    | floating_ip_address | 172.24.4.12                          |
+    | floating_network_id | 27e6fa33-fd39-475e-b048-6ac924972a03 |
+    | headers             |                                      |
+    | id                  | 3d9f1591-a31e-4684-8346-f4bb33a176b0 |
+    | port_id             | None                                 |
+    | project_id          | a59a543373bc4b12b74f07355ad1cabe     |
+    | revision_number     | 1                                    |
+    | router_id           | None                                 |
     | status              | DOWN                                 |
-    | tenant_id           | 0cb06b70ef67424b8add447415449722     |
+    | updated_at          | 2016-11-06T22:48:45Z                 |
     +---------------------+--------------------------------------+
+
 
 .. note:: The world is running out of IPv4 addresses. If you get the
           "No more IP addresses available on network" error,
@@ -388,55 +460,73 @@ various networks that you use.
 
 ::
 
-        $ neutron router-create tenant_router
-        Created a new router:
-        +-----------------------+--------------------------------------+
-        | Field                 | Value                                |
-        +-----------------------+--------------------------------------+
-        | admin_state_up        | True                                 |
-        | external_gateway_info |                                      |
-        | id                    | d380b29f-ca65-4718-9735-196cbed10fce |
-        | name                  | tenant_router                        |
-        | routes                |                                      |
-        | status                | ACTIVE                               |
-        | tenant_id             | f77bf3369741408e89d8f6fe090d29d2     |
-        +-----------------------+--------------------------------------+
+        $ openstack router create project_router
+        +-------------------------+--------------------------------------+
+        | Field                   | Value                                |
+        +-------------------------+--------------------------------------+
+        | admin_state_up          | UP                                   |
+        | availability_zone_hints |                                      |
+        | availability_zones      |                                      |
+        | created_at              | 2016-11-06T22:49:59Z                 |
+        | description             |                                      |
+        | distributed             | False                                |
+        | external_gateway_info   | null                                 |
+        | flavor_id               | None                                 |
+        | ha                      | False                                |
+        | headers                 |                                      |
+        | id                      | e11eba23-961c-43d7-8da0-561abdad880c |
+        | name                    | project_router                       |
+        | project_id              | a59a543373bc4b12b74f07355ad1cabe     |
+        | revision_number         | 2                                    |
+        | routes                  |                                      |
+        | status                  | ACTIVE                               |
+        | updated_at              | 2016-11-06T22:49:59Z                 |
+        +-------------------------+--------------------------------------+
+
 
 Specify an external gateway for your router to tell OpenStack which
 network to use for Internet access.
 
 ::
 
-    $ neutron router-gateway-set tenant_router public
-    Set gateway for router tenant_router
+    $ openstack router set project_router --external-gateway public
+    Set gateway for router project_router
 
-    $ neutron router-show tenant_router
-
-            +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-            | Field                 | Value                                                                                                                                                                                    |
-            +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-            | admin_state_up        | True                                                                                                                                                                                     |
-            | external_gateway_info | {"network_id": "29349515-98c1-4f59-922e-3809d1b9707c", "enable_snat": true, "external_fixed_ips": [{"subnet_id": "7203dd35-7d17-4f37-81a1-9554b3316ddb", "ip_address": "203.0.113.50"}]} |
-            | id                    | d380b29f-ca65-4718-9735-196cbed10fce                                                                                                                                                     |
-            | name                  | tenant_router                                                                                                                                                                            |
-            | routes                |                                                                                                                                                                                          |
-            | status                | ACTIVE                                                                                                                                                                                   |
-            | tenant_id             | f77bf3369741408e89d8f6fe090d29d2                                                                                                                                                         |
-            +-----------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-
+    $ openstack router show project_router
+    +-------------------------+-------------------------------------------------------------------------+
+    | Field                   | Value                                                                   |
+    +-------------------------+-------------------------------------------------------------------------+
+    | admin_state_up          | UP                                                                      |
+    | availability_zone_hints |                                                                         |
+    | availability_zones      | nova                                                                    |
+    | created_at              | 2016-11-06T22:49:59Z                                                    |
+    | description             |                                                                         |
+    | distributed             | False                                                                   |
+    | external_gateway_info   | {"network_id": "27e6fa33-fd39-475e-b048-6ac924972a03", "enable_snat":   |
+    |                         | true, "external_fixed_ips": [{"subnet_id":                              |
+    |                         | "d02006a5-3d10-41f1-a349-6024af41cda0", "ip_address": "172.24.4.13"},   |
+    |                         | {"subnet_id": "b12293c9-a1f4-49e3-952f-136a5dd24980", "ip_address":     |
+    |                         | "2001:db8::9"}]}                                                        |
+    | flavor_id               | None                                                                    |
+    | ha                      | False                                                                   |
+    | id                      | e11eba23-961c-43d7-8da0-561abdad880c                                    |
+    | name                    | project_router                                                          |
+    | project_id              | a59a543373bc4b12b74f07355ad1cabe                                        |
+    | revision_number         | 5                                                                       |
+    | routes                  |                                                                         |
+    | status                  | ACTIVE                                                                  |
+    | updated_at              | 2016-11-06T22:53:04Z                                                    |
+    +-------------------------+-------------------------------------------------------------------------+
 
 Now, attach your router to the worker, API, and web server subnets.
 
 ::
 
-        $ neutron router-interface-add tenant_router worker_subnet
-        Added interface 0d8bd523-06c2-4ddd-8b33-8726af2daa0a to router tenant_router.
+        $ openstack router add subnet project_router worker_subnet
 
-        $ neutron router-interface-add tenant_router api_subnet
-        Added interface 40a7f9a7-0922-4a3d-80de-078222476ba0 to router tenant_router.
+        $ openstack router add subnet project_router api_subnet
 
-        $ neutron router-interface-add tenant_router webserver_subnet
-        Added interface e07271dc-816e-4f62-ab25-3aff155d7faf to router tenant_router.
+        $ openstack router add subnet project_router webserver_subnet
 
 Booting a worker
 ----------------
@@ -534,13 +624,14 @@ Start by looking at what is already in place.
 
 ::
 
-    $ neutron net-list
-    +--------------------------------------+-------------------+-----------------------------------------------------+
-    | id                                   | name              | subnets                                             |
-    +--------------------------------------+-------------------+-----------------------------------------------------+
-    | 3c826379-e896-45a9-bfe1-8d84e68e9c63 | webserver_network | 3eada497-36dd-485b-9ba4-90c5e3340a53 10.0.2.0/24    |
-    | 7ad1ce2b-4b8c-4036-a77b-90332d7f4dbe | public            | 47fd3ff1-ead6-4d23-9ce6-2e66a3dae425 203.0.113.0/24 |
-    +--------------------------------------+-------------------+-----------------------------------------------------+
+    $ openstack network list
+    +--------------------------------------+-------------------+---------------------------------------+
+    | ID                                   | Name              | Subnets                               |
+    +--------------------------------------+-------------------+---------------------------------------+
+    | 2410c262-6c27-4e99-8c31-045b60499a01 | webserver_network | 5878afa5-8f1d-4de5-8018-530044a49934  |
+    | 27e6fa33-fd39-475e-b048-6ac924972a03 | public            | b12293c9-a1f4-49e3-952f-136a5dd24980, |
+    |                                      |                   | d02006a5-3d10-41f1-a349-6024af41cda0  |
+    +--------------------------------------+-------------------+---------------------------------------+
 
 Go ahead and create two instances.
 
@@ -594,49 +685,66 @@ Look at which ports are available:
 
 ::
 
-    $ neutron port-list
-    +--------------------------------------+------+-------------------+---------------------------------------------------------------------------------+
-    | id                                   | name | mac_address       | fixed_ips                                                                       |
-    +--------------------------------------+------+-------------------+---------------------------------------------------------------------------------+
-    | 1d9a0f79-bf05-443e-b65d-a05b0c635936 |      | fa:16:3e:10:f8:f0 | {"subnet_id": "3eada497-36dd-485b-9ba4-90c5e3340a53", "ip_address": "10.0.2.2"} |
-    | 3f40c866-169b-48ec-8e0a-d9f1e70e5756 |      | fa:16:3e:8c:6f:25 | {"subnet_id": "3eada497-36dd-485b-9ba4-90c5e3340a53", "ip_address": "10.0.2.1"} |
-    | 462c92c6-941c-48ab-8cca-3c7a7308f580 |      | fa:16:3e:d7:7d:56 | {"subnet_id": "3eada497-36dd-485b-9ba4-90c5e3340a53", "ip_address": "10.0.2.4"} |
-    | 7451d01f-bc3b-46a6-9ae3-af260d678a63 |      | fa:16:3e:c6:d4:9c | {"subnet_id": "3eada497-36dd-485b-9ba4-90c5e3340a53", "ip_address": "10.0.2.3"} |
-    +--------------------------------------+------+-------------------+---------------------------------------------------------------------------------+
+    $ openstack port list
+    +--------------------------------------+------+-------------------+--------------------------------------------+
+    | ID                                   | Name | MAC Address       | Fixed IP Addresses                         |
+    +--------------------------------------+------+-------------------+--------------------------------------------+
+    | 11b38c90-f55e-41a7-b68b-0d434d66bfa2 |      | fa:16:3e:21:95:a1 | ip_address='10.0.0.1', subnet_id='e7f75523 |
+    |                                      |      |                   | -ae4b-4611-85a3-07efa2e1ba0f'              |
+    | 523331cf-5636-4298-a14c-f545bb32abcf |      | fa:16:3e:f8:a1:81 | ip_address='10.0.0.2', subnet_id='e7f75523 |
+    |                                      |      |                   | -ae4b-4611-85a3-07efa2e1ba0f'              |
+    |                                      |      |                   | ip_address='2001:db8:8000:0:f816:3eff:fef8 |
+    |                                      |      |                   | :a181', subnet_id='f8628fd8-8d61-43e2-9dc8 |
+    |                                      |      |                   | -a03d25443b7d'                             |
+    | cbba0f37-c1a0-4fc8-8722-68e42de7df16 |      | fa:16:3e:39:a6:18 | ip_address='2001:db8:8000::1', subnet_id=' |
+    |                                      |      |                   | f8628fd8-8d61-43e2-9dc8-a03d25443b7d'      |
+    +--------------------------------------+------+-------------------+--------------------------------------------+
+
+
 
 Next, create additional floating IPs. Specify the fixed IP addresses
 they should point to and the ports that they should use:
 
 ::
 
-    $ neutron floatingip-create public --fixed-ip-address 10.0.2.3 --port-id 7451d01f-bc3b-46a6-9ae3-af260d678a63
-    Created a new floatingip:
+    $ openstack floating ip create public --fixed-ip-address 10.0.0.2 --port 523331cf-5636-4298-a14c-f545bb32abcf
     +---------------------+--------------------------------------+
     | Field               | Value                                |
     +---------------------+--------------------------------------+
-    | fixed_ip_address    | 10.0.2.3                             |
-    | floating_ip_address | 203.0.113.21                         |
-    | floating_network_id | 7ad1ce2b-4b8c-4036-a77b-90332d7f4dbe |
-    | id                  | dd2c838e-7c1b-480c-a18c-17f1526c96ea |
-    | port_id             | 7451d01f-bc3b-46a6-9ae3-af260d678a63 |
-    | router_id           | 7f8ee1f6-7211-40e8-b9a8-17582ecfe50b |
+    | created_at          | 2016-11-06T23:23:29Z                 |
+    | description         |                                      |
+    | fixed_ip_address    | 10.0.0.2                             |
+    | floating_ip_address | 172.24.4.2                           |
+    | floating_network_id | 27e6fa33-fd39-475e-b048-6ac924972a03 |
+    | headers             |                                      |
+    | id                  | 0ed15644-4290-4adf-91d4-5713eea895e5 |
+    | port_id             | 523331cf-5636-4298-a14c-f545bb32abcf |
+    | project_id          | 3d2db0593c8045a392fd18385b401b5b     |
+    | revision_number     | 1                                    |
+    | router_id           | 309d1402-a373-4022-9ab8-6824aad1a415 |
     | status              | DOWN                                 |
-    | tenant_id           | 0cb06b70ef67424b8add447415449722     |
+    | updated_at          | 2016-11-06T23:23:29Z                 |
     +---------------------+--------------------------------------+
-    $ neutron floatingip-create public --fixed-ip-address 10.0.2.4 --port-id 462c92c6-941c-48ab-8cca-3c7a7308f580
-    Created a new floatingip:
+
+    $ openstack floating ip create public --fixed-ip-address 10.0.2.4 --port 462c92c6-941c-48ab-8cca-3c7a7308f580
     +---------------------+--------------------------------------+
     | Field               | Value                                |
     +---------------------+--------------------------------------+
-    | fixed_ip_address    | 10.0.2.4                             |
-    | floating_ip_address | 203.0.113.22                         |
-    | floating_network_id | 7ad1ce2b-4b8c-4036-a77b-90332d7f4dbe |
-    | id                  | 6eb510bf-c18f-4c6f-bb35-e21938ca8bd4 |
-    | port_id             | 462c92c6-941c-48ab-8cca-3c7a7308f580 |
-    | router_id           | 7f8ee1f6-7211-40e8-b9a8-17582ecfe50b |
+    | created_at          | 2016-11-06T23:25:26Z                 |
+    | description         |                                      |
+    | fixed_ip_address    | 10.0.0.1                             |
+    | floating_ip_address | 172.24.4.8                           |
+    | floating_network_id | 27e6fa33-fd39-475e-b048-6ac924972a03 |
+    | headers             |                                      |
+    | id                  | 68082405-82f2-4072-b5c3-7047df527a8a |
+    | port_id             | 11b38c90-f55e-41a7-b68b-0d434d66bfa2 |
+    | project_id          | 3d2db0593c8045a392fd18385b401b5b     |
+    | revision_number     | 1                                    |
+    | router_id           | 309d1402-a373-4022-9ab8-6824aad1a415 |
     | status              | DOWN                                 |
-    | tenant_id           | 0cb06b70ef67424b8add447415449722     |
+    | updated_at          | 2016-11-06T23:25:26Z                 |
     +---------------------+--------------------------------------+
+
 
 You are ready to create members for the load balancer pool, which
 reference the floating IPs:
