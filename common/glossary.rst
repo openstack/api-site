@@ -393,11 +393,10 @@ B
       Storage, locally mounted file system, RADOS block devices, VMware
       datastore, and HTTP.
 
-   backup restore and disaster recovery as a service
+   Backup, Restore, and Disaster Recovery service (freezer)
 
-      The OpenStack project that provides integrated tooling for
-      backing up, restoring, and recovering file systems,
-      instances, or database backups. The project name is freezer.
+      The project that provides integrated tooling for backing up, restoring,
+      and recovering file systems, instances, or database backups.
 
    bandwidth
 
@@ -856,7 +855,8 @@ C
 
    congress
 
-      OpenStack project that provides the Governance service.
+      Code name for the :term:`Governance service
+      <Governance service (congress)>`.
 
    consistency window
 
@@ -1555,8 +1555,8 @@ F
 
    freezer
 
-      OpenStack project that provides backup restore and disaster
-      recovery as a service.
+      Code name for the :term:`Backup, Restore, and Disaster Recovery service
+      <Backup, Restore, and Disaster Recovery service (freezer)>`.
 
    front end
 
@@ -1618,12 +1618,11 @@ G
       image is created and then used by all nodes without
       modification.
 
-   Governance service
+   Governance service (congress)
 
-      OpenStack project to provide Governance-as-a-Service across
+      The project that provides Governance-as-a-Service across
       any collection of cloud services in order to monitor,
-      enforce, and audit policy over dynamic infrastructure. The
-      code name for the project is congress.
+      enforce, and audit policy over dynamic infrastructure.
 
    Graphic Interchange Format (GIF)
 
