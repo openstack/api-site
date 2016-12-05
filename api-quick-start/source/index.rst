@@ -25,6 +25,8 @@ Current API versions
 
 `Data Processing v1.1 <http://developer.openstack.org/api-ref/data-processing/>`__
 
+`Data Protection Orchestration v1 <http://developer.openstack.org/api-ref/data-protection-orchestration/>`__
+
 `Database Service API v1.0 <http://developer.openstack.org/api-ref/database/>`__
 
 `Domain Name Server (DNS) API v2 <http://developer.openstack.org/api-ref/dns/>`__
