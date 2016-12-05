@@ -1079,7 +1079,7 @@ D
 
    designate
 
-      Code name for the DNS service project for OpenStack.
+      Code name for the :term:`DNS service <DNS service (designate)>`.
 
    Desktop-as-a-Service
 
@@ -1184,12 +1184,11 @@ D
       A record that specifies information about a particular domain
       and belongs to the domain.
 
-   DNS service
+   DNS service (designate)
 
       OpenStack project that provides scalable, on demand, self
       service access to authoritative DNS services, in a
-      technology-agnostic manner. The code name for the project is
-      designate.
+      technology-agnostic manner.
 
    dnsmasq
 
@@ -2551,6 +2550,12 @@ N
 
       Provides support for NexentaStor devices in Compute.
 
+   NFV Orchestration Service (tacker)
+
+      OpenStack service that aims to implement Network Function Virtualization
+      (NFV) Orchestration services and libraries for end-to-end life-cycle
+      management of Network Services and Virtual Network Functions (VNFs).
+
    Nginx
 
       An HTTP and reverse proxy server, a mail proxy server, and a generic
@@ -3506,12 +3511,12 @@ S
       A controlled reboot where a VM instance is properly restarted
       through operating system commands.
 
-   Software Development Lifecycle Automation service
+   Software Development Lifecycle Automation service (solum)
 
       OpenStack project that aims to make cloud services easier to
       consume and integrate with application development process
       by automating the source-to-image process, and simplifying
-      app-centric deployment. The project name is solum.
+      app-centric deployment.
 
    SolidFire Volume Driver
 
@@ -3520,8 +3525,8 @@ S
 
    solum
 
-      OpenStack project that provides a Software Development
-      Lifecycle Automation service.
+      Code name for the :term:`Software Development Lifecycle Automation
+      service <Software Development Lifecycle Automation service (solum)>`.
 
    spread-first scheduler
 
@@ -3666,6 +3671,11 @@ T
 ~
 
 .. glossary::
+
+   tacker
+
+      Code name for the :term:`NFV Orchestration service <NFV Orchestration
+      service (tacker)>`
 
    Telemetry service (telemetry)
 
