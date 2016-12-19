@@ -41,7 +41,7 @@ This section introduces the
 `HOT templating language <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_,
 and takes you through some common OpenStack Orchestration calls.
 
-In previous sections, you used your SDK to programatically interact with
+In previous sections, you used your SDK to programmatically interact with
 OpenStack. In this section, you use the 'heat' command-line client to access
 the Orchestration API directly through template files.
 
