@@ -31,6 +31,8 @@ Current API versions
 
 `Domain Name Server (DNS) API v2 <http://developer.openstack.org/api-ref/dns/>`__
 
+`EC2 API Service <http://developer.openstack.org/api-ref/ec2-api/>`__
+
 `Identity API v3 <http://developer.openstack.org/api-ref/identity/v3>`__
 
 `Identity API v3 extensions <http://developer.openstack.org/api-ref/identity/v3-ext>`__
