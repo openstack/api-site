@@ -97,9 +97,9 @@ and toolkits with the OpenStack cloud:
        Use it to write C++ or C# code for Microsoft applications.
      - https://www.nuget.org/packages/openstack.net
    * - Go
-     - `gophercloud <https://github.com/rackspace/gophercloud>`_
+     - `gophercloud <https://github.com/gophercloud/gophercloud>`_
      - A go-based SDK.
-       Use it with multiple clouds.
+       Use it to write Golang code that works with OpenStack clouds.
      - http://gophercloud.io/
 
 For a list of available SDKs, see `Software Development Kits <https://wiki.openstack.org/wiki/SDKs>`_.
@@ -232,7 +232,7 @@ To interact with the cloud, you must also have
 
 .. only:: gophercloud
 
-          `a recent version of gophercloud installed <https://godoc.org/github.com/rackspace/gophercloud>`_
+          `a recent version of gophercloud installed <https://godoc.org/github.com/gophercloud/gophercloud>`_
 
 
 Obtain the following information from your cloud provider:
@@ -383,14 +383,14 @@ to run code snippets in your language of choice.
 
 .. only:: gophercloud
 
-    To try it, add the following code to go file
+    Use environment variables to set your cloud credentials
 
     .. literalinclude:: ../samples/gophercloud/getting_started.go
         :language: go
         :start-after: step-1
         :end-before: step-2
 
-    .. note:: The client object accesses the Compute v2.0 service,
+    .. note:: The client object accesses the Compute v2.0 service and type v2.1,
               so that version is in this tutorial.
 
 Flavors and images

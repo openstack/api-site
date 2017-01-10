@@ -33,3 +33,24 @@ Specify a network during instance build
             image=image_id,
             flavor=flavor_id,
             network=network_id)
+
+.. only:: gophercloud
+
+    Add the option Networks and send its id to attach the instance to:
+
+    .. code-block:: go
+
+        opts := servers.CreateOpts {
+            Name: instanceName,
+            ImageRef: image.ID,
+            FlavorRef: flavor.ID,
+            SecurityGroups: []string{securityGroupName},
+            UserData: []byte(userData),
+            Networks: []servers.Network{servers.Network{UUID: networkID}},
+
+        }
+
+        testingInstance, _ = servers.Create(client, keypairs.CreateOptsExt {
+            CreateOptsBuilder: opts,
+            KeyName: keyPairName,
+        }).Extract()
