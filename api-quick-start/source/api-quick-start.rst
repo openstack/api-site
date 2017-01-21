@@ -346,7 +346,7 @@ Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
 .. code-block:: console
 
-   export OS_TOKEN=4b57c7d386a7438b829d1a8922e0eaab
+   export OS_TOKEN=4b57c7d386a7438b829d1a8922e0eaac
 
 The token expires every hour by default,
 though it can be configured differently - see
