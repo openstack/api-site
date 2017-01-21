@@ -55,7 +55,6 @@ for fractal in data['objects']:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
                 f.write(chunk)
-        f.close()
     conn.create_object(container=container_name, name=fractal['uuid'])
 
 for object in conn.list_objects(container_name):
