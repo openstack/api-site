@@ -67,11 +67,11 @@ Because the SDKs do not fully support the OpenStack Networking API, this
 section uses the command-line clients.
 
 Use this guide to install the 'openstack' command-line client:
-http://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
+https://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
 
 Use this guide to set up the necessary variables for your cloud in an
 'openrc' file:
-http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
+https://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
 
 Ensure you have an openrc.sh file, source it, and then check that your
 openstack client works: ::
@@ -586,7 +586,7 @@ Neutron LbaaS API
 -----------------
 
 .. note:: This section is based on the Neutron LBaaS API version 1.0
-          http://docs.openstack.org/admin-guide/networking_adv-features.html#basic-load-balancer-as-a-service-operations
+          https://docs.openstack.org/admin-guide/networking_adv-features.html#basic-load-balancer-as-a-service-operations
 
 .. todo:: libcloud support added 0.14:
           https://developer.rackspace.com/blog/libcloud-0-dot-14-released/ -
