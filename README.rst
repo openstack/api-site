@@ -2,8 +2,8 @@
 Team and repository tags
 ========================
 
-.. image:: http://governance.openstack.org/badges/api-site.svg
-    :target: http://governance.openstack.org/reference/tags/index.html
+.. image:: https://governance.openstack.org/badges/api-site.svg
+    :target: https://governance.openstack.org/reference/tags/index.html
 
 .. Change things from this point on
 
@@ -13,7 +13,7 @@ API-Site repository
 This repository contains API documentation for the OpenStack project.
 
 For details, see `OpenStack Documentation Contributor Guide
-<http://docs.openstack.org/contributor-guide/index.html>`_,
+<https://docs.openstack.org/contributor-guide/index.html>`_,
 which includes these pages:
 
  * API Quick Start
@@ -30,7 +30,7 @@ because they are moving to project repositories.
 To complete code reviews in this repository, use the standard
 OpenStack Gerrit `workflow <https://review.openstack.org>`_.
 For details, see `Gerrit Workflow
-<http://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
+<https://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
 Prerequisites
 =============
@@ -78,7 +78,7 @@ Build and update API docs
 =========================
 
 Refer to the `OpenStack Documentation Contributor Guide
-<http://docs.openstack.org/contributor-guide/api-guides.html>`_
+<https://docs.openstack.org/contributor-guide/api-guides.html>`_
 for more information.
 
 Run tests
@@ -101,11 +101,11 @@ Contribute
 
 Our community welcomes everyone who is interested in open source cloud
 computing and encourages you to join the
-`OpenStack Foundation <http://www.openstack.org/join>`_.
+`OpenStack Foundation <https://www.openstack.org/join>`_.
 
 The best way to get involved with the community is to talk with others online
 or at a meetup and offer contributions through our processes, the
-`OpenStack wiki <http://wiki.openstack.org>`_, blogs,
+`OpenStack wiki <https://wiki.openstack.org>`_, blogs,
 or on IRC at ``#openstack`` on ``irc.freenode.net``.
 
 We welcome all types of contributions, from blueprint designs to documentation
@@ -113,7 +113,7 @@ to testing to deployment scripts.
 
 To contribute to the documents, see
 `OpenStack Documentation Contributor Guide
-<http://docs.openstack.org/contributor-guide/>`_.
+<https://docs.openstack.org/contributor-guide/>`_.
 
 Bugs
 ====
@@ -126,4 +126,4 @@ Install
 =======
 
 To learn more about the OpenStack project,
-see `OpenStack <http://www.openstack.org/>`_.
+see `OpenStack <https://www.openstack.org/>`_.
