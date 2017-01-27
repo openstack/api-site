@@ -9,11 +9,11 @@ Make it durable
 .. todo:: Explain how to get objects back out again.
 
 .. todo:: Large object support in Swift
-          http://docs.openstack.org/developer/swift/overview_large_objects.html
+          https://docs.openstack.org/developer/swift/overview_large_objects.html
 
 This section introduces object storage.
 
-`OpenStack Object Storage <http://www.openstack.org/software/openstack-storage/>`_
+`OpenStack Object Storage <https://www.openstack.org/software/openstack-storage/>`_
 (code-named swift) is open-source software that enables you to create
 redundant, scalable data storage by using clusters of standardized servers to
 store petabytes of accessible data. It is a long-term storage system for large

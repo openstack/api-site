@@ -38,7 +38,7 @@ volumes, compute instances, networking topology, and security policies.
           available; ask your support team for assistance.
 
 This section introduces the
-`HOT templating language <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_,
+`HOT templating language <https://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_,
 and takes you through some common OpenStack Orchestration calls.
 
 In previous sections, you used your SDK to programmatically interact with
@@ -46,11 +46,11 @@ OpenStack. In this section, you use the 'heat' command-line client to access
 the Orchestration API directly through template files.
 
 Install the 'heat' command-line client by following this guide:
-http://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
+https://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
 
 Use this guide to set up the necessary variables for your cloud in an
 'openrc' file:
-http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
+https://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
 
 .. only:: dotnet
 
@@ -88,7 +88,7 @@ HOT templating language
 
 To learn about the template syntax for OpenStack Orchestration, how to
 create basic templates, and their inputs and outputs, see
-`Heat Orchestration Template (HOT) Guide <http://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_.
+`Heat Orchestration Template (HOT) Guide <https://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_.
 
 Work with stacks: Basics
 ------------------------
@@ -210,12 +210,12 @@ The example template depends on the ceilometer project, which is part of the
 To better understand how the template works, use this guide to install the
 'ceilometer' command-line client:
 
-* http://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
+* https://docs.openstack.org/cli-reference/common/cli_install_openstack_command_line_clients.html#install-the-clients
 
 To set up the necessary variables for your cloud in an 'openrc' file, use this
 guide:
 
-* http://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
+* https://docs.openstack.org/cli-reference/common/cli_set_environment_variables_using_openstack_rc.html
 
 The Telemetry service uses meters to measure a given aspect of a resources
 usage. The meter that we are interested in is the :code:`cpu_util` meter.

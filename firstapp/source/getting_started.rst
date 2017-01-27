@@ -65,12 +65,12 @@ and toolkits with the OpenStack cloud:
    * - Python
      - OpenStack SDK
      - A Python-based library for OpenStack.
-     - http://developer.openstack.org/sdks/python/openstacksdk/
+     - https://developer.openstack.org/sdks/python/openstacksdk/
    * - Python
      - Shade
      - A Python-based library developed by OpenStack Infra team.
        Use it to operate multiple OpenStack clouds.
-     - http://docs.openstack.org/infra/shade/
+     - https://docs.openstack.org/infra/shade/
    * - Java
      - `jClouds <https://jclouds.apache.org>`_
      - A Java-based library that the Apache Foundation manages.
@@ -226,7 +226,7 @@ To interact with the cloud, you must also have
 
 .. only:: shade
 
-     `a recent version of shade library installed <http://docs.openstack.org/infra/shade/installation.html>`_.
+     `a recent version of shade library installed <https://docs.openstack.org/infra/shade/installation.html>`_.
 
      .. note:: Before proceeding, install the latest version of shade.
 
@@ -687,7 +687,7 @@ the image and flavor that you choose.
 If the image that you want is not available in your cloud, you can usually
 upload one depending on the policy settings of your cloud. For information about
 how to upload images, see
-`obtaining images <http://docs.openstack.org/image-guide/obtain-images.html>`_.
+`obtaining images <https://docs.openstack.org/image-guide/obtain-images.html>`_.
 
 Set the image and size variables to appropriate values for your cloud. We will
 use these variables in later sections.
