@@ -6,50 +6,52 @@ Use the OpenStack APIs to launch server instances, create images, assign
 metadata to instances and images, create storage containers and objects, and
 complete other actions in your OpenStack cloud.
 
+.. _current_api_versions:
+
 Current API versions
 --------------------
 
-`Bare Metal API v1 <http://developer.openstack.org/api-ref/baremetal/>`__ (microversions)
+`Bare Metal API v1 <https://developer.openstack.org/api-ref/baremetal/>`__ (microversions)
 
-`Block Storage API v3 <http://developer.openstack.org/api-ref/block-storage/v3/>`__ (microversions)
+`Block Storage API v3 <https://developer.openstack.org/api-ref/block-storage/v3/>`__ (microversions)
 
 .. note:: The Block Storage API v3 is functionally identical to the
    Block Storage API v2. Subsequent API v3 microversions, such as v3.1,
    differ from API v2.
 
-`Clustering API v1 <http://developer.openstack.org/api-ref/clustering/>`__
+`Clustering API v1 <https://developer.openstack.org/api-ref/clustering/>`__
 
-`Compute API <http://developer.openstack.org/api-ref/compute/>`__ (microversions)
+`Compute API <https://developer.openstack.org/api-ref/compute/>`__ (microversions)
 
-`Container Infrastructure Management API <http://developer.openstack.org/api-ref/container-infrastructure-management/>`__ (microversions)
+`Container Infrastructure Management API <https://developer.openstack.org/api-ref/container-infrastructure-management/>`__ (microversions)
 
-`Data Processing v1.1 <http://developer.openstack.org/api-ref/data-processing/>`__
+`Data Processing v1.1 <https://developer.openstack.org/api-ref/data-processing/>`__
 
-`Data Protection Orchestration v1 <http://developer.openstack.org/api-ref/data-protection-orchestration/>`__
+`Data Protection Orchestration v1 <https://developer.openstack.org/api-ref/data-protection-orchestration/>`__
 
-`Database Service API v1.0 <http://developer.openstack.org/api-ref/database/>`__
+`Database Service API v1.0 <https://developer.openstack.org/api-ref/database/>`__
 
-`Domain Name Server (DNS) API v2 <http://developer.openstack.org/api-ref/dns/>`__
+`Domain Name Server (DNS) API v2 <https://developer.openstack.org/api-ref/dns/>`__
 
-`EC2 API Service <http://developer.openstack.org/api-ref/ec2-api/>`__
+`EC2 API Service <https://developer.openstack.org/api-ref/ec2-api/>`__
 
-`Identity API v3 <http://developer.openstack.org/api-ref/identity/v3>`__
+`Identity API v3 <https://developer.openstack.org/api-ref/identity/v3>`__
 
-`Identity API v3 extensions <http://developer.openstack.org/api-ref/identity/v3-ext>`__
+`Identity API v3 extensions <https://developer.openstack.org/api-ref/identity/v3-ext>`__
 
-`Image service API v2 <http://developer.openstack.org/api-ref/image/v2>`__
+`Image service API v2 <https://developer.openstack.org/api-ref/image/v2>`__
 
-`Messaging API v2 <http://developer.openstack.org/api-ref/messaging>`__
+`Messaging API v2 <https://developer.openstack.org/api-ref/messaging>`__
 
-`Networking API v2.0 <http://developer.openstack.org/api-ref/networking/v2>`__
+`Networking API v2.0 <https://developer.openstack.org/api-ref/networking/v2>`__
 
-`Object Storage API v1 <http://developer.openstack.org/api-ref/object-storage>`__
+`Object Storage API v1 <https://developer.openstack.org/api-ref/object-storage>`__
 
-`Orchestration API v1 <http://developer.openstack.org/api-ref/orchestration/v1/>`__
+`Orchestration API v1 <https://developer.openstack.org/api-ref/orchestration/v1/>`__
 
-`Search API v1 <http://developer.openstack.org/api-ref/search>`__
+`Search API v1 <https://developer.openstack.org/api-ref/search>`__
 
-`Shared File Systems API v2 <http://developer.openstack.org/api-ref/shared-file-systems>`__ (microversions)
+`Shared File Systems API v2 <https://developer.openstack.org/api-ref/shared-file-systems>`__ (microversions)
 
 .. note:: The Shared File Systems API v1 is functionally identical to the
    Shared File Systems API v2. Subsequent API v2 microversions, such as v2.1,
@@ -58,20 +60,20 @@ Current API versions
 Supported API versions
 ----------------------
 
-`Block Storage API v2 <http://developer.openstack.org/api-ref/block-storage/v2/>`__
+`Block Storage API v2 <https://developer.openstack.org/api-ref/block-storage/v2/>`__
 
 Deprecated API versions
 -----------------------
 
-`Block Storage API v1 <http://developer.openstack.org/api-ref/block-storage/v1/>`__
+`Block Storage API v1 <https://developer.openstack.org/api-ref/block-storage/v1/>`__
 
-`Identity API v2.0 <http://developer.openstack.org/api-ref/identity/v2>`__
+`Identity API v2.0 <https://developer.openstack.org/api-ref/identity/v2>`__
 
-`Identity admin API v2.0 <http://developer.openstack.org/api-ref/identity/v2-admin>`__
+`Identity admin API v2.0 <https://developer.openstack.org/api-ref/identity/v2-admin>`__
 
-`Identity API v2.0 extensions <http://developer.openstack.org/api-ref/identity/v2-ext>`__
+`Identity API v2.0 extensions <https://developer.openstack.org/api-ref/identity/v2-ext>`__
 
-`Image service API v1 <http://developer.openstack.org/api-ref/image/v1>`__
+`Image service API v1 <https://developer.openstack.org/api-ref/image/v1>`__
 
 .. todo: telemetry link
 
@@ -90,7 +92,7 @@ The API status reflects the state of the endpoint on the service.
   information about API status values and version information, see
   `Version Discovery <https://wiki.openstack.org/wiki/VersionDiscovery>`__.
 * Microversions indicates that the API follows a `pattern established by
-  the Compute service <http://developer.openstack.org/api-guide/compute/microversions.html>`__ to
+  the Compute service <https://developer.openstack.org/api-guide/compute/microversions.html>`__ to
   enable small, documented changes to the API on a resource-by-resource
   basis.
 
@@ -135,7 +137,7 @@ To begin sending API requests, use one of the following methods:
    automation tasks in Python by making calls on Python objects rather
    than making REST calls directly. All OpenStack command-line tools are
    implemented by using the Python SDK. See `OpenStack Python
-   SDK <http://docs.openstack.org/user-guide/sdk.html>`__ in the
+   SDK <https://docs.openstack.org/user-guide/sdk.html>`__ in the
    *OpenStack End User Guide*.
 
 .. toctree::

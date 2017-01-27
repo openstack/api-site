@@ -36,7 +36,7 @@ Authentication and API request workflow
 
 The examples in this section use cURL commands. For information about cURL,
 see http://curl.haxx.se/. For information about the OpenStack APIs, see
-`OpenStack API Reference <http://developer.openstack.org/api-ref.html>`__.
+:ref:`current_api_versions`.
 
 
 .. _authenticate:
@@ -340,7 +340,7 @@ Send API requests
 
 This section shows how to make some basic Compute API calls. For a complete
 list of Compute API calls, see
-`Compute API <http://developer.openstack.org/api-ref/compute/>`__.
+`Compute API <https://developer.openstack.org/api-ref/compute/>`__.
 
 Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
@@ -352,7 +352,7 @@ The token expires every hour by default,
 though it can be configured differently - see
 the ``expiration`` option in the
 ``Description of token configuration options`` section of the
-`Identity Service Configuration <http://docs.openstack.org/mitaka/config-reference/identity/options.html#keystone-token>`__ page.
+`Identity Service Configuration <https://docs.openstack.org/newton/config-reference/identity/options.html#keystone-token>`__ page.
 
 Export the tenant name to the ``OS_PROJECT_NAME`` environment variable. For example:
 
@@ -599,7 +599,7 @@ interface. Also, each OpenStack project has a related client project that
 includes Python API bindings and a command-line interface (CLI).
 
 For information about the command-line clients, see `OpenStack
-Command-Line Interface Reference <http://docs.openstack.org/cli-reference/>`__.
+Command-Line Interface Reference <https://docs.openstack.org/cli-reference/>`__.
 
 Install the clients
 -------------------
@@ -642,9 +642,9 @@ Before you can issue client commands, you must download and source the
 ``openrc`` file to set environment variables.
 
 For complete information about the OpenStack clients, including how to source
-the ``openrc`` file, see `OpenStack End User Guide <http://docs.openstack.org/user-guide/>`__,
-`OpenStack Administrator Guide <http://docs.openstack.org/admin-guide/>`__,
-and `OpenStack Command-Line Interface Reference <http://docs.openstack.org/cli-reference/>`__.
+the ``openrc`` file, see `OpenStack End User Guide <https://docs.openstack.org/user-guide/>`__,
+`OpenStack Administrator Guide <https://docs.openstack.org/admin-guide/>`__,
+and `OpenStack Command-Line Interface Reference <https://docs.openstack.org/cli-reference/>`__.
 
 Launch an instance
 ------------------
@@ -732,6 +732,6 @@ command with the image and flavor IDs and the server name:
 
 .. note::
    For information about the default ports that the OpenStack components use,
-   see `Firewalls and default ports <http://docs.openstack.org/liberty/
-   config-reference/content/firewalls-default-ports.html>`_ in the
+   see `Firewalls and default ports <https://docs.openstack.org/newton/config-reference/firewalls-default-ports.html>`_
+   in the
    *OpenStack Configuration Reference*.
