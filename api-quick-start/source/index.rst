@@ -45,6 +45,8 @@ Current API versions
 
 `Networking API v2.0 <https://developer.openstack.org/api-ref/networking/v2>`__
 
+`NFV Orchestration API v1.0 <https://developer.openstack.org/api-ref/nfv-orchestration/v1/>`__
+
 `Object Storage API v1 <https://developer.openstack.org/api-ref/object-storage>`__
 
 `Orchestration API v1 <https://developer.openstack.org/api-ref/orchestration/v1/>`__
