@@ -8,7 +8,6 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   common/conventions.rst
    getting_started
    introduction
    scaling_out
@@ -26,15 +25,6 @@ Appendix
    :maxdepth: 1
 
    appendix
-   common/app-support.rst
-
-Glossary
-~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
-   common/glossary.rst
 
 Search in this guide
 ~~~~~~~~~~~~~~~~~~~~
