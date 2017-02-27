@@ -123,6 +123,13 @@ First, learn how to connect to the Object Storage endpoint:
         :start-after: step-1
         :end-before: step-2
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
+        :start-after: step-1
+        :end-before: step-2
+
 To begin to store objects, we must first make a container.
 Call yours :code:`fractals`:
 
@@ -173,6 +180,12 @@ Call yours :code:`fractals`:
         u'txc6262b9c2bc1445b9dfe3-00574277ff', u'date': u'Mon, 23 May 2016
         03:24:47 GMT', u'content-type': u'text/plain; charset=utf-8'})
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
+        :start-after: step-2
+        :end-before: step-3
 
 You should now be able to see this container appear in a listing of
 all containers in your account:
@@ -219,6 +232,13 @@ all containers in your account:
         [Munch({u'count': 0, u'bytes': 0, u'name': u'fractals'}),
         Munch({u'count': 0, u'bytes': 0, u'name': u'fractals_segments'})]
 
+  .. only:: gophercloud
+
+      .. literalinclude:: ../samples/gophercloud/durability.go
+          :language: go
+          :start-after: step-3
+          :end-before: step-4
+
 The next logical step is to upload an object. Find a photo of a goat
 online, name it :code:`goat.jpg`, and upload it to your
 :code:`fractals` container:
@@ -245,6 +265,13 @@ online, name it :code:`goat.jpg`, and upload it to your
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-4
+        :end-before: step-5
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
         :start-after: step-4
         :end-before: step-5
 
@@ -364,6 +391,13 @@ the same:
 
         d1408b5bf6510426db6e2bafc2f90854
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
+        :start-after: step-5
+        :end-before: step-6
+
 Finally, clean up by deleting the test object:
 
 .. only:: fog
@@ -421,6 +455,12 @@ Finally, clean up by deleting the test object:
 
         []
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
+        :start-after: step-8
+        :end-before: step-9
 
 Back up the Fractals from the database on the Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -452,6 +492,13 @@ Place the images in the :code:`fractals` container:
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-10
+        :end-before: step-11
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
         :start-after: step-10
         :end-before: step-11
 
@@ -502,6 +549,12 @@ A simple loop takes care of that:
               Before you try to run the previous script, make sure that
               it is installed on your system.
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
+        :start-after: step-11
+        :end-before: step-12
 
 Configure the Fractals app to use Object Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -541,6 +594,13 @@ Otherwise, the delete operation fails:
 .. only:: shade
 
     .. literalinclude:: ../samples/shade/durability.py
+        :start-after: step-12
+        :end-before: step-13
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
         :start-after: step-12
         :end-before: step-13
 
@@ -598,6 +658,12 @@ your SDK.
         :start-after: step-13
         :end-before: step-14
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/durability.go
+        :language: go
+        :start-after: step-13
+        :end-before: step-14
 
 Large objects
 ~~~~~~~~~~~~~
