@@ -62,12 +62,15 @@ Current API versions
 Supported API versions
 ----------------------
 
-`Block Storage API v2 <https://developer.openstack.org/api-ref/block-storage/v2/>`__
 
 Deprecated API versions
 -----------------------
 
-`Block Storage API v1 <https://developer.openstack.org/api-ref/block-storage/v1/>`__
+`Block Storage API v2 <https://developer.openstack.org/api-ref/block-storage/v2/>`__
+
+.. note:: The Block Storage API v3 is functionally identical to the
+   Block Storage API v2. Subsequent API v3 microversions, such as v3.1,
+   differ from API v2.
 
 `Identity API v2.0 <https://developer.openstack.org/api-ref/identity/v2>`__
 
