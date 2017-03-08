@@ -83,6 +83,13 @@ Connect to the API endpoint:
         :start-after: step-1
         :end-before: step-2
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/block_storage.go
+        :language: go
+        :start-after: step-1
+        :end-before: step-2
+
 To try it out, make a 1GB volume called 'test'.
 
 .. only:: libcloud
@@ -112,6 +119,15 @@ To try it out, make a 1GB volume called 'test'.
 
     .. note:: The parameter :code:`size` is in gigabytes.
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/block_storage.go
+        :language: go
+        :start-after: step-2
+        :end-before: step-3
+
+    .. note:: The parameter :code:`Size` is in gigabytes.
+
 To see if the volume creation was successful, list all volumes:
 
 .. only:: libcloud
@@ -139,7 +155,12 @@ To see if the volume creation was successful, list all volumes:
         :start-after: step-3
         :end-before: step-4
 
-Attach the storage volume to a running instance.
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/block_storage.go
+        :language: go
+        :start-after: step-3
+        :end-before: step-4
 
 Use Block Storage for the Fractal database server
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,6 +193,13 @@ MySQL, port 3306) from the network:
         :start-after: step-4
         :end-before: step-5
 
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/block_storage.go
+        :language: go
+        :start-after: step-4
+        :end-before: step-5
+
 Create a volume object by using the unique identifier (UUID) for the
 volume. Then, use the server object from the previous code snippet to
 attach the volume to it at :code:`/dev/vdb`:
@@ -194,6 +222,13 @@ attach the volume to it at :code:`/dev/vdb`:
 
     .. literalinclude:: ../samples/shade/block_storage.py
         :language: python
+        :start-after: step-5
+        :end-before: step-6
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/block_storage.go
+        :language: go
         :start-after: step-5
         :end-before: step-6
 
@@ -305,6 +340,12 @@ To detach and delete a volume:
 
     .. literalinclude:: ../samples/shade/block_storage.py
         :language: python
+        :start-after: step-6
+
+.. only:: gophercloud
+
+    .. literalinclude:: ../samples/gophercloud/block_storage.go
+        :language: go
         :start-after: step-6
 
 .. only:: libcloud
