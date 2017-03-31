@@ -17,16 +17,4 @@ Contents
    networking
    advice
    craziness
-
-Appendix
-~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
    appendix
-
-Search in this guide
-~~~~~~~~~~~~~~~~~~~~
-
-* :ref:`search`
