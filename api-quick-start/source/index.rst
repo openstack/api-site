@@ -11,6 +11,8 @@ complete other actions in your OpenStack cloud.
 Current API versions
 --------------------
 
+`Application Catalog API v1 <https://developer.openstack.org/api-ref/application-catalog/v1/>`__
+
 `Bare Metal API v1 <https://developer.openstack.org/api-ref/baremetal/>`__ (microversions)
 
 `Block Storage API v3 <https://developer.openstack.org/api-ref/block-storage/v3/>`__ (microversions)
