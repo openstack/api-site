@@ -9,8 +9,8 @@ authentication request with a payload of credentials to OpenStack Identity to
 get an authentication token.
 
 Credentials are usually a combination of your user name and password,
-and optionally, the name or ID of the tenant where your cloud runs.
-Ask your cloud administrator for your user name, password, and tenant so
+and optionally, the name or ID of the project of your cloud.
+Ask your cloud administrator for your user name, password, and project so
 that you can generate authentication tokens. Alternatively, you can
 supply a token rather than a user name and password.
 
@@ -49,291 +49,130 @@ The payload of credentials to authenticate contains these parameters:
 +-----------------------+----------------+--------------------------------------+
 | Parameter             | Type           | Description                          |
 +=======================+================+======================================+
+| *User Domain*         |     string     | The Domain of the user.              |
+| (required)            |                |                                      |
++-----------------------+----------------+--------------------------------------+
 | username (required)   |     string     | The user name. If you do not provide |
 |                       |                | a user name and password, you must   |
 |                       |                | provide a token.                     |
 +-----------------------+----------------+--------------------------------------+
 | password (required)   |     string     | The password for the user.           |
 +-----------------------+----------------+--------------------------------------+
-| *tenantName*          |     string     | The tenant name. Both the            |
-| (Optional)            |                | *tenantId* and *tenantName*          |
-|                       |                | are optional and mutually exclusive. |
-|                       |                | If you specify both attributes, the  |
-|                       |                | server returns the Bad Request (400) |
-|                       |                | response code.                       |
+| *Project Domain*      |     string     | The Domain of the project. This is a |
+| (optional)            |                | required part of the scope object.   |
 +-----------------------+----------------+--------------------------------------+
-| *tenantId*            |     string     | The tenant ID. Both the *tenantId*   |
-| (Optional)            |                | and *tenantName* are optional and    |
-|                       |                | mutually exclusive. If you specify   |
-|                       |                | both attributes, the server returns  |
-|                       |                | the Bad Request (400) response code. |
-|                       |                | If you do not know the tenant name   |
-|                       |                | or ID, send a request with "" for    |
-|                       |                | the tenant name or ID. The response  |
-|                       |                | returns the tenant name or ID.       |
+| *Project Name*        |     string     | The project name. Both the           |
+| (optional)            |                | *Project ID* and *Project Name*      |
+|                       |                | are optional.                        |
 +-----------------------+----------------+--------------------------------------+
-| token (Optional)      |     string     | A token. If you do not provide a     |
-|                       |                | token, you must provide a user name  |
-|                       |                | and password.                        |
+| *Project ID*          |     string     | The project ID. Both the *project ID*|
+| (optional)            |                | and *Project Name* are optional. But |
+|                       |                | one of them is required along with   |
+|                       |                | the *Project Domain*. They are       |
+|                       |                | wrapped under a scope object.        |
+|                       |                | If you do not know the project name  |
+|                       |                | or ID, send a request without any    |
+|                       |                | scope object.                        |
 +-----------------------+----------------+--------------------------------------+
 
 
 In a typical OpenStack deployment that runs Identity, you can specify your
-tenant name, and user name and password credentials to authenticate.
+project name, and user name and password credentials to authenticate.
 
-First, export your tenant name to the `OS_PROJECT_NAME` environment variable,
-your user name to the `OS_USERNAME` environment variable, and your password to
-the `OS_PASSWORD` environment variable. The example below uses a TryStack endpoint
-but you can also use `$OS_IDENTITYENDPOINT` as an environment variable as needed.
+First, export your project name to the ``OS_PROJECT_NAME`` environment variable,
+your project domain name to the ``OS_PROJECT_DOMAIN_NAME`` environment variable,
+your user name to the ``OS_USERNAME`` environment variable, your password to the
+``OS_PASSWORD`` environment variable and your user domain name to the
+``OS_USER_DOMAIN_NAME`` environment variable.
+
+The example below uses an endpoint from an installation of Ocata by following
+the installation guide. However, you can also use ``$OS_AUTH_URL`` as an
+environment variable as needed to change the URL.
 
 Then, run this cURL command to request a token:
 
 .. code-block:: console
 
-   $ curl -s -X POST $OS_AUTH_URL/tokens \
-     -H "Content-Type: application/json" \
-     -d '{"auth": {"tenantName": "'"$OS_PROJECT_NAME"'", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
-     | python -m json.tool
+  $ curl -v -s -X POST $OS_AUTH_URL/auth/tokens?nocatalog   -H "Content-Type: application/json"   -d '{ "auth": { "identity": { "methods": ["password"],"password": {"user": {"domain": {"name": "'"$OS_USER_DOMAIN_NAME"'"},"name": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"} } }, "scope": { "project": { "domain": { "name": "'"$OS_PROJECT_DOMAIN_NAME"'" }, "name":  "'"$OS_PROJECT_NAME"'" } } }}' \
+  | python -m json.tool
 
-If the request succeeds, it returns the ``OK (200)`` response code followed by a
-response body that contains a token in the form ``"id":"token"`` and an
-expiration date and time in the form ``"expires":"datetime"``.
-
-.. note::
-
-   If you do not know the tenant name or ID, send a request with "" for the
-   tenant name or ID. The response returns the tenant name or ID.
-
-   .. code-block:: console
-
-      $ curl -s -X POST $OS_AUTH_URL/tokens \
-        -H "Content-Type: application/json" \
-        -d '{"auth": {"tenantName": "", "passwordCredentials": {"username": "'"$OS_USERNAME"'", "password": "'"$OS_PASSWORD"'"}}}' \
-        | python -m json.tool
+If the request succeeds, it returns the ``Created (201)`` response code
+along with the token as a value in the ``X-Subject-Token`` response header.
+The header is followed by a response body that has an object of type
+``token`` which has the token expiration date and time in the form
+``"expires_at":"datetime"`` along with other attributes.
 
 The following example shows a successful response:
 
-.. code-block:: json
+.. code-block:: console
 
-   {
-       "access": {
-           "metadata": {
-               "is_admin": 0,
-               "roles": [
-                   "9fe2ff9ee4384b1894a90878d3e92bab"
-               ]
-           },
-           "serviceCatalog": [
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8774/v2/2a124051e083457091cecc3aa553a5a9",
-                           "id": "9484a876103048d6b6061405292a69ec",
-                           "internalURL": "http://172.16.1.2:8774/v2/2a124051e083457091cecc3aa553a5a9",
-                           "publicURL": "http://128.136.179.2:8774/v2/2a124051e083457091cecc3aa553a5a9",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "nova",
-                   "type": "compute"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:9696/",
-                           "id": "48bb1eaac6004287b569171d6eff3a8b",
-                           "internalURL": "http://172.16.1.2:9696/",
-                           "publicURL": "http://128.136.179.2:9696/",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "neutron",
-                   "type": "network"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8776/v2/2a124051e083457091cecc3aa553a5a9",
-                           "id": "4914cc64592048ab823beeed6ff58add",
-                           "internalURL": "http://172.16.1.2:8776/v2/2a124051e083457091cecc3aa553a5a9",
-                           "publicURL": "http://128.136.179.2:8776/v2/2a124051e083457091cecc3aa553a5a9",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "cinderv2",
-                   "type": "volumev2"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8779/v1.0/2a124051e083457091cecc3aa553a5a9",
-                           "id": "255f5bcfd284485ebf033f7488a1a0bd",
-                           "internalURL": "http://172.16.1.2:8779/v1.0/2a124051e083457091cecc3aa553a5a9",
-                           "publicURL": "http://128.136.179.2:8779/v1.0/2a124051e083457091cecc3aa553a5a9",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "trove",
-                   "type": "database"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://128.136.179.2:8080",
-                           "id": "18c55bdb3f4044958cc2257a9345d921",
-                           "internalURL": "http://172.16.1.2:8080",
-                           "publicURL": "http://128.136.179.2:8080",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "swift_s3",
-                   "type": "s3"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:9292",
-                           "id": "2b8be454ac394e4bb482c88a1876c987",
-                           "internalURL": "http://172.16.1.2:9292",
-                           "publicURL": "http://128.136.179.2:9292",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "glance",
-                   "type": "image"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8774/v3",
-                           "id": "b806c63677334f5c8318234a9f8ce6be",
-                           "internalURL": "http://172.16.1.2:8774/v3",
-                           "publicURL": "http://128.136.179.2:8774/v3",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "novav3",
-                   "type": "computev3"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.3:8786/v1/2a124051e083457091cecc3aa553a5a9",
-                           "id": "83daad78b4e94ff98ed0dc9384d2287b",
-                           "internalURL": "http://172.16.1.3:8786/v1/2a124051e083457091cecc3aa553a5a9",
-                           "publicURL": "http://128.136.179.2:8786/v1/2a124051e083457091cecc3aa553a5a9",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "manila",
-                   "type": "share"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8777",
-                           "id": "4d6b384ae0ad4f9c840d9841d2558fc2",
-                           "internalURL": "http://172.16.1.2:8777",
-                           "publicURL": "http://128.136.179.2:8777",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "ceilometer",
-                   "type": "metering"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8776/v1/2a124051e083457091cecc3aa553a5a9",
-                           "id": "0504d7f8035a4149ba41842bae498a10",
-                           "internalURL": "http://172.16.1.2:8776/v1/2a124051e083457091cecc3aa553a5a9",
-                           "publicURL": "http://128.136.179.2:8776/v1/2a124051e083457091cecc3aa553a5a9",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "cinder",
-                   "type": "volume"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:8773/services/Admin",
-                           "id": "5b8d4c3357e04be78a8eb928a839cdd7",
-                           "internalURL": "http://172.16.1.2:8773/services/Cloud",
-                           "publicURL": "http://128.136.179.2:8773/services/Cloud",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "nova_ec2",
-                   "type": "ec2"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://128.136.179.2:8080/",
-                           "id": "1a4c96b000de4474908e45460017bf00",
-                           "internalURL": "http://172.16.1.2:8080/v1/AUTH_2a124051e083457091cecc3aa553a5a9",
-                           "publicURL": "http://128.136.179.2:8080/v1/AUTH_2a124051e083457091cecc3aa553a5a9",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "swift",
-                   "type": "object-store"
-               },
-               {
-                   "endpoints": [
-                       {
-                           "adminURL": "http://172.16.1.2:35357/v2.0",
-                           "id": "40c9824d67dc4ef5b3b9495e117719a2",
-                           "internalURL": "http://172.16.1.2:5000/v2.0",
-                           "publicURL": "http://128.136.179.2:5000/v2.0",
-                           "region": "RegionOne"
-                       }
-                   ],
-                   "endpoints_links": [],
-                   "name": "keystone",
-                   "type": "identity"
-               }
-           ],
-           "token": {
-               "audit_ids": [
-                   "a8ozqFkkSfCmUQpbCZlS-w"
-               ],
-               "expires": "2015-11-05T23:23:27Z",
-               "id": "4b57c7d386a7438b829d1a8922e0eaac",
-               "issued_at": "2015-11-05T22:23:27.166658",
-               "tenant": {
-                   "description": "Auto created account",
-                   "enabled": true,
-                   "id": "2a124051e083457091cecc3aa553a5a9",
-                   "name": "facebook987654321"
-               }
-           },
-           "user": {
-               "id": "182d9ad16c2a4397bdceb595658b830f",
-               "name": "facebook987654321",
-               "roles": [
-                   {
-                       "name": "_member_"
-                   }
-               ],
-               "roles_links": [],
-               "username": "facebook987654321"
-           }
-       }
-   }
+    *   Trying 192.168.56.101...
+    * Connected to controller (192.168.56.101) port 5000 (#0)
+    > POST /v3/auth/tokens?nocatalog HTTP/1.1
+    > Host: controller:5000
+    > User-Agent: curl/7.47.0
+    > Accept: */*
+    > Content-Type: application/json
+    > Content-Length: 226
+    >
+    } [226 bytes data]
+    * upload completely sent off: 226 out of 226 bytes
+    < HTTP/1.1 201 Created
+    < Date: Fri, 26 May 2017 06:48:58 GMT
+    < Server: Apache/2.4.18 (Ubuntu)
+    < X-Subject-Token: gAAAAABZJ8_a7aiq1SnOhbNw8vFb5WZChcvWdzzUAFzhiB99BHrjdSGai--_-JstU3WazsFXmRHNbD07qOQKTp5Sen2R_b9csaDkU49VXqSaJ0jh2nAlwJkys8aazz2oa3xSeUVe3Ndv_HRiW23-iWTr6jquK_AXdhRX7nvM4lmVTrxXFpelnJQ
+    < Vary: X-Auth-Token
+    < X-Distribution: Ubuntu
+    < x-openstack-request-id: req-0e9239ec-104b-40e0-a337-dca91fb24387
+    < Content-Length: 521
+    < Content-Type: application/json
+    <
+    { [521 bytes data]
+    * Connection #0 to host controller left intact
+    {
+        "token": {
+            "audit_ids": [
+                "HOGlhnMFT52xY7PjbuJZlA"
+            ],
+            "expires_at": "2017-05-26T07:48:58.000000Z",
+            "is_domain": false,
+            "issued_at": "2017-05-26T06:48:58.000000Z",
+            "methods": [
+                "password"
+            ],
+            "project": {
+                "domain": {
+                    "id": "default",
+                    "name": "Default"
+                },
+                "id": "05ef0bf2a79c42b2b8155873b6404061",
+                "name": "demo"
+            },
+            "roles": [
+                {
+                    "id": "b18239b7026042ef8695c3c4cf10607b",
+                    "name": "user"
+                }
+            ],
+            "user": {
+                "domain": {
+                    "id": "default",
+                    "name": "Default"
+                },
+                "id": "12846256e60c42f88d0e1ba9711a57f5",
+                "name": "demo",
+                "password_expires_at": null
+            }
+        }
+    }
+
+
+.. note::
+   In the above request, the query string ``nocatalog`` is used as you
+   just want to get a token and do not want the service catalog
+   (if it is available for the user) cluttering the output.
+   If a user wants to get the service catalog, this query string need
+   not be appended to the URL.
 
 Send API requests
 ~~~~~~~~~~~~~~~~~
@@ -346,7 +185,7 @@ Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
 .. code-block:: console
 
-   export OS_TOKEN=4b57c7d386a7438b829d1a8922e0eaac
+   export OS_TOKEN=gAAAAABZJ8_a7aiq1SnOhbNw8vFb5WZChcvWdzzUAFzhiB99BHrjdSGai--_-JstU3WazsFXmRHNbD07qOQKTp5Sen2R_b9csaDkU49VXqSaJ0jh2nAlwJkys8aazz2oa3xSeUVe3Ndv_HRiW23-iWTr6jquK_AXdhRX7nvM4lmVTrxXFpelnJQ
 
 The token expires every hour by default,
 though it can be configured differently - see
@@ -354,7 +193,7 @@ the ``expiration`` option in the
 ``Description of token configuration options`` section of the
 `Identity Service Configuration <https://docs.openstack.org/newton/config-reference/identity/options.html#keystone-token>`__ page.
 
-Export the tenant name to the ``OS_PROJECT_NAME`` environment variable. For example:
+Export the project name to the ``OS_PROJECT_NAME`` environment variable. For example:
 
 .. code-block:: console
 
@@ -735,3 +574,4 @@ command with the image and flavor IDs and the server name:
    see `Firewalls and default ports <https://docs.openstack.org/newton/config-reference/firewalls-default-ports.html>`_
    in the
    *OpenStack Configuration Reference*.
+
