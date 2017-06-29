@@ -45,6 +45,8 @@ Current API versions
 
 `Image service API v2 <https://developer.openstack.org/api-ref/image/v2>`__
 
+`Load Balancer API v2 <https://developer.openstack.org/api-ref/load-balancer/v2>`__
+
 `Messaging API v2 <https://developer.openstack.org/api-ref/messaging>`__
 
 `Networking API v2.0 <https://developer.openstack.org/api-ref/networking/v2>`__
