@@ -495,7 +495,7 @@ trying to download a fractal image from an API service instance that
 does not have the fractal image on its local file system.
 
 Go to :doc:`/durability` to learn how to use Object Storage to solve
-this problem in a elegant way. Or, you can proceed to one of these
+this problem in an elegant way. Or, you can proceed to one of these
 sections:
 
 * :doc:`/block_storage`: Migrate the database to block storage, or use
