@@ -150,7 +150,7 @@ for instance in conn.compute.servers():
 # step-13
 print('Checking if Floating IP is already assigned to testing_instance...')
 testing_instance_floating_ip = None
-for values in testing_instance.addresses.itervalues():
+for values in testing_instance.addresses.values():
     for address in values:
         if address['OS-EXT-IPS:type'] == 'floating':
             testing_instance_floating_ip = conn.network.find_ip(address['addr'])

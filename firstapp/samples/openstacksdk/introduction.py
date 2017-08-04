@@ -165,7 +165,7 @@ instance_controller_1 = conn.compute.get_server(instance_controller_1)
 print('Application will be deployed to http://%s' % controller_instance_floating_ip.floating_ip_address)
 
 # step-12
-for values in instance_controller_1.addresses.itervalues():
+for values in instance_controller_1.addresses.values():
     for address in values:
         if address['OS-EXT-IPS:type'] == 'fixed':
             ip_controller = address['addr']
@@ -217,7 +217,7 @@ instance_worker_1 = conn.compute.get_server(instance_worker_1)
 print('The worker will be available for SSH at %s' % worker_instance_floating_ip.floating_ip_address)
 
 # step-13
-for values in instance_worker_1.addresses.itervalues():
+for values in instance_worker_1.addresses.values():
     for address in values:
         if address['OS-EXT-IPS:type'] == 'floating':
             ip_instance_worker_1 = address['addr']
