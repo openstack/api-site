@@ -9,7 +9,7 @@ Make it durable
 .. todo:: Explain how to get objects back out again.
 
 .. todo:: Large object support in Swift
-          https://docs.openstack.org/developer/swift/overview_large_objects.html
+          https://docs.openstack.org/swift/latest/overview_large_objects.html
 
 This section introduces object storage.
 

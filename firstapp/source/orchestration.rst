@@ -38,7 +38,7 @@ volumes, compute instances, networking topology, and security policies.
           available; ask your support team for assistance.
 
 This section introduces the
-`HOT templating language <https://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_,
+`HOT templating language <https://docs.openstack.org/heat/latest/template_guide/hot_guide.html>`_,
 and takes you through some common OpenStack Orchestration calls.
 
 In previous sections, you used your SDK to programmatically interact with
@@ -88,7 +88,7 @@ HOT templating language
 
 To learn about the template syntax for OpenStack Orchestration, how to
 create basic templates, and their inputs and outputs, see
-`Heat Orchestration Template (HOT) Guide <https://docs.openstack.org/developer/heat/template_guide/hot_guide.html>`_.
+`Heat Orchestration Template (HOT) Guide <https://docs.openstack.org/heat/latest/template_guide/hot_guide.html>`_.
 
 Work with stacks: Basics
 ------------------------
