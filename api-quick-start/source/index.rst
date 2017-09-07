@@ -59,7 +59,7 @@ Current API versions
 
 `Search API v1 <https://developer.openstack.org/api-ref/search>`__
 
-`Shared File Systems API v2 <https://developer.openstack.org/api-ref/shared-file-systems>`__ (microversions)
+`Shared File Systems API v2 <https://developer.openstack.org/api-ref/shared-file-system>`__ (microversions)
 
 .. note:: The Shared File Systems API v1 is functionally identical to the
    Shared File Systems API v2. Subsequent API v2 microversions, such as v2.1,
