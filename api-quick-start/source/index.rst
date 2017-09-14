@@ -49,13 +49,13 @@ Current API versions
 
 `Load Balancer API v2 <https://developer.openstack.org/api-ref/load-balancer/v2>`__
 
-`Messaging API v2 <https://developer.openstack.org/api-ref/messaging>`__
+`Messaging API v2 <https://developer.openstack.org/api-ref/message>`__
 
-`Networking API v2.0 <https://developer.openstack.org/api-ref/networking/v2>`__
+`Networking API v2.0 <https://developer.openstack.org/api-ref/network/v2>`__
 
 `NFV Orchestration API v1.0 <https://developer.openstack.org/api-ref/nfv-orchestration/v1/>`__
 
-`Object Storage API v1 <https://developer.openstack.org/api-ref/object-storage>`__
+`Object Storage API v1 <https://developer.openstack.org/api-ref/object-store>`__
 
 `Orchestration API v1 <https://developer.openstack.org/api-ref/orchestration/v1/>`__
 
