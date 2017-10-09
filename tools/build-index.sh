@@ -34,18 +34,14 @@ if [ "$PUBLISH" = "build" ] ; then
     openstack-indexpage publish-docs
 fi
 if [ "$PUBLISH" = "publish" ] ; then
-
-    # Publication happens from publish-docs/api-ref to
-    # developer.openstack.org, so move content around
-    mkdir -p publish-docs/api-ref/
     python tools/www-generator.py --source-directory www/ \
-        --output-directory publish-docs/api-ref/
-    rsync -a www/static/ publish-docs/api-ref/
+        --output-directory publish-docs/
+    rsync -a www/static/ publish-docs/
     # Don't publish this file
-    rm publish-docs/api-ref/www-index.html
+    rm publish-docs/www-index.html
 
     # This marker is needed for infra publishing
     MARKER_TEXT="Project: $ZUUL_PROJECT Ref: $ZUUL_REFNAME Build: $ZUUL_UUID"
-    echo $MARKER_TEXT > publish-docs/api-ref/.root-marker
+    echo $MARKER_TEXT > publish-docs/.root-marker
 
 fi

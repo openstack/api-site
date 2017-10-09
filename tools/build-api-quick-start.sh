@@ -2,4 +2,4 @@
 
 mkdir -p publish-docs
 
-tools/build-rst.sh api-quick-start --target api-ref/api-guide/quick-start
+tools/build-rst.sh api-quick-start --target api-guide/quick-start
