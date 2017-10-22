@@ -65,7 +65,7 @@ def main():
         environment = jinja2.Environment(loader=loader)
     except Exception as e:
         logger.error("initialising template environment failed: %s" % e)
-        return 1
+        raise
 
     for templateFile in environment.list_templates():
         if not templateFile.endswith('.html'):
@@ -78,7 +78,7 @@ def main():
         except Exception as e:
             logger.error("parsing template %s failed: %s" %
                          (templateFile, e))
-            continue
+            raise
 
         try:
             output = lxml.html.tostring(
@@ -87,7 +87,7 @@ def main():
         except Exception as e:
             logger.error("rendering template %s failed: %s" %
                          (templateFile, e))
-            continue
+            raise
 
         try:
             target_directory = os.path.join(args.output_directory,
@@ -102,7 +102,7 @@ def main():
                 fh.write(output.encode('utf8'))
         except (IOError, OSError, UnicodeEncodeError) as e:
             logger.error("writing %s failed: %s" % (target_file, e))
-            continue
+            raise
 
     return 0
 
