@@ -20,6 +20,8 @@ import sys
 import lxml.html
 from lxml import etree
 import jinja2
+import os_service_types
+import requests
 
 
 def initialize_logging(debug, verbose):
@@ -67,8 +69,16 @@ def main():
         logger.error("initialising template environment failed: %s" % e)
         return 1
 
+    try:
+        service_types = os_service_types.ServiceTypes(
+            session=requests.Session(), only_remote=True)
+    except Exception as e:
+        logger.error("initialising service types data failed: %s" % e)
+        return 1
+
     for templateFile in environment.list_templates():
-        if not templateFile.endswith('.html'):
+        if not (templateFile.endswith('.html')
+                or templateFile.endswith('.htaccess')):
             continue
 
         logger.info("generating %s" % templateFile)
@@ -80,10 +90,14 @@ def main():
                          (templateFile, e))
             continue
 
+
         try:
-            output = lxml.html.tostring(
-                lxml.html.fromstring(template.render()),
-                pretty_print=True)
+            if templateFile.endswith('.html'):
+                output = lxml.html.tostring(
+                    lxml.html.fromstring(template.render()),
+                    pretty_print=True)
+            else:
+                output = template.render(REVERSE=service_types.reverse)
         except Exception as e:
             logger.error("rendering template %s failed: %s" %
                          (templateFile, e))
