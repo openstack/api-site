@@ -89,7 +89,7 @@ install the Python tox package and run ``tox`` from the top-level directory.
 
 To run individual tests:
 
- * ``tox -e checkniceness`` - Niceness tests
+ * ``tox -e linters`` - Niceness tests
  * ``tox -e checkbuild`` - Builds all of the documents in this repository
 
 To run these tests, the Tox package uses the
