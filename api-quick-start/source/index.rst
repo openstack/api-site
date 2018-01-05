@@ -59,6 +59,8 @@ Current API versions
 
 `Orchestration API v1 <https://developer.openstack.org/api-ref/orchestration/v1/>`__
 
+`Placement API <https://developer.openstack.org/api-ref/placement/>`__ (microversions)
+
 `Search API v1 <https://developer.openstack.org/api-ref/search>`__
 
 `Shared File Systems API v2 <https://developer.openstack.org/api-ref/shared-file-system>`__ (microversions)
