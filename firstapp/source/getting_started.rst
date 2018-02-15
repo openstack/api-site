@@ -58,14 +58,14 @@ and toolkits with the OpenStack cloud:
      - Description
      - URL
    * - Python
+     - OpenStack SDK
+     - Official Python-based library for OpenStack.
+     - https://docs.openstack.org/python-openstacksdk/latest/
+   * - Python
      - `Libcloud <https://libcloud.apache.org>`_
      - A Python-based library that the Apache Foundation manages.
        Use it to work with multiple cloud types.
      - https://libcloud.readthedocs.org/en/latest/compute/drivers/openstack.html
-   * - Python
-     - OpenStack SDK
-     - A Python-based library for OpenStack.
-     - https://developer.openstack.org/sdks/python/openstacksdk/
    * - Python
      - Shade
      - A Python-based library developed by OpenStack Infra team.
@@ -213,7 +213,7 @@ To interact with the cloud, you must also have
 
 .. only:: openstacksdk
 
-     a recent version of `openstacksdk <http://python-openstacksdk.readthedocs.org/en/latest/users/index.html>`_
+     a recent version of `OpenStackSDK <https://docs.openstack.org/python-openstacksdk/latest/install/index.html>`_
      installed.
 
 .. only:: phpopencloud
@@ -226,7 +226,7 @@ To interact with the cloud, you must also have
 
 .. only:: shade
 
-     `a recent version of shade library installed <https://docs.openstack.org/infra/shade/installation.html>`_.
+     `a recent version of shade installed <https://docs.openstack.org/shade/latest/install/index.html>`_.
 
      .. note:: Before proceeding, install the latest version of shade.
 
