@@ -60,7 +60,7 @@ and toolkits with the OpenStack cloud:
    * - Python
      - OpenStack SDK
      - Official Python-based library for OpenStack.
-     - https://docs.openstack.org/python-openstacksdk/latest/
+     - https://docs.openstack.org/openstacksdk/latest/
    * - Python
      - `Libcloud <https://libcloud.apache.org>`_
      - A Python-based library that the Apache Foundation manages.
