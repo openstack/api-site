@@ -24,9 +24,6 @@ In addition to these documents, this repository contains:
  * Landing page for developer.openstack.org: ``www``
  * Writing your first OpenStack application tutorial (in progress): ``firstapp``
 
-The files in the ``api-ref`` directory cannot be changed
-because they are moving to project repositories.
-
 To complete code reviews in this repository, use the standard
 OpenStack Gerrit `workflow <https://review.openstack.org>`_.
 For details, see `Gerrit Workflow
