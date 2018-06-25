@@ -6,6 +6,31 @@ Use the OpenStack APIs to launch server instances, create images, assign
 metadata to instances and images, create storage containers and objects, and
 complete other actions in your OpenStack cloud.
 
+.. note::
+   The links below are grouped according to the API status that reflects the
+   state of the endpoint on the service.
+
+   * 'Current' indicates a stable version that is up-to-date, recent, and
+     might receive future versions. This endpoint should be prioritized over
+     all others.
+   * 'Supported' is a stable version that is available on the server.
+     However, it is not likely the most recent available and might not be
+     updated or might be deprecated at some time in the future.
+   * 'Deprecated' is a stable version that is still available but is being
+     deprecated and might be removed in the future.
+   * 'Experimental' is not a stable version. This version is under
+     development or contains features that are otherwise subject to change.
+
+   For more information about API status values and version information, see
+   `Version Discovery <https://wiki.openstack.org/wiki/VersionDiscovery>`__.
+
+   The notation '(microversions)' next to the link to an API reference
+   indicates that the API follows a `pattern established by the Compute
+   service
+   <https://developer.openstack.org/api-guide/compute/microversions.html>`__
+   to enable small, documented changes to the API on a resource-by-resource
+   basis.
+
 .. _current_api_versions:
 
 Current API versions
@@ -91,25 +116,6 @@ Deprecated API versions
 `Image service API v1 <https://developer.openstack.org/api-ref/image/v1>`__
 
 .. todo: telemetry link
-
-The API status reflects the state of the endpoint on the service.
-
-* Current indicates a stable version that is up-to-date, recent, and might
-  receive future versions. This endpoint should be prioritized over all
-  others.
-* Supported is a stable version that is available on the server. However, it
-  is not likely the most recent available and might not be updated or might
-  be deprecated at some time in the future.
-* Deprecated is a stable version that is still available but is being
-  deprecated and might be removed in the future.
-* Experimental is not a stable version. This version is under development or
-  contains features that are otherwise subject to change. For more
-  information about API status values and version information, see
-  `Version Discovery <https://wiki.openstack.org/wiki/VersionDiscovery>`__.
-* Microversions indicates that the API follows a `pattern established by
-  the Compute service <https://developer.openstack.org/api-guide/compute/microversions.html>`__ to
-  enable small, documented changes to the API on a resource-by-resource
-  basis.
 
 API quick-start examples
 ------------------------
