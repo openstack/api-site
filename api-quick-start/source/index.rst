@@ -86,6 +86,8 @@ Current API versions
 
 `Placement API <https://developer.openstack.org/api-ref/placement/>`__ (microversions)
 
+`Resource Optimization API v1 <https://developer.openstack.org/api-ref/resource-optimization>`__
+
 `Search API v1 <https://developer.openstack.org/api-ref/search>`__
 
 `Shared File Systems API v2 <https://developer.openstack.org/api-ref/shared-file-system>`__ (microversions)
