@@ -117,7 +117,7 @@ Bugs
 
 File bugs on Launchpad and not through GitHub:
 
-   https://bugs.launchpad.net/openstack-api-site/
+   `Bugs:openstack-api-site <https://bugs.launchpad.net/openstack-api-site/>`_
 
 Install
 =======
