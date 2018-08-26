@@ -13,7 +13,7 @@ API-Site repository
 This repository contains API documentation for the OpenStack project.
 
 For details, see `OpenStack Documentation Contributor Guide
-<https://docs.openstack.org/contributor-guide/index.html>`_,
+<https://docs.openstack.org/doc-contrib-guide/index.html>`_,
 which includes these pages:
 
  * API Quick Start
@@ -75,7 +75,7 @@ Build and update API docs
 =========================
 
 Refer to the `OpenStack Documentation Contributor Guide
-<https://docs.openstack.org/contributor-guide/api-guides.html>`_
+<https://docs.openstack.org/doc-contrib-guide/api-guides.html>`_
 for more information.
 
 Run tests
@@ -110,7 +110,7 @@ to testing to deployment scripts.
 
 To contribute to the documents, see
 `OpenStack Documentation Contributor Guide
-<https://docs.openstack.org/contributor-guide/>`_.
+<https://docs.openstack.org/doc-contrib-guide/>`_.
 
 Bugs
 ====
