@@ -81,7 +81,7 @@ for the OpenStack APIs:
 
 The following guide provides how to contribute to OpenStack documentation:
 
-*  `Documentation Contributor Guide <https://docs.openstack.org/contributor-guide/>`__
+*  `Documentation Contributor Guide <https://docs.openstack.org/doc-contrib-guide/index.html>`__
 
 ask.openstack.org
 ~~~~~~~~~~~~~~~~~

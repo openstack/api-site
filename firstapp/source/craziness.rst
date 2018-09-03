@@ -74,4 +74,4 @@ Next steps
 Wow! If you have made it through this section, you know more than the
 authors of this guide know about working with OpenStack clouds.
 
-Perhaps you can `contribute <https://docs.openstack.org/contributor-guide/>`_?
+Perhaps you can `contribute <https://docs.openstack.org/doc-contrib-guide/index.html>`_?
