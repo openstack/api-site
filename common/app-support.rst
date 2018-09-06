@@ -32,47 +32,31 @@ bug <https://bugs.launchpad.net/openstack-manuals/+filebug>`__.
 The following books explain how to install an OpenStack cloud and its
 associated components:
 
-*  `Installation Tutorial for openSUSE Leap 42.2 and SUSE Linux Enterprise
-   Server 12 SP2
-   <https://docs.openstack.org/newton/install-guide-obs/>`__
-
-*  `Installation Tutorial for Red Hat Enterprise Linux 7 and CentOS 7
-   <https://docs.openstack.org/newton/install-guide-rdo/>`__
-
-*  `Installation Tutorial for Ubuntu 16.04 (LTS)
-   <https://docs.openstack.org/newton/install-guide-ubuntu/>`__
-
-*  `Installation Tutorial for Debian with Debconf
-   <https://docs.openstack.org/newton/install-guide-debconf/>`__
-
-*  `Installation Tutorial for Debian
-   <https://docs.openstack.org/newton/install-guide-debian/>`__
+* `Rocky Installation Guides <https://docs.openstack.org/rocky/install/>`_
 
 The following books explain how to configure and run an OpenStack cloud:
 
-*  `Architecture Design Guide <https://docs.openstack.org/arch-design/>`__
+*  `Architecture Design Guide <https://docs.openstack.org/arch-design/>`_
 
-*  `Administrator Guide <https://docs.openstack.org/admin-guide/>`__
+*  `Rocky Administrator Guides <https://docs.openstack.org/rocky/admin/>`_
 
-*  `Configuration Reference <https://docs.openstack.org/newton/config-reference/>`__
+*  `Rocky Configuration Guides <https://docs.openstack.org/rocky/configuration/>`_
 
-*  `Operations Guide <https://docs.openstack.org/ops/>`__
+*  `Rocky Networking Guide <https://docs.openstack.org/neutron/rocky/admin/>`_
 
-*  `Networking Guide <https://docs.openstack.org/newton/networking-guide>`__
+*  `High Availability Guide <https://docs.openstack.org/ha-guide/>`_
 
-*  `High Availability Guide <https://docs.openstack.org/ha-guide/>`__
+*  `Security Guide <https://docs.openstack.org/security-guide/>`_
 
-*  `Security Guide <https://docs.openstack.org/sec/>`__
-
-*  `Virtual Machine Image Guide <https://docs.openstack.org/image-guide/>`__
+*  `Virtual Machine Image Guide <https://docs.openstack.org/image-guide/>`_
 
 The following books explain how to use the OpenStack Dashboard and
 command-line clients:
 
-*  `End User Guide <https://docs.openstack.org/user-guide/>`__
+*  `End User Guides <https://docs.openstack.org/rocky/user/>`__
 
 *  `Command-Line Interface Reference
-   <https://docs.openstack.org/cli-reference/>`__
+   <https://docs.openstack.org/python-openstackclient/latest/>`__
 
 The following documentation provides reference and guidance information
 for the OpenStack APIs:
