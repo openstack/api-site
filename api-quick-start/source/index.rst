@@ -109,13 +109,7 @@ Deprecated API versions
    Block Storage API v2. Subsequent API v3 microversions, such as v3.1,
    differ from API v2.
 
-`Identity API v2.0 <https://developer.openstack.org/api-ref/identity/v2>`__
-
-`Identity admin API v2.0 <https://developer.openstack.org/api-ref/identity/v2-admin>`__
-
 `Identity API v2.0 extensions <https://developer.openstack.org/api-ref/identity/v2-ext>`__
-
-`Image service API v1 <https://developer.openstack.org/api-ref/image/v1>`__
 
 .. todo: telemetry link
 
