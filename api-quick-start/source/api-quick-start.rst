@@ -571,7 +571,6 @@ command with the image and flavor IDs and the server name:
 
 .. note::
    For information about the default ports that the OpenStack components use,
-   see `Firewalls and default ports <https://docs.openstack.org/newton/config-reference/firewalls-default-ports.html>`_
-   in the
-   *OpenStack Configuration Reference*.
+   see `Firewalls and default ports <https://docs.openstack.org/install-guide/firewalls-default-ports.html>`_
+   in the *OpenStack Installation Guide*.
 
