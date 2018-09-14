@@ -189,9 +189,8 @@ Export the token ID to the ``OS_TOKEN`` environment variable. For example:
 
 The token expires every hour by default,
 though it can be configured differently - see
-the ``expiration`` option in the
-``Description of token configuration options`` section of the
-`Identity Service Configuration <https://docs.openstack.org/newton/config-reference/identity/options.html#keystone-token>`__ page.
+the `expiration <https://docs.openstack.org/keystone/latest/configuration/config-options.html#token.expiration>`__ option in the
+the *Identity Service Configuration Guide*.
 
 Export the project name to the ``OS_PROJECT_NAME`` environment variable. For example:
 
