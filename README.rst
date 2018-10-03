@@ -124,3 +124,9 @@ Install
 
 To learn more about the OpenStack project,
 see `OpenStack <https://www.openstack.org/>`_.
+
+Release Notes
+=============
+
+Release notes for the project can be found at:
+    https://docs.openstack.org/releasenotes/openstack-manuals/
