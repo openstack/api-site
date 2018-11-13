@@ -194,8 +194,8 @@ instances to scale down, as demand decreases.
 
 To learn about auto-scaling with the Orchestration API, read these articles:
 
-* http://superuser.openstack.org/articles/simple-auto-scaling-environment-with-heat
-* http://superuser.openstack.org/articles/understanding-openstack-heat-auto-scaling
+* https://superuser.openstack.org/articles/simple-auto-scaling-environment-with-heat
+* https://superuser.openstack.org/articles/understanding-openstack-heat-auto-scaling
 
 Initially, the focus is on scaling the workers because they consume the most
 resources.

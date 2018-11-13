@@ -355,7 +355,7 @@ to run code snippets in your language of choice.
         :language: yaml
 
     .. note:: If you do use a public cloud `known by shade
-              <http://git.openstack.org/cgit/openstack/os-client-config/tree/os_client_config/vendors>`_,
+              <https://git.openstack.org/cgit/openstack/os-client-config/tree/os_client_config/vendors>`_,
               you can avoid specifying :code:`auth_url:` and instead specify
               :code:`profile: $PROVIDER_NAME` in the clouds.yml file.
 
@@ -366,7 +366,7 @@ to run code snippets in your language of choice.
     .. literalinclude:: ../samples/shade/shade.yml
         :language: yaml
 
-    See `configure shade <http://git.openstack.org/cgit/openstack/os-client-config/tree/README.rst>`_,
+    See `configure shade <https://git.openstack.org/cgit/openstack/os-client-config/tree/README.rst>`_,
     to configure your cloud using a profile.
 
     .. literalinclude::  ../samples/shade/getting_started.py
