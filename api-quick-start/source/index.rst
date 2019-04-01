@@ -36,6 +36,8 @@ complete other actions in your OpenStack cloud.
 Current API versions
 --------------------
 
+`Acceleration API v1 <https://developer.openstack.org/api-ref/accelerator/v1/>`__
+
 `Application Catalog API v1 <https://developer.openstack.org/api-ref/application-catalog/v1/>`__
 
 `Application Container Service API <https://developer.openstack.org/api-ref/application-container/>`__ (microversions)
