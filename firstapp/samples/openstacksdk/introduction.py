@@ -1,6 +1,6 @@
 # step-1
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i faafo -i messaging -r api -r worker -r demo
 '''
 userdata_b64str = base64.b64encode(userdata)
@@ -19,7 +19,7 @@ testing_instance = conn.compute.create_server(**testing_instance_args)
 
 # step-2
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i faafo -i messaging -r api -r worker -r demo
 '''
 userdata_b64str = base64.b64encode(userdata)
@@ -120,7 +120,7 @@ security_rule_args['remote_group_id'] = worker_group
 conn.network.create_security_group_rule(**security_rule_args)
 
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i messaging -i faafo -r api
 '''
 userdata_b64str = base64.b64encode(userdata)
@@ -172,7 +172,7 @@ for values in instance_controller_1.addresses.values():
             break
 
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i faafo -r worker -e 'http://%(ip_controller)s' -m 'amqp://guest:guest@%(ip_controller)s:5672/'
 ''' % {'ip_controller': ip_controller}
 userdata_b64str = base64.b64encode(userdata)

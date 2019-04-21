@@ -164,7 +164,7 @@ func main() {
 
 	// step-11
 	userData := `#!/usr/bin/env bash
-	curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+	curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 	-i faafo -i messaging -r api -r worker -r demo`
 
 	// step-12

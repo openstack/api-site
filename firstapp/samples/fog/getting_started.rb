@@ -89,7 +89,7 @@ p conn.security_groups.all
 # step-11
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -i messaging -r api -r worker -r demo
 END
 

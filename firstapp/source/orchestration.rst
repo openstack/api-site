@@ -96,7 +96,7 @@ Work with stacks: Basics
 **Stack create**
 
 The
-`hello_faafo <https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/hello_faafo.yaml>`_ Hot template demonstrates
+`hello_faafo <https://opendev.org/openstack/api-site/raw/firstapp/samples/heat/hello_faafo.yaml>`_ Hot template demonstrates
 how to create a compute instance that builds and runs the Fractal application
 as an all-in-one installation.
 
@@ -108,7 +108,7 @@ You pass in these configuration settings as parameters:
 
 .. code-block:: console
 
-    $ wget https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/hello_faafo.yaml
+    $ wget https://opendev.org/openstack/api-site/raw/firstapp/samples/heat/hello_faafo.yaml
     $ openstack stack create -t hello_faafo.yaml \
      --parameter flavor=m1.small\;key_name=test\;image_id=5bbe4073-90c0-4ec9-833c-092459cc4539 hello_faafo
     +---------------------+-----------------------------------------------------------------------+
@@ -245,7 +245,7 @@ Launch the stack with auto-scaling workers:
 
 .. code-block:: console
 
-    $ wget https://git.openstack.org/cgit/openstack/api-site/plain/firstapp/samples/heat/faafo_autoscaling_workers.yaml
+    $ wget https://opendev.org/openstack/api-site/raw/firstapp/samples/heat/faafo_autoscaling_workers.yaml
     $ openstack stack create -t faafo_autoscaling_workers.yaml \
     --parameters flavor=m1.small\;key_name=test\;image_id=5bbe4073-90c0-4ec9-833c-092459cc4539 \
     faafo_autoscaling_workers

@@ -86,7 +86,7 @@ func main() {
 	}).Extract()
 
 	userData := `#!/usr/bin/env bash
-		curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+		curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 		-i faafo -i messaging -r api -r worker -r demo`
 
 	imageID := "41ba40fd-e801-4639-a842-e3a2e5a2ebdd"

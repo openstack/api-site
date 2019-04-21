@@ -6,7 +6,7 @@ This directory contains the "Writing Your First OpenStack Application"
 tutorial.
 
 The tutorials work with an application that can be found in the
-`openstack/faafo <https://git.openstack.org/cgit/openstack/faafo>`_
+`openstack/faafo <https://opendev.org/openstack/faafo>`_
 repository.
 
 Prerequisites

@@ -188,7 +188,7 @@ public class Introduction implements Closeable {
 
     // step-2
     final String ex_userdata = "#!/usr/bin/env bash\n" +
-            " curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh" +
+            " curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh" +
             " | bash -s -- \\\n" +
             " -i faafo -i messaging -r api -r worker -r demo\n";
     // step-2-end
@@ -355,7 +355,7 @@ public class Introduction implements Closeable {
 
     private String createApiInstance() {
         String userData = "#!/usr/bin/env bash\n" +
-                "curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh" +
+                "curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh" +
                 " | bash -s -- \\\n" +
                 " -i messaging -i faafo -r api\n";
         String instanceName = "app-controller";
@@ -370,7 +370,7 @@ public class Introduction implements Closeable {
     // step-12
     private String createWorkerInstance(String apiAccessIP) {
         String userData = "#!/usr/bin/env bash\n" +
-                "curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh" +
+                "curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh" +
                 " | bash -s -- \\\n" +
                 "   -i faafo -r worker -e 'http://%1$s' -m 'amqp://guest:guest@%1$s:5672/'";
         userData = String.format(userData, apiAccessIP);

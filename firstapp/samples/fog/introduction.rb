@@ -1,7 +1,7 @@
 # step-1
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -i messaging -r api -r worker -r demo
 END
 
@@ -18,7 +18,7 @@ testing_instance.wait_for { ready? }
 # step-2
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i messaging -i faafo -r api -r worker -r demo
 END
 
@@ -88,7 +88,7 @@ conn.security_group_rules.create parent_group_id: controller_group.id,
 
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i messaging -i faafo -r api
 END
 
@@ -117,7 +117,7 @@ ip_controller         = instance_controller_1.private_ip_address || instance_con
 
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -r worker -e "http://#{ip_controller}" -m "amqp://guest:guest@#{ip_controller}:5672/"
 END
 

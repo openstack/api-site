@@ -114,7 +114,7 @@ for security_group in conn.network.security_groups():
 
 # step-11
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i faafo -i messaging -r api -r worker -r demo
 '''
 userdata_b64str = base64.b64encode(userdata)

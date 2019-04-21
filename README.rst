@@ -25,7 +25,7 @@ In addition to these documents, this repository contains:
  * Writing your first OpenStack application tutorial (in progress): ``firstapp``
 
 To complete code reviews in this repository, use the standard
-OpenStack Gerrit `workflow <https://review.openstack.org>`_.
+OpenStack Gerrit `workflow <https://review.opendev.org>`_.
 For details, see `Gerrit Workflow
 <https://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
 
@@ -91,7 +91,7 @@ To run individual tests:
 
 To run these tests, the Tox package uses the
 `OpenStack doc tools package
-<https://git.openstack.org/cgit/openstack/openstack-doc-tools>`_.
+<https://opendev.org/openstack/openstack-doc-tools>`_.
 
 Contribute
 ==========

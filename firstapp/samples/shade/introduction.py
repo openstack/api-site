@@ -1,7 +1,7 @@
 # step-1
 userdata = '''#!/usr/bin/env bash
 
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -i messaging -r api -r worker -r demo
 '''
 
@@ -17,7 +17,7 @@ testing_instance = conn.create_server(wait=True, auto_ip=False,
 # step-2
 userdata = '''#!/usr/bin/env bash
 
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -i messaging -r api -r worker -r demo
 '''
 
@@ -66,7 +66,7 @@ else:
     conn.create_security_group_rule(controller_group['name'], 5672, 5672, 'TCP', remote_group_id=worker_group['id'])
 
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i messaging -i faafo -r api
 '''
 
@@ -92,7 +92,7 @@ else:
     ip_controller = conn.get_server_private_ip(instance_controller_1)
 
 userdata = '''#!/usr/bin/env bash
-curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
     -i faafo -r worker -e 'http://%(ip_controller)s' -m 'amqp://guest:guest@%(ip_controller)s:5672/'
 ''' % {'ip_controller': ip_controller}
 

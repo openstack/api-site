@@ -178,7 +178,7 @@ class GettingStarted {
 // # step-11
 
         String ex_userdata = "#!/usr/bin/env bash\n" +
-                " curl -L -s https://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \\\n" +
+                " curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \\\n" +
                 "         -i faafo -i messaging -r api -r worker -r demo\n";
 
 // # step-12

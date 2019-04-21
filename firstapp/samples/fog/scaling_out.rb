@@ -86,7 +86,7 @@ end
 # step-4
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i database -i messaging
 END
 
@@ -103,7 +103,7 @@ services_ip_address = instance_services.private_ip_address
 # step-5
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -r api -m "amqp://guest:guest@#{services_ip_address}:5672/" -d "mysql+pymysql://faafo:password@#{services_ip_address}:3306/faafo"
 END
 
@@ -135,7 +135,7 @@ end
 # step-6
 user_data = <<END
 #!/usr/bin/env bash
-curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
+curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \
 -i faafo -r worker -e "http://#{api_1_ip_address}" -m "amqp://guest:guest@#{services_ip_address}:5672/"
 END
 

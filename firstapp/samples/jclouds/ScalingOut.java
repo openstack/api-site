@@ -189,7 +189,7 @@ public class ScalingOut implements Closeable {
      */
     private String createAppServicesInstance() {
         String userData = "#!/usr/bin/env bash\n" +
-                "curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \\\n" +
+                "curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \\\n" +
                 "-i database -i messaging\n";
         CreateServerOptions options = CreateServerOptions.Builder
                 .keyPairName(KEY_PAIR_NAME)
@@ -205,7 +205,7 @@ public class ScalingOut implements Closeable {
      */
     private String createApiInstance(String name, String servicesIp) {
         String userData = String.format("#!/usr/bin/env bash\n" +
-                "curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \\\n" +
+                "curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \\\n" +
                 "    -i faafo -r api -m 'amqp://guest:guest@%1$s:5672/' \\\n" +
                 "    -d 'mysql+pymysql://faafo:password@%1$s:3306/faafo'", servicesIp);
         CreateServerOptions options = CreateServerOptions.Builder
@@ -232,7 +232,7 @@ public class ScalingOut implements Closeable {
      */
     private String createWorkerInstance(String name, String apiIp, String servicesIp) {
         String userData = String.format("#!/usr/bin/env bash\n" +
-                "curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \\\n" +
+                "curl -L -s https://opendev.org/openstack/faafo/raw/contrib/install.sh | bash -s -- \\\n" +
                 "    -i faafo -r worker -e 'http://%s' -m 'amqp://guest:guest@%s:5672/'",
                 apiIp, servicesIp);
         CreateServerOptions options = CreateServerOptions.Builder
