@@ -74,6 +74,8 @@ Current API versions
 
 `Image service API v2 <https://developer.openstack.org/api-ref/image/v2>`__
 
+`Key Manager API v1 <https://docs.openstack.org/barbican/latest/api/>`__
+
 `Load Balancer API v2 <https://developer.openstack.org/api-ref/load-balancer/v2>`__
 
 `Messaging API v2 <https://developer.openstack.org/api-ref/message>`__
