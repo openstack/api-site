@@ -68,6 +68,8 @@ Current API versions
 
 `EC2 API Service <https://developer.openstack.org/api-ref/ec2-api/>`__
 
+`Function Engine <https://developer.openstack.org/api-ref/function-engine/>`__
+
 `Identity API v3 <https://developer.openstack.org/api-ref/identity/v3>`__
 
 `Identity API v3 extensions <https://developer.openstack.org/api-ref/identity/v3-ext>`__
