@@ -444,7 +444,7 @@ Install the clients
 
 Use ``pip`` to install the OpenStack clients on a Mac OS X or Linux system. It
 is easy and ensures that you get the latest version of the client from the
-`Python Package Index <http://pypi.python.org/pypi>`__. Also, ``pip`` lets you
+`Python Package Index <https://pypi.org/>`__. Also, ``pip`` lets you
 update or remove a package.
 
 You must install the client for each project separately, but the

@@ -33,7 +33,7 @@ Prerequisites
 =============
 
 To build the documentation locally, you must install Python and
-`Python Tox <https://tox.readthedocs.org/>`_.
+`Python Tox <https://tox.readthedocs.io/en/latest/>`_.
 
 To install Tox for Ubuntu 14.04 or later::
 

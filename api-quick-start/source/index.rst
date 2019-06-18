@@ -120,7 +120,7 @@ Deprecated API versions
 API quick-start examples
 ------------------------
 
-With the `TryStack <http://www.trystack.org/>`__ OpenStack
+With the `TryStack <https://www.openstack.org/software/start>`__ OpenStack
 installation, these services work together in the background of the
 installation, and many of these examples work on TryStack.
 
@@ -148,7 +148,7 @@ To begin sending API requests, use one of the following methods:
    for REST. For Firefox, see
    `RESTClient <https://addons.mozilla.org/en-US/firefox/addon/restclient/>`__.
    For Chrome, see
-   `rest-client <http://code.google.com/p/rest-client/>`__.
+   `rest-client <https://code.google.com/archive/p/rest-client/>`__.
 
 -  **OpenStack Python Software Development Kit (SDK)**
 
