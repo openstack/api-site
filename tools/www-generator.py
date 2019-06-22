@@ -15,6 +15,7 @@
 import argparse
 import logging
 import os
+import six
 import sys
 
 import lxml.html
@@ -97,7 +98,8 @@ def main():
                     lxml.html.fromstring(template.render()),
                     pretty_print=True)
             else:
-                output = template.render(REVERSE=service_types.reverse)
+                output_string = template.render(REVERSE=service_types.reverse)
+                output = output_string.encode()
         except Exception as e:
             logger.error("rendering template %s failed: %s" %
                          (templateFile, e))
@@ -113,7 +115,10 @@ def main():
                 os.makedirs(target_directory)
             logger.debug("writing %s" % target_file)
             with open(os.path.join(target_file), 'wb') as fh:
-                fh.write(output.encode('utf8'))
+                if six.PY3:
+                    fh.write(output)
+                else:
+                    fh.write(output.encode('utf8'))
         except (IOError, OSError, UnicodeEncodeError) as e:
             logger.error("writing %s failed: %s" % (target_file, e))
             raise
