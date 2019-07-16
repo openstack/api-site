@@ -22,7 +22,6 @@ which includes these pages:
 In addition to these documents, this repository contains:
 
  * Landing page for developer.openstack.org: ``www``
- * Writing your first OpenStack application tutorial (in progress): ``firstapp``
 
 To complete code reviews in this repository, use the standard
 OpenStack Gerrit `workflow <https://review.opendev.org>`_.
@@ -48,28 +47,6 @@ To build an individual document, such as the API Guide::
     tox -e api-quick-start
 
 The locally-built output files are found in a ``publish-docs`` directory.
-
-"Writing your First OpenStack Application" tutorial
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To build the "Writing your first OpenStack application" tutorial, you must
-install `Graphviz <http://www.graphviz.org/>`_.
-
-To install Graphviz for Ubuntu 12.04 or later or Debian 7 ("wheezy") or later::
-
-    apt-get install graphviz
-
-On Fedora 22 and later::
-
-    dnf install graphviz
-
-On openSUSE::
-
-    zypper install graphviz
-
-On Mac OSX with Homebrew installed::
-
-    brew install graphviz
 
 Build and update API docs
 =========================
