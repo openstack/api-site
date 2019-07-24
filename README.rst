@@ -2,31 +2,20 @@
 Team and repository tags
 ========================
 
-.. image:: https://governance.openstack.org/tc/badges/api-site.svg
-    :target: https://governance.openstack.org/tc/reference/tags/index.html
-
-.. Change things from this point on
 
 API-Site repository
 +++++++++++++++++++
 
-This repository contains API documentation for the OpenStack project.
-
-For details, see `OpenStack Documentation Contributor Guide
-<https://docs.openstack.org/doc-contrib-guide/index.html>`_,
-which includes these pages:
-
- * API Quick Start
- * API Guide (in progress)
-
-In addition to these documents, this repository contains:
-
- * Landing page for developer.openstack.org: ``www``
+This repository contains the index page for
+https://developer.openstack.org in the `www` directory.
 
 To complete code reviews in this repository, use the standard
 OpenStack Gerrit `workflow <https://review.opendev.org>`_.
 For details, see `Gerrit Workflow
 <https://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
+
+This repository is in a frozen state, it will be fully retired once a
+new home is found for the index page.
 
 Prerequisites
 =============
@@ -48,13 +37,6 @@ To build an individual document, such as the API Guide::
 
 The locally-built output files are found in a ``publish-docs`` directory.
 
-Build and update API docs
-=========================
-
-Refer to the `OpenStack Documentation Contributor Guide
-<https://docs.openstack.org/doc-contrib-guide/api-guides.html>`_
-for more information.
-
 Run tests
 =========
 
@@ -63,12 +45,7 @@ install the Python tox package and run ``tox`` from the top-level directory.
 
 To run individual tests:
 
- * ``tox -e linters`` - Niceness tests
  * ``tox -e checkbuild`` - Builds all of the documents in this repository
-
-To run these tests, the Tox package uses the
-`OpenStack doc tools package
-<https://opendev.org/openstack/openstack-doc-tools>`_.
 
 Contribute
 ==========
