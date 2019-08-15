@@ -53,7 +53,7 @@ def parse_command_line_arguments():
     parser.add_argument("--source-directory", type=str,
                         default='www', help='')
     parser.add_argument("--output-directory", type=str,
-                        default='publish-docs/www', help='')
+                        default='publish-docs/html/www', help='')
     return parser.parse_args()
 
 
