@@ -45,7 +45,8 @@ install the Python tox package and run ``tox`` from the top-level directory.
 
 To run individual tests:
 
- * ``tox -e checkbuild`` - Builds all of the documents in this repository
+ * ``tox -e publishdocs`` - Builds all of the documents in this repository,
+   this is called from CI jobs.
 
 Contribute
 ==========

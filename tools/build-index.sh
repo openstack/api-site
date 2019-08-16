@@ -12,36 +12,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-PUBLISH=$1
-
-if [[ -z "$PUBLISH" ]] ; then
-    echo "usage $0 (build|publish)"
-    exit 1
-fi
-
 mkdir -p publish-docs/html
 
-# Build the www pages so that openstack-doc-test creates a link to
-# www/www-index.html.
-if [ "$PUBLISH" = "build" ] ; then
-    python tools/www-generator.py --source-directory www/ \
-        --output-directory publish-docs/html/www/
-    rsync -a www/static/ publish-docs/html/www/
-    # publish-docs/html/www-index.html is the trigger for openstack-doc-test
-    # to include the file.
-    mv publish-docs/html/www/www-index.html publish-docs/html/www-index.html
-    # Create index page for viewing
-    openstack-indexpage publish-docs/html
-fi
-if [ "$PUBLISH" = "publish" ] ; then
-    python tools/www-generator.py --source-directory www/ \
-        --output-directory publish-docs/html/
-    rsync -a www/static/ publish-docs/html/
-    # Don't publish this file
-    rm publish-docs/html/www-index.html
+python tools/www-generator.py --source-directory www/ \
+    --output-directory publish-docs/html/
+rsync -a www/static/ publish-docs/html/
 
-    # This marker is needed for infra publishing
-    MARKER_TEXT="Project: $ZUUL_PROJECT Ref: $ZUUL_REFNAME Build: $ZUUL_UUID"
-    echo $MARKER_TEXT > publish-docs/html/.root-marker
-
-fi
+# This marker is needed for infra publishing
+MARKER_TEXT="Project: $ZUUL_PROJECT Ref: $ZUUL_REFNAME Build: $ZUUL_UUID"
+echo $MARKER_TEXT > publish-docs/html/.root-marker
