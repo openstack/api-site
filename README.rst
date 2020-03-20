@@ -12,7 +12,7 @@ https://developer.openstack.org in the `www` directory.
 To complete code reviews in this repository, use the standard
 OpenStack Gerrit `workflow <https://review.opendev.org>`_.
 For details, see `Gerrit Workflow
-<https://docs.openstack.org/infra/manual/developers.html#development-workflow>`_.
+<https://docs.opendev.org/opendev/infra-manual/latest/developers.html#development-workflow>`_.
 
 This repository is in a frozen state, it will be fully retired once a
 new home is found for the index page.
