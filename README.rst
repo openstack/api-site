@@ -7,7 +7,7 @@ API-Site repository
 +++++++++++++++++++
 
 This repository contains the index page for
-https://developer.openstack.org in the `www` directory.
+https://developer.openstack.org in the ``www`` directory.
 
 To complete code reviews in this repository, use the standard
 OpenStack Gerrit `workflow <https://review.opendev.org>`_.
@@ -23,9 +23,9 @@ Prerequisites
 To build the documentation locally, you must install Python and
 `Python Tox <https://tox.readthedocs.io/en/latest/>`_.
 
-To install Tox for Ubuntu 14.04 or later::
+To install Tox and dependencies for Ubuntu 22.04 or later::
 
-    apt-get install python-tox python-dev libxml2-dev libxslt1-dev
+    apt-get install python3-tox python3-dev libxml2-dev libxslt1-dev
 
 To build all the documentation after installing Python and Tox::
 
